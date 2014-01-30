@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="BoofCV_V4L4J.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://boofcv.org/javadoc/integration/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="BoofCV.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://boofcv.org/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="BoofCVXuggler.jar"/>
+	<classpathentry kind="lib" path="DDogleg.jar"/>
+	<classpathentry kind="lib" path="EJML.jar"/>
+	<classpathentry kind="lib" path="GeoRegression.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://georegression.org/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="jcodec-0.1.5.jar"/>
+	<classpathentry kind="lib" path="xstream-1.4.4.jar"/>
+	<classpathentry kind="lib" path="v4l4j.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://v4l4j.googlecode.com/svn/www/v4l4j-api/index.html"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
