@@ -29,7 +29,7 @@ public class HSVSegmentation {
 	}
 	
 	public static void displayImage() throws IOException{
-		img = ImageIO.read(new File("img/00000002.jpg"));
+		img = ImageIO.read(new File("test_images/00000002.jpg"));
 
 		showSelectedColor("Marker(Y)", img, 0.7f, 0.95f);
 		binaryOps("");
