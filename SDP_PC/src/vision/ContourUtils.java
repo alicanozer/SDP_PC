@@ -39,7 +39,7 @@ public class ContourUtils {
 		return new Point2D_I32(xMean,yMean);
 	}
 
-	/*
+	/**
 	 * Returns whether a point is inside a Contour
 	 */
 	public static boolean isInside(Point2D_I32 p, Contour c){
@@ -56,7 +56,7 @@ public class ContourUtils {
 
 		return pol.contains(p.getX(), p.getY());
 	}
-	/*
+	/**
 	 * Constructs a polygon from a list of points
 	 */
 	public static Polygon polygonFromContour(List<Point2D_I32> plist){
@@ -71,15 +71,10 @@ public class ContourUtils {
 
 		return new Polygon(xs,ys,plist.size());
 	}
-	/*
+	/**
 	 * Returns whether a point is inside a Polygon
 	 */
 	public static boolean isInside(Point2D_I32 p, Polygon pol){
 		return pol.contains(p.getX(), p.getY());
 	}
-	
-	/*
-	 * Contour.external is the list of external coordinates of the contours
-	 * Contour.internal is the list of internal contours
-	 */
 }
