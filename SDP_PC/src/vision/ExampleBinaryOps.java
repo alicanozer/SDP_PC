@@ -52,7 +52,7 @@ public class ExampleBinaryOps {
 
         public static void main( String args[] ) {
                 // load and convert the image into a usable format
-        		BufferedImage image = UtilImageIO.loadImage("img1.jpg");
+        		BufferedImage image = UtilImageIO.loadImage("test_images/00000001.jpg");
 
                 // convert into a usable format
                 ImageFloat32 input = ConvertBufferedImage.convertFromSingle(image, null, ImageFloat32.class);
@@ -91,7 +91,7 @@ public class ExampleBinaryOps {
                 //ShowImages.showWindow(visualContour,"Contours");
                 
                 // my code for the Ball attention the Ball
-                BufferedImage image2 = UtilImageIO.loadImage("frame1.jpg");
+                BufferedImage image2 = UtilImageIO.loadImage("test_images/00000001.jpg");
                 
                 MultiSpectral<ImageFloat32> input2= ConvertBufferedImage.convertFromMulti(image2, null, true, ImageFloat32.class);
                 ImageUInt8 binary2 = new ImageUInt8(input2.width,input2.height);
