@@ -160,7 +160,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	  * 
 	  */
 
-	 /*
+	 /*maxDist2
         This method contains all the current vision code and the frame handling code.
         The frame handling code is quite simple - it just fetches the frame from
         the video device and writes it to the JPabel window.
@@ -173,8 +173,8 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		 // Don't forget to recycle it when done dealing with the frame.
 
 		 BufferedImage img = frame.getBufferedImage();
-		 img = showSelectedColor("Ball", img, 0, 0.8f);
-		 //img = contourOps("Ball", img);
+		 //img = showSelectedColor("Ball", img, 0, 0.8f);
+		 img = contourOps("ball", img);
 		 //img = showSelectedColor("Lines", img, 0.5f, 0.4f);
 		 //img = showSelectedColor("Field", img, 2.0f, 0.55f);
 		 Graphics2D g = (Graphics2D) label.getGraphics();	 	
@@ -226,7 +226,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		 ImageUInt8 binary = new ImageUInt8(input.width,input.height);
 		 ImageSInt32 label = new ImageSInt32(input.width,input.height);
 		 if (type.equals("ball")){
-			 ThresholdImageOps.threshold(input.getBand(0),binary,(float)180,false);
+			 ThresholdImageOps.threshold(input.getBand(0),binary,(float)190,false);
 		 }
 		 else if (type.equals("field")) {
 			 ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
@@ -235,7 +235,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		 filtered = BinaryImageOps.dilate8(filtered, null);
 		 List<Contour> contours = BinaryImageOps.contour(filtered, 8, label);
 
-		 BufferedImage visualContour = VisualizeBinaryData.renderContours(contours,0xFFFFFF,0xFF2020,input.width,input.height,null);
+		 BufferedImage visualContour = VisualizeBinaryData.renderContours(contours,0xFFFFFF,0xFF20FF,input.width,input.height,null);
 
 		 return visualContour;
 	 }
