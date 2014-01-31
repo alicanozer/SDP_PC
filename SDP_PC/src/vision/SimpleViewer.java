@@ -4,6 +4,7 @@ import georegression.metric.UtilAngle;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -45,7 +46,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private static String   device = "/dev/video0";
 	private long lastFrame = System.currentTimeMillis(); // used for calculating FPS
 	private int frameCounter = 0; // we let device capture frames from the 3rd onwards
-
+	
 	private VideoDevice     videoDevice;
 	private FrameGrabber    frameGrabber;
 
@@ -169,15 +170,33 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	  */
 	 @Override
 	 public void nextFrame(VideoFrame frame) {
+		 BufferedImage img = frame.getBufferedImage();
+		 ArrayList<Polygon> regions = new ArrayList<Polygon>();
+		 if(frameCounter < 3){
+			 frameCounter++;
+			 System.out.println("lol");
+		 }
+		 if (frameCounter == 3){
+			 System.out.println("ror");
+			 img = showSelectedColor("Lines", img, 0.5f, 0.4f);
+			 regions = getRegions(img);
+			 frameCounter++;
+			 System.out.println(regions.size());
+			 for(Polygon p: regions){
+				 System.out.println(p.toString());
+			 }
+		 }
 		 // This method is called when a new frame is ready.
 		 // Don't forget to recycle it when done dealing with the frame.
 
-		 BufferedImage img = frame.getBufferedImage();
+		 
 		 //img = showSelectedColor("Ball", img, 0, 0.8f);
-		 img = contourOps("ball", img);
-		 //img = showSelectedColor("Lines", img, 0.5f, 0.4f);
+		 //img = showSelectedColor("Marker(I)", img, 0.7f, 0.95f);
+		 
+		 img = showSelectedColor("Lines", img, 0.5f, 0.4f);
 		 //img = showSelectedColor("Field", img, 2.0f, 0.55f);
-		 Graphics2D g = (Graphics2D) label.getGraphics();	 	
+		 img = contourOps("", img);
+		 Graphics2D g = (Graphics2D) label.getGraphics();
 		 // this draws the frame grabber	 	
 		 g.drawImage(img, 0, 0, width, height, null);
 
@@ -204,6 +223,10 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 		 // step through each pixel and mark how close it is to the selected color
 		 BufferedImage output = new BufferedImage(input.width,input.height,BufferedImage.TYPE_INT_RGB);
+		 
+		 //ImageUInt8 binary = new ImageUInt8(input.width,input.height);
+		 
+		 
 		 for( int y = 0; y < hsv.height; y++ ) {
 			 for( int x = 0; x < hsv.width; x++ ) {
 				 // remember Hue is an angle in radians, so simple subtraction doesn't work
@@ -220,23 +243,64 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		 return output;
 	 }
 
+	 /*
+	  * draws contours of objects on the input image
+	  */
 	 public BufferedImage contourOps(String type, BufferedImage inputImg) {
+		 List<Contour> contours = getContours(type,inputImg);
+		 
+		 //System.out.println("Number of contours " + contours.size());
+		 BufferedImage visualContour = VisualizeBinaryData.renderContours(
+				 contours,
+				 0xFFFFFF,
+				 0xFF20FF,
+				 inputImg.getWidth(),
+				 inputImg.getHeight(),
+				 null);
+
+		 return visualContour;
+	 }
+	 /*
+	  * returns the regions of the pitch as a list of polygons
+	  */
+	 public ArrayList<Polygon> getRegions(BufferedImage inputImg) {
+		 
+		 List<Contour> contours = getContours("",inputImg);
+		 ArrayList<Polygon> pols = new ArrayList<Polygon>();
+		 
+		 // in initial conditions, contours has only 1 element and it is the 
+		 // pitch. it has  at least 4 list of points as internal contours
+		 for(int i=0; i< contours.get(0).internal.size(); i++){
+			 Polygon p = ContourUtils.polygonFromContour(contours.get(0).internal.get(i));
+			 // since our polygons consists of individual pixel coords then the num
+			 // of points a good indication of the perimeter
+			 
+			 if(p.npoints > 100){
+				 pols.add(i,p); 
+			 }
+		 }
+		 return pols;
+	 }
+	 /*
+	  * Gets the list of contours from applying binary thresholding to
+	  * 
+	  */
+	 public List<Contour> getContours(String type, BufferedImage inputImg) {
 
 		 MultiSpectral<ImageFloat32> input= ConvertBufferedImage.convertFromMulti(inputImg, null, true, ImageFloat32.class);
 		 ImageUInt8 binary = new ImageUInt8(input.width,input.height);
 		 ImageSInt32 label = new ImageSInt32(input.width,input.height);
 		 if (type.equals("ball")){
-			 ThresholdImageOps.threshold(input.getBand(0),binary,(float)190,false);
+			 ThresholdImageOps.threshold(input.getBand(0),binary,(float)180,false);
 		 }
-		 else if (type.equals("field")) {
+		 else if (type.equals("")) {
 			 ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
 		 }
 		 ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
 		 filtered = BinaryImageOps.dilate8(filtered, null);
 		 List<Contour> contours = BinaryImageOps.contour(filtered, 8, label);
-
-		 BufferedImage visualContour = VisualizeBinaryData.renderContours(contours,0xFFFFFF,0xFF20FF,input.width,input.height,null);
-
-		 return visualContour;
+		 
+		 return contours;
 	 }
+	 
 }

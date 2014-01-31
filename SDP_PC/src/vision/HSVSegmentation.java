@@ -29,21 +29,24 @@ public class HSVSegmentation {
 	}
 
 	public static void displayImage() throws IOException{
-		img = ImageIO.read(new File("test_images/00000002.jpg"));
+		img = ImageIO.read(new File("test_images/00000006.jpg"));
 
-		showSelectedColor("Marker(Y)", img, 0.7f, 0.95f);
-		binaryOps("");
-		showSelectedColor("Marker(B)", img, 3.0f, 0.8f);
-		binaryOps("");
-		showSelectedColor("Field", img, 2.0f, 0.55f);
-		binaryOps("");
-		showSelectedColor("Ball", img, 0, 1.1f);
-		binaryOps("ball");
-		showSelectedColor("Lines", img, 0.5f, 0.4f);
-		binaryOps("");
+//		showSelectedColor("Marker(Y)", img, 0.7f, 0.95f);
+//		binaryOps("");
+		
+//		showSelectedColor("Marker(Y)", img, 1.5f, 0.26f,0.1f);
+//		binaryOps("");
+//		showSelectedColor("Marker(B)", img, 3.0f, 0.8f);
+//		binaryOps("");
+//		showSelectedColor("Field", img, 2.0f, 0.55f);
+//		binaryOps("");
+//		showSelectedColor("Ball", img, 0, 1.1f);
+//		binaryOps("ball");
+//		showSelectedColor("Lines", img, 0.5f, 0.4f);
+//		binaryOps("");
 	}
 
-	public static void showSelectedColor( String name , BufferedImage image , float hue , float saturation ){
+	public static void showSelectedColor( String name , BufferedImage image , float hue , float saturation , float value){
 		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(image,null,true,ImageFloat32.class);
 		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
 
@@ -51,11 +54,12 @@ public class HSVSegmentation {
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
 		// Pixels which are more than this different from the selected color are set to black
-		float maxDist2 = 0.4f*0.4f;
+		float maxDist2 = 0.16f;//0.4f*0.4f;
 
 		// Extract hue and saturation bands which are independent of intensity
 		ImageFloat32 H = hsv.getBand(0);
 		ImageFloat32 S = hsv.getBand(1);
+		ImageFloat32 V = hsv.getBand(2);
 
 		// Adjust the relative importance of Hue and Saturation
 		float adjustUnits = (float)(Math.PI/2.0);
@@ -67,9 +71,12 @@ public class HSVSegmentation {
 				// remember Hue is an angle in radians, so simple subtraction doesn't work
 				float dh = UtilAngle.dist(H.unsafe_get(x,y),hue);
 				float ds = (S.unsafe_get(x,y)-saturation)*adjustUnits;
+				float dv = (V.get(x, y)/255.0f-value)*adjustUnits;
 
 				// this distance measure is a bit naive, but good enough for this demonstration
-				float dist2 = dh*dh + ds*ds;
+				float dist2 = dh*dh + ds*ds + dv*dv;
+				//System.out.println(dist2);
+				//System.out.println(dv);
 				if( dist2 <= maxDist2 ) {
 					output.setRGB(x,y,image.getRGB(x,y));
 				}

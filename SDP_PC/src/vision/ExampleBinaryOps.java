@@ -123,6 +123,9 @@ public class ExampleBinaryOps {
                 yMean /= contours2.get(0).external.size();	
                 
                 System.out.println("xMean " + xMean + " " + yMean );
+                //Tests
+                System.out.println("Is the mean inside the ball contour ?" + ContourUtils.isInside(new Point2D_I32(135,76),contours2.get(0)));
+                
                 
                 // colors of contours
                 int colorExternal2 = 0xFFFFFF;
@@ -139,6 +142,8 @@ public class ExampleBinaryOps {
                 ShowImages.showWindow(visualFiltered2,"Binary Filtered");
                 ShowImages.showWindow(visualLabel2,"Labeled Blobs");
                 ShowImages.showWindow(visualContour2,"Contours");
+                
+                //Test 2
                 
                 
         }
