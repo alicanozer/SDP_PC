@@ -1,6 +1,7 @@
 package vision;
 
 import georegression.metric.UtilAngle;
+import georegression.struct.point.Point2D_I32;
 
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
@@ -24,7 +25,7 @@ import boofcv.struct.image.MultiSpectral;
  *
  */
 public class VisionOps {
-	public static BufferedImage showSelectedColor( String name , BufferedImage image , float hue , float saturation ){
+	public static BufferedImage segmentHSV( String name , BufferedImage image , float hue , float saturation ){
 		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(image,null,true,ImageFloat32.class);
 		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
 
@@ -122,4 +123,19 @@ public class VisionOps {
 
 		return contours;
 	}
+	/**
+	 * This method returns the center of the ball. Method uses hardcoded values
+	 * that were obtained by testing
+	 * @param img The input image
+	 * @return the coordinates as a Point2D_I32
+	 */
+	public static Point2D_I32 findBall(BufferedImage img){
+		List<Contour> contours = getContours("ball",segmentHSV("ball",img,0f,0.8f));
+		if(contours.size() > 1){
+			System.out.println("WARNING: MORE THAN 1 ball detected");
+		}
+		return ContourUtils.getContourCentroid(contours.get(0));
+	}
+	
+	
 }
