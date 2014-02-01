@@ -1,6 +1,7 @@
 package vision;
 
 import georegression.metric.UtilAngle;
+import georegression.struct.point.Point2D_I32;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -26,7 +27,6 @@ import boofcv.struct.image.ImageFloat32;
 import boofcv.struct.image.ImageSInt32;
 import boofcv.struct.image.ImageUInt8;
 import boofcv.struct.image.MultiSpectral;
-
 import au.edu.jcu.v4l4j.FrameGrabber;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.V4L4JConstants;
@@ -38,7 +38,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 /**
  * This class demonstrates how to perform a simple push-mode capture.
  * It starts the capture and display the video stream in a JLabel
- * @author gilles
+ * @author bilyan, jason
  *
  */
 public class SimpleViewer extends WindowAdapter implements CaptureCallback{
@@ -46,6 +46,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private static String   device = "/dev/video0";
 	private long lastFrame = System.currentTimeMillis(); // used for calculating FPS
 	private int frameCounter = 0; // we let device capture frames from the 3rd onwards
+	private static ArrayList<Polygon> regions = new ArrayList<Polygon>();
 
 	private VideoDevice     videoDevice;
 	private FrameGrabber    frameGrabber;
@@ -156,20 +157,20 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		// The exception is available through e.getCause()
 		e.printStackTrace();
 	}
-/**
- * gets new frames and applies the vidon on them
- */
+	/**
+	 * gets new frames and applies the vision on them
+	 */
 	@Override
 	public void nextFrame(VideoFrame frame) {
 		BufferedImage img = frame.getBufferedImage();
-		ArrayList<Polygon> regions = new ArrayList<Polygon>();
+
 		if(frameCounter < 3){
 			frameCounter++;
-			System.out.println("lol");
 		}
 		if (frameCounter == 3){
 			System.out.println("ror");
-			img = VisionOps.showSelectedColor("Lines", img, 0.5f, 0.4f);
+			
+			img = VisionOps.segmentHSV("Lines", img, 0.5f, 0.4f);
 			regions = VisionOps.getRegions(img);
 			frameCounter++;
 			System.out.println(regions.size());
@@ -177,11 +178,18 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 				System.out.println(p.toString());
 			}
 		}
+		//threading needs to be added here
+		Point2D_I32 ballPos = VisionOps.findBall(img);
+		
+		
+		
+		//this is the old code but I keep it for now, we'll
+		// remove it when we are sure our methods work
 		//img = showSelectedColor("Ball", img, 0, 0.8f);
-		//img = showSelectedColor("Marker(I)", img, 0.7f, 0.95f);
-		img = VisionOps.showSelectedColor("Lines", img, 0.5f, 0.4f);
+		//img = showSelectedColor("Marker(I) Yellow", img, 0.7f, 0.95f);
+		//img = VisionOps.segmentHSV("Lines", img, 0.5f, 0.4f);
 		//img = showSelectedColor("Field", img, 2.0f, 0.55f);
-		img = VisionOps.contourOps("", img);
+		//img = VisionOps.contourOps("", img);
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		// this draws the frame grabber	 	
 		g.drawImage(img, 0, 0, width, height, null);
