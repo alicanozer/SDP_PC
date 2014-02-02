@@ -3,6 +3,7 @@ package vision;
 import georegression.metric.UtilAngle;
 import georegression.struct.point.Point2D_I32;
 
+import java.awt.Color;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -25,7 +26,15 @@ import boofcv.struct.image.MultiSpectral;
  *
  */
 public class VisionOps {
-	public static BufferedImage segmentHSV( String name , BufferedImage image , float hue , float saturation ){
+	/**
+	 * 
+	 * @param image , leaves it intact
+	 * @param hue
+	 * @param saturation
+	 * @return a new image
+	 */
+	// instead of passing a single hue pass an array of hues and saturations!
+	public static BufferedImage segmentHSV(BufferedImage image , float hue , float saturation ){
 		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(image,null,true,ImageFloat32.class);
 		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
 
@@ -44,9 +53,6 @@ public class VisionOps {
 
 		// step through each pixel and mark how close it is to the selected color
 		BufferedImage output = new BufferedImage(input.width,input.height,BufferedImage.TYPE_INT_RGB);
-
-		//ImageUInt8 binary = new ImageUInt8(input.width,input.height);
-
 
 		for( int y = 0; y < hsv.height; y++ ) {
 			for( int x = 0; x < hsv.width; x++ ) {
@@ -69,8 +75,6 @@ public class VisionOps {
 	 */
 	public static BufferedImage contourOps(String type, BufferedImage inputImg) {
 		List<Contour> contours = getContours(type,inputImg);
-
-		//System.out.println("Number of contours " + contours.size());
 		BufferedImage visualContour = VisualizeBinaryData.renderContours(
 				contours,
 				0xFFFFFF,
@@ -86,7 +90,7 @@ public class VisionOps {
 	 */
 	public static ArrayList<Polygon> getRegions(BufferedImage inputImg) {
 
-		List<Contour> contours = getContours("",inputImg);
+		List<Contour> contours = getContours("lines",inputImg);
 		ArrayList<Polygon> pols = new ArrayList<Polygon>();
 
 		// in initial conditions, contours has only 1 element and it is the 
@@ -103,7 +107,7 @@ public class VisionOps {
 		return pols;
 	}
 	/**
-	 * Gets the list of contours from applying binary thresholding to
+	 * Gets the list of contours from applying binary thresholding to an input image
 	 * 
 	 */
 	public static List<Contour> getContours(String type, BufferedImage inputImg) {
@@ -112,9 +116,18 @@ public class VisionOps {
 		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
 		ImageSInt32 label = new ImageSInt32(input.width,input.height);
 		if (type.equals("ball")){
-			ThresholdImageOps.threshold(input.getBand(0),binary,(float)180,false);
+			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
 		}
-		else if (type.equals("")) {
+		else if(type.equals("blue")){
+			ThresholdImageOps.threshold(input.getBand(2),binary,(float)70,false);
+		}
+		else if(type.equals("yellow")){
+			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
+		}
+		else if(type.equals("lines")){
+			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
+		}
+		else if(type.equals("dots")){
 			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
 		}
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
@@ -130,12 +143,132 @@ public class VisionOps {
 	 * @return the coordinates as a Point2D_I32
 	 */
 	public static Point2D_I32 findBall(BufferedImage img){
-		List<Contour> contours = getContours("ball",segmentHSV("ball",img,0f,0.8f));
-		if(contours.size() > 1){
+		List<Contour> contours = getContours("ball",segmentHSV(img, 6.21f, 0.88f));
+		if(contours.size() > 1 ){
 			System.out.println("WARNING: MORE THAN 1 ball detected");
+			return null;
 		}
-		return ContourUtils.getContourCentroid(contours.get(0));
+		else if(contours.size() == 0){
+			System.out.println("WARNING: NO ball detected");
+			return null;
+		}
+		else return ContourUtils.getContourCentroid(contours.get(0));
+	}
+	/**
+	 * finds the marker according to colour
+	 * @param img
+	 * @param type
+	 * @return
+	 */
+	private static Point2D_I32[] findMarkers(BufferedImage img, String type){
+		if(type == "yellow"){
+			List<Contour> contours = getContours("yellow",segmentHSV(img, 0.7f, 0.95f));
+			if(contours.size() != 2 ){
+				System.out.println("WARNING: SOMETHING else than 2 yellow markers was detected");
+				return null;
+			}
+			Point2D_I32[] ret = new Point2D_I32[2];
+
+			ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+			ret[1] = ContourUtils.getContourCentroid(contours.get(1));
+
+			return ret;
+		}
+		//TODO : implement
+		else if(type == "blue"){
+			List<Contour> contours = getContours("blue",segmentHSV(img, 3.31f, 0.538f));
+			if(contours.size() != 2 ){
+				System.out.println("WARNING: SOMETHING else than 2 blue markers was detected");
+				return null;
+			}
+			Point2D_I32[] ret = new Point2D_I32[2];
+
+			ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+			ret[1] = ContourUtils.getContourCentroid(contours.get(1));
+
+			return ret;
+		}
+		else return null;
+	}
+	/**
+	 * Finds the positions of the Blue Markers
+	 * @param img
+	 * @return
+	 */
+	public static Point2D_I32[] findBlueMarkers(BufferedImage img){
+		return findMarkers(img,"blue");
+	}
+	/**
+	 * Finds the positions of the Yellow Markers
+	 * @param img
+	 * @return
+	 */
+	public static Point2D_I32[] findYellowMarkers(BufferedImage img){
+		return findMarkers(img,"yellow");
+	}
+	
+	public static Point2D_I32[] findDots(BufferedImage img){
+		List<Contour> contours = getContours("dots",segmentHSV(img, 1.04f, 0.218f));
+		if(contours.size() != 4){
+			System.out.println("WARNING: STH else than 4 dots were founds");
+			return null;
+		}
+		Point2D_I32[] ret = new Point2D_I32[4];
+
+		ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+		ret[1] = ContourUtils.getContourCentroid(contours.get(1));
+		ret[2] = ContourUtils.getContourCentroid(contours.get(2));
+		ret[3] = ContourUtils.getContourCentroid(contours.get(3));
+		return ret;
+	}
+	
+	public static ArrayList<Point2D_I32> findrgb(
+			BufferedImage img, 
+			int windowSize, 
+			int windowTolerance,
+			double redThreshold,
+			double blueThreshold,
+			double greenThreshold)
+	{
+		ArrayList<Point2D_I32> probCoords = new ArrayList<Point2D_I32>();
+		int width = img.getWidth();
+		int height = img.getHeight();
+		for(int i = 0; i < width; i=i+windowSize){ 
+			for(int j=0; j < height; j=j+windowSize){
+				int[] window = img.getRGB(i, j, windowSize, windowSize, null, 0, windowSize); // get rgb values, stores as ints for some reason...
+				int count = 0; 
+				for(int k=0; k < windowSize*windowSize; k++){
+					Color C1 = new Color(window[k]); 
+					double r = (double)C1.getRed() / (C1.getRed() + C1.getBlue() + C1.getGreen());
+					double g = (double)C1.getGreen() / (C1.getRed() + C1.getBlue() + C1.getGreen());
+					double b = (double)C1.getBlue() / (C1.getRed() + C1.getBlue() + C1.getGreen());
+					if(Math.abs(r - redThreshold) < 0.1 &&
+							Math.abs(g - greenThreshold) < 0.1 &&
+							Math.abs(b - blueThreshold) < 0.1){
+						count++;
+					}
+				}
+				if( count > windowTolerance ){// arbitrary threshold, needs tuning
+					probCoords.add(new Point2D_I32(i,j));
+				}
+			}
+		}
+		return probCoords;
 	}
 	
 	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
