@@ -174,7 +174,6 @@ public class VisionOps {
 
 			return ret;
 		}
-		//TODO : implement
 		else if(type == "blue"){
 			List<Contour> contours = getContours("blue",segmentHSV(img, 3.31f, 0.538f));
 			if(contours.size() != 2 ){
@@ -206,7 +205,7 @@ public class VisionOps {
 	public static Point2D_I32[] findYellowMarkers(BufferedImage img){
 		return findMarkers(img,"yellow");
 	}
-	
+
 	public static Point2D_I32[] findDots(BufferedImage img){
 		List<Contour> contours = getContours("dots",segmentHSV(img, 1.04f, 0.218f));
 		if(contours.size() != 4){
@@ -221,7 +220,7 @@ public class VisionOps {
 		ret[3] = ContourUtils.getContourCentroid(contours.get(3));
 		return ret;
 	}
-	
+
 	public static ArrayList<Point2D_I32> findrgb(
 			BufferedImage img, 
 			int windowSize, 
@@ -229,7 +228,7 @@ public class VisionOps {
 			double redThreshold,
 			double blueThreshold,
 			double greenThreshold)
-	{
+			{
 		ArrayList<Point2D_I32> probCoords = new ArrayList<Point2D_I32>();
 		int width = img.getWidth();
 		int height = img.getHeight();
@@ -254,11 +253,11 @@ public class VisionOps {
 			}
 		}
 		return probCoords;
-	}
-	
-	
-	
-	
+			}
+
+
+
+
 }
 
 
