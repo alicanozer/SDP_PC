@@ -185,6 +185,8 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		Point2D_I32 ballPos = VisionOps.findBall(img);
 		Point2D_I32[] yellowMarkersPos = VisionOps.findYellowMarkers(img);
 		Point2D_I32[] blueMarkersPos = VisionOps.findBlueMarkers(img);
+		
+		
 		//ArrayList<Point2D_I32> dotsPos = VisionOps.findrgb(img, 5, 20, 0.35, 0.35, 1-(0.35 + 0.35));
 		//System.out.println(dotsPos);
 		//this is the old code but I keep it for now, we'll
