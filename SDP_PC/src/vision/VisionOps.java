@@ -7,7 +7,16 @@ import java.awt.Color;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import boofcv.alg.color.ColorHsv;
 import boofcv.alg.filter.binary.BinaryImageOps;
@@ -26,6 +35,56 @@ import boofcv.struct.image.MultiSpectral;
  *
  */
 public class VisionOps {
+		private BufferedImage imageCont;
+		
+		public VisionOps(BufferedImage imageCont){
+			this.imageCont = imageCont;
+		}
+//	public static BufferedImage segmentMultiHSV(BufferedImage[] images, float[] hues , float[] saturations){
+//		if(!(images.length == hues.length) && (hues.length == saturations.length)){
+//			return null;
+//		}
+//		ArrayList<MultiSpectral<ImageFloat32>> inputs = new ArrayList<MultiSpectral<ImageFloat32>>();
+//		
+//		
+//		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(image,null,true,ImageFloat32.class);
+//		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
+//
+//		// Convert into HSV
+//		ColorHsv.rgbToHsv_F32(input,hsv);
+//
+//		// Pixels which are more than this different from the selected color are set to black
+//		float maxDist2 = 0.4f*0.4f;
+//
+//		// Extract hue and saturation bands which are independent of intensity
+//		ImageFloat32 H = hsv.getBand(0);
+//		ImageFloat32 S = hsv.getBand(1);
+//
+//		// Adjust the relative importance of Hue and Saturation
+//		float adjustUnits = (float)(Math.PI/2.0);
+//
+//		// step through each pixel and mark how close it is to the selected color
+//		BufferedImage output = new BufferedImage(input.width,input.height,BufferedImage.TYPE_INT_RGB);
+//
+//		for( int y = 0; y < hsv.height; y++ ) {
+//			for( int x = 0; x < hsv.width; x++ ) {
+//				// remember Hue is an angle in radians, so simple subtraction doesn't work
+//				float dh = UtilAngle.dist(H.unsafe_get(x,y),hue);
+//				float ds = (S.unsafe_get(x,y)-saturation)*adjustUnits;
+//
+//				// this distance measure is a bit naive, but good enough for this demonstration
+//				float dist2 = dh*dh + ds*ds;
+//				if( dist2 <= maxDist2 ) {
+//					output.setRGB(x,y,image.getRGB(x,y));
+//				}
+//			}
+//		}
+//		return output;
+//	}
+
+	
+	
+	
 	/**
 	 * 
 	 * @param image , leaves it intact
@@ -253,10 +312,108 @@ public class VisionOps {
 			}
 		}
 		return probCoords;
-			}
+	}
+	
+	
+	/**
+	 * Threads implementation, appears to be slower on my laptop, might be better on DICE
+	 * @return
+	 * @throws Exception
+	 */
+	public ObjectLocations getObjectLocations() throws Exception {
+		long begTest = new java.util.Date().getTime();
 
+		List<Future<Point2D_I32[]>> futuresList = new ArrayList< Future<Point2D_I32[]> >();
+		ExecutorService eservice = Executors.newFixedThreadPool(4);
 
+		Set<Callable<Point2D_I32[]>> tasks = new HashSet<Callable<Point2D_I32[]>>();
+		
+		
+		tasks.add(new GetBall(this.imageCont));
+		tasks.add(new GetYellowMarkers(this.imageCont));
+		tasks.add(new GetBlueMarkers(this.imageCont));
+		tasks.add(new GetDots(this.imageCont));
+		
+		
+		futuresList = eservice.invokeAll(tasks);
+		
+		eservice.shutdown();
 
+		Double secs = new Double((new java.util.Date().getTime() - begTest)*0.001);
+		System.out.println("run time threads" + secs + " secs");
+		
+		return new ObjectLocations(futuresList.get(0).get()[0],futuresList.get(1).get(),futuresList.get(2).get(),futuresList.get(3).get());
+	}
+	/**
+	 * encapsulated unit of work for getting the ball
+	 * @author bilyan
+	 *
+	 */
+	class GetBall implements Callable<Point2D_I32[]>{
+		private final BufferedImage img;
+		public GetBall(BufferedImage img){
+			this.img = img;
+		}
+		public BufferedImage getImg(){
+			return this.img;
+		}
+		@Override
+		public Point2D_I32[] call() throws Exception {
+			Point2D_I32[] ball = new Point2D_I32[1];
+			ball[0] = findBall(this.img); 
+			return ball;
+		}
+	}
+	/**
+	 * encapsulated unit of work for getting the yellow markers
+	 * @author bilyan
+	 *
+	 */
+	class GetYellowMarkers implements Callable<Point2D_I32[]>{
+		private final BufferedImage img;
+		public GetYellowMarkers(BufferedImage img){
+			this.img = img;
+		}
+		public BufferedImage getImg(){
+			return this.img;
+		}
+		@Override
+		public Point2D_I32[] call() throws Exception {
+			return findYellowMarkers(this.img); 
+		}
+	}
+	/**
+	 * encapsulated unit of work for getting the blue Markers
+	 * @author bilyan
+	 *
+	 */
+	class GetBlueMarkers implements Callable<Point2D_I32[]>{
+		private final BufferedImage img;
+		public GetBlueMarkers(BufferedImage img){
+			this.img = img;
+		}
+		public BufferedImage getImg(){
+			return this.img;
+		}
+		@Override
+		public Point2D_I32[] call() throws Exception {
+			return findBlueMarkers(this.img); 
+		}
+	}
+	
+	class GetDots implements Callable<Point2D_I32[]>{
+		private final BufferedImage img;
+		public GetDots(BufferedImage img){
+			this.img = img;
+		}
+		public BufferedImage getImg(){
+			return this.img;
+		}
+		@Override
+		public Point2D_I32[] call() throws Exception {
+			return findDots(this.img); 
+		}
+	}
 
 }
 
