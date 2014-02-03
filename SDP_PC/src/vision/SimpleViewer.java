@@ -163,7 +163,13 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	@Override
 	public void nextFrame(VideoFrame frame) {
 		BufferedImage img = frame.getBufferedImage();
-		
+		img = img.getSubimage(60, 60, 550, 316);
+		width = 550;
+		height = 316;
+		long thisFrame = System.currentTimeMillis();
+		int frameRate = (int) (1000 / (thisFrame - lastFrame));
+
+		lastFrame = thisFrame;
 		if(frameCounter < 3){
 			frameCounter++;
 		}
@@ -186,8 +192,8 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		float[] hues = {6.21f,0.7f,3.31f };
 		float[] saturations = {0.88f,0.95f,0.538f};
 		
-//		img = VisionOps.segmentMultiHSV(img, hues, saturations)[2];
-//		img = VisionOps.contourOps("blue", img);
+//		img = VisionOps.segmentMultiHSV(img, hues, saturations)[1];
+//		img = VisionOps.contourOps("ball", img);
 		
 		ObjectLocations obs = VisionOps.getObjectLocations(img);
 
@@ -209,26 +215,30 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		// this draws the frame grabber	 
 		g.drawImage(img, 0, 0, width, height, null);
+		g.setColor(Color.WHITE);
+		g.drawString("FPS " + frameRate , 10, 10);
 		//draw X over ball
 		if(obs.ball != null){
 			g.drawLine(obs.ball.getX() - 10, obs.ball.getY(), obs.ball.getX() +10, obs.ball.getY());
 			g.drawLine(obs.ball.getX() , obs.ball.getY() - 10, obs.ball.getX(), obs.ball.getY() + 10);
 		}
-		//draw X over yellow markers
-		if(obs.yellowMarkers != null){
-			g.drawLine(obs.yellowMarkers[0].getX() - 10, obs.yellowMarkers[0].getY(), obs.yellowMarkers[0].getX() +10, obs.yellowMarkers[0].getY());
-			g.drawLine(obs.yellowMarkers[0].getX() , obs.yellowMarkers[0].getY() - 10, obs.yellowMarkers[0].getX(), obs.yellowMarkers[0].getY() + 10);
-
-			g.drawLine(obs.yellowMarkers[1].getX() - 10, obs.yellowMarkers[1].getY(), obs.yellowMarkers[1].getX() +10, obs.yellowMarkers[1].getY());
-			g.drawLine(obs.yellowMarkers[1].getX() , obs.yellowMarkers[1].getY() - 10, obs.yellowMarkers[1].getX(), obs.yellowMarkers[1].getY() + 10);
-		}
 //		//draw X over yellow markers
+		if(obs.yellowMarkers != null){
+			for(int i = 0; i < obs.yellowMarkers.length; i++){
+				if(obs.yellowMarkers[i] != null){
+					g.drawLine(obs.yellowMarkers[i].getX() - 10, obs.yellowMarkers[i].getY(), obs.yellowMarkers[i].getX() +10, obs.yellowMarkers[i].getY());
+					g.drawLine(obs.yellowMarkers[i].getX() , obs.yellowMarkers[i].getY() - 10, obs.yellowMarkers[i].getX(), obs.yellowMarkers[i].getY() + 10);
+				}
+			}
+		}
+////		//draw X over yellow markers
 		if(obs.blueMarkers != null){
-			g.drawLine(obs.blueMarkers[0].getX() - 10, obs.blueMarkers[0].getY(), obs.blueMarkers[0].getX() +10, obs.blueMarkers[0].getY());
-			g.drawLine(obs.blueMarkers[0].getX() , obs.blueMarkers[0].getY() - 10, obs.blueMarkers[0].getX(), obs.blueMarkers[0].getY() + 10);
-
-			g.drawLine(obs.blueMarkers[1].getX() - 10, obs.blueMarkers[1].getY(), obs.blueMarkers[1].getX() +10, obs.blueMarkers[1].getY());
-			g.drawLine(obs.blueMarkers[1].getX() , obs.blueMarkers[1].getY() - 10, obs.blueMarkers[1].getX(), obs.blueMarkers[1].getY() + 10);
+			for(int i = 0; i < obs.blueMarkers.length; i++){
+				if(obs.blueMarkers[i] != null){
+					g.drawLine(obs.blueMarkers[i].getX() - 10, obs.blueMarkers[i].getY(), obs.blueMarkers[i].getX() +10, obs.blueMarkers[i].getY());
+					g.drawLine(obs.blueMarkers[i].getX() , obs.blueMarkers[i].getY() - 10, obs.blueMarkers[i].getX(), obs.blueMarkers[i].getY() + 10);
+				}
+			}
 		}
 //		if(dotsPos != null){
 //		g.drawLine(dotsPos[0].getX() - 10, dotsPos[0].getY(), dotsPos[0].getX() +10, dotsPos[0].getY());

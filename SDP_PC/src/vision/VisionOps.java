@@ -42,12 +42,14 @@ public class VisionOps {
 			this.imageCont = imageCont;
 		}
 	public static BufferedImage[] segmentMultiHSV(BufferedImage image, float[] hues , float[] saturations){
+
 		if(!(hues.length == saturations.length)){
 			return null;
 		}
 		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(image,null,true,ImageFloat32.class);
 		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
 
+		
 		// Convert into HSV
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
@@ -188,7 +190,7 @@ public class VisionOps {
 		}
 		else if(type.equals("blue")){
 			ThresholdImageOps.threshold(input.getBand(2),binary,(float)60,false);
-			BlurImageOps.gaussian(binary, binary, 4, 10, null);
+			BlurImageOps.gaussian(binary, binary, 4, 5, null);
 		}
 		else if(type.equals("yellow")){
 			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
@@ -241,11 +243,15 @@ public class VisionOps {
 	private static Point2D_I32[] findMarkers(BufferedImage img, String type){
 		if(type == "yellow"){
 			List<Contour> contours = getContours("yellow",img);//segmentHSV(img, 0.7f, 0.95f));
-			if(contours.size() != 2 ){
-				System.out.println("WARNING: SOMETHING else than 2 yellow markers was detected");
+			Point2D_I32[] ret = new Point2D_I32[2];
+			if(contours.size() == 1 ){
+				System.out.println("WARNING: ONLY ONE yellow marker was detected");
+				ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+				return ret;
+			}
+			else if(contours.size() != 2){
 				return null;
 			}
-			Point2D_I32[] ret = new Point2D_I32[2];
 
 			ret[0] = ContourUtils.getContourCentroid(contours.get(0));
 			ret[1] = ContourUtils.getContourCentroid(contours.get(1));
@@ -254,11 +260,16 @@ public class VisionOps {
 		}
 		else if(type == "blue"){
 			List<Contour> contours = getContours("blue",img);//segmentHSV(img, 3.31f, 0.538f));
-			if(contours.size() != 2 ){
-				System.out.println("WARNING: SOMETHING else than 2 blue markers was detected");
+			Point2D_I32[] ret = new Point2D_I32[2];
+			if(contours.size() == 1 ){
+				System.out.println("WARNING: ONLY ONE blue marker was detected");
+				ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+				return ret;
+			}
+			else if(contours.size() != 2){
 				return null;
 			}
-			Point2D_I32[] ret = new Point2D_I32[2];
+
 
 			ret[0] = ContourUtils.getContourCentroid(contours.get(0));
 			ret[1] = ContourUtils.getContourCentroid(contours.get(1));
