@@ -22,4 +22,5 @@ public class ObjectLocations {
 		this.blueMarkers = blueMarkers;
 		this.dots = dots;
 	}
+	
 }

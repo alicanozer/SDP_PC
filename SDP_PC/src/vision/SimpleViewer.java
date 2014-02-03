@@ -163,11 +163,9 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	@Override
 	public void nextFrame(VideoFrame frame) {
 		BufferedImage img = frame.getBufferedImage();
-
+		
 		if(frameCounter < 3){
 			frameCounter++;
-			frame.recycle();
-			return;
 		}
 		else if (frameCounter == 3){
 			System.out.println("ror");
@@ -182,11 +180,18 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		}
 		//threading needs to be added here
 		
-		Point2D_I32 ballPos = VisionOps.findBall(img);
-		Point2D_I32[] yellowMarkersPos = VisionOps.findYellowMarkers(img);
-		Point2D_I32[] blueMarkersPos = VisionOps.findBlueMarkers(img);
+//		Point2D_I32 ballPos = VisionOps.findBall(img);
+//		Point2D_I32[] yellowMarkersPos = VisionOps.findYellowMarkers(img);
+//		Point2D_I32[] blueMarkersPos = VisionOps.findBlueMarkers(img);
+		float[] hues = {6.21f,0.7f,3.31f };
+		float[] saturations = {0.88f,0.95f,0.538f};
 		
+//		img = VisionOps.segmentMultiHSV(img, hues, saturations)[2];
+//		img = VisionOps.contourOps("blue", img);
 		
+		ObjectLocations obs = VisionOps.getObjectLocations(img);
+
+		//img = VisionOps.segmentMultiHSV(img, hues , saturations);
 		//ArrayList<Point2D_I32> dotsPos = VisionOps.findrgb(img, 5, 20, 0.35, 0.35, 1-(0.35 + 0.35));
 		//System.out.println(dotsPos);
 		//this is the old code but I keep it for now, we'll
@@ -205,27 +210,26 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		// this draws the frame grabber	 
 		g.drawImage(img, 0, 0, width, height, null);
 		//draw X over ball
-//		if(ballPos != null){
-//			//System.out.println(ballPos.getX() + " " + ballPos.getY());
-//			g.drawLine(ballPos.getX() - 10, ballPos.getY(), ballPos.getX() +10, ballPos.getY());
-//			g.drawLine(ballPos.getX() , ballPos.getY() - 10, ballPos.getX(), ballPos.getY() + 10);
-//		}
+		if(obs.ball != null){
+			g.drawLine(obs.ball.getX() - 10, obs.ball.getY(), obs.ball.getX() +10, obs.ball.getY());
+			g.drawLine(obs.ball.getX() , obs.ball.getY() - 10, obs.ball.getX(), obs.ball.getY() + 10);
+		}
+		//draw X over yellow markers
+		if(obs.yellowMarkers != null){
+			g.drawLine(obs.yellowMarkers[0].getX() - 10, obs.yellowMarkers[0].getY(), obs.yellowMarkers[0].getX() +10, obs.yellowMarkers[0].getY());
+			g.drawLine(obs.yellowMarkers[0].getX() , obs.yellowMarkers[0].getY() - 10, obs.yellowMarkers[0].getX(), obs.yellowMarkers[0].getY() + 10);
+
+			g.drawLine(obs.yellowMarkers[1].getX() - 10, obs.yellowMarkers[1].getY(), obs.yellowMarkers[1].getX() +10, obs.yellowMarkers[1].getY());
+			g.drawLine(obs.yellowMarkers[1].getX() , obs.yellowMarkers[1].getY() - 10, obs.yellowMarkers[1].getX(), obs.yellowMarkers[1].getY() + 10);
+		}
 //		//draw X over yellow markers
-//		if(yellowMarkersPos != null){
-//			g.drawLine(yellowMarkersPos[0].getX() - 10, yellowMarkersPos[0].getY(), yellowMarkersPos[0].getX() +10, yellowMarkersPos[0].getY());
-//			g.drawLine(yellowMarkersPos[0].getX() , yellowMarkersPos[0].getY() - 10, yellowMarkersPos[0].getX(), yellowMarkersPos[0].getY() + 10);
-//
-//			g.drawLine(yellowMarkersPos[1].getX() - 10, yellowMarkersPos[1].getY(), yellowMarkersPos[1].getX() +10, yellowMarkersPos[1].getY());
-//			g.drawLine(yellowMarkersPos[1].getX() , yellowMarkersPos[1].getY() - 10, yellowMarkersPos[1].getX(), yellowMarkersPos[1].getY() + 10);
-//		}
-//		//draw X over yellow markers
-//		if(blueMarkersPos != null){
-//			g.drawLine(blueMarkersPos[0].getX() - 10, blueMarkersPos[0].getY(), blueMarkersPos[0].getX() +10, blueMarkersPos[0].getY());
-//			g.drawLine(blueMarkersPos[0].getX() , blueMarkersPos[0].getY() - 10, blueMarkersPos[0].getX(), blueMarkersPos[0].getY() + 10);
-//
-//			g.drawLine(blueMarkersPos[1].getX() - 10, blueMarkersPos[1].getY(), blueMarkersPos[1].getX() +10, blueMarkersPos[1].getY());
-//			g.drawLine(blueMarkersPos[1].getX() , blueMarkersPos[1].getY() - 10, blueMarkersPos[1].getX(), blueMarkersPos[1].getY() + 10);
-//		}
+		if(obs.blueMarkers != null){
+			g.drawLine(obs.blueMarkers[0].getX() - 10, obs.blueMarkers[0].getY(), obs.blueMarkers[0].getX() +10, obs.blueMarkers[0].getY());
+			g.drawLine(obs.blueMarkers[0].getX() , obs.blueMarkers[0].getY() - 10, obs.blueMarkers[0].getX(), obs.blueMarkers[0].getY() + 10);
+
+			g.drawLine(obs.blueMarkers[1].getX() - 10, obs.blueMarkers[1].getY(), obs.blueMarkers[1].getX() +10, obs.blueMarkers[1].getY());
+			g.drawLine(obs.blueMarkers[1].getX() , obs.blueMarkers[1].getY() - 10, obs.blueMarkers[1].getX(), obs.blueMarkers[1].getY() + 10);
+		}
 //		if(dotsPos != null){
 //		g.drawLine(dotsPos[0].getX() - 10, dotsPos[0].getY(), dotsPos[0].getX() +10, dotsPos[0].getY());
 //		g.drawLine(dotsPos[0].getX() , dotsPos[0].getY() - 10, dotsPos[0].getX(), dotsPos[0].getY() + 10);
@@ -234,6 +238,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 //		g.drawLine(dotsPos[1].getX() , dotsPos[1].getY() - 10, dotsPos[1].getX(), dotsPos[1].getY() + 10);
 //	}
 		// recycle the frame
+
 		frame.recycle();
 	}
 
