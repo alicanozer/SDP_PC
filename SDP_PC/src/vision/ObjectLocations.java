@@ -1,5 +1,7 @@
 package vision;
 
+import java.awt.Graphics2D;
+
 import georegression.struct.point.Point2D_I32;
 /**
  * stub wrapper around object positions
@@ -21,6 +23,46 @@ public class ObjectLocations {
 		this.yellowMarkers = yellowMarkers;
 		this.blueMarkers = blueMarkers;
 		this.dots = dots;
+	}
+	/**
+	 * draws crosses over all objects of interest
+	 * @param g
+	 */
+	public void drawCrosses(Graphics2D g){
+		if (this.ball != null) {
+			// drawing X over ball
+			g.drawLine(this.ball.x - 10, this.ball.y, this.ball.x + 10, this.ball.y);
+			g.drawLine(this.ball.x, this.ball.y - 10, this.ball.x, this.ball.y + 10);
+		}
+		if (this.yellowMarkers != null) {
+			g.drawLine(this.yellowMarkers[0].x - 10, this.yellowMarkers[0].y,
+					this.yellowMarkers[0].x + 10, this.yellowMarkers[0].y);
+			g.drawLine(this.yellowMarkers[0].x, this.yellowMarkers[0].y + 10,
+					this.yellowMarkers[0].x, this.yellowMarkers[0].y - 10);
+			
+			if (this.yellowMarkers.length == 2) {
+				g.drawLine(this.yellowMarkers[1].x - 10,
+						this.yellowMarkers[1].y, this.yellowMarkers[1].x + 10,
+						this.yellowMarkers[1].y);
+				g.drawLine(this.yellowMarkers[1].x,
+						this.yellowMarkers[1].y + 10, this.yellowMarkers[1].x,
+						this.yellowMarkers[1].y - 10);
+			}
+		}
+		if (this.blueMarkers != null) {
+			//		// drawing X over blue markers
+			g.drawLine(this.blueMarkers[0].x - 10, this.blueMarkers[0].y,
+					this.blueMarkers[0].x + 10, this.blueMarkers[0].y);
+			g.drawLine(this.blueMarkers[0].x, this.blueMarkers[0].y + 10,
+					this.blueMarkers[0].x, this.blueMarkers[0].y - 10);
+			
+			if (this.blueMarkers.length == 2) {
+				g.drawLine(this.blueMarkers[1].x - 10, this.blueMarkers[1].y,
+						this.blueMarkers[1].x + 10, this.blueMarkers[1].y);
+				g.drawLine(this.blueMarkers[1].x, this.blueMarkers[1].y + 10,
+						this.blueMarkers[1].x, this.blueMarkers[1].y - 10);
+			}
+		}
 	}
 	
 }
