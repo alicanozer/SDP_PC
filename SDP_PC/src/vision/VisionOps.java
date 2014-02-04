@@ -12,6 +12,7 @@ import boofcv.alg.color.ColorHsv;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
 import boofcv.alg.filter.binary.ThresholdImageOps;
+import boofcv.alg.filter.blur.BlurImageOps;
 import boofcv.core.image.ConvertBufferedImage;
 import boofcv.gui.binary.VisualizeBinaryData;
 import boofcv.struct.image.ImageFloat32;
@@ -178,8 +179,8 @@ public class VisionOps {
 			//BinaryImageOps.logicAnd(green,red,binary);
 		}
 		else if(type.equals("blue")){
-			ThresholdImageOps.threshold(input.getBand(2),binary,(float)60,false);
-			//BlurImageOps.gaussian(binary, binary, 4, 5, null);
+			ThresholdImageOps.threshold(input.getBand(2),binary,(float)70,false);
+			BlurImageOps.gaussian(binary, binary, 4, 6, null);
 		}
 		else if(type.equals("yellow")){
 			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
@@ -239,6 +240,7 @@ public class VisionOps {
 				return ret;
 			}
 			else if(contours.size() != 2){
+				System.out.println("WARNING: " + contours.size() + " yellow marker were detected");
 				return null;
 			}
 
@@ -256,6 +258,7 @@ public class VisionOps {
 				return ret;
 			}
 			else if(contours.size() != 2){
+				System.out.println("WARNING: " + contours.size() + " blue marker were detected");
 				return null;
 			}
 
@@ -285,8 +288,8 @@ public class VisionOps {
 	}
 
 	public static ObjectLocations getObjectLocations(BufferedImage img){
-		float[] hues = {6.21f,0.7f,3.31f};
-		float[] saturations = {0.88f,0.95f,0.538f};
+		float[] hues = {6.21f,0.7f,3.14f}; // was 331
+		float[] saturations = {0.88f,0.95f,0.395f}; // was 538
 		MultiSpectral<ImageFloat32>[] segmented = segmentMultiHSV(img,hues,saturations);
 		return new ObjectLocations(findBall(segmented[0]),findYellowMarkers(segmented[1]),findBlueMarkers(segmented[2]),null);
 	}
