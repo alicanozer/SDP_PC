@@ -7,17 +7,7 @@ import java.awt.Color;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
 import boofcv.alg.color.ColorHsv;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
@@ -36,11 +26,17 @@ import boofcv.struct.image.MultiSpectral;
  *
  */
 public class VisionOps {
-		private BufferedImage imageCont;
 		
-		public VisionOps(BufferedImage imageCont){
-			this.imageCont = imageCont;
-		}
+		
+		
+		
+	/**
+	 * stable dont touch
+	 * @param image
+	 * @param hues
+	 * @param saturations
+	 * @return
+	 */
 	public static BufferedImage[] segmentMultiHSV(BufferedImage image, float[] hues , float[] saturations){
 
 		if(!(hues.length == saturations.length)){
@@ -176,7 +172,7 @@ public class VisionOps {
 	}
 	/**
 	 * Gets the list of contours from applying binary thresholding to an input image
-	 * 
+	 * TODO: make it accept MultiSpectralImage instead of converting to/from BufferedImage
 	 */
 	public static List<Contour> getContours(String type, BufferedImage inputImg) {
 
@@ -190,7 +186,7 @@ public class VisionOps {
 		}
 		else if(type.equals("blue")){
 			ThresholdImageOps.threshold(input.getBand(2),binary,(float)60,false);
-			BlurImageOps.gaussian(binary, binary, 4, 5, null);
+			//BlurImageOps.gaussian(binary, binary, 4, 5, null);
 		}
 		else if(type.equals("yellow")){
 			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
@@ -349,6 +345,185 @@ public class VisionOps {
 		float[] saturations = {0.88f,0.95f,0.538f};
 		BufferedImage[] segmented = segmentMultiHSV(img,hues,saturations);
 		return new ObjectLocations(findBall(segmented[0]),findYellowMarkers(segmented[1]),findBlueMarkers(segmented[2]),null);
+	}
+	
+	////// EXPERIMENTAL CODE
+	////////////////////////////////////
+	
+	/**
+	 * experimental
+	 * @param image
+	 * @param hues
+	 * @param saturations
+	 * @return
+	 */
+	public static MultiSpectral<ImageFloat32> segmentMultiHSV_HSV(BufferedImage image, float[] hues , float[] saturations){
+
+		if(!(hues.length == saturations.length)){
+			return null;
+		}
+		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(image,null,true,ImageFloat32.class);
+		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
+
+		
+		// Convert into HSV
+		ColorHsv.rgbToHsv_F32(input,hsv);
+
+		// Pixels which are more than this different from the selected color are set to black
+		float maxDist2 = 0.16f; // was 0.16f
+
+		// Extract hue and saturation bands which are independent of intensity
+		ImageFloat32 H = hsv.getBand(0);
+		ImageFloat32 S = hsv.getBand(1);
+		
+
+		// Adjust the relative importance of Hue and Saturation
+		float adjustUnits = (float)(Math.PI/2.0);
+
+		// step through each pixel and mark how close it is to the selected color
+		//BufferedImage output = new BufferedImage(input.width,input.height,BufferedImage.TYPE_INT_BGR);
+		MultiSpectral<ImageFloat32> output = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,1);
+		for( int y = 0; y < hsv.height; y++ ) {
+			for( int x = 0; x < hsv.width; x++ ) {
+				for(int k = 0; k < hues.length; k++){
+					// remember Hue is an angle in radians, so simple subtraction doesn't work
+					float dh = UtilAngle.dist(H.unsafe_get(x,y),hues[k]);
+					float ds = (S.unsafe_get(x,y)-saturations[k])*adjustUnits;
+					// this distance measure is a bit naive, but good enough for this demonstration
+					float dist2 = dh*dh + ds*ds;
+					if( dist2 <= maxDist2 ) {
+						//System.out.println(UtilAngle.bound(H.unsafe_get(x, y)));
+						//System.out.println(UtilAngle.degreeToRadian(UtilAngle.radianToDegree((H.unsafe_get(x, y)))));
+						
+						output.getBand(0).set(x, y, (float) UtilAngle.bound(H.unsafe_get(x, y)));//  setRGB(x,y,image.getRGB(x,y));
+						//output.getBand(1).set(x, y, S.unsafe_get(x, y));//  setRGB(x,y,image.getRGB(x,y));
+					}
+				}
+
+			}
+		}
+		return output;
+	}
+
+	
+	
+	/**
+	 * experimental
+	 * @param img
+	 * @return
+	 */
+	public static ObjectLocations getObjectLocations_HSV(BufferedImage img){
+		float[] hues = {6.21f,0.7f,3.14f}; // was 3.31
+		float[] saturations = {0.88f,0.95f,0.761f}; //0.538f
+		MultiSpectral<ImageFloat32> segmented = segmentMultiHSV_HSV(img,hues,saturations);
+		return new ObjectLocations(findBall_HSV(segmented),findYellowMarkers_HSV(segmented),findBlueMarkers_HSV(segmented),null);
+	}
+	
+	public static List<Contour> getContours_HSV(String type, MultiSpectral<ImageFloat32> input) {
+		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
+		ImageSInt32 label = new ImageSInt32(input.width,input.height);
+		if (type.equals("ball")){
+			ImageUInt8 upper = ThresholdImageOps.threshold(input.getBand(0),null,-0.073f + 0.07f,true);
+			ImageUInt8 lower = ThresholdImageOps.threshold(input.getBand(0),null,-0.073f - 0.07f,false);
+//			ImageUInt8 green = ThresholdImageOps.threshold(input.getBand(1),null,(float)25,true);
+			BinaryImageOps.logicAnd(lower,upper,binary);
+		}
+		else if(type.equals("blue")){
+			BlurImageOps.gaussian(binary, binary, 4, 5, null);
+			ImageUInt8 upper = ThresholdImageOps.threshold(input.getBand(0), null, 3.31f + 0.01f, true);
+			ImageUInt8 lower = ThresholdImageOps.threshold(input.getBand(0), null, 3.31f - 0.01f, false);
+			BinaryImageOps.logicAnd(lower,upper,binary);
+			
+		}
+		else if(type.equals("yellow")){
+			ImageUInt8 upper = ThresholdImageOps.threshold(input.getBand(0), null , 0.7f + 0.1f,true);
+			ImageUInt8 lower = ThresholdImageOps.threshold(input.getBand(0), null , 0.7f - 0.1f,false);
+			BinaryImageOps.logicAnd(lower,upper,binary);
+//			BinaryImageOps.logicAnd(green,red,binary);
+//			BinaryImageOps.logicAnd(binary,blue,binary);
+//			BlurImageOps.gaussian(binary, binary, 4, 10, null);
+		}
+		else if(type.equals("lines")){
+			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
+		}
+		else if(type.equals("dots")){
+			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
+		}
+
+		
+		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
+		filtered = BinaryImageOps.dilate8(filtered, null);
+		List<Contour> contours = BinaryImageOps.contour(filtered, 8, label);
+		
+		return contours;
+	}
+
+	public static Point2D_I32 findBall_HSV(MultiSpectral<ImageFloat32> img){
+		List<Contour> contours = getContours_HSV("ball",img);//,segmentHSV(img, 6.21f, 0.88f));
+		if(contours.size() > 1 ){
+			System.out.println("WARNING: MORE THAN 1 ball detected");
+			return null;
+		}
+		else if(contours.size() == 0){
+			System.out.println("WARNING: NO ball detected");
+			return null;
+		}
+		else return ContourUtils.getContourCentroid(contours.get(0));
+	}
+
+	private static Point2D_I32[] findMarkers_HSV(MultiSpectral<ImageFloat32> img, String type){
+		if(type == "yellow"){
+			List<Contour> contours = getContours_HSV("yellow",img);//segmentHSV(img, 0.7f, 0.95f));
+			Point2D_I32[] ret = new Point2D_I32[2];
+			if(contours.size() == 1 ){
+				System.out.println("WARNING: ONLY ONE yellow marker was detected");
+				ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+				return ret;
+			}
+			else if(contours.size() != 2){
+				System.out.println("WARNING: " + contours.size() + " yellow marker were detected");
+				return null;
+			}
+
+			ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+			ret[1] = ContourUtils.getContourCentroid(contours.get(1));
+
+			return ret;
+		}
+		else if(type == "blue"){
+			
+			List<Contour> contours = getContours_HSV("blue",img);//segmentHSV(img, 3.31f, 0.538f));
+
+			Point2D_I32[] ret = new Point2D_I32[2];
+			if(contours.size() == 1 ){
+				System.out.println("WARNING: ONLY ONE blue marker was detected");
+				ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+				return ret;
+			}
+			else if(contours.size() != 2){
+				System.out.println("WARNING: " + contours.size() +" blue markers were detected");
+				return null;
+			}
+			
+			
+			ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+			ret[1] = ContourUtils.getContourCentroid(contours.get(1));
+			return ret;
+		}
+		else return null;
+	}
+
+	public static Point2D_I32[] findBlueMarkers_HSV(MultiSpectral<ImageFloat32> img){
+		
+		return findMarkers_HSV(img,"blue");
+	}
+	/**
+	 * Finds the positions of the Yellow Markers
+	 * @param segmented
+	 * @return
+	 */
+	public static Point2D_I32[] findYellowMarkers_HSV(MultiSpectral<ImageFloat32> segmented){
+		return findMarkers_HSV(segmented,"yellow");
 	}
 }
 
