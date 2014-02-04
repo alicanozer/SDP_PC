@@ -284,40 +284,6 @@ public class VisionOps {
 		return findMarkers(img,"yellow");
 	}
 
-	public static ArrayList<Point2D_I32> findrgb(
-			BufferedImage img, 
-			int windowSize, 
-			int windowTolerance,
-			double redThreshold,
-			double blueThreshold,
-			double greenThreshold)
-			{
-		ArrayList<Point2D_I32> probCoords = new ArrayList<Point2D_I32>();
-		int width = img.getWidth();
-		int height = img.getHeight();
-		for(int i = 0; i < width; i=i+windowSize){ 
-			for(int j=0; j < height; j=j+windowSize){
-				int[] window = img.getRGB(i, j, windowSize, windowSize, null, 0, windowSize); // get rgb values, stores as ints for some reason...
-				int count = 0; 
-				for(int k=0; k < windowSize*windowSize; k++){
-					Color C1 = new Color(window[k]); 
-					double r = (double)C1.getRed() / (C1.getRed() + C1.getBlue() + C1.getGreen());
-					double g = (double)C1.getGreen() / (C1.getRed() + C1.getBlue() + C1.getGreen());
-					double b = (double)C1.getBlue() / (C1.getRed() + C1.getBlue() + C1.getGreen());
-					if(Math.abs(r - redThreshold) < 0.1 &&
-							Math.abs(g - greenThreshold) < 0.1 &&
-							Math.abs(b - blueThreshold) < 0.1){
-						count++;
-					}
-				}
-				if( count > windowTolerance ){// arbitrary threshold, needs tuning
-					probCoords.add(new Point2D_I32(i,j));
-				}
-			}
-		}
-		return probCoords;
-			}
-
 	public static ObjectLocations getObjectLocations(BufferedImage img){
 		float[] hues = {6.21f,0.7f,3.31f};
 		float[] saturations = {0.88f,0.95f,0.538f};
