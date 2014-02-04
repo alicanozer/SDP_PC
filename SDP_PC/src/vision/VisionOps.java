@@ -430,8 +430,8 @@ public class VisionOps {
 		}
 		else if(type.equals("blue")){
 			BlurImageOps.gaussian(binary, binary, 4, 5, null);
-			ImageUInt8 upper = ThresholdImageOps.threshold(input.getBand(0), null, 3.31f + 0.01f, true);
-			ImageUInt8 lower = ThresholdImageOps.threshold(input.getBand(0), null, 3.31f - 0.01f, false);
+			ImageUInt8 upper = ThresholdImageOps.threshold(input.getBand(0), null, 3.14f + 0.1f, true);
+			ImageUInt8 lower = ThresholdImageOps.threshold(input.getBand(0), null, 3.14f - 0.1f, false);
 			BinaryImageOps.logicAnd(lower,upper,binary);
 			
 		}
