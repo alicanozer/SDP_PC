@@ -175,9 +175,9 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		}
 		else if (frameCounter == 3){
 			System.out.println("ror");
-			
-			img = VisionOps.segmentHSV(img, 0.5f, 0.4f);
-			regions = VisionOps.getRegions(img);
+			float[] hues = {0.5f};
+			float[] saturations = {0.4f};
+			regions = VisionOps.getRegions(VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
 			frameCounter++;
 			System.out.println(regions.size());
 			for(Polygon p: regions){
