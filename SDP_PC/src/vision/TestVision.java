@@ -43,7 +43,7 @@ public class TestVision {
 
 		Graphics2D g = (Graphics2D) img1.getGraphics();
 		ObjectLocations obs = VisionOps.getObjectLocations(img1);
-//
+		//ObjectLocations obs = VisionOps.getObjectLocations_HSV(img1);
 		obs.drawCrosses(g);
 		ShowImages.showWindow(img1,"identifying objects");
 	}
