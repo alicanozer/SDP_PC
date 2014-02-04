@@ -32,7 +32,7 @@ public class VisionOps {
 	 * @param saturations
 	 * @return
 	 */
-	public static BufferedImage[] segmentMultiHSV(BufferedImage image, float[] hues , float[] saturations){
+	public static MultiSpectral<ImageFloat32>[] segmentMultiHSV(BufferedImage image, float[] hues , float[] saturations){
 
 		if(!(hues.length == saturations.length)){
 			return null;
@@ -56,9 +56,9 @@ public class VisionOps {
 		float adjustUnits = (float)(Math.PI/2.0);
 
 		// step through each pixel and mark how close it is to the selected color
-		BufferedImage[] output = new BufferedImage[hues.length];
+		MultiSpectral<ImageFloat32>[] output = new MultiSpectral[hues.length];
 		for(int k = 0; k < hues.length; k++){
-			output[k] = new BufferedImage(input.width,input.height,BufferedImage.TYPE_INT_RGB);
+			output[k] = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
 		}
 
 
@@ -72,13 +72,13 @@ public class VisionOps {
 					// this distance measure is a bit naive, but good enough for this demonstration
 					float dist2 = dh*dh + ds*ds;
 					if( dist2 <= maxDist2 ) {
-						output[k].setRGB(x,y,image.getRGB(x,y));
+						for(int z = 0; z < 3; z++){
+							output[k].getBand(z).unsafe_set(x, y, input.getBand(z).unsafe_get(x, y));
+						}
 					}
 				}
-
 			}
 		}
-
 		return output;
 	}
 
@@ -132,7 +132,7 @@ public class VisionOps {
 	/**
 	 * draws contours of objects on the input image
 	 */
-	public static BufferedImage contourOps(String type, BufferedImage inputImg) {
+	public static BufferedImage contourOps(String type, MultiSpectral<ImageFloat32> inputImg) {
 		List<Contour> contours = getContours(type,inputImg);
 		BufferedImage visualContour = VisualizeBinaryData.renderContours(
 				contours,
@@ -147,7 +147,7 @@ public class VisionOps {
 	/**
 	 * returns the regions of the pitch as a list of polygons
 	 */
-	public static ArrayList<Polygon> getRegions(BufferedImage inputImg) {
+	public static ArrayList<Polygon> getRegions(MultiSpectral<ImageFloat32> inputImg) {
 
 		List<Contour> contours = getContours("lines",inputImg);
 		ArrayList<Polygon> pols = new ArrayList<Polygon>();
@@ -169,9 +169,7 @@ public class VisionOps {
 	 * Gets the list of contours from applying binary thresholding to an input image
 	 * TODO: make it accept MultiSpectralImage instead of converting to/from BufferedImage
 	 */
-	public static List<Contour> getContours(String type, BufferedImage inputImg) {
-
-		MultiSpectral<ImageFloat32> input= ConvertBufferedImage.convertFromMulti(inputImg, null, true, ImageFloat32.class);
+	public static List<Contour> getContours(String type, MultiSpectral<ImageFloat32> input) {
 		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
 		ImageSInt32 label = new ImageSInt32(input.width,input.height);
 		if (type.equals("ball")){
@@ -213,7 +211,7 @@ public class VisionOps {
 	 * @param img The input image
 	 * @return the coordinates as a Point2D_I32
 	 */
-	public static Point2D_I32 findBall(BufferedImage img){
+	public static Point2D_I32 findBall(MultiSpectral<ImageFloat32> img){
 		List<Contour> contours = getContours("ball",img);//,segmentHSV(img, 6.21f, 0.88f));
 		if(contours.size() > 1 ){
 			System.out.println("WARNING: MORE THAN 1 ball detected");
@@ -231,7 +229,7 @@ public class VisionOps {
 	 * @param type
 	 * @return
 	 */
-	private static Point2D_I32[] findMarkers(BufferedImage img, String type){
+	private static Point2D_I32[] findMarkers(MultiSpectral<ImageFloat32> img, String type){
 		if(type == "yellow"){
 			List<Contour> contours = getContours("yellow",img);//segmentHSV(img, 0.7f, 0.95f));
 			Point2D_I32[] ret = new Point2D_I32[2];
@@ -274,7 +272,7 @@ public class VisionOps {
 	 * @param img
 	 * @return
 	 */
-	public static Point2D_I32[] findBlueMarkers(BufferedImage img){
+	public static Point2D_I32[] findBlueMarkers(MultiSpectral<ImageFloat32> img){
 		return findMarkers(img,"blue");
 	}
 	/**
@@ -282,23 +280,8 @@ public class VisionOps {
 	 * @param img
 	 * @return
 	 */
-	public static Point2D_I32[] findYellowMarkers(BufferedImage img){
+	public static Point2D_I32[] findYellowMarkers(MultiSpectral<ImageFloat32> img){
 		return findMarkers(img,"yellow");
-	}
-
-	public static Point2D_I32[] findDots(BufferedImage img){
-		List<Contour> contours = getContours("dots",segmentHSV(img, 1.04f, 0.218f));
-		if(contours.size() != 4){
-			System.out.println("WARNING: STH else than 4 dots were founds");
-			return null;
-		}
-		Point2D_I32[] ret = new Point2D_I32[4];
-
-		ret[0] = ContourUtils.getContourCentroid(contours.get(0));
-		ret[1] = ContourUtils.getContourCentroid(contours.get(1));
-		ret[2] = ContourUtils.getContourCentroid(contours.get(2));
-		ret[3] = ContourUtils.getContourCentroid(contours.get(3));
-		return ret;
 	}
 
 	public static ArrayList<Point2D_I32> findrgb(
@@ -338,7 +321,7 @@ public class VisionOps {
 	public static ObjectLocations getObjectLocations(BufferedImage img){
 		float[] hues = {6.21f,0.7f,3.31f};
 		float[] saturations = {0.88f,0.95f,0.538f};
-		BufferedImage[] segmented = segmentMultiHSV(img,hues,saturations);
+		MultiSpectral<ImageFloat32>[] segmented = segmentMultiHSV(img,hues,saturations);
 		return new ObjectLocations(findBall(segmented[0]),findYellowMarkers(segmented[1]),findBlueMarkers(segmented[2]),null);
 	}
 }
