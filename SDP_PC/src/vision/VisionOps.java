@@ -360,22 +360,7 @@ public class VisionOps {
 		}
 	}
 	
-	public static double getDirection (Point2D_I32 prevPos, Point2D_I32 curPos) throws Exception{
-		double theta = 0;
-		double dx = prevPos.x - curPos.x;
-		double dy = prevPos.y - curPos.y;
-		if (dx < 0 && dy > 0)
-			theta = Math.PI/2 + Math.atan2(Math.abs(dy), Math.abs(dx));
-		else if (dx < 0 && dy < 0)
-			theta  = Math.PI/2 - Math.atan2(Math.abs(dy), Math.abs(dx));
-		else if (dx > 0 && dy < 0)
-			theta = Math.PI*2 - Math.atan2(Math.abs(dx), Math.abs(dy));
-		else if (dx > 0 && dy > 0)
-			theta = Math.PI + Math.atan2(Math.abs(dy), Math.abs(dx));
-		else 
-			throw new Exception("math error");
-		return theta;
-	}
+
 
 	
 }
