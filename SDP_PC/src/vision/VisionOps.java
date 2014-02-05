@@ -180,7 +180,7 @@ public class VisionOps {
 		}
 		else if(type.equals("blue")){
 			ThresholdImageOps.threshold(input.getBand(2),binary,(float)70,false);
-			BlurImageOps.gaussian(binary, binary, 4, 6, null);
+			//BlurImageOps.gaussian(binary, binary, 4, 6, null);
 		}
 		else if(type.equals("yellow")){
 			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
@@ -289,7 +289,7 @@ public class VisionOps {
 
 	public static ObjectLocations getObjectLocations(BufferedImage img){
 		float[] hues = {6.21f,0.7f,3.14f}; // was 331
-		float[] saturations = {0.88f,0.95f,0.395f}; // was 538
+		float[] saturations = {0.88f,0.95f,0.895f}; // was 538 / 395
 		MultiSpectral<ImageFloat32>[] segmented = segmentMultiHSV(img,hues,saturations);
 		return new ObjectLocations(findBall(segmented[0]),findYellowMarkers(segmented[1]),findBlueMarkers(segmented[2]),null);
 	}

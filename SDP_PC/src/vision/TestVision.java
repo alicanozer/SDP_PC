@@ -2,14 +2,23 @@ package vision;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import boofcv.core.image.ConvertBufferedImage;
 import boofcv.gui.image.ShowImages;
+import boofcv.io.image.SimpleImageSequence;
+import boofcv.io.video.VideoMjpegCodec;
+import boofcv.io.wrapper.images.JpegByteImageSequence;
+import boofcv.struct.image.ImageFloat32;
 
 public class TestVision {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException{
 		// finding the field
 		BufferedImage img1 = ImageIO.read(new File("test_images/00000007.jpg"));
@@ -31,11 +40,11 @@ public class TestVision {
 		System.out.println("run time no threads" + secs + " secs");
 		
 		float[] hues = {6.21f,0.7f,3.14f}; // was 3.31
-		float[] saturations = {0.88f,0.95f,0.761f}; //0.538f
+		float[] saturations = {0.88f,0.95f,0.895f}; //0.538f
 		
-		//img1 = VisionOps.segmentMultiHSV(img1, hues, saturations)[2];
+		//img1 = ConvertBufferedImage.convertTo_F32(VisionOps.segmentMultiHSV(img1, hues, saturations)[2], null ,true);
+		//img1 = VisionOps.contourOps("blue", VisionOps.segmentMultiHSV(img1, hues, saturations)[2]);
 		
-		//img1 = ConvertBufferedImage.convertTo_F32(VisionOps.segmentMultiHSV_HSV(img1, hues, saturations),null,true);
 		
 		
 		//img1 = VisionOps.contourOps("blue", img1);
@@ -43,8 +52,8 @@ public class TestVision {
 
 		Graphics2D g = (Graphics2D) img1.getGraphics();
 		ObjectLocations obs = VisionOps.getObjectLocations(img1);
-		//ObjectLocations obs = VisionOps.getObjectLocations_HSV(img1);
 		obs.drawCrosses(g);
 		ShowImages.showWindow(img1,"identifying objects");
+		//video test
 	}
 }
