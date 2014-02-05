@@ -54,10 +54,12 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private JLabel          label;
 	private JFrame          frame;
 	private static BufferedImage segOutputBall;
+	private static List<Point2D_I32> ballPos;
 
 
 
 	public static void main(String args[]){
+		ballPos = new ArrayList<Point2D_I32>();
 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -185,7 +187,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			regions = VisionOps.getRegions(VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
 			frameCounter++;
 			if(regions.size() == 4){
-				System.out.println("Successfully constructed the internal representation of the field.");
+				System.out.println("Successfully constructed the internal representation of theprvBallPos = obs.ball; field.");
 			}
 			else{
 				System.out.println(
@@ -213,7 +215,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		//img = VisionOps.segmentMultiHSV(img, hues , saturations);
 		//ArrayList<Point2D_I32> dotsPos = VisionOps.findrgb(img, 5, 20, 0.35, 0.35, 1-(0.35 + 0.35));
 		//System.out.println(dotsPos);
-		//this is the old code but I keep it for now, we'll
+		//this is the old code but I keep it for now, we'llprvBallPos = obs.ball;
 		// remove it when we are sure our methods work
 		//img = VisionOps.segmentHSV(img, 6.21f, 0.88f); // ball
 		//img = VisionOps.segmentHSV("Marker(I) Yellow", img, 0.7f, 0.95f);
@@ -231,9 +233,26 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
 		
+		
 		ObjectLocations obs = VisionOps.getObjectLocations(img);
 		
 		obs.drawCrosses(g);
+		if (ballPos.size()>2)
+			ballPos.clear();
+		
+		if (frameCounter > 1 && ballPos.size()==2) {
+			if (obs.ball!=null) {
+				//System.out.println(obs.ball);
+				ballPos.add(obs.ball);
+				try {
+					System.out.println(ballPos.get(0).toString() + ballPos.get(1).toString()); //0 should be position in prev frame
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
 //		//draw X over ball
 //		if(obs.ball != null){
 //			g.drawLine(obs.ball.getX() - 10, obs.ball.getY(), obs.ball.getX() +10, obs.ball.getY());

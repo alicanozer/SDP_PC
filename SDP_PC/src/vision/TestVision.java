@@ -1,5 +1,7 @@
 package vision;
 
+import georegression.struct.point.Point2D_I32;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
@@ -19,7 +21,7 @@ import boofcv.struct.image.ImageFloat32;
 
 public class TestVision {
 	@SuppressWarnings("unchecked")
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws Exception{
 		// finding the field
 		BufferedImage img1 = ImageIO.read(new File("test_images/00000007.jpg"));
 		
@@ -34,7 +36,7 @@ public class TestVision {
 		long begTest = new java.util.Date().getTime();
 //		Point2D_I32 ball = VisionOps.findBall(img1);
 //		Point2D_I32[] yellowMarkers = VisionOps.findYellowMarkers(img1);
-//		Point2D_I32[] blueMarkers = VisionOps.findBlueMarkers(img1);
+//		Point2D_I32[] blueMarkers = VisionOps.fmath errorindBlueMarkers(img1);
 //		Point2D_I32[] dots = VisionOps.findDots(img1);
 		Double secs = new Double((new java.util.Date().getTime() - begTest)*0.001);
 		System.out.println("run time no threads" + secs + " secs");
@@ -55,5 +57,9 @@ public class TestVision {
 		obs.drawCrosses(g);
 		ShowImages.showWindow(img1,"identifying objects");
 		//video test
+		
+		Point2D_I32 start = new Point2D_I32(15,6);
+		Point2D_I32 end = new Point2D_I32(10,2);
+		System.out.println(VisionOps.getDirection(start, end));
 	}
 }
