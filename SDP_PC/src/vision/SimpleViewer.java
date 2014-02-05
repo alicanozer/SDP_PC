@@ -166,7 +166,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	@Override
 	public void nextFrame(VideoFrame frame) {
 		BufferedImage img = frame.getBufferedImage();
-		img = img.getSubimage(60, 60, 550, 316);
+		img = img.getSubimage(50, 60, 550, 316);
 		width = 550;
 		height = 316;
 		long thisFrame = System.currentTimeMillis();
