@@ -8,6 +8,8 @@ import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
+
 import boofcv.alg.color.ColorHsv;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
@@ -284,6 +286,28 @@ public class VisionOps {
 		MultiSpectral<ImageFloat32>[] segmented = segmentMultiHSV(img,hues,saturations);
 		return new ObjectLocations(findBall(segmented[0]),findYellowMarkers(segmented[1]),findBlueMarkers(segmented[2]),null);
 	}
+	
+	//give start point and end point in Point2D_I32 and return a clockwise angle in radians relative to origin
+	//
+	public static double getDirection (Point2D_I32 prevPos, Point2D_I32 curPos) throws Exception{
+		double theta = 0;
+		double dx = prevPos.x - curPos.x;
+		double dy = prevPos.y - curPos.y;
+		if (dx < 0 && dy > 0)
+			theta = Math.PI/2 + Math.atan2(Math.abs(dy), Math.abs(dx));
+		else if (dx < 0 && dy < 0)
+			theta  = Math.PI/2 - Math.atan2(Math.abs(dy), Math.abs(dx));
+		else if (dx > 0 && dy < 0)
+			theta = Math.PI*2 - Math.atan2(Math.abs(dx), Math.abs(dy));
+		else if (dx > 0 && dy > 0)
+			theta = Math.PI + Math.atan2(Math.abs(dy), Math.abs(dx));
+		else 
+			throw new Exception("math error");
+		return theta;
+	}
+	
+	
+	
 }
 
 
