@@ -203,7 +203,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 //		Point2D_I32[] yellowMarkersPos = VisionOps.findYellowMarkers(img);
 //		Point2D_I32[] blueMarkersPos = VisionOps.findBlueMarkers(img);
 		float[] hues = {6.21f,0.7f,3.14f };
-		float[] saturations = {0.88f,0.95f,0.395f};
+		float[] saturations = {0.88f,0.95f,0.605f};
 		
 		//img = ConvertBufferedImage.convertTo_F32(VisionOps.segmentMultiHSV(img, hues, saturations)[2], null ,true);
 		//img = VisionOps.contourOps("blue", VisionOps.segmentMultiHSV(img, hues, saturations)[2]);
