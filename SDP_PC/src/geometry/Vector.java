@@ -2,6 +2,7 @@ package geometry;
 
 import java.lang.Math;
 
+
 public class Vector {
 	
 	private double x;
@@ -160,4 +161,3 @@ public class Vector {
 		return intersectY(this, direction, y);
 	}
 	
-}
