@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommException;
+import lejos.pc.comm.NXTConnector;
 import lejos.pc.comm.NXTInfo;
 import lejos.pc.comm.NXTCommFactory;
 
@@ -27,28 +28,31 @@ public class BTSend2 {
 	public static void main(String[] args) {
 		
 		//Create link objects
-		NXTComm link1 = null;
+		/*NXTComm link1 = null;
 		try {
 			link1 = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
 		} catch (NXTCommException e) {
 			System.out.println("Error loading bluetooth driver:");
 			System.out.println(e.getMessage());
-		}
+		}*/
 		//NXTComm link2 = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
 		
 		//Create connections to each robot
-		NXTInfo robot1 = new NXTInfo(NXTCommFactory.BLUETOOTH, "team trinity", "00:16:53:09:70:C6");
+		//NXTInfo robot1 = new NXTInfo(NXTCommFactory.BLUETOOTH, "team trinity", "00:16:53:09:70:C6");
 		//NXTInfo robot2 = new NXTInfo(NXTCommFactory.BLUETOOTH, "hercules", "00:16:53:0D:4E:D8");
 		
 		//Open connection to each robot
-		boolean connected1 = false;
+		/*boolean connected1 = false;
 		try {
 			connected1 = link1.open(robot1);
 		} catch (NXTCommException e) {
 			System.out.println("Error opening connection:");
 			System.out.println(e.getMessage());
-		}
+		}*/
 		//boolean connected2 = link2.open(robot2);
+		
+		NXTConnector conn1 = new NXTConnector();
+		boolean connected1 = conn1.connectTo("btspp://0016530970C6");
 		
 		if (!connected1) {
 			System.err.println("Failed to connect to any NXT");
@@ -56,8 +60,8 @@ public class BTSend2 {
 		}
 		
 		//Open input and output streams to each robot
-		DataOutputStream dos1 = new DataOutputStream(link1.getOutputStream());
-		DataInputStream dis1 = new DataInputStream(link1.getInputStream());
+		DataOutputStream dos1 = new DataOutputStream(conn1.getOutputStream());
+		DataInputStream dis1 = new DataInputStream(conn1.getInputStream());
 		//DataOutputStream dos2 = new DataOutputStream(link2.getOutputStream());
 		//DataInputStream dis2 = new DataInputStream(link2.getInputStream());
 		
@@ -77,7 +81,7 @@ public class BTSend2 {
 		try {
 			dis1.close();
 			dos1.close();
-			link1.close();
+			conn1.close();
 		} catch (IOException e) {
 			System.out.println("IOException closing connection:");
 			System.out.println(e.getMessage());
