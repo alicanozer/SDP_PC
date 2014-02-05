@@ -365,6 +365,7 @@ public class VisionOps {
 
 	//give start point and end point in Point2D_I32 and return a clockwise angle in radians relative to origin
 	//
+
 	public static double getDirection (Point2D_I32 prevPos, Point2D_I32 curPos) throws Exception{
 		double theta = 0;
 		double dx = prevPos.x - curPos.x;
@@ -381,8 +382,6 @@ public class VisionOps {
 			throw new Exception("math error");
 		return theta;
 	}
-	
-	
 
 	
 }
