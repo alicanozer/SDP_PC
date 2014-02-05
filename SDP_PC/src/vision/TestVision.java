@@ -10,12 +10,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import boofcv.core.image.ConvertBufferedImage;
 import boofcv.gui.image.ShowImages;
-import boofcv.io.image.SimpleImageSequence;
-import boofcv.io.video.VideoMjpegCodec;
-import boofcv.io.wrapper.images.JpegByteImageSequence;
-import boofcv.struct.image.ImageFloat32;
+
 
 public class TestVision {
 	@SuppressWarnings("unchecked")
@@ -55,5 +51,6 @@ public class TestVision {
 		obs.drawCrosses(g);
 		ShowImages.showWindow(img1,"identifying objects");
 		//video test
+
 	}
 }
