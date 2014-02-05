@@ -1,0 +1,14 @@
+<boofcv.struct.calib.IntrinsicParameters>
+  <cx>-815.5616618446453</cx>
+  <cy>9591.09578202864</cy>
+  <flipY>false</flipY>
+  <fx>5615.216482696896</fx>
+  <fy>14330.131676757394</fy>
+  <height>480</height>
+  <radial>
+    <double>0.012170746454293974</double>
+    <double>-0.1808266271735873</double>
+  </radial>
+  <skew>0.0</skew>
+  <width>640</width>
+</boofcv.struct.calib.IntrinsicParameters>
