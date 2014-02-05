@@ -53,35 +53,45 @@ public class BTSend2 {
 		
 		NXTConnector conn1 = new NXTConnector();
 		boolean connected1 = conn1.connectTo("btspp://0016530970C6");
+		NXTConnector conn2 = new NXTConnector();
+		boolean connected2 = conn2.connectTo("btspp://0016530D4ED8");
 		
-		if (!connected1) {
-			System.err.println("Failed to connect to any NXT");
+		if (!connected1 || !connected2) {
+			System.err.println("Failed to connect to a NXT");
 			System.exit(1);
 		}
 		
-		//Open input and output streams to each robot
 		DataOutputStream dos1 = new DataOutputStream(conn1.getOutputStream());
 		DataInputStream dis1 = new DataInputStream(conn1.getInputStream());
-		//DataOutputStream dos2 = new DataOutputStream(link2.getOutputStream());
-		//DataInputStream dis2 = new DataInputStream(link2.getInputStream());
+		DataOutputStream dos2 = new DataOutputStream(conn2.getOutputStream());
+		DataInputStream dis2 = new DataInputStream(conn2.getInputStream());
 		
-		//Try sending integer to robot 1
-		try {
-			System.out.println("Sending test message");
-			dos1.writeInt((12345));
-			dos1.flush();
-		} catch (IOException e) {
-			System.out.println("IO Exception writing bytes:");
-			System.out.println(e.getMessage());
+		//If modulus of i is 0 then send integer to brock 1 else brick 2
+		for(int i=0;i<100;i++) {
+			try {
+				int j = i%2;
+				if(j==0) {
+					dos1.writeInt((i*30000));
+					dos1.flush();
+				} else {
+					dos2.writeInt((i*30000));
+					dos2.flush();
+				}				
+			} catch (IOException ioe) {
+				System.out.println("IO Exception writing bytes:");
+				System.out.println(ioe.getMessage());
+				break;
+			}
 		}
-		
-		//Try receiving integer from robot 1
 		
 		//Close open connections and streams
 		try {
 			dis1.close();
 			dos1.close();
+			dis2.close();
+			dos2.close();
 			conn1.close();
+			conn2.close();
 		} catch (IOException e) {
 			System.out.println("IOException closing connection:");
 			System.out.println(e.getMessage());
