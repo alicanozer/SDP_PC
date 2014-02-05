@@ -363,6 +363,7 @@ public class VisionOps {
 	}
 	
 
+
 	//give start point and end point in Point2D_I32 and return a clockwise angle in radians relative to origin
 	//
 
@@ -382,6 +383,7 @@ public class VisionOps {
 			throw new Exception("math error");
 		return theta;
 	}
+
 
 	
 }

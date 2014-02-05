@@ -83,6 +83,52 @@ public class ObjectLocations {
 			} catch (NullPointerException e) {
 			}
 		}
+		
+		if (this.dots != null) {
+			// drawing X over blue markers
+			g.setColor(Color.RED);
+
+			try {
+				g.drawLine(this.dots[0].x - 10, 
+						this.dots[0].y,
+						this.dots[0].x + 10, 
+						this.dots[0].y);
+				g.drawLine(this.dots[0].x, 
+						this.dots[0].y + 10,
+						this.dots[0].x, 
+						this.dots[0].y - 10);
+				
+				g.drawLine(this.dots[1].x - 10, 
+						this.dots[1].y,
+						this.dots[1].x + 10, 
+						this.dots[1].y);
+				g.drawLine(this.dots[1].x, 
+						this.dots[1].y + 10,
+						this.dots[1].x, 
+						this.dots[1].y - 10);
+				
+				g.drawLine(this.dots[2].x - 10, 
+						this.dots[2].y,
+						this.dots[2].x + 10, 
+						this.dots[2].y);
+				g.drawLine(this.dots[2].x, 
+						this.dots[2].y + 10,
+						this.dots[2].x, 
+						this.dots[2].y - 10);
+				
+				g.drawLine(this.dots[3].x - 10, 
+						this.dots[3].y,
+						this.dots[3].x + 10, 
+						this.dots[3].y);
+				g.drawLine(this.dots[3].x, 
+						this.dots[3].y + 10,
+						this.dots[3].x, 
+						this.dots[3].y - 10);
+			} catch (NullPointerException e) {
+			}
+		}
+		
+		
 		g.setColor(c);
 	}
 	
