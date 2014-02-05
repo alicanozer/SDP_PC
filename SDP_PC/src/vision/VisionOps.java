@@ -174,14 +174,14 @@ public class VisionOps {
 		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
 		ImageSInt32 label = new ImageSInt32(input.width,input.height);
 		if (type.equals("ball")){
-			ThresholdImageOps.threshold(input.getBand(0),binary,(float)170,false);
+			ThresholdImageOps.threshold(input.getBand(0),binary,(float)150,false);
 		}
 		else if(type.equals("blue")){
 			ThresholdImageOps.threshold(input.getBand(2),binary,(float)70,false);
-			BlurImageOps.gaussian(binary, binary, 4, 6, null);
+			//BlurImageOps.gaussian(binary, binary, 4, 6, null);
 		}
 		else if(type.equals("yellow")){
-			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
+			ThresholdImageOps.threshold(input.getBand(0),binary,(float)130,false);
 		}
 		else if(type.equals("lines")){
 			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
@@ -190,7 +190,7 @@ public class VisionOps {
 			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
 		}
 
-
+		
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
 		filtered = BinaryImageOps.dilate8(filtered, null);
 		List<Contour> contours = BinaryImageOps.contour(filtered, 8, label);
