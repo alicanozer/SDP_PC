@@ -186,9 +186,6 @@ public class VisionOps {
 		else if(type.equals("lines")){
 			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
 		}
-		else if(type.equals("dots")){
-			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
-		}
 
 		
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
@@ -234,7 +231,7 @@ public class VisionOps {
 				System.out.println("WARNING: " + contours.size() + " yellow marker were detected");
 				return null;
 			}
-
+			
 			ret[0] = ContourUtils.getContourCentroid(contours.get(0));
 			ret[1] = ContourUtils.getContourCentroid(contours.get(1));
 
@@ -277,12 +274,90 @@ public class VisionOps {
 	public static Point2D_I32[] findYellowMarkers(MultiSpectral<ImageFloat32> img){
 		return findMarkers(img,"yellow");
 	}
-
+	/**
+	 * Finds the position of all objects in the field and returns them bundled up in a nice wrapped
+	 * TODO more info on this
+	 * @param img
+	 * @return the coords
+	 */
 	public static ObjectLocations getObjectLocations(BufferedImage img){
 		float[] hues = {6.21f,0.7f,3.14f}; 
 		float[] saturations = {0.88f,0.95f,0.605f}; 
 		MultiSpectral<ImageFloat32>[] segmented = segmentMultiHSV(img,hues,saturations);
-		return new ObjectLocations(findBall(segmented[0]),findYellowMarkers(segmented[1]),findBlueMarkers(segmented[2]),null);
+		
+		Point2D_I32 ball = findBall(segmented[0]);
+		Point2D_I32[] yellowMarkers = findYellowMarkers(segmented[1]);
+		Point2D_I32[] blueMarkers = findBlueMarkers(segmented[2]);
+		
+		Point2D_I32[] dots = new Point2D_I32[4];
+		
+		int counter = 0; // iterator for the dots array
+		if(yellowMarkers != null){
+			for(int i = 0; i < yellowMarkers.length; i++){
+				if (yellowMarkers[i] != null){
+					dots[counter] = getMeanDotNearMarker(img,yellowMarkers[i],28);
+					counter++;
+				}
+			}
+		}
+
+		if(blueMarkers != null){
+			for(int i = 0; i < blueMarkers.length; i++){
+				if (blueMarkers[i] != null){
+					dots[counter] = getMeanDotNearMarker(img,blueMarkers[i],28);
+					counter++;
+				}
+			}
+		}
+
+		
+		return new ObjectLocations(ball,yellowMarkers,blueMarkers,dots);
+	}
+	
+/**
+ * 
+ * @param img
+ * @param p
+ * @param windowSize
+ * @return
+ */
+	public static Point2D_I32 getMeanDotNearMarker(
+			BufferedImage img, 
+			Point2D_I32 p, // this is a marker position 
+			int windowSize)
+	{
+		int x = p.getX();
+		int y = p.getY();
+
+		BufferedImage cropped = img.getSubimage(x - windowSize/2, y - windowSize/2, windowSize, windowSize);
+		
+		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(cropped,null,true,ImageFloat32.class);
+		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,cropped.getWidth(),cropped.getHeight(),3);
+		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
+
+		// Convert into HSV
+		ColorHsv.rgbToHsv_F32(input,hsv);
+		
+		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)55,true);
+		
+		//
+		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
+		filtered = BinaryImageOps.dilate8(filtered, null);
+		
+		List<Contour> contours = BinaryImageOps.contour(binary, 8, null);
+		
+		if(contours.size() != 1){
+			System.out.println("WARNING: " + contours.size() + " dots detected");
+			return null;
+		}
+		else {
+			Point2D_I32 p1 = ContourUtils.getContourCentroid(contours.get(0));
+			p1.x = p1.x + x - windowSize/2;
+			p1.y = p1.y + y - windowSize/2;
+			
+			return p1;
+
+		}
 	}
 }
 
