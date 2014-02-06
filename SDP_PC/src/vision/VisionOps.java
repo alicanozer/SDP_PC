@@ -220,13 +220,13 @@ public class VisionOps {
 	 * @param type
 	 * @return
 	 */
-	private static Point2D_I32[] findMarkers(MultiSpectral<ImageFloat32> img, String type){
+	private static ArrayList<Point2D_I32> findMarkers(MultiSpectral<ImageFloat32> img, String type){
 		if(type == "yellow"){
 			List<Contour> contours = getContours("yellow",img);//segmentHSV(img, 0.7f, 0.95f));
-			Point2D_I32[] ret = new Point2D_I32[2];
+			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
 				System.out.println("WARNING: ONLY ONE yellow marker was detected");
-				ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+				ret.add(ContourUtils.getContourCentroid(contours.get(0)));
 				return ret;
 			}
 			else if(contours.size() != 2){
@@ -234,17 +234,17 @@ public class VisionOps {
 				return null;
 			}
 			
-			ret[0] = ContourUtils.getContourCentroid(contours.get(0));
-			ret[1] = ContourUtils.getContourCentroid(contours.get(1));
+			ret.add(ContourUtils.getContourCentroid(contours.get(0)));
+			ret.add(ContourUtils.getContourCentroid(contours.get(1)));
 
 			return ret;
 		}
 		else if(type == "blue"){
 			List<Contour> contours = getContours("blue",img);//segmentHSV(img, 3.31f, 0.538f));
-			Point2D_I32[] ret = new Point2D_I32[2];
+			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
 				System.out.println("WARNING: ONLY ONE blue marker was detected");
-				ret[0] = ContourUtils.getContourCentroid(contours.get(0));
+				ret.add(ContourUtils.getContourCentroid(contours.get(0)));
 				return ret;
 			}
 			else if(contours.size() != 2){
@@ -253,8 +253,8 @@ public class VisionOps {
 			}
 
 
-			ret[0] = ContourUtils.getContourCentroid(contours.get(0));
-			ret[1] = ContourUtils.getContourCentroid(contours.get(1));
+			ret.add(ContourUtils.getContourCentroid(contours.get(0)));
+			ret.add(ContourUtils.getContourCentroid(contours.get(1)));
 
 			return ret;
 		}
@@ -265,7 +265,7 @@ public class VisionOps {
 	 * @param img
 	 * @return
 	 */
-	public static Point2D_I32[] findBlueMarkers(MultiSpectral<ImageFloat32> img){
+	public static ArrayList<Point2D_I32> findBlueMarkers(MultiSpectral<ImageFloat32> img){
 		return findMarkers(img,"blue");
 	}
 	/**
@@ -273,7 +273,7 @@ public class VisionOps {
 	 * @param img
 	 * @return
 	 */
-	public static Point2D_I32[] findYellowMarkers(MultiSpectral<ImageFloat32> img){
+	public static ArrayList<Point2D_I32> findYellowMarkers(MultiSpectral<ImageFloat32> img){
 		return findMarkers(img,"yellow");
 	}
 	/**
@@ -288,29 +288,35 @@ public class VisionOps {
 		MultiSpectral<ImageFloat32>[] segmented = segmentMultiHSV(img,hues,saturations);
 		
 		Point2D_I32 ball = findBall(segmented[0]);
-		Point2D_I32[] yellowMarkers = findYellowMarkers(segmented[1]);
-		Point2D_I32[] blueMarkers = findBlueMarkers(segmented[2]);
+		ArrayList<Point2D_I32> yellowMarkers = findYellowMarkers(segmented[1]);
+		ArrayList<Point2D_I32> blueMarkers = findBlueMarkers(segmented[2]);
 		
-		Point2D_I32[] dots = new Point2D_I32[4];
+		ArrayList<Point2D_I32> dots = new ArrayList<Point2D_I32>();
 		
-		int counter = 0; // iterator for the dots array
-		if(yellowMarkers != null){
-			for(int i = 0; i < yellowMarkers.length; i++){
-				if (yellowMarkers[i] != null){
-					dots[counter] = getMeanDotNearMarker(img,yellowMarkers[i],28);
-					counter++;
-				}
-			}
-		}
-
-		if(blueMarkers != null){
-			for(int i = 0; i < blueMarkers.length; i++){
-				if (blueMarkers[i] != null){
-					dots[counter] = getMeanDotNearMarker(img,blueMarkers[i],28);
-					counter++;
-				}
-			}
-		}
+//		int counter = 0; // iterator for the dots array
+//		if(yellowMarkers != null){
+//			for(int i = 0; i < yellowMarkers.length; i++){
+//				if (yellowMarkers[i] != null){
+//					dots[counter] = getMeanDotNearMarker(img,yellowMarkers[i],28);
+//					counter++;
+//				}
+//			}
+//		}
+//
+//		if(blueMarkers != null){
+//			for(int i = 0; i < blueMarkers.length; i++){
+//				if (blueMarkers[i] != null){
+//					dots[counter] = getMeanDotNearMarker(img,blueMarkers[i],28);
+//					counter++;
+//				}
+//			}
+//		}
+		
+		dots.add(0,getMeanDotNearMarker(img,yellowMarkers.get(0),28));
+		dots.add(1,getMeanDotNearMarker(img,yellowMarkers.get(1),28));
+		dots.add(2,getMeanDotNearMarker(img,blueMarkers.get(0),28));
+		dots.add(3,getMeanDotNearMarker(img,blueMarkers.get(1),28));
+		
 
 		
 		return new ObjectLocations(ball,yellowMarkers,blueMarkers,dots);

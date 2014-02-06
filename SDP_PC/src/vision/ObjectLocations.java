@@ -1,9 +1,10 @@
 package vision;
 
+import georegression.struct.point.Point2D_I32;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
-
-import georegression.struct.point.Point2D_I32;
+import java.util.ArrayList;
 /**
  * stub wrapper around object positions
  * @author bilyan
@@ -11,15 +12,15 @@ import georegression.struct.point.Point2D_I32;
  */
 public class ObjectLocations {
 	public Point2D_I32 ball;
-	public Point2D_I32[] yellowMarkers;
-	public Point2D_I32[] blueMarkers;
-	public Point2D_I32[] dots;
+	public ArrayList<Point2D_I32> yellowMarkers;
+	public ArrayList<Point2D_I32> blueMarkers;
+	public ArrayList<Point2D_I32> dots;
 
 	public ObjectLocations(
 			Point2D_I32 ball,
-			Point2D_I32[] yellowMarkers,
-			Point2D_I32[] blueMarkers,
-			Point2D_I32[] dots){
+			ArrayList<Point2D_I32>  yellowMarkers,
+			ArrayList<Point2D_I32>  blueMarkers,
+			ArrayList<Point2D_I32>  dots){
 		this.ball = ball;
 		this.yellowMarkers = yellowMarkers;
 		this.blueMarkers = blueMarkers;
@@ -38,48 +39,48 @@ public class ObjectLocations {
 			g.drawLine(this.ball.x, this.ball.y - 10, this.ball.x, this.ball.y + 10);
 		}
 		if (this.yellowMarkers != null) {
-			g.drawLine(this.yellowMarkers[0].x - 10, 
-					this.yellowMarkers[0].y,
-					this.yellowMarkers[0].x + 10, 
-					this.yellowMarkers[0].y);
-			g.drawLine(this.yellowMarkers[0].x, 
-					this.yellowMarkers[0].y + 10,
-					this.yellowMarkers[0].x, 
-					this.yellowMarkers[0].y - 10);
+			g.drawLine(this.yellowMarkers.get(0).x - 10, 
+					this.yellowMarkers.get(0).y,
+					this.yellowMarkers.get(0).x + 10, 
+					this.yellowMarkers.get(0).y);
+			g.drawLine(this.yellowMarkers.get(0).x, 
+					this.yellowMarkers.get(0).y + 10,
+					this.yellowMarkers.get(0).x, 
+					this.yellowMarkers.get(0).y - 10);
 			
 
 			try {
-				g.drawLine(this.yellowMarkers[1].x - 10,
-						this.yellowMarkers[1].y, 
-						this.yellowMarkers[1].x + 10,
-						this.yellowMarkers[1].y);
-				g.drawLine(this.yellowMarkers[1].x,
-						this.yellowMarkers[1].y + 10, 
-						this.yellowMarkers[1].x,
-						this.yellowMarkers[1].y - 10);
+				g.drawLine(this.yellowMarkers.get(1).x - 10,
+						this.yellowMarkers.get(1).y, 
+						this.yellowMarkers.get(1).x + 10,
+						this.yellowMarkers.get(1).y);
+				g.drawLine(this.yellowMarkers.get(1).x,
+						this.yellowMarkers.get(1).y + 10, 
+						this.yellowMarkers.get(1).x,
+						this.yellowMarkers.get(1).y - 10);
 			} catch (NullPointerException e) {
 			}
 		}
 		if (this.blueMarkers != null) {
 			// drawing X over blue markers
-			g.drawLine(this.blueMarkers[0].x - 10, 
-					this.blueMarkers[0].y,
-					this.blueMarkers[0].x + 10, 
-					this.blueMarkers[0].y);
-			g.drawLine(this.blueMarkers[0].x, 
-					this.blueMarkers[0].y + 10,
-					this.blueMarkers[0].x, 
-					this.blueMarkers[0].y - 10);
+			g.drawLine(this.blueMarkers.get(0).x - 10, 
+					this.blueMarkers.get(0).y,
+					this.blueMarkers.get(0).x + 10, 
+					this.blueMarkers.get(0).y);
+			g.drawLine(this.blueMarkers.get(0).x, 
+					this.blueMarkers.get(0).y + 10,
+					this.blueMarkers.get(0).x, 
+					this.blueMarkers.get(0).y - 10);
 
 			try {
-				g.drawLine(this.blueMarkers[1].x - 10, 
-						this.blueMarkers[1].y,
-						this.blueMarkers[1].x + 10, 
-						this.blueMarkers[1].y);
-				g.drawLine(this.blueMarkers[1].x, 
-						this.blueMarkers[1].y + 10,
-						this.blueMarkers[1].x, 
-						this.blueMarkers[1].y - 10);
+				g.drawLine(this.blueMarkers.get(1).x - 10, 
+						this.blueMarkers.get(1).y,
+						this.blueMarkers.get(1).x + 10, 
+						this.blueMarkers.get(1).y);
+				g.drawLine(this.blueMarkers.get(1).x, 
+						this.blueMarkers.get(1).y + 10,
+						this.blueMarkers.get(1).x, 
+						this.blueMarkers.get(1).y - 10);
 			} catch (NullPointerException e) {
 			}
 		}
@@ -89,41 +90,41 @@ public class ObjectLocations {
 			g.setColor(Color.RED);
 
 			try {
-				g.drawLine(this.dots[0].x - 10, 
-						this.dots[0].y,
-						this.dots[0].x + 10, 
-						this.dots[0].y);
-				g.drawLine(this.dots[0].x, 
-						this.dots[0].y + 10,
-						this.dots[0].x, 
-						this.dots[0].y - 10);
+				g.drawLine(this.dots.get(0).x - 10, 
+						this.dots.get(0).y,
+						this.dots.get(0).x + 10, 
+						this.dots.get(0).y);
+				g.drawLine(this.dots.get(0).x, 
+						this.dots.get(0).y + 10,
+						this.dots.get(0).x, 
+						this.dots.get(0).y - 10);
 				
-				g.drawLine(this.dots[1].x - 10, 
-						this.dots[1].y,
-						this.dots[1].x + 10, 
-						this.dots[1].y);
-				g.drawLine(this.dots[1].x, 
-						this.dots[1].y + 10,
-						this.dots[1].x, 
-						this.dots[1].y - 10);
+				g.drawLine(this.dots.get(1).x - 10, 
+						this.dots.get(1).y,
+						this.dots.get(1).x + 10, 
+						this.dots.get(1).y);
+				g.drawLine(this.dots.get(1).x, 
+						this.dots.get(1).y + 10,
+						this.dots.get(1).x, 
+						this.dots.get(1).y - 10);
 				
-				g.drawLine(this.dots[2].x - 10, 
-						this.dots[2].y,
-						this.dots[2].x + 10, 
-						this.dots[2].y);
-				g.drawLine(this.dots[2].x, 
-						this.dots[2].y + 10,
-						this.dots[2].x, 
-						this.dots[2].y - 10);
+				g.drawLine(this.dots.get(2).x - 10, 
+						this.dots.get(2).y,
+						this.dots.get(2).x + 10, 
+						this.dots.get(2).y);
+				g.drawLine(this.dots.get(2).x, 
+						this.dots.get(2).y + 10,
+						this.dots.get(2).x, 
+						this.dots.get(2).y - 10);
 				
-				g.drawLine(this.dots[3].x - 10, 
-						this.dots[3].y,
-						this.dots[3].x + 10, 
-						this.dots[3].y);
-				g.drawLine(this.dots[3].x, 
-						this.dots[3].y + 10,
-						this.dots[3].x, 
-						this.dots[3].y - 10);
+				g.drawLine(this.dots.get(3).x - 10, 
+						this.dots.get(3).y,
+						this.dots.get(3).x + 10, 
+						this.dots.get(3).y);
+				g.drawLine(this.dots.get(3).x, 
+						this.dots.get(3).y + 10,
+						this.dots.get(3).x, 
+						this.dots.get(3).y - 10);
 			} catch (NullPointerException e) {
 			}
 		}
