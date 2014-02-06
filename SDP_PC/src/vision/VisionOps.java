@@ -291,29 +291,26 @@ public class VisionOps {
 		
 		ArrayList<Point2D_I32> dots = new ArrayList<Point2D_I32>();
 		
-//		int counter = 0; // iterator for the dots array
-//		if(yellowMarkers != null){
-//			for(int i = 0; i < yellowMarkers.length; i++){
-//				if (yellowMarkers[i] != null){
-//					dots[counter] = getMeanDotNearMarker(img,yellowMarkers[i],28);
-//					counter++;
-//				}
-//			}
-//		}
-//
-//		if(blueMarkers != null){
-//			for(int i = 0; i < blueMarkers.length; i++){
-//				if (blueMarkers[i] != null){
-//					dots[counter] = getMeanDotNearMarker(img,blueMarkers[i],28);
-//					counter++;
-//				}
-//			}
-//		}
+		int counter = 0; // iterator for the dots array
+		if(yellowMarkers != null){
+			for(int i = 0; i < 2; i++){
+				if (yellowMarkers.get(i) != null){
+					dots.add(getMeanDotNearMarker(img,yellowMarkers.get(i),28));
+					counter++;
+				}
+			}
+		}
+
+		if(blueMarkers != null){
+			for(int i = 0; i < 2; i++){
+				if (blueMarkers.get(i) != null){
+					dots.add(getMeanDotNearMarker(img,blueMarkers.get(i),28));
+					counter++;
+				}
+			}
+		}
 		
-		dots.add(0,getMeanDotNearMarker(img,yellowMarkers.get(0),28));
-		dots.add(1,getMeanDotNearMarker(img,yellowMarkers.get(1),28));
-		dots.add(2,getMeanDotNearMarker(img,blueMarkers.get(0),28));
-		dots.add(3,getMeanDotNearMarker(img,blueMarkers.get(1),28));
+		
 		
 
 		
