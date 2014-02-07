@@ -59,8 +59,8 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private static boolean lock = true;
 
 	public static void main(String args[]){
-
 		ObjectLocations.setYellowDefendingLeft(true);
+
 
 		ObjectLocations.setYellowUs(true);
 		try {
@@ -174,7 +174,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	@Override
 	public void nextFrame(VideoFrame frame) {
 		BufferedImage img = frame.getBufferedImage();
-		img = img.getSubimage(50, 60, 550, 316);
+		img = img.getSubimage(50, 70, 550, 316);
 		width = 550;
 		height = 316;
 		long thisFrame = System.currentTimeMillis();
@@ -198,6 +198,9 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+
+
+
 
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
