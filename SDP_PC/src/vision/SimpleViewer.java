@@ -53,6 +53,19 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 	private JLabel          label;
 	private JFrame          frame;
+	
+	public static Point2D_I32 ballPrvPos;
+	public static Point2D_I32 yellowAttackPrvPos;
+	public static Point2D_I32 yellowDefendPrvPos;
+	public static Point2D_I32 blueAttackPrvPos;
+	public static Point2D_I32 blueDefendPrvPos;
+	
+	public static Point2D_I32 ballCurPos;
+	public static Point2D_I32 yellowAttackCurPos;
+	public static Point2D_I32 yellowDefendCurPos;
+	public static Point2D_I32 blueAttackCurPos;
+	public static Point2D_I32 blueDefendCurPos;
+	
 	private static BufferedImage segOutputBall;
 	private static List<Point2D_I32> ballPos;
 
@@ -214,7 +227,23 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		
 
 		try {
+			ballPrvPos = ObjectLocations.ball;
+			yellowAttackPrvPos = ObjectLocations.yellowATTACKmarker;
+			yellowDefendPrvPos = ObjectLocations.yellowDEFENDmarker;
+			blueAttackPrvPos = ObjectLocations.blueATTACKmarker;
+			blueDefendPrvPos = ObjectLocations.blueDEFENDmarker;
+			
+			
 			ObjectLocations.updateObjectLocations(img);
+			ballCurPos = ObjectLocations.ball;
+			yellowAttackCurPos = ObjectLocations.yellowATTACKmarker;
+			yellowDefendCurPos = ObjectLocations.yellowDEFENDmarker;
+			blueAttackCurPos = ObjectLocations.blueATTACKmarker;
+			blueDefendCurPos = ObjectLocations.blueDEFENDmarker;
+			
+			//System.out.print(VisionOps.getDirection(ballPrvPos, ballCurPos)); 
+			String[] objs = {"ball", "blahs"};
+			ObjectLocations.drawAllDirections(g, objs);
 			ObjectLocations.drawCrosses(g);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

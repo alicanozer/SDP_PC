@@ -5,6 +5,7 @@ import georegression.struct.point.Point2D_I32;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -345,6 +346,61 @@ public class ObjectLocations {
 		return blueATTACKmarker;
 	}
 	
+	/**
+	 * draws lines indicating direction of movement over an object
+	 * @param g
+	 * @throws Exception 
+	 */
+	public static void drawDirection(Graphics2D g, String object) throws Exception{
+		Color c = g.getColor();
+		g.setColor(Color.MAGENTA);
+		double angle = 0;
+		if (object == "ball" && ObjectLocations.ball != null) {
+			angle = VisionOps.getDirection(SimpleViewer.ballPrvPos, SimpleViewer.ballCurPos);
+			if (angle != 0.0){
+				g.draw(new Line2D.Double(SimpleViewer.ballCurPos.x, SimpleViewer.ballCurPos.y, (SimpleViewer.ballCurPos.x + Math.sin(angle)*100), (SimpleViewer.ballCurPos.y + Math.cos(angle)*100)));
+				//g.drawLine(SimpleViewer.ballCurPos.x, SimpleViewer.ballCurPos.y, (SimpleViewer.ballCurPos.x + (int) Math.sin(angle)*10), (SimpleViewer.ballCurPos.y + (int) Math.cos(angle)*10));
+				/*System.out.println((SimpleViewer.ballCurPos.y + Math.cos(angle)*100));
+				System.out.println((SimpleViewer.ballCurPos.x + Math.sin(angle)*100));
+				System.out.println("drawing from " + SimpleViewer.ballCurPos.x + " , " + SimpleViewer.ballCurPos.y + "->"+" , " + " at angle " + angle);*/
+				}
+			}
+		else if (object == "yellowAtk"){
+			angle = VisionOps.getDirection(SimpleViewer.yellowAttackPrvPos, SimpleViewer.yellowAttackCurPos);
+			if (angle != 0.0){
+				g.draw(new Line2D.Double(SimpleViewer.yellowAttackCurPos.x, SimpleViewer.yellowAttackCurPos.y, (SimpleViewer.yellowAttackCurPos.x + Math.sin(angle)*100), (SimpleViewer.yellowAttackCurPos.y + Math.cos(angle)*100)));
+				}
+			}
+		else if (object == "yellowDef"){
+			angle = VisionOps.getDirection(SimpleViewer.yellowDefendPrvPos, SimpleViewer.yellowDefendCurPos);
+			if (angle != 0.0){
+				g.draw(new Line2D.Double(SimpleViewer.yellowDefendCurPos.x, SimpleViewer.yellowDefendCurPos.y, (SimpleViewer.yellowDefendCurPos.x + Math.sin(angle)*100), (SimpleViewer.yellowDefendCurPos.y + Math.cos(angle)*100)));
+				}
+			}
+		else if (object == "blueAtk"){
+			angle = VisionOps.getDirection(SimpleViewer.blueAttackPrvPos, SimpleViewer.blueAttackCurPos);
+			if (angle != 0.0){
+				g.draw(new Line2D.Double(SimpleViewer.blueAttackCurPos.x, SimpleViewer.blueAttackCurPos.y, (SimpleViewer.blueAttackCurPos.x + Math.sin(angle)*100), (SimpleViewer.blueAttackCurPos.y + Math.cos(angle)*100)));
+				}
+			}
+		else if (object == "blueDef"){
+			angle = VisionOps.getDirection(SimpleViewer.blueDefendPrvPos, SimpleViewer.blueDefendCurPos);
+			if (angle != 0.0){
+				g.draw(new Line2D.Double(SimpleViewer.blueDefendCurPos.x, SimpleViewer.blueDefendCurPos.y, (SimpleViewer.blueDefendCurPos.x + Math.sin(angle)*100), (SimpleViewer.blueDefendCurPos.y + Math.cos(angle)*100)));
+				}
+			}
+		else{
+			throw new Exception("what the hell is a "+ object +" ?");
+		}
+	}
+	
+	//draws directions over a list of objects you want 
+	public static void drawAllDirections(Graphics2D g, String[] objects) throws Exception{
+		for (String obj:objects){
+			drawDirection(g, obj);
+		}
+		
+	}
 	/**
 	 * draws crosses over all objects of interest
 	 * @param g
