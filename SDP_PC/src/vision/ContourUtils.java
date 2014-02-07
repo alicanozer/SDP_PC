@@ -25,11 +25,19 @@ public class ContourUtils {
 	public static Point2D_I32 getContourCentroid(Contour c){
 		int xMean = 0;
 		int yMean = 0;
-
+		
 		List<Point2D_I32> ext = c.external;
+		if(ext == null){
+			System.out.println("fuck this shit");
+			
+		}
 		int extSize = ext.size();
-
-		for(Point2D_I32 p: c.external){
+		if(extSize == 0){
+			System.out.println("FUCK IU");
+			
+		}
+		
+		for(Point2D_I32 p: ext){
 			xMean += p.x;
 			yMean += p.y;
 		}

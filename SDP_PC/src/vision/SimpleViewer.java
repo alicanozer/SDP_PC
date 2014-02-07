@@ -56,20 +56,25 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private static BufferedImage segOutputBall;
 	private static List<Point2D_I32> ballPos;
 
-
+	private static boolean lock = true;
 
 	public static void main(String args[]){
-		ballPos = new ArrayList<Point2D_I32>();
 
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new SimpleViewer();
-			}
-			
-			
-			
-		});
+		ObjectLocations.setYellowDefendingLeft(true);
+		ObjectLocations.setYellowUs(true);
+		try {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					new SimpleViewer();
+				}
+			});
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("i failed miserably and now I must die to repent for my sins... ");
+		}
+
 	}
 
 	/**
@@ -175,68 +180,39 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
 
 		lastFrame = thisFrame;
-		if(frameCounter < 3){
-			frameCounter++;
-			frame.recycle();
-			return;
-		}
-		if (frameCounter == 3){
-			System.out.println("Attempting to construct the internal representation of the field...");
-			float[] hues = {0.5f};
-			float[] saturations = {0.4f};
-			regions = VisionOps.getRegions(VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
-			frameCounter++;
-			if(regions.size() == 4){
-				System.out.println("Successfully constructed the internal representation of theprvBallPos = obs.ball; field.");
+		try {
+			if(frameCounter < 3){
+				frameCounter++;
+				frame.recycle();
+				return;
+
 			}
-			else{
-				System.out.println(
-						"WARNING: Unable to construct the internal representation of the field, will attempty at next frame.\n " +
-						"Is there clutter on the pitch?");
+			else if (frameCounter == 3){
+				frameCounter++;
+				ObjectLocations.setRegions(img);
+				frame.recycle();
+				return;
 			}
-			frame.recycle();
-			System.out.println("Starting to capture...");
-			return;
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
-		//threading needs to be added here
-		
-//		Point2D_I32 ballPos = VisionOps.findBall(img);
-//		Point2D_I32[] yellowMarkersPos = VisionOps.findYellowMarkers(img);
-//		Point2D_I32[] blueMarkersPos = VisionOps.findBlueMarkers(img);
-		float[] hues = {6.21f,0.7f,3.14f};
-		float[] saturations = {0.88f,0.95f,0.605f};
-		
-		//img = ConvertBufferedImage.convertTo_F32(VisionOps.segmentMultiHSV(img, hues, saturations)[3], null ,true);
-		//img = VisionOps.contourOps("plates", VisionOps.segmentMultiHSV(img, hues, saturations)[3]);
-		
-
-
-		//img = VisionOps.segmentMultiHSV(img, hues , saturations);
-		//ArrayList<Point2D_I32> dotsPos = VisionOps.findrgb(img, 5, 20, 0.35, 0.35, 1-(0.35 + 0.35));
-		//System.out.println(dotsPos);
-		//this is the old code but I keep it for now, we'llprvBallPos = obs.ball;
-		// remove it when we are sure our methods work
-		//img = VisionOps.segmentHSV(img, 6.21f, 0.88f); // ball
-		//img = VisionOps.segmentHSV("Marker(I) Yellow", img, 0.7f, 0.95f);
-		//img = VisionOps.segmentHSV(img, 0.5f, 0.4f); // lines
-		//img = VisionOps.segmentHSV(img, 2.0f, 0.55f); // field
-		//img = VisionOps.contourOps("", img);
-		//img = VisionOps.segmentHSV(img, 3.31f, 0.538f); // blue
-		//img = VisionOps.contourOps("lines", img);
-		
-		//img = VisionOps.segmentHSV(img,  1.04f, 0.218f); // blue
-		//img = VisionOps.contourOps("dots", img);
 		Graphics2D g = (Graphics2D) label.getGraphics();
-		// this draws the frame grabber	 
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
 		
+
+		try {
+			ObjectLocations.updateObjectLocations(img);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		
-		ObjectLocations obs = VisionOps.getObjectLocations(img);
-		
-		obs.drawCrosses(g);
+
 
 
 		if (ballPos.size()>2)
