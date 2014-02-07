@@ -189,8 +189,8 @@ public class ObjectLocations {
 	}
 	public static void updateObjectLocations(BufferedImage img){
 		
-		float[] hues = {0f,0.5f,2.87f, 0.5f}; 
-		float[] saturations = {200.0f/255.0f,0.80f,0.605f, 0.4f};
+		float[] hues = {0f, 0.5f, 2.79f, 0.5f}; 
+		float[] saturations = {0.78f, 0.74f, 0.315f, 0.4f};
 //		float[] hues = {6.21f,0.7f,3.14f}; 
 //		float[] saturations = {0.88f,0.95f,0.605f}; 
 		MultiSpectral<ImageFloat32>[] segmented = VisionOps.segmentMultiHSV(img,hues,saturations);
