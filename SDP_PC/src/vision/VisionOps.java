@@ -162,7 +162,7 @@ public class VisionOps {
 				}
 			}
 		}
-
+		System.out.println("siiiize " + contours.size());
 		if(contours.size() != 1 || contours.get(0).internal.size() < 4){
 			System.out.println(contours.size() + " " + contours.get(0).internal.size());
 			return null;
@@ -180,7 +180,12 @@ public class VisionOps {
 				pols.add(p); 
 			}
 		}
-		if(pols.size() == 4) return pols;
+		System.out.println("pols size " + pols.size());
+		//System.exit(0);
+		if(pols.size() == 4) {
+			System.out.println("SUCCEEDED");
+			return pols;
+		}
 		else return null;
 	}
 	/**
@@ -191,14 +196,17 @@ public class VisionOps {
 		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
 		ImageSInt32 label = new ImageSInt32(input.width,input.height);
 		if (type.equals("ball")){
-			ThresholdImageOps.threshold(input.getBand(0),binary,(float)150,false);
+			ImageUInt8 red = ThresholdImageOps.threshold(input.getBand(0),null,(float)170,false);
+			ImageUInt8 green = ThresholdImageOps.threshold(input.getBand(1),null,(float)100,true);
+			BinaryImageOps.logicAnd(red, green, binary);
+			//BlurImageOps.gaussian(input.getBand(0), input.getBand(0), -1, 6, null);
 		}
 		else if(type.equals("blue")){
 			ThresholdImageOps.threshold(input.getBand(2),binary,(float)70,false);
 			//BlurImageOps.gaussian(binary, binary, 4, 6, null);
 		}
 		else if(type.equals("yellow")){
-			ThresholdImageOps.threshold(input.getBand(0),binary,(float)130,false);
+			ThresholdImageOps.threshold(input.getBand(0),binary,(float)160,false);
 		}
 		else if(type.equals("lines")){
 			//BlurImageOps.gaussian(input.getBand(0), input.getBand(0), -1, 3, null);

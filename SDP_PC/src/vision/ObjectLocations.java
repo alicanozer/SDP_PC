@@ -88,29 +88,29 @@ public class ObjectLocations {
 			//entering critical section
 			lock = false;
 
+			Point2D_I32[] polCentroid = new Point2D_I32[4];
+			for(int z = 0 ; z < 4; z++){
+				polCentroid[z] = ContourUtils.getPolygonCentroid(regions.get(z));
+			}
 
-			Point2D_I32 pol1Centroid = ContourUtils.getPolygonCentroid(regions.get(0));
-			Point2D_I32 pol2Centroid = ContourUtils.getPolygonCentroid(regions.get(1));
-			Point2D_I32 pol3Centroid = ContourUtils.getPolygonCentroid(regions.get(2));
-			Point2D_I32 pol4Centroid = ContourUtils.getPolygonCentroid(regions.get(3));
-			int i = pol1Centroid.x;
-			int j = pol2Centroid.x;
-			int k = pol3Centroid.x;
-			int l = pol4Centroid.x;
+			int i = polCentroid[0].x;
+			int j = polCentroid[1].x;
+			int k = polCentroid[2].x;
+			int l = polCentroid[3].x;
 
 			int[] order = sort(i,j,k,l);
 			
 			region1 = regions.get(order[0] - 1);
-			region1Centre = ContourUtils.getPolygonCentroid(region1);
+			region1Centre = polCentroid[order[0] - 1];
 			
 			region2 = regions.get(order[1] - 1);
-			region2Centre = ContourUtils.getPolygonCentroid(region2);
+			region2Centre = polCentroid[order[1] - 1];
 			
 			region3 = regions.get(order[2] - 1);
-			region3Centre = ContourUtils.getPolygonCentroid(region3);
+			region3Centre = polCentroid[order[2] - 1];
 			
 			region4 = regions.get(order[3] - 1);
-			region4Centre = ContourUtils.getPolygonCentroid(region4);
+			region4Centre = polCentroid[order[3] - 1];
 
 			lock = true;
 			regionsSet = true;
@@ -187,9 +187,11 @@ public class ObjectLocations {
 
 	}
 	public static void updateObjectLocations(BufferedImage img){
-
-		float[] hues = {6.21f,0.7f,3.14f}; 
-		float[] saturations = {0.88f,0.95f,0.605f}; 
+		
+		float[] hues = {0f,0.5f,2.87f, 0.5f}; 
+		float[] saturations = {200.0f/255.0f,0.80f,0.605f, 0.4f};
+//		float[] hues = {6.21f,0.7f,3.14f}; 
+//		float[] saturations = {0.88f,0.95f,0.605f}; 
 		MultiSpectral<ImageFloat32>[] segmented = VisionOps.segmentMultiHSV(img,hues,saturations);
 
 		Point2D_I32 ballLocal = VisionOps.findBall(segmented[0]);
@@ -228,46 +230,46 @@ public class ObjectLocations {
 //			System.out.println("ball is in region 4");
 //		}
 		//setting the yellow robots, by cases
-		if(ContourUtils.isInside(yellowMarkers.get(0), region1) && ContourUtils.isInside(yellowMarkers.get(1), region3) && yellowLeft) {
-			setYellowDEFENDmarker(yellowMarkers.get(0));
-			setYellowATTACKmarker(yellowMarkers.get(1));
-			
-		}
-		else if(ContourUtils.isInside(yellowMarkers.get(1), region1) && ContourUtils.isInside(yellowMarkers.get(0), region3) && yellowLeft) {
-			setYellowDEFENDmarker(yellowMarkers.get(1));
-			setYellowATTACKmarker(yellowMarkers.get(0));
-		}
-		else if(ContourUtils.isInside(yellowMarkers.get(0), region2) && ContourUtils.isInside(yellowMarkers.get(1), region4) && !yellowLeft) {
-			setYellowDEFENDmarker(yellowMarkers.get(0));
-			setYellowATTACKmarker(yellowMarkers.get(1));
-		}
-		else if(ContourUtils.isInside(yellowMarkers.get(1), region2) && ContourUtils.isInside(yellowMarkers.get(0), region4) && !yellowLeft) {
-			setYellowDEFENDmarker(yellowMarkers.get(1));
-			setYellowATTACKmarker(yellowMarkers.get(0));
-		}
-		else{
-			System.err.println("Unable to locate yellow robots");
-		}
-		//setting the blue robots by cases
-		if(ContourUtils.isInside(blueMarkers.get(0), region1) && ContourUtils.isInside(blueMarkers.get(1), region3) && !yellowLeft) {
-			setBlueDEFENDmarker(blueMarkers.get(0));
-			setBlueATTACKmarker(blueMarkers.get(1));
-		}
-		else if(ContourUtils.isInside(blueMarkers.get(1), region1) && ContourUtils.isInside(blueMarkers.get(0), region3) && !yellowLeft) {
-			setBlueDEFENDmarker(blueMarkers.get(1));
-			setBlueATTACKmarker(blueMarkers.get(0));
-		}
-		else if(ContourUtils.isInside(blueMarkers.get(0), region2) && ContourUtils.isInside(blueMarkers.get(1), region4) && yellowLeft) {
-			setBlueDEFENDmarker(blueMarkers.get(0));
-			setBlueATTACKmarker(blueMarkers.get(1));
-		}
-		else if(ContourUtils.isInside(blueMarkers.get(1), region2) && ContourUtils.isInside(blueMarkers.get(0), region4) && yellowLeft) {
-			setBlueDEFENDmarker(blueMarkers.get(1));
-			setBlueATTACKmarker(blueMarkers.get(0));
-		}
-		else{
-			System.err.println("Unable to locate blue robots");
-		}
+//		if(ContourUtils.isInside(yellowMarkers.get(0), region1) && ContourUtils.isInside(yellowMarkers.get(1), region3) && yellowLeft) {
+//			setYellowDEFENDmarker(yellowMarkers.get(0));
+//			setYellowATTACKmarker(yellowMarkers.get(1));
+//			
+//		}
+//		else if(ContourUtils.isInside(yellowMarkers.get(1), region1) && ContourUtils.isInside(yellowMarkers.get(0), region3) && yellowLeft) {
+//			setYellowDEFENDmarker(yellowMarkers.get(1));
+//			setYellowATTACKmarker(yellowMarkers.get(0));
+//		}
+//		else if(ContourUtils.isInside(yellowMarkers.get(0), region2) && ContourUtils.isInside(yellowMarkers.get(1), region4) && !yellowLeft) {
+//			setYellowDEFENDmarker(yellowMarkers.get(0));
+//			setYellowATTACKmarker(yellowMarkers.get(1));
+//		}
+//		else if(ContourUtils.isInside(yellowMarkers.get(1), region2) && ContourUtils.isInside(yellowMarkers.get(0), region4) && !yellowLeft) {
+//			setYellowDEFENDmarker(yellowMarkers.get(1));
+//			setYellowATTACKmarker(yellowMarkers.get(0));
+//		}
+//		else{
+//			System.err.println("Unable to locate yellow robots");
+//		}
+//		//setting the blue robots by cases
+//		if(ContourUtils.isInside(blueMarkers.get(0), region1) && ContourUtils.isInside(blueMarkers.get(1), region3) && !yellowLeft) {
+//			setBlueDEFENDmarker(blueMarkers.get(0));
+//			setBlueATTACKmarker(blueMarkers.get(1));
+//		}
+//		else if(ContourUtils.isInside(blueMarkers.get(1), region1) && ContourUtils.isInside(blueMarkers.get(0), region3) && !yellowLeft) {
+//			setBlueDEFENDmarker(blueMarkers.get(1));
+//			setBlueATTACKmarker(blueMarkers.get(0));
+//		}
+//		else if(ContourUtils.isInside(blueMarkers.get(0), region2) && ContourUtils.isInside(blueMarkers.get(1), region4) && yellowLeft) {
+//			setBlueDEFENDmarker(blueMarkers.get(0));
+//			setBlueATTACKmarker(blueMarkers.get(1));
+//		}
+//		else if(ContourUtils.isInside(blueMarkers.get(1), region2) && ContourUtils.isInside(blueMarkers.get(0), region4) && yellowLeft) {
+//			setBlueDEFENDmarker(blueMarkers.get(1));
+//			setBlueATTACKmarker(blueMarkers.get(0));
+//		}
+//		else{
+//			System.err.println("Unable to locate blue robots");
+//		}
 		
 		dots = dotsLocal;
 		
