@@ -151,8 +151,12 @@ public class VisionOps {
 	public static ArrayList<Polygon> getRegions(MultiSpectral<ImageFloat32> inputImg) {
 
 		List<Contour> contours = getContours("lines",inputImg);
+		if(contours.size() != 1 || contours.get(0).internal.size() < 4){
+			System.out.println(contours.size() + " " + contours.get(0).internal.size());
+			return null;
+		}
+		
 		ArrayList<Polygon> pols = new ArrayList<Polygon>();
-
 		// in initial conditions, contours has only 1 element and it is the 
 		// pitch. it has  at least 4 list of points as internal contours
 		for(int i=0; i< contours.get(0).internal.size(); i++){
@@ -161,10 +165,11 @@ public class VisionOps {
 			// of points a good indication of the perimeter
 
 			if(p.npoints > 100){
-				pols.add(i,p); 
+				pols.add(p); 
 			}
 		}
-		return pols;
+		if(pols.size() == 4) return pols;
+		else return null;
 	}
 	/**
 	 * Gets the list of contours from applying binary thresholding to an input image
@@ -184,10 +189,11 @@ public class VisionOps {
 			ThresholdImageOps.threshold(input.getBand(0),binary,(float)130,false);
 		}
 		else if(type.equals("lines")){
+			//BlurImageOps.gaussian(input.getBand(0), input.getBand(0), -1, 3, null);
 			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
 		}
 
-		
+
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
 		filtered = BinaryImageOps.dilate8(filtered, null);
 		List<Contour> contours = BinaryImageOps.contour(filtered, 8, label);
@@ -231,7 +237,7 @@ public class VisionOps {
 				System.out.println("WARNING: " + contours.size() + " yellow marker were detected");
 				return null;
 			}
-			
+
 			ret.add(ContourUtils.getContourCentroid(contours.get(0)));
 			ret.add(ContourUtils.getContourCentroid(contours.get(1)));
 
@@ -275,55 +281,12 @@ public class VisionOps {
 		return findMarkers(img,"yellow");
 	}
 	/**
-	 * Finds the position of all objects in the field and returns them bundled up in a nice wrapped
-	 * TODO more info on this
+	 * 
 	 * @param img
-	 * @return the coords
+	 * @param p
+	 * @param windowSize
+	 * @return
 	 */
-	public static ObjectLocations getObjectLocations(BufferedImage img){
-		float[] hues = {6.21f,0.7f,3.14f}; 
-		float[] saturations = {0.88f,0.95f,0.605f}; 
-		MultiSpectral<ImageFloat32>[] segmented = segmentMultiHSV(img,hues,saturations);
-		
-		Point2D_I32 ball = findBall(segmented[0]);
-		ArrayList<Point2D_I32> yellowMarkers = findYellowMarkers(segmented[1]);
-		ArrayList<Point2D_I32> blueMarkers = findBlueMarkers(segmented[2]);
-		
-		ArrayList<Point2D_I32> dots = new ArrayList<Point2D_I32>();
-		
-		int counter = 0; // iterator for the dots array
-		if(yellowMarkers != null){
-			for(int i = 0; i < 2; i++){
-				if (yellowMarkers.get(i) != null){
-					dots.add(getMeanDotNearMarker(img,yellowMarkers.get(i),28));
-					counter++;
-				}
-			}
-		}
-
-		if(blueMarkers != null){
-			for(int i = 0; i < 2; i++){
-				if (blueMarkers.get(i) != null){
-					dots.add(getMeanDotNearMarker(img,blueMarkers.get(i),28));
-					counter++;
-				}
-			}
-		}
-		
-		
-		
-
-		
-		return new ObjectLocations(ball,yellowMarkers,blueMarkers,dots);
-	}
-	
-/**
- * 
- * @param img
- * @param p
- * @param windowSize
- * @return
- */
 	public static Point2D_I32 getMeanDotNearMarker(
 			BufferedImage img, 
 			Point2D_I32 p, // this is a marker position 
@@ -331,54 +294,65 @@ public class VisionOps {
 	{
 		int x = p.getX();
 		int y = p.getY();
-
-		BufferedImage cropped = img.getSubimage(x - windowSize/2, y - windowSize/2, windowSize, windowSize);
+		BufferedImage cropped;
 		
+		if(x >= windowSize/2 && y >= windowSize/2 && x + windowSize/2 < img.getWidth() && y + windowSize/2 < img.getHeight()){
+			cropped = img.getSubimage(x - windowSize/2, y - windowSize/2, windowSize, windowSize);
+		}
+		else{
+			return null;
+		}
+
 		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(cropped,null,true,ImageFloat32.class);
 		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,cropped.getWidth(),cropped.getHeight(),3);
 		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
 
 		// Convert into HSV
 		ColorHsv.rgbToHsv_F32(input,hsv);
-		
 		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)55,true);
-		
+
 		//
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
 		filtered = BinaryImageOps.dilate8(filtered, null);
-		
+
 		List<Contour> contours = BinaryImageOps.contour(binary, 8, null);
-		
-		if(contours.size() != 1){
+
+		if(contours.size() == 0){
 			System.out.println("WARNING: " + contours.size() + " dots detected");
+			return null;
+		}
+		else if(contours.size() > 1){
+			System.out.println("WARNING: " + contours.size() + " dots detected, taking their mean");
+			// Iverse distance weighting : http://en.wikipedia.org/wiki/Inverse_distance_weighting
+			
 			return null;
 		}
 		else {
 			Point2D_I32 p1 = ContourUtils.getContourCentroid(contours.get(0));
 			p1.x = p1.x + x - windowSize/2;
 			p1.y = p1.y + y - windowSize/2;
-			
+
 			return p1;
 
 		}
 	}
-public static double getDirection (Point2D_I32 prevPos, Point2D_I32 curPos) throws Exception{
-	double theta = 0;
-	double dx = prevPos.x - curPos.x;
-	double dy = prevPos.y - curPos.y;
-	if (dx < 0 && dy > 0)
-		theta = Math.PI/2 + Math.atan2(Math.abs(dy), Math.abs(dx));
-	else if (dx < 0 && dy < 0)
-		theta  = Math.PI/2 - Math.atan2(Math.abs(dy), Math.abs(dx));
-	else if (dx > 0 && dy < 0)
-		theta = Math.PI*2 - Math.atan2(Math.abs(dx), Math.abs(dy));
-	else if (dx > 0 && dy > 0)
-		theta = Math.PI + Math.atan2(Math.abs(dy), Math.abs(dx));
-	else 
-		throw new Exception("math error");
-	return theta;
-}
-	
+	public static double getDirection (Point2D_I32 prevPos, Point2D_I32 curPos) throws Exception{
+		double theta = 0;
+		double dx = prevPos.x - curPos.x;
+		double dy = prevPos.y - curPos.y;
+		if (dx < 0 && dy > 0)
+			theta = Math.PI/2 + Math.atan2(Math.abs(dy), Math.abs(dx));
+		else if (dx < 0 && dy < 0)
+			theta  = Math.PI/2 - Math.atan2(Math.abs(dy), Math.abs(dx));
+		else if (dx > 0 && dy < 0)
+			theta = Math.PI*2 - Math.atan2(Math.abs(dx), Math.abs(dy));
+		else if (dx > 0 && dy > 0)
+			theta = Math.PI + Math.atan2(Math.abs(dy), Math.abs(dx));
+		else 
+			throw new Exception("math error");
+		return theta;
+	}
+
 }
 
 
