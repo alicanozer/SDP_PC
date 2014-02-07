@@ -58,7 +58,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private static boolean lock = true;
 
 	public static void main(String args[]){
-		ObjectLocations.setYellowDefendingLeft(true);
+		ObjectLocations.setYellowDefendingLeft(false);
 		ObjectLocations.setYellowUs(true);
 		try {
 			SwingUtilities.invokeLater(new Runnable() {
@@ -72,6 +72,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			e.printStackTrace();
 			System.out.println("i failed miserably and now I must die to repent for my sins... ");
 		}
+		
 	}
 
 	/**
@@ -194,6 +195,13 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		float[] hues = {0.5f};
+		float[] saturations = {0.4f};
+		//img2 = ConvertBufferedImage.convertTo_F32(VisionOps.segmentMultiHSV(img2, hues, saturations)[0], null, true);
+		//img = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
+		
+		
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
@@ -201,6 +209,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		
 		try {
 			ObjectLocations.updateObjectLocations(img);
+			ObjectLocations.drawCrosses(g);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
