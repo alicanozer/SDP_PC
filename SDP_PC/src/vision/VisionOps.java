@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
@@ -289,6 +291,15 @@ public class VisionOps {
 	 * @param windowSize
 	 * @return
 	 */
+	
+/**
+ * 
+ * @param img
+ * @param p
+ * @param windowSize
+ * @return
+ */
+
 	public static Point2D_I32 getMeanDotNearMarker(
 			BufferedImage img, 
 			Point2D_I32 p, // this is a marker position 
@@ -311,13 +322,18 @@ public class VisionOps {
 
 		// Convert into HSV
 		ColorHsv.rgbToHsv_F32(input,hsv);
+
 		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)55,true);
+
+
+		
 
 		//
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
 		filtered = BinaryImageOps.dilate8(filtered, null);
 
 		List<Contour> contours = BinaryImageOps.contour(binary, 8, null);
+
 
 		if(contours.size() == 0){
 			System.out.println("WARNING: " + contours.size() + " dots detected");
@@ -327,15 +343,72 @@ public class VisionOps {
 			System.out.println("WARNING: " + contours.size() + " dots detected, taking their mean");
 			// Iverse distance weighting : http://en.wikipedia.org/wiki/Inverse_distance_weighting
 			
-			return null;
+			
+System.out.println("WARNING: " + contours.size() + " dots detected, taking their mean!");
+			
+			class Tuple<S, T>
+			{
+				public S data;
+				public T index;
+
+				public Tuple(S s, T t)
+				{
+					this.data = s;
+					this.index = t;
+				}
+			}
+			
+			
+			// when more than 1 point is detected we take the mean of the points
+			// since the windows are very small this won't skew things too much
+			ArrayList<Tuple<Point2D_I32,Double>> list = new ArrayList<Tuple<Point2D_I32,Double>>();
+
+			// using the mean
+			Point2D_I32 mean = new Point2D_I32();
+
+			for(Contour c: contours){
+				Point2D_I32 p2 = ContourUtils.getContourCentroid(c);
+				double distanceTo =  Math.sqrt((windowSize/2 - p2.x)*(windowSize/2 - p2.x) + (windowSize/2 - p2.y)*(windowSize/2 - p2.y));
+				list.add(new Tuple<Point2D_I32,Double>(p2,distanceTo));
+
+				mean.x += p2.x;
+				mean.y += p2.y;
+			}
+			mean.x /= contours.size();
+			mean.y /= contours.size();
+			
+			mean.x = mean.x + x - windowSize/2;
+			mean.y = mean.y + y - windowSize/2;
+			
+			// using the median
+			Comparator<Tuple<Point2D_I32,Double>> comparator = new Comparator<Tuple<Point2D_I32,Double>>()
+					{
+
+				public int compare(Tuple<Point2D_I32,Double> tupleA,
+						Tuple<Point2D_I32,Double> tupleB)
+				{
+					if (tupleA.index < tupleB.index) return -1;
+					else if (tupleA.index == tupleB.index) return 0;
+					else return 1;
+				}
+
+					};
+		    	    
+		    Collections.sort(list, comparator);
+		    
+		    Point2D_I32 median =  list.get(list.size()/2).data; // get the median
+		    median.x = median.x + x - windowSize/2;
+		    median.y = median.y + y - windowSize/2;
+		    
+			return mean;
 		}
 		else {
 			Point2D_I32 p1 = ContourUtils.getContourCentroid(contours.get(0));
+			// transform coordinates
 			p1.x = p1.x + x - windowSize/2;
 			p1.y = p1.y + y - windowSize/2;
 
 			return p1;
-
 		}
 	}
 
