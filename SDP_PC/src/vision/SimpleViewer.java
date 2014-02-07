@@ -199,8 +199,13 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			e1.printStackTrace();
 		}
 
-
-
+		
+		float[] hues = {0f, 0.5f, 2.79f, 0.5f}; 
+		float[] saturations = {0.78f, 0.74f, 0.315f, 0.4f};
+		//img2 = ConvertBufferedImage.convertTo_F32(VisionOps.segmentMultiHSV(img2, hues, saturations)[0], null, true);
+		//img = VisionOps.contourOps("yellow", VisionOps.segmentMultiHSV(img, hues, saturations)[1]);
+		
+		
 
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);

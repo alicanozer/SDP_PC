@@ -208,7 +208,12 @@ public class VisionOps {
 			//BlurImageOps.gaussian(binary, binary, 4, 6, null);
 		}
 		else if(type.equals("yellow")){
-			ThresholdImageOps.threshold(input.getBand(0),binary,(float)160,false);
+			ImageUInt8 red = ThresholdImageOps.threshold(input.getBand(0),null,(float)190,false);
+			ImageUInt8 green = ThresholdImageOps.threshold(input.getBand(1),null,(float)90,false);
+			ImageUInt8 blue = ThresholdImageOps.threshold(input.getBand(2),null,(float)50,true);
+			BinaryImageOps.logicAnd(red, green, binary);
+			BinaryImageOps.logicAnd(binary, blue, binary);
+			//BlurImageOps.gaussian(binary, binary, 3, 6, null);
 		}
 		else if(type.equals("lines")){
 			//BlurImageOps.gaussian(input.getBand(0), input.getBand(0), -1, 3, null);
