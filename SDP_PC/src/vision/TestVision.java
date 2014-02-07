@@ -31,7 +31,7 @@ public class TestVision {
 
 		BufferedImage img1 = ImageIO.read(new File("test_images/00000008.jpg"));
 
-		BufferedImage img2 = ImageIO.read(new File("test_images/00000006.jpg"));
+		BufferedImage img2 = ImageIO.read(new File("test_images/000000011.jpg"));
 
 		ObjectLocations.setRegions(img2);
 		ObjectLocations.setYellowDefendingLeft(true);

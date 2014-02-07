@@ -60,7 +60,8 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 	public static void main(String args[]){
 
-		ObjectLocations.setYellowDefendingLeft(true);
+		ObjectLocations.setYellowDefendingLeft(false);
+
 		ObjectLocations.setYellowUs(true);
 		try {
 			SwingUtilities.invokeLater(new Runnable() {
@@ -206,6 +207,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 		try {
 			ObjectLocations.updateObjectLocations(img);
+			ObjectLocations.drawCrosses(g);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

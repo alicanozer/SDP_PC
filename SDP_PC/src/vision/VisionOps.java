@@ -154,7 +154,17 @@ public class VisionOps {
 	 */
 	public static ArrayList<Polygon> getRegions(MultiSpectral<ImageFloat32> inputImg) {
 
-		List<Contour> contours = getContours("lines",inputImg);
+		List<Contour> contoursFromImage = getContours("lines",inputImg);
+		List<Contour> contours = new ArrayList<Contour>();
+		// removes contours that have external sizes < 300
+		if(contoursFromImage != null && contoursFromImage.size() != 0){
+			for(int w = 0; w < contoursFromImage.size(); w++){
+				if (contoursFromImage.get(w).external.size() > 300){
+					contours.add(contoursFromImage.get(w));
+				}
+			}
+		}
+
 		if(contours.size() != 1 || contours.get(0).internal.size() < 4){
 			System.out.println(contours.size() + " " + contours.get(0).internal.size());
 			return null;
@@ -364,43 +374,55 @@ System.out.println("WARNING: " + contours.size() + " dots detected, taking their
 			ArrayList<Tuple<Point2D_I32,Double>> list = new ArrayList<Tuple<Point2D_I32,Double>>();
 
 			// using the mean
-			Point2D_I32 mean = new Point2D_I32();
-
+			//Point2D_I32 mean = new Point2D_I32();
+			Point2D_I32 iwm = new Point2D_I32();
+			double totalDistance = 0.0;
 			for(Contour c: contours){
 				Point2D_I32 p2 = ContourUtils.getContourCentroid(c);
 				double distanceTo =  Math.sqrt((windowSize/2 - p2.x)*(windowSize/2 - p2.x) + (windowSize/2 - p2.y)*(windowSize/2 - p2.y));
-				list.add(new Tuple<Point2D_I32,Double>(p2,distanceTo));
+				totalDistance += 1.0/distanceTo;
+				iwm.x += p2.x*1.0/distanceTo;
+				iwm.y += p2.y*1.0/distanceTo;
+//				list.add(new Tuple<Point2D_I32,Double>(p2,distanceTo));
 
-				mean.x += p2.x;
-				mean.y += p2.y;
+//				mean.x += p2.x;
+//				mean.y += p2.y;
 			}
-			mean.x /= contours.size();
-			mean.y /= contours.size();
+			iwm.x /= totalDistance;
+			iwm.y /= totalDistance;
 			
-			mean.x = mean.x + x - windowSize/2;
-			mean.y = mean.y + y - windowSize/2;
+			iwm.x = iwm.x + x - windowSize/2;
+			iwm.y = iwm.y + y - windowSize/2;
 			
-			// using the median
-			Comparator<Tuple<Point2D_I32,Double>> comparator = new Comparator<Tuple<Point2D_I32,Double>>()
-					{
-
-				public int compare(Tuple<Point2D_I32,Double> tupleA,
-						Tuple<Point2D_I32,Double> tupleB)
-				{
-					if (tupleA.index < tupleB.index) return -1;
-					else if (tupleA.index == tupleB.index) return 0;
-					else return 1;
-				}
-
-					};
-		    	    
-		    Collections.sort(list, comparator);
-		    
-		    Point2D_I32 median =  list.get(list.size()/2).data; // get the median
-		    median.x = median.x + x - windowSize/2;
-		    median.y = median.y + y - windowSize/2;
-		    
-			return mean;
+			return iwm;
+//			mean.x /= contours.size();
+//			mean.y /= contours.size();
+//			
+//			mean.x = mean.x + x - windowSize/2;
+//			mean.y = mean.y + y - windowSize/2;
+			
+//			return mean;
+//			// using the median
+//			Comparator<Tuple<Point2D_I32,Double>> comparator = new Comparator<Tuple<Point2D_I32,Double>>()
+//					{
+//
+//				public int compare(Tuple<Point2D_I32,Double> tupleA,
+//						Tuple<Point2D_I32,Double> tupleB)
+//				{
+//					if (tupleA.index < tupleB.index) return -1;
+//					else if (tupleA.index == tupleB.index) return 0;
+//					else return 1;
+//				}
+//
+//					};
+//		    	    
+//		    Collections.sort(list, comparator);
+//		    
+//		    Point2D_I32 median =  list.get(list.size()/2).data; // get the median
+//		    median.x = median.x + x - windowSize/2;
+//		    median.y = median.y + y - windowSize/2;
+//		    
+//			return mean;
 		}
 		else {
 			Point2D_I32 p1 = ContourUtils.getContourCentroid(contours.get(0));
