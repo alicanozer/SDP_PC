@@ -353,7 +353,7 @@ public class VisionOps {
 		List<Contour> contours = new ArrayList<Contour>();
 		
 		for(int i = 0; i < contoursFull.size(); i++){
-			System.out.println("contour size " + contoursFull.get(i).external.size());
+			//System.out.println("contour size " + contoursFull.get(i).external.size());
 			if(contoursFull.get(i).external.size() > 15 && contoursFull.get(i).external.size() < 30){
 				contours.add(contoursFull.get(i));
 			}
@@ -455,7 +455,9 @@ public class VisionOps {
 		double theta = 0;
 		double dx = prevPos.x - curPos.x;
 		double dy = prevPos.y - curPos.y;
-		if (dx < 0 && dy > 0)
+		if (prevPos == null || curPos == null)
+			throw new Exception("math error - either point is null");
+		else if (dx < 0 && dy > 0)
 			theta = Math.PI/2 + Math.atan2(Math.abs(dy), Math.abs(dx));
 		else if (dx < 0 && dy < 0)
 			theta  = Math.PI/2 - Math.atan2(Math.abs(dy), Math.abs(dx));
@@ -463,8 +465,9 @@ public class VisionOps {
 			theta = Math.PI*2 - Math.atan2(Math.abs(dx), Math.abs(dy));
 		else if (dx > 0 && dy > 0)
 			theta = Math.PI + Math.atan2(Math.abs(dy), Math.abs(dx));
-		else 
-			throw new Exception("math error");
+		else if (dx == 0 && dy == 0)
+			throw new Exception("no direction");
+			
 		return theta;
 	}
 

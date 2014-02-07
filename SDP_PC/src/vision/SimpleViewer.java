@@ -53,6 +53,19 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 	private JLabel          label;
 	private JFrame          frame;
+	
+	public static Point2D_I32 ballPrvPos;
+	public static Point2D_I32 yellowAttackPrvPos;
+	public static Point2D_I32 yellowDefendPrvPos;
+	public static Point2D_I32 blueAttackPrvPos;
+	public static Point2D_I32 blueDefendPrvPos;
+	
+	public static Point2D_I32 ballCurPos;
+	public static Point2D_I32 yellowAttackCurPos;
+	public static Point2D_I32 yellowDefendCurPos;
+	public static Point2D_I32 blueAttackCurPos;
+	public static Point2D_I32 blueDefendCurPos;
+	
 	private static BufferedImage segOutputBall;
 
 	private static boolean lock = true;
@@ -202,13 +215,30 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		//img = VisionOps.contourOps("ball", VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
 		
 		
+		
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
 		
 		try {
+			ballPrvPos = ObjectLocations.ball;
+			yellowAttackPrvPos = ObjectLocations.yellowATTACKmarker;
+			yellowDefendPrvPos = ObjectLocations.yellowDEFENDmarker;
+			blueAttackPrvPos = ObjectLocations.blueATTACKmarker;
+			blueDefendPrvPos = ObjectLocations.blueDEFENDmarker;
+			
+			
 			ObjectLocations.updateObjectLocations(img);
+			ballCurPos = ObjectLocations.ball;
+			yellowAttackCurPos = ObjectLocations.yellowATTACKmarker;
+			yellowDefendCurPos = ObjectLocations.yellowDEFENDmarker;
+			blueAttackCurPos = ObjectLocations.blueATTACKmarker;
+			blueDefendCurPos = ObjectLocations.blueDEFENDmarker;
+			
+			//System.out.print(VisionOps.getDirection(ballPrvPos, ballCurPos)); 
+			String[] objs = {"ball", "blahs"};
+			ObjectLocations.drawAllDirections(g, objs);
 			ObjectLocations.drawCrosses(g);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
