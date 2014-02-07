@@ -6,6 +6,7 @@ import georegression.struct.point.Point2D_I32;
 import java.awt.Color;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -191,16 +192,113 @@ public class VisionOps {
 		else return null;
 	}
 	/**
+	 * Method that does segmentation of objects purely in HSV space.
+	 * @param type
+	 * @param img
+	 * @return
+	 */
+	public static List<Contour> newHSVSegment(String type,BufferedImage img){
+		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img,null,true,ImageFloat32.class);
+		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
+
+			
+		// Convert into HSV
+		ColorHsv.rgbToHsv_F32(input,hsv);
+
+		
+		
+		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
+		switch(type){
+		case "ball":
+			// hue goes 0 to 2pi
+			ImageUInt8 lowerHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.0f,false);
+			ImageUInt8 upperHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.22f,true);
+			
+			ImageUInt8 lowerSaturationBall = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.66f,false);
+			BinaryImageOps.logicAnd(lowerHueBall, upperHueBall, binary);
+			BinaryImageOps.logicAnd(binary, lowerSaturationBall, binary);
+			break;	
+		case "blue":
+			BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
+			BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
+			
+			ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 1.97f,false); // was 1.97
+			ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.14f,true); // was 3.14
+			
+			ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.30f,true); //was 0.25
+			BinaryImageOps.logicAnd(lowerHueBlue, upperHueBlue, binary);
+			BinaryImageOps.logicAnd(binary, upperSaturationBlue, binary);
+			break;
+		case "yellow":
+			ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.34f,false); // was 0.34
+			ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.69f,true); // was 0.69
+			
+			ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.65f,false); // was 0.62
+			ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.86f,true); // was 0.86
+			//values are 0..255
+			
+			BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
+			BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
+			BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
+			BlurImageOps.gaussian(binary, binary, 4, 5, null);
+		}
+		
+		
+		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
+		filtered = BinaryImageOps.dilate8(filtered, null);
+		List<Contour> contoursUnfiltered = BinaryImageOps.contour(filtered, 8, null);
+		List<Contour> contoursFiltered = new ArrayList<Contour>();
+		for(Contour c: contoursUnfiltered) {
+			Point2D_I32 p = ContourUtils.getContourCentroid(c);
+			if(type == "yellow"){
+				if(
+						c.external.size() > 18 &&
+						p.x > 15 && p.x < img.getWidth() - 15
+						) contoursFiltered.add(c);
+			}
+			else{
+				if(
+						c.external.size() > 10 &&
+						p.x > 15 && p.x < img.getWidth() - 15
+						) contoursFiltered.add(c);
+			}
+		}
+
+		return contoursFiltered;
+	}
+	
+	public static BufferedImage newDisplay(List<Contour> contours, int width, int height) {
+		BufferedImage visualContour = VisualizeBinaryData.renderContours(
+				contours,
+				0xFFFFFF,
+				0xFF20FF,
+				width,
+				height,
+				null);
+
+		return visualContour;
+	}
+	
+	
+	/**
 	 * Gets the list of contours from applying binary thresholding to an input image
 	 * TODO: make it accept MultiSpectralImage instead of converting to/from BufferedImage
 	 */
 	public static List<Contour> getContours(String type, MultiSpectral<ImageFloat32> input) {
-		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
-		ImageSInt32 label = new ImageSInt32(input.width,input.height);
+		
+		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
+
+		// Convert into HSV
+		ColorHsv.rgbToHsv_F32(input,hsv);
+		
+		
+		ImageUInt8 binary = new ImageUInt8(input.width,input.height);;
 		if (type.equals("ball")){
-			ImageUInt8 red = ThresholdImageOps.threshold(input.getBand(0),null,(float)170,false);
-			ImageUInt8 green = ThresholdImageOps.threshold(input.getBand(1),null,(float)100,true);
-			BinaryImageOps.logicAnd(red, green, binary);
+			// hue goes 0 to 2pi
+			ThresholdImageOps.threshold(hsv.getBand(0),binary, 1.0f ,false);
+			
+//			ImageUInt8 green = ThresholdImageOps.threshold(input.getBand(1),null,(float)100,true);
+//			BinaryImageOps.logicAnd(red, green, binary);
 			//BlurImageOps.gaussian(input.getBand(0), input.getBand(0), -1, 6, null);
 		}
 		else if(type.equals("blue")){
@@ -223,7 +321,7 @@ public class VisionOps {
 
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
 		filtered = BinaryImageOps.dilate8(filtered, null);
-		List<Contour> contours = BinaryImageOps.contour(filtered, 8, label);
+		List<Contour> contours = BinaryImageOps.contour(filtered, 8, null);
 
 		return contours;
 	}
