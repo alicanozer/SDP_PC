@@ -331,7 +331,7 @@ public class VisionOps {
 		// Convert into HSV
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
-		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)55,true);
+		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)65,true);
 
 
 		
@@ -340,9 +340,16 @@ public class VisionOps {
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
 		filtered = BinaryImageOps.dilate8(filtered, null);
 
-		List<Contour> contours = BinaryImageOps.contour(binary, 8, null);
+		List<Contour> contoursFull = BinaryImageOps.contour(binary, 8, null);
 
-
+		List<Contour> contours = new ArrayList<Contour>();
+		
+		for(int i = 0; i < contoursFull.size(); i++){
+			System.out.println("contour size " + contoursFull.get(i).external.size());
+			if(contoursFull.get(i).external.size() > 15 && contoursFull.get(i).external.size() < 30){
+				contours.add(contoursFull.get(i));
+			}
+		}
 		if(contours.size() == 0){
 			System.out.println("WARNING: " + contours.size() + " dots detected");
 			return null;
@@ -350,10 +357,7 @@ public class VisionOps {
 		else if(contours.size() > 1){
 			System.out.println("WARNING: " + contours.size() + " dots detected, taking their mean");
 			// Iverse distance weighting : http://en.wikipedia.org/wiki/Inverse_distance_weighting
-			
-			
-System.out.println("WARNING: " + contours.size() + " dots detected, taking their mean!");
-			
+
 			class Tuple<S, T>
 			{
 				public S data;
@@ -372,19 +376,22 @@ System.out.println("WARNING: " + contours.size() + " dots detected, taking their
 			ArrayList<Tuple<Point2D_I32,Double>> list = new ArrayList<Tuple<Point2D_I32,Double>>();
 
 			// using the mean
-			//Point2D_I32 mean = new Point2D_I32();
+			Point2D_I32 mean = new Point2D_I32();
 			Point2D_I32 iwm = new Point2D_I32();
 			double totalDistance = 0.0;
 			for(Contour c: contours){
-				Point2D_I32 p2 = ContourUtils.getContourCentroid(c);
-				double distanceTo =  Math.sqrt((windowSize/2 - p2.x)*(windowSize/2 - p2.x) + (windowSize/2 - p2.y)*(windowSize/2 - p2.y));
-				totalDistance += 1.0/distanceTo;
-				iwm.x += p2.x*1.0/distanceTo;
-				iwm.y += p2.y*1.0/distanceTo;
+				Point2D_I32 curPoint = ContourUtils.getContourCentroid(c);
+				double distanceTo = 1.0/Math.pow(
+						Math.sqrt(Math.pow((windowSize/2 - curPoint.x),2.0) +
+								  Math.pow((windowSize/2 - curPoint.y),2.0)),
+						20.0);
+				totalDistance += distanceTo;
+				iwm.x += curPoint.x*distanceTo;
+				iwm.y += curPoint.y*distanceTo;
 //				list.add(new Tuple<Point2D_I32,Double>(p2,distanceTo));
 
-//				mean.x += p2.x;
-//				mean.y += p2.y;
+				mean.x += curPoint.x;
+				mean.y += curPoint.y;
 			}
 			iwm.x /= totalDistance;
 			iwm.y /= totalDistance;
@@ -392,12 +399,16 @@ System.out.println("WARNING: " + contours.size() + " dots detected, taking their
 			iwm.x = iwm.x + x - windowSize/2;
 			iwm.y = iwm.y + y - windowSize/2;
 			
-			return iwm;
-//			mean.x /= contours.size();
-//			mean.y /= contours.size();
-//			
-//			mean.x = mean.x + x - windowSize/2;
-//			mean.y = mean.y + y - windowSize/2;
+			
+			mean.x /= contours.size();
+			mean.y /= contours.size();
+			
+			mean.x = mean.x + x - windowSize/2;
+			mean.y = mean.y + y - windowSize/2;
+			
+			// mean works better for now with window
+			return mean;
+
 			
 //			return mean;
 //			// using the median

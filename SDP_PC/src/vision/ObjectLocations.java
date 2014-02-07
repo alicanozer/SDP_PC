@@ -42,8 +42,14 @@ public class ObjectLocations {
 	private static boolean lock = true;
 
 	
-
-	public static void setRegions(BufferedImage img) throws Exception{
+	/**
+	 * attempts to set the regions
+	 * @param img
+	 * @return TRUE if the regions are or were already set, FALSE otherwise
+	 * @throws Exception
+	 */
+	public static boolean setRegions(BufferedImage img) throws Exception{
+		boolean done = false;
 		if(!regionsSet){
 			System.out.println("Attempting to construct the internal representation of the field...");
 			float[] hues = {0.5f};
@@ -62,7 +68,7 @@ public class ObjectLocations {
 				System.out.println(
 						"WARNING: Unable to construct the internal representation of the field, will attempty at next frame.\n " +
 						"Is there clutter on the pitch?");
-				return;
+				return false;
 			}
 			for(Polygon p: regions) {
 				System.out.println(p);
@@ -109,9 +115,10 @@ public class ObjectLocations {
 			lock = true;
 			regionsSet = true;
 			// leaving critical section
-			
+			return true;
 		}
 		else{
+			return true;
 			/**
 			 * do NOTHING
 			 */
@@ -193,33 +200,33 @@ public class ObjectLocations {
 
 		if(yellowMarkers != null){
 			for(Point2D_I32 p: yellowMarkers){
-				dotsLocal.add(VisionOps.getMeanDotNearMarker(img,p,40));
+				dotsLocal.add(VisionOps.getMeanDotNearMarker(img,p,44)); // window 44 works well
 			}
 		}
 
 		if(blueMarkers != null){
 			for(Point2D_I32 p: blueMarkers){
-				dotsLocal.add(VisionOps.getMeanDotNearMarker(img,p,40));
+				dotsLocal.add(VisionOps.getMeanDotNearMarker(img,p,44));
 			}
 		}
 		
 		//setting the ball
 		setBall(ballLocal);
 		
-		if(ContourUtils.isInside(ball, region1)){
-			System.out.println("ball is in region 1");
-			System.out.println("ball location : " + ball.x + " " + ball.y);
-			System.out.println("region 1 centroid : " + region1Centre.x + " " + region1Centre.y);
-		}
-		else if(ContourUtils.isInside(ball, region2)){
-			System.out.println("ball is in region 2");
-		}
-		else if(ContourUtils.isInside(ball, region3)){
-			System.out.println("ball is in region 3");
-		}
-		else if(ContourUtils.isInside(ball, region4)){
-			System.out.println("ball is in region 4");
-		}
+//		if(ContourUtils.isInside(ball, region1)){
+//			System.out.println("ball is in region 1");
+//			System.out.println("ball location : " + ball.x + " " + ball.y);
+//			System.out.println("region 1 centroid : " + region1Centre.x + " " + region1Centre.y);
+//		}
+//		else if(ContourUtils.isInside(ball, region2)){
+//			System.out.println("ball is in region 2");
+//		}
+//		else if(ContourUtils.isInside(ball, region3)){
+//			System.out.println("ball is in region 3");
+//		}
+//		else if(ContourUtils.isInside(ball, region4)){
+//			System.out.println("ball is in region 4");
+//		}
 		//setting the yellow robots, by cases
 		if(ContourUtils.isInside(yellowMarkers.get(0), region1) && ContourUtils.isInside(yellowMarkers.get(1), region3) && yellowLeft) {
 			setYellowDEFENDmarker(yellowMarkers.get(0));
@@ -348,23 +355,28 @@ public class ObjectLocations {
 			g.drawLine(ObjectLocations.ball.x - 10, ObjectLocations.ball.y, ObjectLocations.ball.x + 10, ObjectLocations.ball.y);
 			g.drawLine(ObjectLocations.ball.x, ObjectLocations.ball.y - 10, ObjectLocations.ball.x, ObjectLocations.ball.y + 10);
 		}
+		// WRONG position of yellowDEFENDmarker
 		if(yellowDEFENDmarker != null){
 			g.drawLine(yellowDEFENDmarker.x - 10, yellowDEFENDmarker.y, yellowDEFENDmarker.x + 10, yellowDEFENDmarker.y );
 			g.drawLine(yellowDEFENDmarker.x, yellowDEFENDmarker.y - 10, yellowDEFENDmarker.x, yellowDEFENDmarker.y + 10);
+			g.drawOval(yellowDEFENDmarker.x - 22, yellowDEFENDmarker.y - 22, 44, 44);
 		}
 
 		if(yellowATTACKmarker != null){
 			g.drawLine(yellowATTACKmarker.x - 10, yellowATTACKmarker.y, yellowATTACKmarker.x + 10, yellowATTACKmarker.y );
 			g.drawLine(yellowATTACKmarker.x, yellowATTACKmarker.y - 10, yellowATTACKmarker.x, yellowATTACKmarker.y + 10);
+			g.drawOval(yellowATTACKmarker.x - 22, yellowATTACKmarker.y - 22, 44, 44);
 		}
 		if(blueDEFENDmarker != null){
 			g.drawLine(blueDEFENDmarker.x - 10, blueDEFENDmarker.y, blueDEFENDmarker.x + 10, blueDEFENDmarker.y );
 			g.drawLine(blueDEFENDmarker.x, blueDEFENDmarker.y - 10, blueDEFENDmarker.x, blueDEFENDmarker.y + 10);
+			//g.drawOval(blueDEFENDmarker.x - 22, blueDEFENDmarker.y - 22, 44, 44);
 		}
 
 		if(blueATTACKmarker != null){
 			g.drawLine(blueATTACKmarker.x - 10, blueATTACKmarker.y, blueATTACKmarker.x + 10, blueATTACKmarker.y );
 			g.drawLine(blueATTACKmarker.x, blueATTACKmarker.y - 10, blueATTACKmarker.x, blueATTACKmarker.y + 10);
+			//g.drawOval(blueATTACKmarker.x - 22, blueATTACKmarker.y - 22, 44, 44);
 		}
 		
 
@@ -387,8 +399,10 @@ public class ObjectLocations {
 		g.setColor(Color.RED);
 		if(dots != null){
 			for(Point2D_I32 p: dots){
-				g.drawLine(p.x - 10, p.y, p.x + 10, p.y );
-				g.drawLine(p.x, p.y - 10, p.x, p.y + 10);
+				if(p != null){
+					g.drawLine(p.x - 10, p.y, p.x + 10, p.y );
+					g.drawLine(p.x, p.y - 10, p.x, p.y + 10);
+				}
 			}
 		}
 		g.setColor(c);

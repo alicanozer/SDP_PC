@@ -58,7 +58,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private static boolean lock = true;
 
 	public static void main(String args[]){
-		ObjectLocations.setYellowDefendingLeft(false);
+		ObjectLocations.setYellowDefendingLeft(true);
 		ObjectLocations.setYellowUs(true);
 		try {
 			SwingUtilities.invokeLater(new Runnable() {
