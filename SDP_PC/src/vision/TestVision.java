@@ -34,7 +34,6 @@ public class TestVision {
 		
 		BufferedImage img3 = ImageIO.read(new File("test_images/cropped5.jpg"));
 
-		ObjectLocations.setRegions(img2);
 		ObjectLocations.setYellowDefendingLeft(true);
 		ObjectLocations.setYellowUs(true);
 		

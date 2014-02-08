@@ -313,7 +313,7 @@ public class VisionOps {
 		}
 		else if(type.equals("lines")){
 			//BlurImageOps.gaussian(input.getBand(0), input.getBand(0), -1, 3, null);
-			ThresholdImageOps.threshold(input.getBand(0),binary,(float)100,false);
+			ThresholdImageOps.threshold(input.getBand(0),binary,(float)180,false);
 		}
 
 
@@ -324,13 +324,12 @@ public class VisionOps {
 		return contours;
 	}
 	/**
-	 * This method returns the center of the ball. Method uses hardcoded values
-	 * that were obtained by testing
-	 * @param img The input image
-	 * @return the coordinates as a Point2D_I32
+	 * 
+	 * @param img
+	 * @return
 	 */
-	public static Point2D_I32 findBall(MultiSpectral<ImageFloat32> img){
-		List<Contour> contours = getContours("ball",img);//,segmentHSV(img, 6.21f, 0.88f));
+	public static Point2D_I32 findBall(BufferedImage img){
+		List<Contour> contours = newHSVSegment("ball",img);//,segmentHSV(img, 6.21f, 0.88f));
 		if(contours.size() > 1 ){
 			System.out.println("WARNING: MORE THAN 1 ball detected");
 			return null;
@@ -347,9 +346,9 @@ public class VisionOps {
 	 * @param type
 	 * @return
 	 */
-	private static ArrayList<Point2D_I32> findMarkers(MultiSpectral<ImageFloat32> img, String type){
+	private static ArrayList<Point2D_I32> findMarkers(BufferedImage img, String type){
 		if(type == "yellow"){
-			List<Contour> contours = getContours("yellow",img);//segmentHSV(img, 0.7f, 0.95f));
+			List<Contour> contours = newHSVSegment("yellow",img);//segmentHSV(img, 0.7f, 0.95f));
 			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
 				System.out.println("WARNING: ONLY ONE yellow marker was detected");
@@ -367,7 +366,7 @@ public class VisionOps {
 			return ret;
 		}
 		else if(type == "blue"){
-			List<Contour> contours = getContours("blue",img);//segmentHSV(img, 3.31f, 0.538f));
+			List<Contour> contours = newHSVSegment("blue",img);//segmentHSV(img, 3.31f, 0.538f));
 			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
 				System.out.println("WARNING: ONLY ONE blue marker was detected");
@@ -392,7 +391,7 @@ public class VisionOps {
 	 * @param img
 	 * @return
 	 */
-	public static ArrayList<Point2D_I32> findBlueMarkers(MultiSpectral<ImageFloat32> img){
+	public static ArrayList<Point2D_I32> findBlueMarkers(BufferedImage img){
 		return findMarkers(img,"blue");
 	}
 	/**
@@ -400,7 +399,7 @@ public class VisionOps {
 	 * @param img
 	 * @return
 	 */
-	public static ArrayList<Point2D_I32> findYellowMarkers(MultiSpectral<ImageFloat32> img){
+	public static ArrayList<Point2D_I32> findYellowMarkers(BufferedImage img){
 		return findMarkers(img,"yellow");
 	}
 	/**
@@ -442,10 +441,16 @@ public class VisionOps {
 		// Convert into HSV
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
-		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)65,true);
-
-
 		
+		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)90,true);
+		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)50,false);
+		
+		ImageUInt8 lowerHue = ThresholdImageOps.threshold(hsv.getBand(0),null,0.69f,true);
+		ImageUInt8 upperHue = ThresholdImageOps.threshold(hsv.getBand(0),null,1.13f,false);
+		
+		BinaryImageOps.logicAnd(lowerValue, upperValue, binary);
+//		BinaryImageOps.logicAnd(lowerHue, binary, binary);
+//		BinaryImageOps.logicAnd(upperHue, binary, binary);
 
 		//
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
@@ -456,13 +461,13 @@ public class VisionOps {
 		List<Contour> contours = new ArrayList<Contour>();
 		
 		for(int i = 0; i < contoursFull.size(); i++){
-			//System.out.println("contour size " + contoursFull.get(i).external.size());
+			System.out.println("contour size " + contoursFull.get(i).external.size());
 			if(contoursFull.get(i).external.size() > 15 && contoursFull.get(i).external.size() < 30){
 				contours.add(contoursFull.get(i));
 			}
 		}
 		if(contours.size() == 0){
-			System.out.println("WARNING: " + contours.size() + " dots detected");
+			//System.out.println("WARNING: " + contours.size() + " dots detected");
 			return null;
 		}
 		else if(contours.size() > 1){
