@@ -194,39 +194,25 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
 
 		lastFrame = thisFrame;
-		try {
-			if(frameCounter < 3){
-				frameCounter++;
-				frame.recycle();
-				return;
-
-			}
-			else if (frameCounter == 3){
-				frameCounter++;
-				ObjectLocations.setRegions(img);
-				frame.recycle();
-				return;
-			}
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
 		
-		float[] hues = {0f, 0.5f, 2.79f, 0.5f}; 
-		float[] saturations = {0.78f, 0.74f, 0.315f, 0.4f};
-		//img2 = ConvertBufferedImage.convertTo_F32(VisionOps.segmentMultiHSV(img2, hues, saturations)[0], null, true);
-		img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
+		float[] hues = {0.5f}; 
+		float[] saturations = {0.4f};
+		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
 		
+		//img = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
 
-		//img = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img, hues, saturations)[3]);
 		
 
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
-		
+
+		g.setColor(Color.BLACK);
+		// the 3 regions
+		g.drawLine(130, 0, 130, img.getHeight());
+		g.drawLine(280, 0, 280, img.getHeight());
+		g.drawLine(430, 0, 430, img.getHeight());
 
 		try {
 			ballPrvPos = ObjectLocations.ball;
@@ -234,18 +220,28 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			yellowDefendPrvPos = ObjectLocations.yellowDEFENDmarker;
 			blueAttackPrvPos = ObjectLocations.blueATTACKmarker;
 			blueDefendPrvPos = ObjectLocations.blueDEFENDmarker;
-			
-			
+
+
 			ObjectLocations.updateObjectLocations(img);
 			ballCurPos = ObjectLocations.ball;
 			yellowAttackCurPos = ObjectLocations.yellowATTACKmarker;
 			yellowDefendCurPos = ObjectLocations.yellowDEFENDmarker;
 			blueAttackCurPos = ObjectLocations.blueATTACKmarker;
 			blueDefendCurPos = ObjectLocations.blueDEFENDmarker;
-			
+
 			//System.out.print(VisionOps.getDirection(ballPrvPos, ballCurPos)); 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
 			String[] objs = {"ball", "blahs"};
 			ObjectLocations.drawAllDirections(g, objs);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
 			ObjectLocations.drawCrosses(g);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

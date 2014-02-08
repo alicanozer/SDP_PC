@@ -30,15 +30,11 @@ public class ObjectLocations {
 	private static boolean yellowUs;   // flag whether we are the yellow team
 	private static boolean regionsSet = false; // flag whether regions were set
 
-	private static Polygon region1 = null;
-	private static Polygon region2 = null;
-	private static Polygon region3 = null;
-	private static Polygon region4 = null;
+	private static int region12X = 130;
+	private static int region23X = 280;
+	private static int region34X = 430;
 
-	private static Point2D_I32 region1Centre = null;
-	private static Point2D_I32 region2Centre = null;
-	private static Point2D_I32 region3Centre = null;
-	private static Point2D_I32 region4Centre = null;
+
 	// lock
 	private static boolean lock = true;
 
@@ -49,83 +45,83 @@ public class ObjectLocations {
 	 * @return TRUE if the regions are or were already set, FALSE otherwise
 	 * @throws Exception
 	 */
-	public static boolean setRegions(BufferedImage img) throws Exception{
-		boolean done = false;
-		if(!regionsSet){
-			System.out.println("Attempting to construct the internal representation of the field...");
-			float[] hues = {0.5f};
-			float[] saturations = {0.4f};
-			ArrayList<Polygon> regions = null;
-			try {
-				regions = VisionOps.getRegions(VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if(regions != null){
-				System.out.println("Successfully constructed the internal representation of the field.");
-			}
-			else{
-				System.out.println(
-						"WARNING: Unable to construct the internal representation of the field, will attempty at next frame.\n " +
-						"Is there clutter on the pitch?");
-				return false;
-			}
-			for(Polygon p: regions) {
-				System.out.println(p);
-				System.out.println(p.npoints);
-				int x = 0;
-				int y = 0;
-				int npoints = p.npoints;
-				for(int i=0;i<npoints;i++){
-					 x += p.xpoints[i];
-					 y += p.ypoints[i];
-				}
-				System.out.println("Polygon coords : " + x/npoints + " " + y/npoints);
-			}
-			//busy wait for others to release lock
-			while(!lock);
-
-			//entering critical section
-			lock = false;
-
-			Point2D_I32[] polCentroid = new Point2D_I32[4];
-			for(int z = 0 ; z < 4; z++){
-				polCentroid[z] = ContourUtils.getPolygonCentroid(regions.get(z));
-			}
-
-			int i = polCentroid[0].x;
-			int j = polCentroid[1].x;
-			int k = polCentroid[2].x;
-			int l = polCentroid[3].x;
-
-			int[] order = sort(i,j,k,l);
-			
-			region1 = regions.get(order[0] - 1);
-			region1Centre = polCentroid[order[0] - 1];
-			
-			region2 = regions.get(order[1] - 1);
-			region2Centre = polCentroid[order[1] - 1];
-			
-			region3 = regions.get(order[2] - 1);
-			region3Centre = polCentroid[order[2] - 1];
-			
-			region4 = regions.get(order[3] - 1);
-			region4Centre = polCentroid[order[3] - 1];
-
-			lock = true;
-			regionsSet = true;
-			// leaving critical section
-			return true;
-		}
-		else{
-			return true;
-			/**
-			 * do NOTHING
-			 */
-		}
-
-	}
+//	public static boolean setRegions(BufferedImage img) throws Exception{
+//		boolean done = false;
+//		if(!regionsSet){
+//			System.out.println("Attempting to construct the internal representation of the field...");
+//			float[] hues = {0.5f};
+//			float[] saturations = {0.4f};
+//			ArrayList<Polygon> regions = null;
+//			try {
+//				regions = VisionOps.getRegions(VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			if(regions != null){
+//				System.out.println("Successfully constructed the internal representation of the field.");
+//			}
+//			else{
+//				System.out.println(
+//						"WARNING: Unable to construct the internal representation of the field, will attempty at next frame.\n " +
+//						"Is there clutter on the pitch?");
+//				return false;
+//			}
+//			for(Polygon p: regions) {
+//				System.out.println(p);
+//				System.out.println(p.npoints);
+//				int x = 0;
+//				int y = 0;
+//				int npoints = p.npoints;
+//				for(int i=0;i<npoints;i++){
+//					 x += p.xpoints[i];
+//					 y += p.ypoints[i];
+//				}
+//				System.out.println("Polygon coords : " + x/npoints + " " + y/npoints);
+//			}
+//			//busy wait for others to release lock
+//			while(!lock);
+//
+//			//entering critical section
+//			lock = false;
+//
+//			Point2D_I32[] polCentroid = new Point2D_I32[4];
+//			for(int z = 0 ; z < 4; z++){
+//				polCentroid[z] = ContourUtils.getPolygonCentroid(regions.get(z));
+//			}
+//
+//			int i = polCentroid[0].x;
+//			int j = polCentroid[1].x;
+//			int k = polCentroid[2].x;
+//			int l = polCentroid[3].x;
+//
+//			int[] order = sort(i,j,k,l);
+//			
+//			region1 = regions.get(order[0] - 1);
+//			region1Centre = polCentroid[order[0] - 1];
+//			
+//			region2 = regions.get(order[1] - 1);
+//			region2Centre = polCentroid[order[1] - 1];
+//			
+//			region3 = regions.get(order[2] - 1);
+//			region3Centre = polCentroid[order[2] - 1];
+//			
+//			region4 = regions.get(order[3] - 1);
+//			region4Centre = polCentroid[order[3] - 1];
+//
+//			lock = true;
+//			regionsSet = true;
+//			// leaving critical section
+//			return true;
+//		}
+//		else{
+//			return true;
+//			/**
+//			 * do NOTHING
+//			 */
+//		}
+//
+//	}
 	public static void setYellowDefendingLeft(boolean flag){
 		while(!lock);
 
@@ -188,16 +184,9 @@ public class ObjectLocations {
 
 	}
 	public static void updateObjectLocations(BufferedImage img){
-		
-		float[] hues = {0f, 0.5f, 2.79f, 0.5f}; 
-		float[] saturations = {0.78f, 0.74f, 0.315f, 0.4f};
-//		float[] hues = {6.21f,0.7f,3.14f}; 
-//		float[] saturations = {0.88f,0.95f,0.605f}; 
-		MultiSpectral<ImageFloat32>[] segmented = VisionOps.segmentMultiHSV(img,hues,saturations);
-
-		Point2D_I32 ballLocal = VisionOps.findBall(segmented[0]);
-		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkers(segmented[1]);
-		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkers(segmented[2]);
+		Point2D_I32 ballLocal = VisionOps.findBall(img);
+		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkers(img);
+		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkers(img);
 
 		ArrayList<Point2D_I32> dotsLocal = new ArrayList<Point2D_I32>();
 
@@ -216,61 +205,38 @@ public class ObjectLocations {
 		//setting the ball
 		setBall(ballLocal);
 		
-//		if(ContourUtils.isInside(ball, region1)){
-//			System.out.println("ball is in region 1");
-//			System.out.println("ball location : " + ball.x + " " + ball.y);
-//			System.out.println("region 1 centroid : " + region1Centre.x + " " + region1Centre.y);
-//		}
-//		else if(ContourUtils.isInside(ball, region2)){
-//			System.out.println("ball is in region 2");
-//		}
-//		else if(ContourUtils.isInside(ball, region3)){
-//			System.out.println("ball is in region 3");
-//		}
-//		else if(ContourUtils.isInside(ball, region4)){
-//			System.out.println("ball is in region 4");
-//		}
-		//setting the yellow robots, by cases
-//		if(ContourUtils.isInside(yellowMarkers.get(0), region1) && ContourUtils.isInside(yellowMarkers.get(1), region3) && yellowLeft) {
-//			setYellowDEFENDmarker(yellowMarkers.get(0));
-//			setYellowATTACKmarker(yellowMarkers.get(1));
-//			
-//		}
-//		else if(ContourUtils.isInside(yellowMarkers.get(1), region1) && ContourUtils.isInside(yellowMarkers.get(0), region3) && yellowLeft) {
-//			setYellowDEFENDmarker(yellowMarkers.get(1));
-//			setYellowATTACKmarker(yellowMarkers.get(0));
-//		}
-//		else if(ContourUtils.isInside(yellowMarkers.get(0), region2) && ContourUtils.isInside(yellowMarkers.get(1), region4) && !yellowLeft) {
-//			setYellowDEFENDmarker(yellowMarkers.get(0));
-//			setYellowATTACKmarker(yellowMarkers.get(1));
-//		}
-//		else if(ContourUtils.isInside(yellowMarkers.get(1), region2) && ContourUtils.isInside(yellowMarkers.get(0), region4) && !yellowLeft) {
-//			setYellowDEFENDmarker(yellowMarkers.get(1));
-//			setYellowATTACKmarker(yellowMarkers.get(0));
-//		}
-//		else{
-//			System.err.println("Unable to locate yellow robots");
-//		}
-//		//setting the blue robots by cases
-//		if(ContourUtils.isInside(blueMarkers.get(0), region1) && ContourUtils.isInside(blueMarkers.get(1), region3) && !yellowLeft) {
-//			setBlueDEFENDmarker(blueMarkers.get(0));
-//			setBlueATTACKmarker(blueMarkers.get(1));
-//		}
-//		else if(ContourUtils.isInside(blueMarkers.get(1), region1) && ContourUtils.isInside(blueMarkers.get(0), region3) && !yellowLeft) {
-//			setBlueDEFENDmarker(blueMarkers.get(1));
-//			setBlueATTACKmarker(blueMarkers.get(0));
-//		}
-//		else if(ContourUtils.isInside(blueMarkers.get(0), region2) && ContourUtils.isInside(blueMarkers.get(1), region4) && yellowLeft) {
-//			setBlueDEFENDmarker(blueMarkers.get(0));
-//			setBlueATTACKmarker(blueMarkers.get(1));
-//		}
-//		else if(ContourUtils.isInside(blueMarkers.get(1), region2) && ContourUtils.isInside(blueMarkers.get(0), region4) && yellowLeft) {
-//			setBlueDEFENDmarker(blueMarkers.get(1));
-//			setBlueATTACKmarker(blueMarkers.get(0));
-//		}
-//		else{
-//			System.err.println("Unable to locate blue robots");
-//		}
+		if(yellowLeft){
+			//set yellow
+			if(yellowMarkers != null){
+				for(Point2D_I32 p: yellowMarkers){
+					if(p.x < region12X) setYellowDEFENDmarker(p);
+					if(region23X < p.x && p.x < region23X) setYellowATTACKmarker(p);
+				}
+			}
+			//set blue
+			if(blueMarkers != null){
+				for(Point2D_I32 p: blueMarkers){
+					if(region12X < p.x && p.x < region23X) setBlueATTACKmarker(p);
+					if(p.x > region34X) setBlueDEFENDmarker(p);
+				}
+			}
+		}
+		else{ // blueLeft
+			//set yellow
+			if(yellowMarkers != null){
+				for(Point2D_I32 p: yellowMarkers){
+					if(region12X < p.x && p.x < region23X) setYellowATTACKmarker(p);
+					if(p.x > region34X) setYellowDEFENDmarker(p);
+				}
+			}
+			//set blue
+			if(blueMarkers != null){
+				for(Point2D_I32 p: blueMarkers){
+					if(p.x < region12X) setBlueDEFENDmarker(p);
+					if(region23X < p.x && p.x < region34X) setBlueATTACKmarker(p);
+				}
+			}
+		}
 		
 		dots = dotsLocal;
 		
@@ -411,19 +377,19 @@ public class ObjectLocations {
 		if (ObjectLocations.ball != null) {
 			// drawing X over ball			//		
 			g.drawLine(ObjectLocations.ball.x - 10, ObjectLocations.ball.y, ObjectLocations.ball.x + 10, ObjectLocations.ball.y);
-			g.drawLine(ObjectLocations.ball.x, ObjectLocations.ball.y - 10, ObjectLocations.ball.x, ObjectLocations.ball.y + 10);
+			//g.drawLine(ObjectLocations.ball.x, ObjectLocations.ball.y - 10, ObjectLocations.ball.x, ObjectLocations.ball.y + 10);
 		}
 		// WRONG position of yellowDEFENDmarker
 		if(yellowDEFENDmarker != null){
 			g.drawLine(yellowDEFENDmarker.x - 10, yellowDEFENDmarker.y, yellowDEFENDmarker.x + 10, yellowDEFENDmarker.y );
 			g.drawLine(yellowDEFENDmarker.x, yellowDEFENDmarker.y - 10, yellowDEFENDmarker.x, yellowDEFENDmarker.y + 10);
-			g.drawOval(yellowDEFENDmarker.x - 22, yellowDEFENDmarker.y - 22, 44, 44);
+			//g.drawOval(yellowDEFENDmarker.x - 22, yellowDEFENDmarker.y - 22, 44, 44);
 		}
 
 		if(yellowATTACKmarker != null){
 			g.drawLine(yellowATTACKmarker.x - 10, yellowATTACKmarker.y, yellowATTACKmarker.x + 10, yellowATTACKmarker.y );
 			g.drawLine(yellowATTACKmarker.x, yellowATTACKmarker.y - 10, yellowATTACKmarker.x, yellowATTACKmarker.y + 10);
-			g.drawOval(yellowATTACKmarker.x - 22, yellowATTACKmarker.y - 22, 44, 44);
+			//g.drawOval(yellowATTACKmarker.x - 22, yellowATTACKmarker.y - 22, 44, 44);
 		}
 		if(blueDEFENDmarker != null){
 			g.drawLine(blueDEFENDmarker.x - 10, blueDEFENDmarker.y, blueDEFENDmarker.x + 10, blueDEFENDmarker.y );
@@ -437,23 +403,6 @@ public class ObjectLocations {
 			//g.drawOval(blueATTACKmarker.x - 22, blueATTACKmarker.y - 22, 44, 44);
 		}
 		
-
-		
-		if(region1Centre != null){
-			g.drawString("1", region1Centre.x, region1Centre.y);
-		}
-
-		if(region2Centre != null){
-			g.drawString("2", region2Centre.x, region2Centre.y);
-		}
-
-		if(region3Centre != null){
-			g.drawString("3", region3Centre.x, region3Centre.y);
-		}
-
-		if(region4Centre != null){
-			g.drawString("4", region4Centre.x, region4Centre.y);
-		}
 		g.setColor(Color.RED);
 		if(dots != null){
 			for(Point2D_I32 p: dots){
