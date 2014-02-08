@@ -53,21 +53,39 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 	private JLabel          label;
 	private JFrame          frame;
+	
+	public static Point2D_I32 ballPrvPos;
+	public static Point2D_I32 yellowAttackPrvPos;
+	public static Point2D_I32 yellowDefendPrvPos;
+	public static Point2D_I32 blueAttackPrvPos;
+	public static Point2D_I32 blueDefendPrvPos;
+	
+	public static Point2D_I32 ballCurPos;
+	public static Point2D_I32 yellowAttackCurPos;
+	public static Point2D_I32 yellowDefendCurPos;
+	public static Point2D_I32 blueAttackCurPos;
+	public static Point2D_I32 blueDefendCurPos;
+	
 	private static BufferedImage segOutputBall;
 
-
+	private static boolean lock = true;
 
 	public static void main(String args[]){
-
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new SimpleViewer();
-			}
-			
-			
-			
-		});
+		ObjectLocations.setYellowDefendingLeft(false);
+		ObjectLocations.setYellowUs(true);
+		try {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					new SimpleViewer();
+				}
+			});
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("i failed miserably and now I must die to repent for my sins... ");
+		}
+		
 	}
 
 	/**
@@ -166,105 +184,64 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	@Override
 	public void nextFrame(VideoFrame frame) {
 		BufferedImage img = frame.getBufferedImage();
-		img = img.getSubimage(50, 60, 550, 316);
+		img = img.getSubimage(50, 70, 540, 316);
 		width = 550;
 		height = 316;
 		long thisFrame = System.currentTimeMillis();
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
 
 		lastFrame = thisFrame;
-		if(frameCounter < 3){
-			frameCounter++;
-			frame.recycle();
-			return;
-		}
-		if (frameCounter == 3){
-			System.out.println("Attempting to construct the internal representation of the field...");
-			float[] hues = {0.5f};
-			float[] saturations = {0.4f};
-			regions = VisionOps.getRegions(VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
-			frameCounter++;
-			if(regions.size() == 4){
-				System.out.println("Successfully constructed the internal representation of the field.");
-			}
-			else{
-				System.out.println(
-						"WARNING: Unable to construct the internal representation of the field, will attempty at next frame.\n " +
-						"Is there clutter on the pitch?");
-			}
-			frame.recycle();
-			System.out.println("Starting to capture...");
-			return;
-		}
-
-		//threading needs to be added here
 		
-//		Point2D_I32 ballPos = VisionOps.findBall(img);
-//		Point2D_I32[] yellowMarkersPos = VisionOps.findYellowMarkers(img);
-//		Point2D_I32[] blueMarkersPos = VisionOps.findBlueMarkers(img);
-		float[] hues = {6.21f,0.7f,3.14f };
-		float[] saturations = {0.88f,0.95f,0.605f};
+		float[] hues = {0.5f}; 
+		float[] saturations = {0.4f};
+		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
 		
-		//img = ConvertBufferedImage.convertTo_F32(VisionOps.segmentMultiHSV(img, hues, saturations)[2], null ,true);
-		//img = VisionOps.contourOps("blue", VisionOps.segmentMultiHSV(img, hues, saturations)[2]);
+		//img = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
 		
-
-
-		//img = VisionOps.segmentMultiHSV(img, hues , saturations);
-		//ArrayList<Point2D_I32> dotsPos = VisionOps.findrgb(img, 5, 20, 0.35, 0.35, 1-(0.35 + 0.35));
-		//System.out.println(dotsPos);
-		//this is the old code but I keep it for now, we'll
-		// remove it when we are sure our methods work
-		//img = VisionOps.segmentHSV(img, 6.21f, 0.88f); // ball
-		//img = VisionOps.segmentHSV("Marker(I) Yellow", img, 0.7f, 0.95f);
-		//img = VisionOps.segmentHSV(img, 0.5f, 0.4f); // lines
-		//img = VisionOps.segmentHSV(img, 2.0f, 0.55f); // field
-		//img = VisionOps.contourOps("", img);
-		//img = VisionOps.segmentHSV(img, 3.31f, 0.538f); // blue
-		//img = VisionOps.contourOps("lines", img);
-		
-		//img = VisionOps.segmentHSV(img,  1.04f, 0.218f); // blue
-		//img = VisionOps.contourOps("dots", img);
 		Graphics2D g = (Graphics2D) label.getGraphics();
-		// this draws the frame grabber	 
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
+		g.setColor(Color.BLACK);
+		// the 3 regions
+		g.drawLine(130, 0, 130, img.getHeight());
+		g.drawLine(280, 0, 280, img.getHeight());
+		g.drawLine(430, 0, 430, img.getHeight());
+		try {
+			ballPrvPos = ObjectLocations.ball;
+			yellowAttackPrvPos = ObjectLocations.yellowATTACKmarker;
+			yellowDefendPrvPos = ObjectLocations.yellowDEFENDmarker;
+			blueAttackPrvPos = ObjectLocations.blueATTACKmarker;
+			blueDefendPrvPos = ObjectLocations.blueDEFENDmarker;
+
+
+			ObjectLocations.updateObjectLocations(img);
+			ballCurPos = ObjectLocations.ball;
+			yellowAttackCurPos = ObjectLocations.yellowATTACKmarker;
+			yellowDefendCurPos = ObjectLocations.yellowDEFENDmarker;
+			blueAttackCurPos = ObjectLocations.blueATTACKmarker;
+			blueDefendCurPos = ObjectLocations.blueDEFENDmarker;
+
+			//System.out.print(VisionOps.getDirection(ballPrvPos, ballCurPos)); 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			String[] objs = {"ball", "blahs"};
+			ObjectLocations.drawAllDirections(g, objs);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			ObjectLocations.drawCrosses(g);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		ObjectLocations obs = VisionOps.getObjectLocations(img);
-		
-		obs.drawCrosses(g);
-//		//draw X over ball
-//		if(obs.ball != null){
-//			g.drawLine(obs.ball.getX() - 10, obs.ball.getY(), obs.ball.getX() +10, obs.ball.getY());
-//			g.drawLine(obs.ball.getX() , obs.ball.getY() - 10, obs.ball.getX(), obs.ball.getY() + 10);
-//		}
-////		//draw X over yellow markers
-//		if(obs.yellowMarkers != null){
-//			for(int i = 0; i < obs.yellowMarkers.length; i++){
-//				if(obs.yellowMarkers[i] != null){
-//					g.drawLine(obs.yellowMarkers[i].getX() - 10, obs.yellowMarkers[i].getY(), obs.yellowMarkers[i].getX() +10, obs.yellowMarkers[i].getY());
-//					g.drawLine(obs.yellowMarkers[i].getX() , obs.yellowMarkers[i].getY() - 10, obs.yellowMarkers[i].getX(), obs.yellowMarkers[i].getY() + 10);
-//				}
-//			}
-//		}
-//////		//draw X over yellow markers
-//		if(obs.blueMarkers != null){
-//			for(int i = 0; i < obs.blueMarkers.length; i++){
-//				if(obs.blueMarkers[i] != null){
-//					g.drawLine(obs.blueMarkers[i].getX() - 10, obs.blueMarkers[i].getY(), obs.blueMarkers[i].getX() +10, obs.blueMarkers[i].getY());
-//					g.drawLine(obs.blueMarkers[i].getX() , obs.blueMarkers[i].getY() - 10, obs.blueMarkers[i].getX(), obs.blueMarkers[i].getY() + 10);
-//				}
-//			}
-//		}
-////		if(dotsPos != null){
-////		g.drawLine(dotsPos[0].getX() - 10, dotsPos[0].getY(), dotsPos[0].getX() +10, dotsPos[0].getY());
-////		g.drawLine(dotsPos[0].getX() , dotsPos[0].getY() - 10, dotsPos[0].getX(), dotsPos[0].getY() + 10);
-////
-////		g.drawLine(dotsPos[1].getX() - 10, dotsPos[1].getY(), dotsPos[1].getX() +10, dotsPos[1].getY());
-////		g.drawLine(dotsPos[1].getX() , dotsPos[1].getY() - 10, dotsPos[1].getX(), dotsPos[1].getY() + 10);
-////	}
-//		// recycle the frame
+
 
 		frame.recycle();
 	}
