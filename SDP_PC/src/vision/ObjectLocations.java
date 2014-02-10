@@ -30,10 +30,14 @@ public class ObjectLocations {
 	private static boolean yellowUs;   // flag whether we are the yellow team
 	private static boolean regionsSet = false; // flag whether regions were set
 
-	private static int region12X = 130;
-	private static int region23X = 280;
-	private static int region34X = 430;
-
+	//new pitch
+//	private static int region12X = 130;
+//	private static int region23X = 280;
+//	private static int region34X = 430;
+	//old pitch
+	private static int region12X = 120;
+	private static int region23X = 270;
+	private static int region34X = 420;
 
 	// lock
 	private static boolean lock = true;
@@ -210,7 +214,7 @@ public class ObjectLocations {
 			if(yellowMarkers != null){
 				for(Point2D_I32 p: yellowMarkers){
 					if(p.x < region12X) setYellowDEFENDmarker(p);
-					if(region23X < p.x && p.x < region23X) setYellowATTACKmarker(p);
+					if(region23X < p.x && p.x < region34X) setYellowATTACKmarker(p);
 				}
 			}
 			//set blue
@@ -356,7 +360,7 @@ public class ObjectLocations {
 				}
 			}
 		else{
-			throw new Exception("what the hell is a "+ object +" ?");
+//			/throw new Exception("what the hell is a "+ object +" ?");
 		}
 	}
 	
@@ -377,7 +381,7 @@ public class ObjectLocations {
 		if (ObjectLocations.ball != null) {
 			// drawing X over ball			//		
 			g.drawLine(ObjectLocations.ball.x - 10, ObjectLocations.ball.y, ObjectLocations.ball.x + 10, ObjectLocations.ball.y);
-			//g.drawLine(ObjectLocations.ball.x, ObjectLocations.ball.y - 10, ObjectLocations.ball.x, ObjectLocations.ball.y + 10);
+			g.drawLine(ObjectLocations.ball.x, ObjectLocations.ball.y - 10, ObjectLocations.ball.x, ObjectLocations.ball.y + 10);
 		}
 		// WRONG position of yellowDEFENDmarker
 		if(yellowDEFENDmarker != null){

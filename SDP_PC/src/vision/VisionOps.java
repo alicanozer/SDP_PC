@@ -211,36 +211,65 @@ public class VisionOps {
 		switch(type){
 		case "ball":
 			// hue goes 0 to 2pi
-			ImageUInt8 lowerHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.0f,false);
-			ImageUInt8 upperHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.22f,true);
+			ImageUInt8 lowerHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 6.10f,false);
+			ImageUInt8 upperHueBall = ThresholdImageOps.threshold(hsv.getBand(0),binary, 0.10f,true);
 			
 			ImageUInt8 lowerSaturationBall = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.66f,false);
-			BinaryImageOps.logicAnd(lowerHueBall, upperHueBall, binary);
+			BinaryImageOps.logicOr(lowerHueBall, upperHueBall, binary);
 			BinaryImageOps.logicAnd(binary, lowerSaturationBall, binary);
 			break;	
 		case "blue":
-			BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
-			BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
-			
-			ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 1.97f,false); // was 1.97
-			ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.14f,true); // was 3.14
-			
-			ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.30f,true); //was 0.25
-			BinaryImageOps.logicAnd(lowerHueBlue, upperHueBlue, binary);
-			BinaryImageOps.logicAnd(binary, upperSaturationBlue, binary);
+			if(false){ // new pitch but doesnt work
+				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
+				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
+
+				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 1.97f,false); // was 1.97
+				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.14f,true); // was 3.14
+
+				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.30f,true); //was 0.25
+				BinaryImageOps.logicAnd(lowerHueBlue, upperHueBlue, binary);
+				BinaryImageOps.logicAnd(binary, upperSaturationBlue, binary);
+			}
+			else{// old pitchj
+				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
+				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
+
+				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.10f,false); // was 3.14
+				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.49f,true); // was 3.49
+
+				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.62f,false); //was 0.70
+				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.862f,true); //was 0.82
+				
+				BinaryImageOps.logicAnd(lowerHueBlue, upperHueBlue, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationBlue, binary);
+				BinaryImageOps.logicAnd(binary, upperSaturationBlue, binary);
+			}
 			break;
 		case "yellow":
-			ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.34f,false); // was 0.34
-			ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.69f,true); // was 0.69
+			if(false){ // new pitch
+				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.34f,false); // was 0.34
+				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.69f,true); // was 0.69
+
+				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.65f,false); // was 0.62
+				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.86f,true); // was 0.86
+				//values are 0..255
+
+				BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
+				BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
+				BlurImageOps.gaussian(binary, binary, 4, 5, null);
+			}
+			else{//old pitch
+				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.52f,false); // was 0.34
+				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.87f,true); // was 0.69
+
+				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.74f,false); // was 0.62
+				//ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.86f,true); // was 0.86
+				BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
+//				BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
+			}
 			
-			ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.65f,false); // was 0.62
-			ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.86f,true); // was 0.86
-			//values are 0..255
-			
-			BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
-			BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
-			BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
-			BlurImageOps.gaussian(binary, binary, 4, 5, null);
 		}
 		
 		
