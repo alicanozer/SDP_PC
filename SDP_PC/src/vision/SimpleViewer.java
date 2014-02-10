@@ -16,14 +16,20 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import org.ddogleg.struct.FastQueue;
+import org.ddogleg.struct.FastQueueList;
+
 import boofcv.alg.color.ColorHsv;
+import boofcv.alg.feature.detect.edge.CannyEdge;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
 import boofcv.alg.filter.binary.ThresholdImageOps;
 import boofcv.core.image.ConvertBufferedImage;
+import boofcv.factory.feature.detect.edge.FactoryEdgeDetectors;
 import boofcv.gui.binary.VisualizeBinaryData;
 import boofcv.gui.image.ShowImages;
 import boofcv.struct.image.ImageFloat32;
+import boofcv.struct.image.ImageSInt16;
 import boofcv.struct.image.ImageSInt32;
 import boofcv.struct.image.ImageUInt8;
 import boofcv.struct.image.MultiSpectral;
@@ -71,7 +77,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private static boolean lock = true;
 
 	public static void main(String args[]){
-		ObjectLocations.setYellowDefendingLeft(false);
+		ObjectLocations.setYellowDefendingLeft(true);
 		ObjectLocations.setYellowUs(true);
 		try {
 			SwingUtilities.invokeLater(new Runnable() {
@@ -194,9 +200,29 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		
 		float[] hues = {0.5f}; 
 		float[] saturations = {0.4f};
-		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
+		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
 		
 		//img = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
+		
+//		ImageUInt8 gray = ConvertBufferedImage.convertFrom(img,(ImageUInt8)null);
+//		ImageUInt8 edgeImage = new ImageUInt8(gray.width,gray.height);
+//		ImageUInt8 filtered = BinaryImageOps.erode8(edgeImage,null);
+//		filtered = BinaryImageOps.dilate8(filtered, null);
+ 
+		// Create a canny edge detector which will dynamically compute the threshold based on maximum edge intensity
+		// It has also been configured to save the trace as a graph.  This is the graph created while performing
+		// hysteresis thresholding.
+		// First parameter is edge blurring threshold
+//		CannyEdge<ImageUInt8,ImageSInt16> canny = FactoryEdgeDetectors.canny(2,true, true, ImageUInt8.class, ImageSInt16.class);
+// 
+//		// The edge image is actually an optional parameter.  If you don't need it just pass in null
+//		canny.process(gray,0.06f,0.15f,filtered); //0.08 , 0.15
+ 
+		// First get the contour created by canny
+		//List<EdgeContour> edgeContours = canny.getContours();
+		// The 'edgeContours' is a tree graph that can be difficult to process.  An alternative is to extract
+		// the contours from the binary image, which will produce a single loop for each connected cluster of pixels.
+		// Note that you are only interested in external contours.
 		
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
@@ -204,9 +230,51 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		g.drawString("FPS " + frameRate , 10, 10);
 		g.setColor(Color.BLACK);
 		// the 3 regions
-		g.drawLine(130, 0, 130, img.getHeight());
-		g.drawLine(280, 0, 280, img.getHeight());
-		g.drawLine(430, 0, 430, img.getHeight());
+		g.drawLine(120, 0, 120, img.getHeight());
+		g.drawLine(270, 0, 270, img.getHeight());
+		g.drawLine(420, 0, 420, img.getHeight());
+		
+		
+//		List<Contour> contoursUnfiltered = BinaryImageOps.contour(filtered, 8, null);
+//		List<Contour> contours = new ArrayList<Contour>();
+//		
+//		try {
+//			for(Contour c: contoursUnfiltered){
+//				if(c.external.size() > 40 && c.external.size() < 130){
+//					Point2D_I32 p = ContourUtils.getContourCentroid(c);
+//					double Area = c.external.size()*c.external.size()/(4.0*Math.PI);
+//
+//					if(Area > 120.0 && Area < 350.0){ //270
+//						g.setColor(Color.white);
+//						g.drawLine(p.x - 10 , p.y, p.x + 10, p.y);
+//						g.drawLine(p.x , p.y -10, p.x , p.y +10);
+//					}
+//				}
+//				if(c.external.size() > 12 && c.external.size() < 22){
+//					p = ContourUtils.getContourCentroid(c);
+//					g.setColor(Color.white);
+//					g.drawLine(p.x - 10 , p.y, p.x + 10, p.y);
+//					g.drawLine(p.x , p.y -10, p.x , p.y +10);
+//				}
+//			}
+//		} catch (Exception e2) {
+//			// TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		}
+		
+
+		
+		// display the results
+		//BufferedImage visualBinary = VisualizeBinaryData.renderBinary(edgeImage, null); 
+		//BufferedImage visualCannyContour = VisualizeBinaryData.renderContours(edgeContours,null,gray.width,gray.height,null); 
+//		try {
+//			img = VisualizeBinaryData.renderExternal(contours, null,gray.width, gray.height, null);
+//		} catch (Exception e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//			System.exit(0);
+//		}
+		
 		try {
 			ballPrvPos = ObjectLocations.ball;
 			yellowAttackPrvPos = ObjectLocations.yellowATTACKmarker;
@@ -228,7 +296,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			e.printStackTrace();
 		}
 		try {
-			String[] objs = {"ball", "blahs"};
+			String[] objs = {"ball"};
 			ObjectLocations.drawAllDirections(g, objs);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
