@@ -1,4 +1,4 @@
-gpackage vision;
+package vision;
 
 import georegression.metric.UtilAngle;
 import georegression.struct.point.Point2D_I32;
@@ -60,17 +60,6 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private JLabel          label;
 	private JFrame          frame;
 	
-	public static Point2D_I32 ballPrvPos;
-	public static Point2D_I32 yellowAttackPrvPos;
-	public static Point2D_I32 yellowDefendPrvPos;
-	public static Point2D_I32 blueAttackPrvPos;
-	public static Point2D_I32 blueDefendPrvPos;
-	
-	public static Point2D_I32 ballCurPos;
-	public static Point2D_I32 yellowAttackCurPos;
-	public static Point2D_I32 yellowDefendCurPos;
-	public static Point2D_I32 blueAttackCurPos;
-	public static Point2D_I32 blueDefendCurPos;
 	
 	private static BufferedImage segOutputBall;
 	private static List<Point2D_I32> ballPos;
@@ -78,7 +67,8 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private static boolean lock = true;
 
 	public static void main(String args[]){
-		ObjectLocations.setYellowDefendingLeft(true);
+
+		ObjectLocations.setYellowDefendingLeft(false);
 
 		ObjectLocations.setYellowUs(true);
 		try {
@@ -202,7 +192,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		
 		float[] hues = {0.5f}; 
 		float[] saturations = {0.4f};
-		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
+		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
 		
 		//img = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
 
@@ -284,19 +274,10 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		
 
 		try {
-			ballPrvPos = ObjectLocations.ball;
-			yellowAttackPrvPos = ObjectLocations.yellowATTACKmarker;
-			yellowDefendPrvPos = ObjectLocations.yellowDEFENDmarker;
-			blueAttackPrvPos = ObjectLocations.blueATTACKmarker;
-			blueDefendPrvPos = ObjectLocations.blueDEFENDmarker;
+
 
 
 			ObjectLocations.updateObjectLocations(img);
-			ballCurPos = ObjectLocations.ball;
-			yellowAttackCurPos = ObjectLocations.yellowATTACKmarker;
-			yellowDefendCurPos = ObjectLocations.yellowDEFENDmarker;
-			blueAttackCurPos = ObjectLocations.blueATTACKmarker;
-			blueDefendCurPos = ObjectLocations.blueDEFENDmarker;
 
 			//System.out.print(VisionOps.getDirection(ballPrvPos, ballCurPos)); 
 		} catch (Exception e) {
@@ -305,7 +286,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		}
 		try {
 			String[] objs = {"ball"};
-			ObjectLocations.drawAllDirections(g, objs);
+			//ObjectLocations.drawAllDirections(g, objs);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

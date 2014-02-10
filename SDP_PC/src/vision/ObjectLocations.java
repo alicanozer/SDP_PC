@@ -23,6 +23,12 @@ public class ObjectLocations {
 	private static Point2D_I32 blueATTACKmarker = null;
 	private static Point2D_I32 blueDEFENDmarker = null;
 	
+	private static double ballAngle;
+	private static double yellowATTACKmarkerAngle;
+	private static double yellowDEFENDmarkerAngle;
+	private static double blueATTACKmarkerAngle;
+	private static double blueDEFENDmarkerAngle;
+	
 	private static ArrayList<Point2D_I32> dots = null;
 	//TODO : add orientations
 	// we assume the leftmost region of the pitch is region 1
@@ -43,89 +49,7 @@ public class ObjectLocations {
 	private static boolean lock = true;
 
 	
-	/**
-	 * attempts to set the regions
-	 * @param img
-	 * @return TRUE if the regions are or were already set, FALSE otherwise
-	 * @throws Exception
-	 */
-//	public static boolean setRegions(BufferedImage img) throws Exception{
-//		boolean done = false;
-//		if(!regionsSet){
-//			System.out.println("Attempting to construct the internal representation of the field...");
-//			float[] hues = {0.5f};
-//			float[] saturations = {0.4f};
-//			ArrayList<Polygon> regions = null;
-//			try {
-//				regions = VisionOps.getRegions(VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			if(regions != null){
-//				System.out.println("Successfully constructed the internal representation of the field.");
-//			}
-//			else{
-//				System.out.println(
-//						"WARNING: Unable to construct the internal representation of the field, will attempty at next frame.\n " +
-//						"Is there clutter on the pitch?");
-//				return false;
-//			}
-//			for(Polygon p: regions) {
-//				System.out.println(p);
-//				System.out.println(p.npoints);
-//				int x = 0;
-//				int y = 0;
-//				int npoints = p.npoints;
-//				for(int i=0;i<npoints;i++){
-//					 x += p.xpoints[i];
-//					 y += p.ypoints[i];
-//				}
-//				System.out.println("Polygon coords : " + x/npoints + " " + y/npoints);
-//			}
-//			//busy wait for others to release lock
-//			while(!lock);
-//
-//			//entering critical section
-//			lock = false;
-//
-//			Point2D_I32[] polCentroid = new Point2D_I32[4];
-//			for(int z = 0 ; z < 4; z++){
-//				polCentroid[z] = ContourUtils.getPolygonCentroid(regions.get(z));
-//			}
-//
-//			int i = polCentroid[0].x;
-//			int j = polCentroid[1].x;
-//			int k = polCentroid[2].x;
-//			int l = polCentroid[3].x;
-//
-//			int[] order = sort(i,j,k,l);
-//			
-//			region1 = regions.get(order[0] - 1);
-//			region1Centre = polCentroid[order[0] - 1];
-//			
-//			region2 = regions.get(order[1] - 1);
-//			region2Centre = polCentroid[order[1] - 1];
-//			
-//			region3 = regions.get(order[2] - 1);
-//			region3Centre = polCentroid[order[2] - 1];
-//			
-//			region4 = regions.get(order[3] - 1);
-//			region4Centre = polCentroid[order[3] - 1];
-//
-//			lock = true;
-//			regionsSet = true;
-//			// leaving critical section
-//			return true;
-//		}
-//		else{
-//			return true;
-//			/**
-//			 * do NOTHING
-//			 */
-//		}
-//
-//	}
+
 	public static void setYellowDefendingLeft(boolean flag){
 		while(!lock);
 
@@ -145,48 +69,7 @@ public class ObjectLocations {
 		//leaving critical section
 		
 	}
-	// i j k l
-	// 1 2 3 4
-	private static int[] sort(int i,int j, int k, int l){
-		if (i < j) {
-			if (j < k) {
-				if (k < l) return new int[] {1,2,3,4}; // [i,j,k,l];
-				if (j < l) return new int[] {1,2,4,3}; // [i,j,l,k];
-				if (i < l) return new int[] {1,4,2,3}; // [i,l,j,k];
-				return new int[] {4,1,2,3};  //[l,i,j,k];
-			} else if (i < k) {
-				if (j < l) return new int[] {1,3,2,4} ;// [i,k,j,l];
-				if (k < l) return new int[] {1,3,4,2} ;//[i,k,l,j];
-				if (i < l) return new int[] {1,4,3,2} ;//[i,l,k,j];
-				return new int[] { 4,1,3,2};//[l,i,k,j];
-			} else {
-				if (j < l) return new int[] {3,1,2,4};//[k,i,j,l];
-				if (i < l) return new int[] {3,1,4,2};//[k,i,l,j];
-				if (k < l) return new int[] {3,4,1,2};//[k,l,i,j];
-				return new int[] {4,3,1,2};//[l,k,i,j];
-			}
-			// i j k l
-			// 1 2 3 4
-		} else {
-			if (i < k) {
-				if (k < l) return new int[] {2,1,3,4};//[j,i,k,l];
-				if (i < l) return new int[] {2,1,4,3};//[j,i,l,k];
-				if (j < l) return new int[] {2,4,1,3};//[j,l,i,k];
-				return new int[] {4,2,1,3};//[l,j,i,k];
-			} else if (j < k) {
-				if (i < l) return new int[] {2,3,1,4};//[j,k,i,l];
-				if (k < l) return new int[] {2,3,4,1};  //[j,k,l,i];
-				if (j < l) return new int[] {2,4,3,1};     //[j,l,k,i];
-				return new int[] {4,2,3,1};//[l,j,k,i];
-			} else {
-				if (i < l) return new int[] {3,2,1,4}; // [k,j,i,l];
-				if (j < l) return new int[] {3,2,4,1}; // [k,j,l,i];
-				if (k < l) return new int[] {3,4,2,1};// [k,l,j,i];
-				return new int[]  {4,3,2,1}; //[l,k,j,i];
-			}
-		}
 
-	}
 	public static void updateObjectLocations(BufferedImage img){
 		Point2D_I32 ballLocal = VisionOps.findBall(img);
 		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkers(img);
@@ -196,7 +79,7 @@ public class ObjectLocations {
 
 		if(yellowMarkers != null){
 			for(Point2D_I32 p: yellowMarkers){
-				dotsLocal.add(VisionOps.getMeanDotNearMarker(img,p,44)); // window 44 works well
+				dotsLocal.add(VisionOps.getMeanDotNearMarker(img,p,50)); // window 44 works well
 			}
 		}
 
@@ -206,7 +89,13 @@ public class ObjectLocations {
 			}
 		}
 		
-		//setting the ball
+		//setting the ball and its angle
+		try {
+			ballAngle = VisionOps.getDirection(ball,ballLocal);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setBall(ballLocal);
 		
 		if(yellowLeft){
@@ -243,6 +132,8 @@ public class ObjectLocations {
 		}
 		
 		dots = dotsLocal;
+		
+		
 		
 
 	}
@@ -321,56 +212,56 @@ public class ObjectLocations {
 	 * @param g
 	 * @throws Exception 
 	 */
-	public static void drawDirection(Graphics2D g, String object) throws Exception{
-		Color c = g.getColor();
-		g.setColor(Color.MAGENTA);
-		double angle = 0;
-		if (object == "ball" && ObjectLocations.ball != null) {
-			angle = VisionOps.getDirection(SimpleViewer.ballPrvPos, SimpleViewer.ballCurPos);
-			if (angle != 0.0){
-				g.draw(new Line2D.Double(SimpleViewer.ballCurPos.x, SimpleViewer.ballCurPos.y, (SimpleViewer.ballCurPos.x + Math.sin(angle)*100), (SimpleViewer.ballCurPos.y + Math.cos(angle)*100)));
-				//g.drawLine(SimpleViewer.ballCurPos.x, SimpleViewer.ballCurPos.y, (SimpleViewer.ballCurPos.x + (int) Math.sin(angle)*10), (SimpleViewer.ballCurPos.y + (int) Math.cos(angle)*10));
-				/*System.out.println((SimpleViewer.ballCurPos.y + Math.cos(angle)*100));
-				System.out.println((SimpleViewer.ballCurPos.x + Math.sin(angle)*100));
-				System.out.println("drawing from " + SimpleViewer.ballCurPos.x + " , " + SimpleViewer.ballCurPos.y + "->"+" , " + " at angle " + angle);*/
-				}
-			}
-		else if (object == "yellowAtk"){
-			angle = VisionOps.getDirection(SimpleViewer.yellowAttackPrvPos, SimpleViewer.yellowAttackCurPos);
-			if (angle != 0.0){
-				g.draw(new Line2D.Double(SimpleViewer.yellowAttackCurPos.x, SimpleViewer.yellowAttackCurPos.y, (SimpleViewer.yellowAttackCurPos.x + Math.sin(angle)*100), (SimpleViewer.yellowAttackCurPos.y + Math.cos(angle)*100)));
-				}
-			}
-		else if (object == "yellowDef"){
-			angle = VisionOps.getDirection(SimpleViewer.yellowDefendPrvPos, SimpleViewer.yellowDefendCurPos);
-			if (angle != 0.0){
-				g.draw(new Line2D.Double(SimpleViewer.yellowDefendCurPos.x, SimpleViewer.yellowDefendCurPos.y, (SimpleViewer.yellowDefendCurPos.x + Math.sin(angle)*100), (SimpleViewer.yellowDefendCurPos.y + Math.cos(angle)*100)));
-				}
-			}
-		else if (object == "blueAtk"){
-			angle = VisionOps.getDirection(SimpleViewer.blueAttackPrvPos, SimpleViewer.blueAttackCurPos);
-			if (angle != 0.0){
-				g.draw(new Line2D.Double(SimpleViewer.blueAttackCurPos.x, SimpleViewer.blueAttackCurPos.y, (SimpleViewer.blueAttackCurPos.x + Math.sin(angle)*100), (SimpleViewer.blueAttackCurPos.y + Math.cos(angle)*100)));
-				}
-			}
-		else if (object == "blueDef"){
-			angle = VisionOps.getDirection(SimpleViewer.blueDefendPrvPos, SimpleViewer.blueDefendCurPos);
-			if (angle != 0.0){
-				g.draw(new Line2D.Double(SimpleViewer.blueDefendCurPos.x, SimpleViewer.blueDefendCurPos.y, (SimpleViewer.blueDefendCurPos.x + Math.sin(angle)*100), (SimpleViewer.blueDefendCurPos.y + Math.cos(angle)*100)));
-				}
-			}
-		else{
-//			/throw new Exception("what the hell is a "+ object +" ?");
-		}
-	}
+//	public static void drawDirection(Graphics2D g, String object) throws Exception{
+//		Color c = g.getColor();
+//		g.setColor(Color.MAGENTA);
+//		double angle = 0;
+//		if (object == "ball" && ObjectLocations.ball != null) {
+//			angle = VisionOps.getDirection(SimpleViewer.ballPrvPos, SimpleViewer.ballCurPos);
+//			if (angle != 0.0){
+//				g.draw(new Line2D.Double(SimpleViewer.ballCurPos.x, SimpleViewer.ballCurPos.y, (SimpleViewer.ballCurPos.x + Math.sin(angle)*100), (SimpleViewer.ballCurPos.y + Math.cos(angle)*100)));
+//				//g.drawLine(SimpleViewer.ballCurPos.x, SimpleViewer.ballCurPos.y, (SimpleViewer.ballCurPos.x + (int) Math.sin(angle)*10), (SimpleViewer.ballCurPos.y + (int) Math.cos(angle)*10));
+//				/*System.out.println((SimpleViewer.ballCurPos.y + Math.cos(angle)*100));
+//				System.out.println((SimpleViewer.ballCurPos.x + Math.sin(angle)*100));
+//				System.out.println("drawing from " + SimpleViewer.ballCurPos.x + " , " + SimpleViewer.ballCurPos.y + "->"+" , " + " at angle " + angle);*/
+//				}
+//			}
+//		else if (object == "yellowAtk"){
+//			angle = VisionOps.getDirection(SimpleViewer.yellowAttackPrvPos, SimpleViewer.yellowAttackCurPos);
+//			if (angle != 0.0){
+//				g.draw(new Line2D.Double(SimpleViewer.yellowAttackCurPos.x, SimpleViewer.yellowAttackCurPos.y, (SimpleViewer.yellowAttackCurPos.x + Math.sin(angle)*100), (SimpleViewer.yellowAttackCurPos.y + Math.cos(angle)*100)));
+//				}
+//			}
+//		else if (object == "yellowDef"){
+//			angle = VisionOps.getDirection(SimpleViewer.yellowDefendPrvPos, SimpleViewer.yellowDefendCurPos);
+//			if (angle != 0.0){
+//				g.draw(new Line2D.Double(SimpleViewer.yellowDefendCurPos.x, SimpleViewer.yellowDefendCurPos.y, (SimpleViewer.yellowDefendCurPos.x + Math.sin(angle)*100), (SimpleViewer.yellowDefendCurPos.y + Math.cos(angle)*100)));
+//				}
+//			}
+//		else if (object == "blueAtk"){
+//			angle = VisionOps.getDirection(SimpleViewer.blueAttackPrvPos, SimpleViewer.blueAttackCurPos);
+//			if (angle != 0.0){
+//				g.draw(new Line2D.Double(SimpleViewer.blueAttackCurPos.x, SimpleViewer.blueAttackCurPos.y, (SimpleViewer.blueAttackCurPos.x + Math.sin(angle)*100), (SimpleViewer.blueAttackCurPos.y + Math.cos(angle)*100)));
+//				}
+//			}
+//		else if (object == "blueDef"){
+//			angle = VisionOps.getDirection(SimpleViewer.blueDefendPrvPos, SimpleViewer.blueDefendCurPos);
+//			if (angle != 0.0){
+//				g.draw(new Line2D.Double(SimpleViewer.blueDefendCurPos.x, SimpleViewer.blueDefendCurPos.y, (SimpleViewer.blueDefendCurPos.x + Math.sin(angle)*100), (SimpleViewer.blueDefendCurPos.y + Math.cos(angle)*100)));
+//				}
+//			}
+//		else{
+////			/throw new Exception("what the hell is a "+ object +" ?");
+//		}
+//	}
 	
-	//draws directions over a list of objects you want 
-	public static void drawAllDirections(Graphics2D g, String[] objects) throws Exception{
-		for (String obj:objects){
-			drawDirection(g, obj);
-		}
-		
-	}
+//	//draws directions over a list of objects you want 
+//	public static void drawAllDirections(Graphics2D g, String[] objects) throws Exception{
+//		for (String obj:objects){
+//			drawDirection(g, obj);
+//		}
+//		
+//	}
 	/**
 	 * draws crosses over all objects of interest
 	 * @param g
@@ -411,11 +302,15 @@ public class ObjectLocations {
 		if(dots != null){
 			for(Point2D_I32 p: dots){
 				if(p != null){
-					g.drawLine(p.x - 10, p.y, p.x + 10, p.y );
+					System.out.println("LOL?");
+					g.drawLine(p.x - 10, p.y, p.x + 10, p.y);
 					g.drawLine(p.x, p.y - 10, p.x, p.y + 10);
 				}
 			}
 		}
+		
+		g.setColor(Color.MAGENTA);
+		g.draw(new Line2D.Double(ball.x, ball.y, (ball.x + Math.sin(ballAngle)*100), (ball.y + Math.cos(ballAngle)*100)));
 		g.setColor(c);
 	}
 
