@@ -23,8 +23,8 @@ public class TestAStar {
 		Color c = g.getColor();
 		g.setColor(Color.RED);
 				
-		int ballX = objs.ball.x;
-		int ballY = objs.ball.y;
+		int ballX = objs.getBall().x;
+		int ballY = objs.getBall().y;
 		
 		/* the objects in Object locations are static fields so use them directly */
 //		int yellowX = objs.yellowMarkers[0].x;

@@ -17,11 +17,11 @@ import boofcv.struct.image.MultiSpectral;
  *
  */
 public class ObjectLocations {
-	public static Point2D_I32 ball = null;
-	public static Point2D_I32 yellowATTACKmarker = null;
-	public static Point2D_I32 yellowDEFENDmarker = null;
-	public static Point2D_I32 blueATTACKmarker = null;
-	public static Point2D_I32 blueDEFENDmarker = null;
+	private static Point2D_I32 ball = null;
+	private static Point2D_I32 yellowATTACKmarker = null;
+	private static Point2D_I32 yellowDEFENDmarker = null;
+	private static Point2D_I32 blueATTACKmarker = null;
+	private static Point2D_I32 blueDEFENDmarker = null;
 	
 	private static ArrayList<Point2D_I32> dots = null;
 	//TODO : add orientations
