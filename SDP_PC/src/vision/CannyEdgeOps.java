@@ -20,7 +20,7 @@ import boofcv.struct.image.ImageUInt8;
 public class CannyEdgeOps {
 	 
 	public static void main( String args[] ) throws IOException {
-		BufferedImage image = ImageIO.read(new File("test_images/00000007.jpg"));
+		BufferedImage image = ImageIO.read(new File("test_images/000000013.jpg"));
  
 		ImageUInt8 gray = ConvertBufferedImage.convertFrom(image,(ImageUInt8)null);
 		ImageUInt8 edgeImage = new ImageUInt8(gray.width,gray.height);
