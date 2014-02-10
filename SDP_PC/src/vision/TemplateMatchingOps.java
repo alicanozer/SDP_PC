@@ -100,7 +100,7 @@ public class TemplateMatchingOps {
 	}
  
 	/**
-	 * Helper function will is finds matches and displays the results as colored rectangles
+	 * Helper function will is finds matches and displays the results as coloured rectangles
 	 */
 	private static void drawRectangles(Graphics2D g2,
 									   ImageFloat32 image, ImageFloat32 template,
