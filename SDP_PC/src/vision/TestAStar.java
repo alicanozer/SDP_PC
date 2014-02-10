@@ -26,8 +26,9 @@ public class TestAStar {
 		int ballX = objs.ball.x;
 		int ballY = objs.ball.y;
 		
-		int yellowX = objs.yellowMarkers[0].x;
-		int yellowY = objs.yellowMarkers[0].y;
+		/* the objects in Object locations are static fields so use them directly */
+//		int yellowX = objs.yellowMarkers[0].x;
+//		int yellowY = objs.yellowMarkers[0].y;
 			
 //		ReducedMap map = new ReducedMap(objs, true);
 				
