@@ -1,0 +1,98 @@
+package comms;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+
+import lejos.pc.comm.NXTConnector;
+
+public class Bluetooth {
+	/**
+	 * These variables will need to change to include ready states for both robots
+	 * 
+	 * e.g. attackReady, defenceReady, attackConnected and defenceConnceted
+	 * 
+	 * There will also need to data streams for both robots
+	 * 
+	 * @author Mark Johnston	
+	*/
+	private boolean robotReady = false;
+	private boolean connected = false;
+	private InputStream dis1;
+	private OutputStream dos1;
+	private int buffer = 0;
+	
+	public Bluetooth(String nxtAddress) throws IOException {
+		NXTConnector conn1 = new NXTConnector();
+		openBluetoothConnection(conn1, nxtAddress);
+	}
+	
+	public void openBluetoothConnection(NXTConnector connector, String nxtAddress) throws IOException {
+		final int[] READY_STATE = { 0, 0, 0, 0 };
+		System.out.println("Trying to connect to robot..");
+		
+		boolean connection = connector.connectTo("btspp://"+nxtAddress);
+		
+		//Initialise input and output streams
+		dis1 = connector.getInputStream();
+		dos1 = connector.getOutputStream();
+		
+		//Check that robot is ready
+		while (true) {
+			int[] received = receiveData();
+			boolean equals = true;
+			//Check that each integer sent from robot equals expected value
+			for (int i = 0; i < 4; i++) {
+				if (received[i] != READY_STATE[i]) {
+					equals = false;
+					break;
+				}
+			}
+			//If not ready try again in 10 ms
+			if (equals) {
+				break;
+			} else {
+				try {
+					Thread.sleep(10);  // Prevent 100% cpu usage
+				} catch (InterruptedException e) {
+					throw new IOException("Failed to connect: "+ e.toString());
+				}
+			}
+		}
+		
+		//These will need changed when using multiple robots
+		connected = true;
+		robotReady = true;
+		System.out.println("Connected to robot");
+	}
+	
+	//Receive byte data from robot and convert to integer array
+	public int[] receiveData() throws IOException {
+		byte[] res = new byte[4];
+		dis1.read(res);
+		int[] ret = { (int) (res[0]), (int) (res[1]), (int) (res[2]), (int) (res[3]) };
+		return ret;
+	}
+	
+	//Send byte data to robot
+	public void sendToRobot(int[] comm) throws IOException {
+		if (!connected)
+			return;
+		byte[] command = { (byte) comm[0], (byte) comm[1], (byte) comm[2], (byte) comm[3] };
+		dos1.write(command);
+		dos1.flush();
+		
+		//Need to add buffer to keep track of data sent to robot
+}
+	
+	public boolean isConnected() {
+		return connected;
+	}
+	
+	public boolean isRobotReady() {
+		return robotReady;
+	}
+
+
+	
+}
