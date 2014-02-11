@@ -1,5 +1,6 @@
 package comms;
 
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class Bluetooth {
 	private OutputStream dos1;
 	private int buffer = 0;
 	
+
 	// Commands
 	public final static int NOTHING = 0;
 	public final static int FORWARDS = 1;
@@ -33,6 +35,7 @@ public class Bluetooth {
 	public final static int ROTATERIGHT = 7;
 	public final static int QUIT = 9;
 	
+
 	public Bluetooth(String nxtAddress) throws IOException {
 		NXTConnector conn1 = new NXTConnector();
 		openBluetoothConnection(conn1, nxtAddress);
@@ -87,6 +90,7 @@ public class Bluetooth {
 	
 	//Send byte data to robot
 	public void sendCommand(int[] comm) throws IOException {
+
 		if (!connected)
 			return;
 		byte[] command = { (byte) comm[0], (byte) comm[1], (byte) comm[2], (byte) comm[3] };

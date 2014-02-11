@@ -62,11 +62,14 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	
 	
 	private static BufferedImage segOutputBall;
+	private static List<Point2D_I32> ballPos;
 
 	private static boolean lock = true;
 
 	public static void main(String args[]){
+
 		ObjectLocations.setYellowDefendingLeft(true);
+
 		ObjectLocations.setYellowUs(true);
 		
 		
@@ -82,7 +85,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			e.printStackTrace();
 			System.out.println("i failed miserably and now I must die to repent for my sins... ");
 		}
-		
+
 	}
 
 	/**
@@ -189,7 +192,6 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
 
 		lastFrame = thisFrame;
-		
 		float[] hues = {0.5f}; 
 		float[] saturations = {0.4f};
 		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
@@ -220,6 +222,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
+
 		g.setColor(Color.BLACK);
 		// the 3 regions
 		g.drawLine(115, 0, 115, img.getHeight());

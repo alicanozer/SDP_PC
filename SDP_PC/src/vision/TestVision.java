@@ -28,6 +28,7 @@ public class TestVision {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception{
 		// finding the field
+
 		BufferedImage img1 = ImageIO.read(new File("test_images/00000008.jpg"));
 
 		BufferedImage img2 = ImageIO.read(new File("test_images/000000011.jpg"));
@@ -71,8 +72,39 @@ public class TestVision {
 				null);
 		
 		ShowImages.showWindow(img3,"identifying objects");
+
+		
+		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img3,null,true,ImageFloat32.class);
+		
+
+		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,img3.getWidth(),img3.getHeight(),3);
+		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
+
+
+		// Convert into HSV
+		ColorHsv.rgbToHsv_F32(input,hsv);
+
+		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)65,true);
+		
+		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
+		filtered = BinaryImageOps.dilate8(filtered, null);
+		List<Contour> contours = BinaryImageOps.contour(filtered, 8, null);
+		
+		
+		System.out.println(VisionOps.getMeanDotNearMarker(img3, new Point2D_I32(19,19), 30));
+		
+		img3 = VisualizeBinaryData.renderContours(
+				contours,
+				0xFFFFFF,
+				0xFF20FF,
+				input.getWidth(),
+				input.getHeight(),
+				null);
+		
+		ShowImages.showWindow(img3,"identifying objects");
 		
 		
 		
+
 	}
 }

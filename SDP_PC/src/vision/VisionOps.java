@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Vector;
+
 import boofcv.alg.color.ColorHsv;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
@@ -179,6 +181,7 @@ public class VisionOps {
 
 			if(p.npoints > 100){
 				pols.add(p); 
+
 			}
 		}
 		System.out.println("pols size " + pols.size());
@@ -189,6 +192,140 @@ public class VisionOps {
 		}
 		else return null;
 	}
+	/**
+	 * Method that does segmentation of objects purely in HSV space.
+	 * @param type
+	 * @param img
+	 * @return
+	 */
+	public static List<Contour> newHSVSegment(String type,BufferedImage img){
+		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img,null,true,ImageFloat32.class);
+		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
+
+			
+		// Convert into HSV
+		ColorHsv.rgbToHsv_F32(input,hsv);
+
+		
+		
+		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
+		switch(type){
+		case "ball":
+			if(true){//new pitch
+				// hue goes 0 to 2pi
+				ImageUInt8 lowerHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 6.10f,false);
+				ImageUInt8 upperHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.10f,true);
+				
+				ImageUInt8 lowerSaturationBall = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.47f,false);
+				BinaryImageOps.logicOr(lowerHueBall, upperHueBall, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationBall, binary);
+				break;
+			}
+			else{
+				// hue goes 0 to 2pi
+				ImageUInt8 lowerHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 6.10f,false);
+				ImageUInt8 upperHueBall = ThresholdImageOps.threshold(hsv.getBand(0),binary, 0.10f,true);
+				
+				ImageUInt8 lowerSaturationBall = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.66f,false);
+				BinaryImageOps.logicOr(lowerHueBall, upperHueBall, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationBall, binary);
+				break;	
+			}
+
+		case "blue":
+			if(true){ // new pitch but doesnt work
+				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 3, 3, null);
+				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 3, 3, null);
+
+				
+				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 2.96f,false); // was 1.97
+				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.49f,true); // was 3.14
+
+				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.35f,true); //was 0.25
+				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.25f,false); //was 0.25
+				BinaryImageOps.logicAnd(lowerHueBlue, upperHueBlue, binary);
+				BinaryImageOps.logicAnd(binary, upperSaturationBlue, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationBlue, binary);
+			}
+			else{// old pitch
+				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
+				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
+
+				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.10f,false); // was 3.14
+				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.49f,true); // was 3.49
+
+				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.62f,false); //was 0.70
+				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.862f,true); //was 0.82
+				
+				BinaryImageOps.logicAnd(lowerHueBlue, upperHueBlue, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationBlue, binary);
+				BinaryImageOps.logicAnd(binary, upperSaturationBlue, binary);
+			}
+			break;
+		case "yellow":
+			if(true){ // new pitch
+				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.52f,false); // was 0.34
+				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 1f,true); // was 0.69
+
+				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.35f,false); // was 0.62
+				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.80f,true); // was 0.86
+				//values are 0..255
+
+				BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
+				BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
+				//BlurImageOps.gaussian(binary, binary, 4, 5, null);
+			}
+			else{//old pitch
+				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.52f,false); // was 0.34
+				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.87f,true); // was 0.69
+
+				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.74f,false); // was 0.62
+				//ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.86f,true); // was 0.86
+				BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
+//				BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
+			}
+			
+		}
+		
+		
+		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
+		filtered = BinaryImageOps.dilate8(filtered, null);
+		List<Contour> contoursUnfiltered = BinaryImageOps.contour(filtered, 8, null);
+		List<Contour> contoursFiltered = new ArrayList<Contour>();
+		for(Contour c: contoursUnfiltered) {
+			Point2D_I32 p = PointUtils.getContourCentroid(c);
+			if(type == "yellow"){
+				if(
+						c.external.size() > 18 &&
+						p.x > 15 && p.x < img.getWidth() - 15
+						) contoursFiltered.add(c);
+			}
+			else{
+				if(
+						c.external.size() > 10 &&
+						p.x > 15 && p.x < img.getWidth() - 15
+						) contoursFiltered.add(c);
+			}
+		}
+
+		return contoursFiltered;
+	}
+	
+	public static BufferedImage newDisplay(List<Contour> contours, int width, int height) {
+		BufferedImage visualContour = VisualizeBinaryData.renderContours(
+				contours,
+				0xFFFFFF,
+				0xFF20FF,
+				width,
+				height,
+				null);
+
+		return visualContour;
+	}
+	
+	
 	/**
 	 * Method that does segmentation of objects purely in HSV space.
 	 * @param type
@@ -502,6 +639,7 @@ public class VisionOps {
 
 		List<Contour> contoursFull = BinaryImageOps.contour(binary, 8, null);
 
+
 		List<Contour> contours = new ArrayList<Contour>();
 		
 		for(int i = 0; i < contoursFull.size(); i++){
@@ -557,7 +695,7 @@ public class VisionOps {
 			return p1;
 		}
 	}
-	
+
 	public static double getDirection (Point2D_I32 prevPos, Point2D_I32 curPos) throws Exception{
 		
 		double theta = 0;
@@ -581,6 +719,7 @@ public class VisionOps {
 		return theta;
 		
 	}
+
 
 }
 
