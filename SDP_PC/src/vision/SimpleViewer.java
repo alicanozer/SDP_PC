@@ -68,7 +68,11 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 	public static void main(String args[]){
 
+
 		ObjectLocations.setYellowDefendingLeft(false);
+
+
+		ObjectLocations.setYellowDefendingLeft(true);
 
 		ObjectLocations.setYellowUs(true);
 		try {
@@ -228,9 +232,10 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		g.setColor(Color.BLACK);
 		// the 3 regions
 
-		g.drawLine(120, 0, 120, img.getHeight());
-		g.drawLine(270, 0, 270, img.getHeight());
-		g.drawLine(420, 0, 420, img.getHeight());
+		g.drawLine(115, 0, 115, img.getHeight());
+		g.drawLine(260, 0, 260, img.getHeight());
+		g.drawLine(410, 0, 410, img.getHeight());
+
 		
 		
 //		List<Contour> contoursUnfiltered = BinaryImageOps.contour(filtered, 8, null);
