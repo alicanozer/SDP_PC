@@ -34,8 +34,8 @@ public class ReducedMap implements TileBasedMap {
 		this.avoidBall = avoidBall;
 		
 		// Find location of ball on map
-		int ballx = reduceRound(objs.ball.x);
-		int bally = reduceRound(objs.ball.y);
+		int ballx = reduceRound(objs.getBall().x);
+		int bally = reduceRound(objs.getBall().y);
 		
 		if (ballx <= 1)
 			ballx += 2;

@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class GoalInfo {
+	
 	public final int width = 640;
 	public final int height = 480;
 	public final int goalWidth = 15;

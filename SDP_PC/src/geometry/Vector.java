@@ -162,3 +162,5 @@ public class Vector {
 		return intersectY(this, direction, y);
 	}
 	
+}
+	

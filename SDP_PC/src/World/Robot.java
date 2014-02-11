@@ -9,8 +9,8 @@ public class Robot extends Entity {
 	public double bearing;
 	public RobotType type;
 
-	public Robot(RobotType type) {
-		this.type = type;
+	public Robot(RobotType r) {
+		this.type = r;
 	}
 
 

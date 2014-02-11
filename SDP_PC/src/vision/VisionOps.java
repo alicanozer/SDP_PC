@@ -559,6 +559,7 @@ public class VisionOps {
 	}
 	
 	public static double getDirection (Point2D_I32 prevPos, Point2D_I32 curPos) throws Exception{
+		
 		double theta = 0;
 		double dx = prevPos.x - curPos.x;
 		double dy = prevPos.y - curPos.y;
@@ -578,6 +579,7 @@ public class VisionOps {
 //			throw new Exception("no direction");
 			return 0.0;
 		return theta;
+		
 	}
 
 }
