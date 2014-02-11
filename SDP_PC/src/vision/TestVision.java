@@ -34,6 +34,8 @@ public class TestVision {
 		BufferedImage img2 = ImageIO.read(new File("test_images/000000011.jpg"));
 		
 		BufferedImage img3 = ImageIO.read(new File("test_images/cropped8.jpg"));
+		
+		BufferedImage img4 = ImageIO.read(new File("test_images/pitch2_1.png"));
 
 		ObjectLocations.setYellowDefendingLeft(true);
 		ObjectLocations.setYellowUs(true);
@@ -46,62 +48,62 @@ public class TestVision {
 		//img2 = ConvertBufferedImage.convertTo_F32(VisionOps.segmentMultiHSV(img2, hues, saturations)[0], null, true);
 		//img2 = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img2, hues, saturations)[0]);
 		
-		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img3,null,true,ImageFloat32.class);
+//		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img3,null,true,ImageFloat32.class);
+//		
+//		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,img3.getWidth(),img3.getHeight(),3);
+//		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
+//
+//		// Convert into HSV
+//		ColorHsv.rgbToHsv_F32(input,hsv);
+//
+//		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)65,true);
+//		
+//		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
+//		filtered = BinaryImageOps.dilate8(filtered, null);
+//		List<Contour> contours = BinaryImageOps.contour(filtered, 8, null);
+//		
+//		
+//		System.out.println(VisionOps.getMeanDotNearMarker(img3, new Point2D_I32(19,19), 30));
+//		
+//		img3 = VisualizeBinaryData.renderContours(
+//				contours,
+//				0xFFFFFF,
+//				0xFF20FF,
+//				input.getWidth(),
+//				input.getHeight(),
+//				null);
+//		
+//		ShowImages.showWindow(img3,"identifying objects");
+//
+//		
+//		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img3,null,true,ImageFloat32.class);
+//		
+//
+//		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,img3.getWidth(),img3.getHeight(),3);
+//		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
+//
+//
+//		// Convert into HSV
+//		ColorHsv.rgbToHsv_F32(input,hsv);
+//
+//		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)65,true);
+//		
+//		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
+//		filtered = BinaryImageOps.dilate8(filtered, null);
+//		List<Contour> contours = BinaryImageOps.contour(filtered, 8, null);
+//		
+//		
+//		System.out.println(VisionOps.getMeanDotNearMarker(img3, new Point2D_I32(19,19), 30));
+//		
+//		img3 = VisualizeBinaryData.renderContours(
+//				contours,
+//				0xFFFFFF,
+//				0xFF20FF,
+//				input.getWidth(),
+//				input.getHeight(),
+//				null);
 		
-		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,img3.getWidth(),img3.getHeight(),3);
-		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
-
-		// Convert into HSV
-		ColorHsv.rgbToHsv_F32(input,hsv);
-
-		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)65,true);
-		
-		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
-		filtered = BinaryImageOps.dilate8(filtered, null);
-		List<Contour> contours = BinaryImageOps.contour(filtered, 8, null);
-		
-		
-		System.out.println(VisionOps.getMeanDotNearMarker(img3, new Point2D_I32(19,19), 30));
-		
-		img3 = VisualizeBinaryData.renderContours(
-				contours,
-				0xFFFFFF,
-				0xFF20FF,
-				input.getWidth(),
-				input.getHeight(),
-				null);
-		
-		ShowImages.showWindow(img3,"identifying objects");
-
-		
-		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img3,null,true,ImageFloat32.class);
-		
-
-		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,img3.getWidth(),img3.getHeight(),3);
-		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
-
-
-		// Convert into HSV
-		ColorHsv.rgbToHsv_F32(input,hsv);
-
-		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)65,true);
-		
-		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
-		filtered = BinaryImageOps.dilate8(filtered, null);
-		List<Contour> contours = BinaryImageOps.contour(filtered, 8, null);
-		
-		
-		System.out.println(VisionOps.getMeanDotNearMarker(img3, new Point2D_I32(19,19), 30));
-		
-		img3 = VisualizeBinaryData.renderContours(
-				contours,
-				0xFFFFFF,
-				0xFF20FF,
-				input.getWidth(),
-				input.getHeight(),
-				null);
-		
-		ShowImages.showWindow(img3,"identifying objects");
+		ShowImages.showWindow(img4,"identifying objects");
 		
 		
 		
