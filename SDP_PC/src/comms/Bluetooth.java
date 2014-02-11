@@ -1,4 +1,5 @@
-gpackage comms;
+package comms;
+
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -95,7 +96,6 @@ public class Bluetooth {
 			return;
 		byte[] command = { (byte) comm[0], (byte) comm[1], (byte) comm[2], (byte) comm[3] };
 		dos1.write(command);
-
 		dos1.flush();	
 		//Need to add buffer to keep track of data sent to robot
 	}
@@ -110,7 +110,6 @@ public class Bluetooth {
 			System.err.println("Couldn't close Bluetooth connection: " + e.toString());
 		}
 	}
-
 	
 	public boolean isConnected() {
 		return connected;
