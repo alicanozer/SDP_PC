@@ -21,3 +21,5 @@ After a connection has been established between PC and robot you can send instru
 sets the speed of the robot to 10. If the optional variables are not needed then the values should be left as 0.
 
 When sending the commands to the robot each integer is converted to a byte therefor the largest decimal value of any of the four integers is 127.
+
+dafuq
