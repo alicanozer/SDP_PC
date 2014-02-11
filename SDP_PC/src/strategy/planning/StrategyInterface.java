@@ -9,9 +9,8 @@ public abstract class StrategyInterface implements Runnable {
 	ObjectLocations obj;
 	RobotMover mover;
 
-	public StrategyInterface(ObjectLocations obj, RobotMover mover) {
+	public StrategyInterface(RobotMover mover) {
 		this.shouldidie = false;
-		this.obj = obj;
 		this.mover = mover;
 	}
 
