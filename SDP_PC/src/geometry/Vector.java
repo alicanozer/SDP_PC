@@ -3,6 +3,7 @@ package geometry;
 import java.lang.Math;
 
 
+
 public class Vector {
 	
 	private double x;
