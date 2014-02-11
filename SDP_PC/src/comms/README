@@ -1,7 +1,11 @@
 To create a new connection first initialise a new Bluetooth object:
 
 
+
     private static Bluetooth myConnection;
+
+
+
 
     
 then create the new Bluetooth object with the robot name being either HERCULES or TEAM_TRINITY.
