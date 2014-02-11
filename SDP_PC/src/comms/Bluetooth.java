@@ -1,4 +1,4 @@
-package comms;
+gpackage comms;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,6 +22,19 @@ public class Bluetooth {
 	private OutputStream dos1;
 	private int buffer = 0;
 	
+
+	// Commands
+	public final static int NOTHING = 0;
+	public final static int FORWARDS = 1;
+	public final static int BACKWARDS = 2;
+	public final static int STOP = 3;
+	public final static int KICK = 4;
+	public final static int SPEED = 5;
+	public final static int ROTATELEFT = 6;
+	public final static int ROTATERIGHT = 7;
+	public final static int QUIT = 9;
+	
+
 	public Bluetooth(String nxtAddress) throws IOException {
 		NXTConnector conn1 = new NXTConnector();
 		openBluetoothConnection(conn1, nxtAddress);
@@ -75,15 +88,29 @@ public class Bluetooth {
 	}
 	
 	//Send byte data to robot
-	public void sendToRobot(int[] comm) throws IOException {
+
+	public void sendCommand(int[] comm) throws IOException {
+
 		if (!connected)
 			return;
 		byte[] command = { (byte) comm[0], (byte) comm[1], (byte) comm[2], (byte) comm[3] };
 		dos1.write(command);
-		dos1.flush();
-		
+
+		dos1.flush();	
 		//Need to add buffer to keep track of data sent to robot
-}
+	}
+	
+	public void closeBluetoothConnection(NXTConnector connector) {
+		try {
+			connected = false;
+			dis1.close();
+			dos1.close();
+			connector.close();
+		} catch (IOException e) {
+			System.err.println("Couldn't close Bluetooth connection: " + e.toString());
+		}
+	}
+
 	
 	public boolean isConnected() {
 		return connected;
