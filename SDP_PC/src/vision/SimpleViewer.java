@@ -75,6 +75,8 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		ObjectLocations.setYellowDefendingLeft(true);
 
 		ObjectLocations.setYellowUs(true);
+		
+		
 		try {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
@@ -197,7 +199,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		
 		float[] hues = {0.5f}; 
 		float[] saturations = {0.4f};
-		img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
+		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
 		
 		//img = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
 

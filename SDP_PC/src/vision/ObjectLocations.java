@@ -342,26 +342,26 @@ public class ObjectLocations {
 		//leaving critical section
 	}
 	
-	public Point2D_I32 getBall(){
+	public static Point2D_I32 getBall(){
 		while(!lock);
 		return ball;
 	}
 	
-	public Point2D_I32 getYellowDEFENDmarker(){
+	public static Point2D_I32 getYellowDEFENDmarker(){
 		while(!lock);
 		return yellowDEFENDmarker;
 	}
 	
-	public Point2D_I32 getYellowATTACKmarker(){
+	public static Point2D_I32 getYellowATTACKmarker(){
 		while(!lock);
 		return yellowATTACKmarker;
 	}
-	public Point2D_I32 getBlueDEFENDmarker(){
+	public static Point2D_I32 getBlueDEFENDmarker(){
 		while(!lock);
 		return blueDEFENDmarker;
 	}
 	
-	public Point2D_I32 getBlueATTACKmarker(){
+	public static Point2D_I32 getBlueATTACKmarker(){
 		while(!lock);
 		return blueATTACKmarker;
 	}
