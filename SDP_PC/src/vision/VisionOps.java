@@ -476,8 +476,10 @@ public class VisionOps {
 //		
 //		ImageUInt8 lowerHue = ThresholdImageOps.threshold(hsv.getBand(0),null,0.69f,true);
 //		ImageUInt8 upperHue = ThresholdImageOps.threshold(hsv.getBand(0),null,1.13f,false);
-		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)65,true);
-//		BinaryImageOps.logicAnd(lowerHue, upperValue, binary);
+		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)65,true);
+		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)40,false);
+		
+		BinaryImageOps.logicAnd(lowerValue, upperValue, binary);
 
 		//
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
