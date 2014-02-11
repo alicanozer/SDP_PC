@@ -89,7 +89,6 @@ public class Bluetooth {
 	}
 	
 	//Send byte data to robot
-
 	public void sendCommand(int[] comm) throws IOException {
 
 		if (!connected)

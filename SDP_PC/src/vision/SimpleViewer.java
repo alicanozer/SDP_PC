@@ -68,10 +68,6 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 	public static void main(String args[]){
 
-
-		ObjectLocations.setYellowDefendingLeft(false);
-
-
 		ObjectLocations.setYellowDefendingLeft(true);
 
 		ObjectLocations.setYellowUs(true);
@@ -196,15 +192,12 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
 
 		lastFrame = thisFrame;
-		
 		float[] hues = {0.5f}; 
 		float[] saturations = {0.4f};
 		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
 		
 		//img = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
-
 		
-
 //		ImageUInt8 gray = ConvertBufferedImage.convertFrom(img,(ImageUInt8)null);
 //		ImageUInt8 edgeImage = new ImageUInt8(gray.width,gray.height);
 //		ImageUInt8 filtered = BinaryImageOps.erode8(edgeImage,null);
@@ -225,7 +218,6 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		// the contours from the binary image, which will produce a single loop for each connected cluster of pixels.
 		// Note that you are only interested in external contours.
 		
-
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
@@ -233,11 +225,9 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 		g.setColor(Color.BLACK);
 		// the 3 regions
-
 		g.drawLine(115, 0, 115, img.getHeight());
 		g.drawLine(260, 0, 260, img.getHeight());
 		g.drawLine(410, 0, 410, img.getHeight());
-
 		
 		
 //		List<Contour> contoursUnfiltered = BinaryImageOps.contour(filtered, 8, null);
@@ -280,7 +270,6 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 //			System.exit(0);
 //		}
 		
-
 		try {
 
 
@@ -305,58 +294,8 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		
 
-
-
-		if (ballPos.size()>2)
-			ballPos.clear();
-		
-		if (frameCounter > 1 && ballPos.size()==2) {
-			if (obs.ball!=null) {
-				//System.out.println(obs.ball);
-				ballPos.add(obs.ball);
-				try {
-					System.out.println(ballPos.get(0).toString() + ballPos.get(1).toString()); //0 should be position in prev frame
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		
-//		//draw X over ball
-//		if(obs.ball != null){
-//			g.drawLine(obs.ball.getX() - 10, obs.ball.getY(), obs.ball.getX() +10, obs.ball.getY());
-//			g.drawLine(obs.ball.getX() , obs.ball.getY() - 10, obs.ball.getX(), obs.ball.getY() + 10);
-//		}
-////		//draw X over yellow markers
-//		if(obs.yellowMarkers != null){
-//			for(int i = 0; i < obs.yellowMarkers.length; i++){
-//				if(obs.yellowMarkers[i] != null){
-//					g.drawLine(obs.yellowMarkers[i].getX() - 10, obs.yellowMarkers[i].getY(), obs.yellowMarkers[i].getX() +10, obs.yellowMarkers[i].getY());
-//					g.drawLine(obs.yellowMarkers[i].getX() , obs.yellowMarkers[i].getY() - 10, obs.yellowMarkers[i].getX(), obs.yellowMarkers[i].getY() + 10);
-//				}
-//			}
-//		}
-//////		//draw X over yellow markers
-//		if(obs.blueMarkers != null){
-//			for(int i = 0; i < obs.blueMarkers.length; i++){
-//				if(obs.blueMarkers[i] != null){
-//					g.drawLine(obs.blueMarkers[i].getX() - 10, obs.blueMarkers[i].getY(), obs.blueMarkers[i].getX() +10, obs.blueMarkers[i].getY());
-//					g.drawLine(obs.blueMarkers[i].getX() , obs.blueMarkers[i].getY() - 10, obs.blueMarkers[i].getX(), obs.blueMarkers[i].getY() + 10);
-//				}
-//			}
-//		}
-////		if(dotsPos != null){
-////		g.drawLine(dotsPos[0].getX() - 10, dotsPos[0].getY(), dotsPos[0].getX() +10, dotsPos[0].getY());
-////		g.drawLine(dotsPos[0].getX() , dotsPos[0].getY() - 10, dotsPos[0].getX(), dotsPos[0].getY() + 10);
-////
-////		g.drawLine(dotsPos[1].getX() - 10, dotsPos[1].getY(), dotsPos[1].getX() +10, dotsPos[1].getY());
-////		g.drawLine(dotsPos[1].getX() , dotsPos[1].getY() - 10, dotsPos[1].getX(), dotsPos[1].getY() + 10);
-////	}
-//		// recycle the frame
 
 		frame.recycle();
 	}
