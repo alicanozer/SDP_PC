@@ -473,7 +473,6 @@ public class VisionOps {
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
 		
-//		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)90,true);
 //		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)50,false);
 //		
 //		ImageUInt8 lowerHue = ThresholdImageOps.threshold(hsv.getBand(0),null,0.69f,true);
@@ -549,6 +548,8 @@ public class VisionOps {
 		double theta = 0;
 		double dx = prevPos.x - curPos.x;
 		double dy = prevPos.y - curPos.y;
+//		if(Math.abs(dx) < 0.001) return theta;
+//		if(Math.abs(dy) < 0.001) return theta;
 		if (prevPos == null || curPos == null)
 			throw new Exception("math error - either point is null");
 		else if (dx < 0 && dy > 0)
