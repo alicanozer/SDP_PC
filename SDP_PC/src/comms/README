@@ -6,8 +6,7 @@ then create the new Bluetooth object with the robot name being either HERCULES o
 
     myConnection = new Bluetooth(ROBOT_NAME);
 
-After a connection has been established between PC and robot you can send instructions to the robot using the 
-sendCommand(int[]) method. This method requires an array of four integers with the first being the command to be executed by the robot. A list of available commands are located in the Bluetooth class. The remainig three integers are optional variables that can used within Commands. For example the command
+After a connection has been established between PC and robot you can send instructions to the robot using the sendCommand(int[]) method. This method requires an array of four integers with the first being the command to be executed by the robot. A list of available commands are located in the Bluetooth class. The remainig three integers are optional variables that can used within Commands. For example the command
 
     int [] testSPEED = new int [] {Bluetooth.SPEED,10,0,0};
     sendCommand(testSPEED);
