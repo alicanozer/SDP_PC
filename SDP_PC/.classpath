@@ -26,7 +26,9 @@
 			<attribute name="javadoc_location" value="http://v4l4j.googlecode.com/svn/www/v4l4j-api/index.html"/>
 		</attributes>
 	</classpathentry>
+
 	<classpathentry kind="lib" path="xstream-1.4.4.jar"/>
+
 	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp4/bluecove.jar"/>
 	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp4/bluecove-gpl.jar"/>
 	<classpathentry kind="lib" path="/afs/inf.ed.ac.uk/group/teaching/sdp/sdp4/pccomm.jar"/>
