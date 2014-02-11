@@ -175,7 +175,7 @@ public class VisionOps {
 		// in initial conditions, contours has only 1 element and it is the 
 		// pitch. it has  at least 4 list of points as internal contours
 		for(int i=0; i< contours.get(0).internal.size(); i++){
-			Polygon p = ContourUtils.polygonFromContour(contours.get(0).internal.get(i));
+			Polygon p = PointUtils.polygonFromContour(contours.get(0).internal.get(i));
 			// since our polygons consists of individual pixel coords then the num
 			// of points a good indication of the perimeter
 
@@ -278,7 +278,7 @@ public class VisionOps {
 		List<Contour> contoursUnfiltered = BinaryImageOps.contour(filtered, 8, null);
 		List<Contour> contoursFiltered = new ArrayList<Contour>();
 		for(Contour c: contoursUnfiltered) {
-			Point2D_I32 p = ContourUtils.getContourCentroid(c);
+			Point2D_I32 p = PointUtils.getContourCentroid(c);
 			if(type == "yellow"){
 				if(
 						c.external.size() > 18 &&
@@ -369,7 +369,7 @@ public class VisionOps {
 			System.out.println("WARNING: NO ball detected");
 			return null;
 		}
-		else return ContourUtils.getContourCentroid(contours.get(0));
+		else return PointUtils.getContourCentroid(contours.get(0));
 	}
 	/**
 	 * finds the marker according to colour
@@ -383,7 +383,7 @@ public class VisionOps {
 			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
 				System.out.println("WARNING: ONLY ONE yellow marker was detected");
-				ret.add(ContourUtils.getContourCentroid(contours.get(0)));
+				ret.add(PointUtils.getContourCentroid(contours.get(0)));
 				return ret;
 			}
 			else if(contours.size() != 2){
@@ -391,8 +391,8 @@ public class VisionOps {
 				return null;
 			}
 
-			ret.add(ContourUtils.getContourCentroid(contours.get(0)));
-			ret.add(ContourUtils.getContourCentroid(contours.get(1)));
+			ret.add(PointUtils.getContourCentroid(contours.get(0)));
+			ret.add(PointUtils.getContourCentroid(contours.get(1)));
 
 			return ret;
 		}
@@ -401,7 +401,7 @@ public class VisionOps {
 			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
 				System.out.println("WARNING: ONLY ONE blue marker was detected");
-				ret.add(ContourUtils.getContourCentroid(contours.get(0)));
+				ret.add(PointUtils.getContourCentroid(contours.get(0)));
 				return ret;
 			}
 			else if(contours.size() != 2){
@@ -410,8 +410,8 @@ public class VisionOps {
 			}
 
 
-			ret.add(ContourUtils.getContourCentroid(contours.get(0)));
-			ret.add(ContourUtils.getContourCentroid(contours.get(1)));
+			ret.add(PointUtils.getContourCentroid(contours.get(0)));
+			ret.add(PointUtils.getContourCentroid(contours.get(1)));
 
 			return ret;
 		}
@@ -492,7 +492,7 @@ public class VisionOps {
 		List<Contour> contours = new ArrayList<Contour>();
 		
 		for(int i = 0; i < contoursFull.size(); i++){
-			System.out.println("contour size " + contoursFull.get(i).external.size());
+			//System.out.println("contour size " + contoursFull.get(i).external.size());
 			if(contoursFull.get(i).external.size() > 15 && contoursFull.get(i).external.size() < 30){
 				contours.add(contoursFull.get(i));
 			}
@@ -527,7 +527,7 @@ public class VisionOps {
 			Point2D_I32 iwm = new Point2D_I32();
 			double totalDistance = 0.0;
 			for(Contour c: contours){
-				Point2D_I32 curPoint = ContourUtils.getContourCentroid(c);
+				Point2D_I32 curPoint = PointUtils.getContourCentroid(c);
 				double distanceTo = 1.0/Math.pow(
 						Math.sqrt(Math.pow((windowSize/2 - curPoint.x),2.0) +
 								  Math.pow((windowSize/2 - curPoint.y),2.0)),
@@ -581,7 +581,7 @@ public class VisionOps {
 //			return mean;
 		}
 		else {
-			Point2D_I32 p1 = ContourUtils.getContourCentroid(contours.get(0));
+			Point2D_I32 p1 = PointUtils.getContourCentroid(contours.get(0));
 			// transform coordinates
 			p1.x = p1.x + x - windowSize/2;
 			p1.y = p1.y + y - windowSize/2;
