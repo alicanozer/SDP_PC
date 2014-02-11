@@ -32,7 +32,7 @@ public class TestVision {
 
 		BufferedImage img2 = ImageIO.read(new File("test_images/000000011.jpg"));
 		
-		BufferedImage img3 = ImageIO.read(new File("test_images/cropped5.jpg"));
+		BufferedImage img3 = ImageIO.read(new File("test_images/cropped8.jpg"));
 
 		ObjectLocations.setYellowDefendingLeft(true);
 		ObjectLocations.setYellowUs(true);

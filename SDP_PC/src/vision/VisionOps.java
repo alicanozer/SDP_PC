@@ -471,15 +471,13 @@ public class VisionOps {
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
 		
-		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)90,true);
-		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)50,false);
-		
-		ImageUInt8 lowerHue = ThresholdImageOps.threshold(hsv.getBand(0),null,0.69f,true);
-		ImageUInt8 upperHue = ThresholdImageOps.threshold(hsv.getBand(0),null,1.13f,false);
-		
-		BinaryImageOps.logicAnd(lowerValue, upperValue, binary);
-//		BinaryImageOps.logicAnd(lowerHue, binary, binary);
-//		BinaryImageOps.logicAnd(upperHue, binary, binary);
+//		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)90,true);
+//		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)50,false);
+//		
+//		ImageUInt8 lowerHue = ThresholdImageOps.threshold(hsv.getBand(0),null,0.69f,true);
+//		ImageUInt8 upperHue = ThresholdImageOps.threshold(hsv.getBand(0),null,1.13f,false);
+		ThresholdImageOps.threshold(hsv.getBand(2),binary,(float)65,true);
+//		BinaryImageOps.logicAnd(lowerHue, upperValue, binary);
 
 		//
 		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
@@ -500,26 +498,6 @@ public class VisionOps {
 			return null;
 		}
 		else if(contours.size() > 1){
-			System.out.println("WARNING: " + contours.size() + " dots detected, taking their mean");
-			// Iverse distance weighting : http://en.wikipedia.org/wiki/Inverse_distance_weighting
-
-			class Tuple<S, T>
-			{
-				public S data;
-				public T index;
-
-				public Tuple(S s, T t)
-				{
-					this.data = s;
-					this.index = t;
-				}
-			}
-			
-			
-			// when more than 1 point is detected we take the mean of the points
-			// since the windows are very small this won't skew things too much
-			ArrayList<Tuple<Point2D_I32,Double>> list = new ArrayList<Tuple<Point2D_I32,Double>>();
-
 			// using the mean
 			Point2D_I32 mean = new Point2D_I32();
 			Point2D_I32 iwm = new Point2D_I32();
@@ -533,7 +511,6 @@ public class VisionOps {
 				totalDistance += distanceTo;
 				iwm.x += curPoint.x*distanceTo;
 				iwm.y += curPoint.y*distanceTo;
-//				list.add(new Tuple<Point2D_I32,Double>(p2,distanceTo));
 
 				mean.x += curPoint.x;
 				mean.y += curPoint.y;
@@ -553,30 +530,6 @@ public class VisionOps {
 			
 			// mean works better for now with window
 			return mean;
-
-			
-//			return mean;
-//			// using the median
-//			Comparator<Tuple<Point2D_I32,Double>> comparator = new Comparator<Tuple<Point2D_I32,Double>>()
-//					{
-//
-//				public int compare(Tuple<Point2D_I32,Double> tupleA,
-//						Tuple<Point2D_I32,Double> tupleB)
-//				{
-//					if (tupleA.index < tupleB.index) return -1;
-//					else if (tupleA.index == tupleB.index) return 0;
-//					else return 1;
-//				}
-//
-//					};
-//		    	    
-//		    Collections.sort(list, comparator);
-//		    
-//		    Point2D_I32 median =  list.get(list.size()/2).data; // get the median
-//		    median.x = median.x + x - windowSize/2;
-//		    median.y = median.y + y - windowSize/2;
-//		    
-//			return mean;
 		}
 		else {
 			Point2D_I32 p1 = PointUtils.getContourCentroid(contours.get(0));
@@ -603,8 +556,8 @@ public class VisionOps {
 		else if (dx > 0 && dy > 0)
 			theta = Math.PI + Math.atan2(Math.abs(dy), Math.abs(dx));
 		else if (dx == 0 && dy == 0)
-			throw new Exception("no direction");
-			
+//			throw new Exception("no direction");
+			return 0.0;
 		return theta;
 	}
 
