@@ -25,18 +25,23 @@ public class ObjectLocations {
 	
 
 	public static double getBallDirectionAngle() {
+		while(!lock);
 		return ballDirectionAngle;
 	}
 	public static double getYellowATTACKmarkerDirectionAngle() {
+		while(!lock);
 		return yellowATTACKmarkerDirectionAngle;
 	}
 	public static double getYellowDEFENDmarkerDicrectionAngle() {
+		while(!lock);
 		return yellowDEFENDmarkerDicrectionAngle;
 	}
 	public static double getBlueATTACKmarkerDirectionAngle() {
+		while(!lock);
 		return blueATTACKmarkerDirectionAngle;
 	}
 	public static double getBlueDEFENDmarkerDirectionAngle() {
+		while(!lock);
 		return blueDEFENDmarkerDirectionAngle;
 	}
 
@@ -47,15 +52,19 @@ public class ObjectLocations {
 	private static double blueDEFENDmarkerDirectionAngle;
 	
 	public static double getYellowATTACKmarkerOrientationAngle() {
+		while(!lock);
 		return yellowATTACKmarkerOrientationAngle;
 	}
 	public static double getYellowDEFENDmarkerOrientationAngle() {
+		while(!lock);
 		return yellowDEFENDmarkerOrientationAngle;
 	}
 	public static double getBlueATTACKmarkerOrientationAngle() {
+		while(!lock);
 		return blueATTACKmarkerOrientationAngle;
 	}
 	public static double getBlueDEFENDmarkerOrientationAngle() {
+		while(!lock);
 		return blueDEFENDmarkerOrientationAngle;
 	}
 
