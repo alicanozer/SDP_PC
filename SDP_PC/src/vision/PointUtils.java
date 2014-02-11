@@ -18,7 +18,7 @@ import georegression.struct.shapes.Polygon2D_I32;
  * @author bilyan
  *
  */
-public class ContourUtils {
+public class PointUtils {
 	/*
 	 * Gets the centroid of a Contour
 	 */
@@ -96,5 +96,38 @@ public class ContourUtils {
 		x /= npoints;
 		y /= npoints;
 		return new Point2D_I32(x,y);
+	}
+	/**
+	 * returns euclidean distance between targets
+	 * @param p
+	 * @param q
+	 * @return
+	 */
+	public static double euclideanDistance(Point2D_I32 p, Point2D_I32 q){
+		return pnormDistance(p,q,2.0);
+	}
+	/**
+	 * return manhattan distance between points
+	 * @param p
+	 * @param q
+	 * @return
+	 */
+	public static double manhattanDistance(Point2D_I32 p, Point2D_I32 q){
+		double x = p.x - q.x;
+		double y = p.y - q.y;
+		return Math.abs(x) + Math.abs(y);
+	}
+	/**
+	 * returns arbitrary p-norm distance between 2 points
+	 * @param p
+	 * @param q
+	 * @param pnorm
+	 * @return
+	 */
+	public static double pnormDistance(Point2D_I32 p, Point2D_I32 q, double pnorm){
+		double x = Math.pow(p.x - q.x, pnorm);
+		double y = Math.pow(p.y - q.y, pnorm);
+		
+		return Math.pow(x + y, 1.0/pnorm);
 	}
 }
