@@ -1,12 +1,15 @@
 package World;
 
+import Calculations.AngleCalculator;
+import World.Robot;
+import World.Ball;
 import Calculations.*;
 
 public class WorldState {
 
 	private static final int NUM_FRAMES = 10;
 	
-	private AngleCalculator angleCalc = new AngleCalculator();
+	//private AngleCalculator angleCalc = new AngleCalculator();
 	private long counter;
 	private int direction;
 	private int color;
@@ -55,4 +58,19 @@ public class WorldState {
 	private boolean blueHasBall = false;
 	private boolean yellowHasBall = false;
 	
+	public final GoalInfo goalInfo;
+	
+	public Ball ball = new Ball();
+	public Robot theirAttackRobot = new Robot(RobotType.AttackThem);
+	public Robot theirDefenseRobot = new Robot(RobotType.DefendThem);
+	public Robot ourAttackRobot = new Robot(RobotType.AttackUs);
+	public Robot ourDefenseRobot = new Robot(RobotType.DefendUs);
+	
+	public WorldState(GoalInfo goalInfo) {
+		// control properties
+		this.direction = 0;
+		this.color = 0;
+		this.pitch = 0;
+		this.goalInfo = goalInfo;
+	}
 }
