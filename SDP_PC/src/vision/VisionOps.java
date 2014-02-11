@@ -208,27 +208,43 @@ public class VisionOps {
 		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
 		switch(type){
 		case "ball":
-			// hue goes 0 to 2pi
-			ImageUInt8 lowerHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 6.10f,false);
-			ImageUInt8 upperHueBall = ThresholdImageOps.threshold(hsv.getBand(0),binary, 0.10f,true);
-			
-			ImageUInt8 lowerSaturationBall = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.66f,false);
-			BinaryImageOps.logicOr(lowerHueBall, upperHueBall, binary);
-			BinaryImageOps.logicAnd(binary, lowerSaturationBall, binary);
-			break;	
+			if(true){//new pitch
+				// hue goes 0 to 2pi
+				ImageUInt8 lowerHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 6.10f,false);
+				ImageUInt8 upperHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.10f,true);
+				
+				ImageUInt8 lowerSaturationBall = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.47f,false);
+				BinaryImageOps.logicOr(lowerHueBall, upperHueBall, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationBall, binary);
+				break;
+			}
+			else{
+				// hue goes 0 to 2pi
+				ImageUInt8 lowerHueBall = ThresholdImageOps.threshold(hsv.getBand(0),null, 6.10f,false);
+				ImageUInt8 upperHueBall = ThresholdImageOps.threshold(hsv.getBand(0),binary, 0.10f,true);
+				
+				ImageUInt8 lowerSaturationBall = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.66f,false);
+				BinaryImageOps.logicOr(lowerHueBall, upperHueBall, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationBall, binary);
+				break;	
+			}
+
 		case "blue":
-			if(false){ // new pitch but doesnt work
-				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
-				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
+			if(true){ // new pitch but doesnt work
+				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 3, 3, null);
+				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 3, 3, null);
 
-				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 1.97f,false); // was 1.97
-				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.14f,true); // was 3.14
+				
+				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 2.96f,false); // was 1.97
+				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.49f,true); // was 3.14
 
-				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.30f,true); //was 0.25
+				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.35f,true); //was 0.25
+				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.25f,false); //was 0.25
 				BinaryImageOps.logicAnd(lowerHueBlue, upperHueBlue, binary);
 				BinaryImageOps.logicAnd(binary, upperSaturationBlue, binary);
+				BinaryImageOps.logicAnd(binary, lowerSaturationBlue, binary);
 			}
-			else{// old pitchj
+			else{// old pitch
 				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
 				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
 
@@ -244,18 +260,18 @@ public class VisionOps {
 			}
 			break;
 		case "yellow":
-			if(false){ // new pitch
-				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.34f,false); // was 0.34
-				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.69f,true); // was 0.69
+			if(true){ // new pitch
+				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.52f,false); // was 0.34
+				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 1f,true); // was 0.69
 
-				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.65f,false); // was 0.62
-				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.86f,true); // was 0.86
+				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.35f,false); // was 0.62
+				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.80f,true); // was 0.86
 				//values are 0..255
 
 				BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
 				BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
 				BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
-				BlurImageOps.gaussian(binary, binary, 4, 5, null);
+				//BlurImageOps.gaussian(binary, binary, 4, 5, null);
 			}
 			else{//old pitch
 				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.52f,false); // was 0.34
@@ -546,8 +562,8 @@ public class VisionOps {
 		double theta = 0;
 		double dx = prevPos.x - curPos.x;
 		double dy = prevPos.y - curPos.y;
-//		if(Math.abs(dx) < 0.001) return theta;
-//		if(Math.abs(dy) < 0.001) return theta;
+		if(Math.abs(dx) < 2 && Math.abs(dy) < 2) return 0.0;
+
 		if (prevPos == null || curPos == null)
 			throw new Exception("math error - either point is null");
 		else if (dx < 0 && dy > 0)
