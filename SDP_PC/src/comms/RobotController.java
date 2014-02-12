@@ -24,4 +24,6 @@ public interface RobotController {
 	
 	public void backwards();
 		
+	public void setSpeed(int speed);
+	
 }
