@@ -289,7 +289,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			e.printStackTrace();
 		}
 		try {
-			ObjectLocations.drawCrosses(g);
+			//ObjectLocations.drawCrosses(g);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

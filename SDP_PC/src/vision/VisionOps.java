@@ -264,17 +264,35 @@ public class VisionOps {
 			break;
 		case "yellow":
 			if(true){ // new pitch
-				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.52f,false); // was 0.34
-				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 1f,true); // was 0.69
+				// for the day
+//				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.52f,false); // was 0.34
+//				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 1f,true); // was 0.69
+//
+//				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.35f,false); // was 0.62
+//				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.80f,true); // was 0.86
+//				//values are 0..255
+//
+//				BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
+//				BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
+//				BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
+//				//BlurImageOps.gaussian(binary, binary, 4, 5, null);
+				
+				//for the night
+				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
+				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
+				
+				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.60f,false); // was 0.34
+				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.77f,true); // was 0.87
 
-				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.35f,false); // was 0.62
-				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.80f,true); // was 0.86
+				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.44f,false); // was 0.50
+				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.60f,true); // was 0.70
 				//values are 0..255
 
 				BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
 				BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
 				BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
-				//BlurImageOps.gaussian(binary, binary, 4, 5, null);
+
+				
 			}
 			else{//old pitch
 				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.52f,false); // was 0.34
@@ -298,13 +316,13 @@ public class VisionOps {
 			Point2D_I32 p = PointUtils.getContourCentroid(c);
 			if(type == "yellow"){
 				if(
-						c.external.size() > 18 &&
+						c.external.size() > 10 && c.external.size() < 50 &&
 						p.x > 15 && p.x < img.getWidth() - 15
 						) contoursFiltered.add(c);
 			}
 			else{
 				if(
-						c.external.size() > 10 &&
+						c.external.size() > 10 &&  c.external.size() < 50 &&
 						p.x > 15 && p.x < img.getWidth() - 15
 						) contoursFiltered.add(c);
 			}
@@ -379,11 +397,11 @@ public class VisionOps {
 	public static Point2D_I32 findBall(BufferedImage img){
 		List<Contour> contours = newHSVSegment("ball",img);//,segmentHSV(img, 6.21f, 0.88f));
 		if(contours.size() > 1 ){
-			System.out.println("WARNING: MORE THAN 1 ball detected");
+//			System.out.println("WARNING: MORE THAN 1 ball detected");
 			return null;
 		}
 		else if(contours.size() == 0){
-			System.out.println("WARNING: NO ball detected");
+//			System.out.println("WARNING: NO ball detected");
 			return null;
 		}
 		else return PointUtils.getContourCentroid(contours.get(0));
@@ -399,12 +417,12 @@ public class VisionOps {
 			List<Contour> contours = newHSVSegment("yellow",img);//segmentHSV(img, 0.7f, 0.95f));
 			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
-				System.out.println("WARNING: ONLY ONE yellow marker was detected");
+//				System.out.println("WARNING: ONLY ONE yellow marker was detected");
 				ret.add(PointUtils.getContourCentroid(contours.get(0)));
 				return ret;
 			}
 			else if(contours.size() != 2){
-				System.out.println("WARNING: " + contours.size() + " yellow marker were detected");
+//				System.out.println("WARNING: " + contours.size() + " yellow marker were detected");
 				return null;
 			}
 
@@ -417,12 +435,12 @@ public class VisionOps {
 			List<Contour> contours = newHSVSegment("blue",img);//segmentHSV(img, 3.31f, 0.538f));
 			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
-				System.out.println("WARNING: ONLY ONE blue marker was detected");
+//				System.out.println("WARNING: ONLY ONE blue marker was detected");
 				ret.add(PointUtils.getContourCentroid(contours.get(0)));
 				return ret;
 			}
 			else if(contours.size() != 2){
-				System.out.println("WARNING: " + contours.size() + " blue marker were detected");
+//				System.out.println("WARNING: " + contours.size() + " blue marker were detected");
 				return null;
 			}
 

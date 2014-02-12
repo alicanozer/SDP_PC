@@ -89,7 +89,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 
 	@Override
 	public void rotateLEFT(int angle) {
-		int[] commands = { bluetooth.ROTATELEFT, 0,0,0 }; 
+		int[] commands = { bluetooth.ROTATELEFT, angle,0,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands);
@@ -141,5 +141,19 @@ public class BluetoothRobot extends Robot implements RobotController {
 			e.printStackTrace();
 		}		
 	}
+	
+	@Override
+	public void setSpeed(int speed) {
+		int[] commands = { bluetooth.SPEED, speed,0,0 }; 
+		
+		try {
+			bluetooth.sendCommand(commands);
+			System.out.println("Robot Stopped");
+		}catch (IOException e) {
+			System.out.println("Command could not be sent");
+			e.printStackTrace();
+		}
+	}
+	
 	
 }

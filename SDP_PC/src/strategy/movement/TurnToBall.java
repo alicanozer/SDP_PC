@@ -75,7 +75,7 @@ public class TurnToBall {
 	}
 
 	// This method calculates the angle between the robot and a point (x,y)
-	public static double AngleTurner(Robot us, double x, double y) {
+	public static double AngleTurner(Robot us, int x, int y) {
 		double pointBearing = findPointBearing(us, x, y);
 		double angle = turnAngle(us.bearing, pointBearing);
 		return angle;
