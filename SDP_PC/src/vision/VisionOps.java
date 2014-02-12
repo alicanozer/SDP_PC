@@ -281,11 +281,11 @@ public class VisionOps {
 				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
 				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
 				
-				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.60f,false); // was 0.34
-				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.77f,true); // was 0.87
+				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.50f,false); // was 0.60
+				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.91f,true); // was 0.77
 
-				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.44f,false); // was 0.50
-				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.60f,true); // was 0.70
+				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.62f,false); // was 0.44
+				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.78f,true); // was 0.60
 				//values are 0..255
 
 				BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
@@ -512,8 +512,8 @@ public class VisionOps {
 //		
 //		ImageUInt8 lowerHue = ThresholdImageOps.threshold(hsv.getBand(0),null,0.69f,true);
 //		ImageUInt8 upperHue = ThresholdImageOps.threshold(hsv.getBand(0),null,1.13f,false);
-		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)65,true);
-		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)40,false);
+		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)80,true);
+		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)50,false);
 		
 		BinaryImageOps.logicAnd(lowerValue, upperValue, binary);
 

@@ -127,7 +127,7 @@ public class ObjectLocations {
 
 		if(yellowMarkers != null){
 			for(Point2D_I32 p: yellowMarkers){
-				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,38);
+				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,44);
 				if(newCentre != null)
 					dotsLocal.add(newCentre); // window 44 works well
 			}
@@ -135,7 +135,7 @@ public class ObjectLocations {
 
 		if(blueMarkers != null){
 			for(Point2D_I32 p: blueMarkers){
-				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,38);
+				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,44);
 				if(newCentre != null)
 					dotsLocal.add(newCentre); // window 44 works well
 			}
