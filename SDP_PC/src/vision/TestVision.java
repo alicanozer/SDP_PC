@@ -36,11 +36,12 @@ public class TestVision {
 		BufferedImage img3 = ImageIO.read(new File("test_images/cropped8.jpg"));
 		
 		BufferedImage img4 = ImageIO.read(new File("test_images/pitch2_1.png"));
-
-		ObjectLocations.setYellowDefendingLeft(true);
-		ObjectLocations.setYellowUs(true);
 		
-		//ObjectLocations.updateObjectLocations(img2);
+		BufferedImage img5 = ImageIO.read(new File("test_images/000000013.jpg"));
+//		ObjectLocations.setYellowDefendingLeft(true);
+//		ObjectLocations.setYellowUs(true);
+//		
+//		ObjectLocations.updateObjectLocations(img2);
 		
 		//ObjectLocations.drawCrosses((Graphics2D) img2.getGraphics());
 		float[] hues = {0.5f};
@@ -103,7 +104,13 @@ public class TestVision {
 //				input.getHeight(),
 //				null);
 		
-		ShowImages.showWindow(img4,"identifying objects");
+		//img4 = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img4),img4.getWidth(), img4.getHeight());
+		img5 = img5.getSubimage(50, 70, 540, 316);
+		img5 = VisionOps.newDisplay(VisionOps.newHSVSegment("ball",img5),img5.getWidth(), img5.getHeight());
+//		ObjectLocations.updateObjectLocations(img4);
+//		ObjectLocations.drawCrosses((Graphics2D) img4.getGraphics());
+		//ShowImages.showWindow(img4,"img4");
+		ShowImages.showWindow(img5,"img5");
 		
 		
 		

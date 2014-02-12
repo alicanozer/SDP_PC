@@ -24,6 +24,7 @@ import boofcv.alg.feature.detect.edge.CannyEdge;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
 import boofcv.alg.filter.binary.ThresholdImageOps;
+import boofcv.alg.filter.blur.BlurImageOps;
 import boofcv.core.image.ConvertBufferedImage;
 import boofcv.factory.feature.detect.edge.FactoryEdgeDetectors;
 import boofcv.gui.binary.VisualizeBinaryData;
@@ -194,7 +195,14 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		lastFrame = thisFrame;
 		float[] hues = {0.5f}; 
 		float[] saturations = {0.4f};
-		img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
+
+//		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img,null,true,ImageFloat32.class);
+//		BlurImageOps.gaussian(input.getBand(0), input.getBand(0), 5, -1, null);
+//		BlurImageOps.gaussian(input.getBand(1), input.getBand(1), 5, -1, null);
+//		img = ConvertBufferedImage.convertTo_F32(input, null, true);
+		
+		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
+
 		
 		//img = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
 		
