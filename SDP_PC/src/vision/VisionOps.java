@@ -264,10 +264,12 @@ public class VisionOps {
 			break;
 		case "yellow":
 			if(true){ // new pitch
-				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.52f,false); // was 0.34
-				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 1f,true); // was 0.69
+				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
+				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
+				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.50f,false); // was 0.34
+				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.9f,true); // was 0.69
 
-				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.35f,false); // was 0.62
+				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.55f,false); // was 0.62
 				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.80f,true); // was 0.86
 				//values are 0..255
 
@@ -298,13 +300,13 @@ public class VisionOps {
 			Point2D_I32 p = PointUtils.getContourCentroid(c);
 			if(type == "yellow"){
 				if(
-						c.external.size() > 18 &&
+						c.external.size() > 18 && c.external.size() < 60 &&
 						p.x > 15 && p.x < img.getWidth() - 15
 						) contoursFiltered.add(c);
 			}
 			else{
 				if(
-						c.external.size() > 10 &&
+						c.external.size() > 10 && c.external.size() < 60 &&
 						p.x > 15 && p.x < img.getWidth() - 15
 						) contoursFiltered.add(c);
 			}
@@ -494,8 +496,8 @@ public class VisionOps {
 //		
 //		ImageUInt8 lowerHue = ThresholdImageOps.threshold(hsv.getBand(0),null,0.69f,true);
 //		ImageUInt8 upperHue = ThresholdImageOps.threshold(hsv.getBand(0),null,1.13f,false);
-		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)65,true);
-		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)40,false);
+		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)80,true);
+		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)65,false);
 		
 		BinaryImageOps.logicAnd(lowerValue, upperValue, binary);
 
