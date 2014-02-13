@@ -19,6 +19,8 @@ import javax.swing.SwingUtilities;
 import org.ddogleg.struct.FastQueue;
 import org.ddogleg.struct.FastQueueList;
 
+import world.PixelWorld;
+import world.World;
 import boofcv.alg.color.ColorHsv;
 import boofcv.alg.feature.detect.edge.CannyEdge;
 import boofcv.alg.filter.binary.BinaryImageOps;
@@ -48,7 +50,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  * @author bilyan, jason
  *
  */
-public class SimpleViewer extends WindowAdapter implements CaptureCallback{
+public class SimpleViewer2 extends SimpleViewer implements Runnable{
 	private static int      width = 640, height = 480, std = V4L4JConstants.STANDARD_WEBCAM, channel = 0;
 	private static String   device = "/dev/video0";
 	private long lastFrame = System.currentTimeMillis(); // used for calculating FPS
@@ -61,6 +63,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private JLabel          label;
 	private JFrame          frame;
 	
+	private PixelWorld world;
 	
 	private static BufferedImage segOutputBall;
 	private static List<Point2D_I32> ballPos;
@@ -78,7 +81,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					new SimpleViewer();
+					new SimpleViewer2();
 				}
 			});
 		} catch (Exception e) {
@@ -91,31 +94,11 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 	/**
 	 * Builds a WebcamViewer object
+	 * @param world 
 	 * @throws V4L4JException if any parameter if invalid
 	 */
-	public SimpleViewer(){
-		// Initialise video device and frame grabber
-		try {
-			initFrameGrabber();
-		} catch (V4L4JException e1) {
-			System.err.println("Error setting up capture");
-			e1.printStackTrace();
-
-			// cleanup and exit
-			cleanupCapture();
-			return;
-		}
-
-		// create and initialise UI
-		initGUI();
-
-		// start capture
-		try {
-			frameGrabber.startCapture();
-		} catch (V4L4JException e){
-			System.err.println("Error starting the capture");
-			e.printStackTrace();
-		}
+	public SimpleViewer2(PixelWorld world){
+		this.world = world;
 	}
 
 	/**
@@ -279,10 +262,23 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 //		}
 		
 		try {
-
-
-
+			
+			
+			
 			ObjectLocations.updateObjectLocations(img);
+			
+			// Update the world model with the new positions. Leave out the
+			// orientation if it's not yet reliable.
+			world.getMobilePixelObject(PixelWorld.BALL)
+					.setPixelPosition(ObjectLocations.getBall());
+			world.getMobilePixelObject(PixelWorld.BLUE_ATTACKER)
+					.setPixelPosition(ObjectLocations.getBlueATTACKmarker());
+			world.getMobilePixelObject(PixelWorld.BLUE_DEFENDER)
+					.setPixelPosition(ObjectLocations.getBlueDEFENDmarker());
+			world.getMobilePixelObject(PixelWorld.YELLOW_ATTACKER)
+					.setPixelPosition(ObjectLocations.getYellowATTACKmarker());
+			world.getMobilePixelObject(PixelWorld.YELLOW_DEFENDER)
+					.setPixelPosition(ObjectLocations.getYellowDEFENDmarker());
 
 			//System.out.print(VisionOps.getDirection(ballPrvPos, ballCurPos)); 
 		} catch (Exception e) {
@@ -306,6 +302,32 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 
 
 		frame.recycle();
+	}
+
+	@Override
+	public void run() {
+		// Initialise video device and frame grabber
+		try {
+			initFrameGrabber();
+		} catch (V4L4JException e1) {
+			System.err.println("Error setting up capture");
+			e1.printStackTrace();
+
+			// cleanup and exit
+			cleanupCapture();
+			return;
+		}
+
+		// create and initialise UI
+		initGUI();
+
+		// start capture
+		try {
+			frameGrabber.startCapture();
+		} catch (V4L4JException e){
+			System.err.println("Error starting the capture");
+			e.printStackTrace();
+		}
 	}
 
 
