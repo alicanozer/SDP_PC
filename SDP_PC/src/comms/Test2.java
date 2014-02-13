@@ -6,9 +6,11 @@ import javax.swing.SwingUtilities;
 
 import lejos.nxt.Button;
 import strategy.movement.TurnToBall;
+import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import vision.PointUtils;
 import vision.SimpleViewer;
+import Calculations.DistanceCalculator;
 import World.Robot;
 import World.RobotType;
 
@@ -18,9 +20,7 @@ public class Test2 {
 	public static final String HERCULES = "0016530D4ED8";
 	private static Bluetooth connection;
 	
-	public static void main(String[] args) throws IOException {
-		
-		
+	public static void main(String[] args) throws Exception {
 		
 		ObjectLocations.setYellowDefendingLeft(true);
 		ObjectLocations.setYellowUs(true);
@@ -37,111 +37,39 @@ public class Test2 {
 			System.out.println("i failed miserably and now I must die to repent for my sins... ");
 		}
 //		
+		
 		bRobot = new BluetoothRobot(RobotType.AttackUs, connection);
 		bRobot.connect();
-		double turn = 0.0;
-		double angle = 0.0;
-		double distance = 0.0;
-				
+		
+		TurnToObject angle = new TurnToObject();
 		
 		while(true) {
 			if(ObjectLocations.getBall() != null && ObjectLocations.getYellowDEFENDmarker() != null) {
-				if (ObjectLocations.getBall().y > ObjectLocations.getYellowDEFENDmarker().y) {
+				double turnAngle = angle.Ball(ObjectLocations.getYellowATTACKmarker());
+				int correct = (int) turnAngle;
+				bRobot.rotateLEFT(-correct);
+			
+				int x1 = ObjectLocations.getYellowATTACKmarker().x;
+				int y1 = ObjectLocations.getYellowATTACKmarker().y;
+				
+				int x2 = ObjectLocations.getBall().x;
+				int y2 = ObjectLocations.getBall().y;
+				
+				double threshold = DistanceCalculator.Distance(x1, y1, x2, y2);
+				int distance = 0;
+				
+				while (distance < threshold) {
 					bRobot.forward();
-				} else if (ObjectLocations.getBall().y < ObjectLocations.getYellowDEFENDmarker().y) {
-					bRobot.backwards();
-				} else {
-					bRobot.stop();
+					int[] data = connection.receiveData();
+					int convertToDistance = data[0]*256*256*256 + data[1]*256*256 + data[2]*256 + data[3]*1;
+					System.out.println(convertToDistance);
+					distance = convertToDistance;
 				}
+				
+				bRobot.stop();
 			}
 		}
 		
-		/*while(true){
-			if(ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null){
-				
-//				angle = AngleTurner(ObjectLocations.getBall().x, ObjectLocations.getBall().y);
-				System.out.println("Ball Detected");
-				System.out.println("Ball Detected");
-				System.out.println("Ball Detected");
-				System.out.println("Ball Detected");
-				System.out.println("Ball Detected");
-				System.out.println("Ball Detected");
-				System.out.println("Ball Detected");
-				System.out.println("Ball Detected");
-				System.out.println("Ball Detected");
-
-				int prevX = ObjectLocations.getYellowATTACKmarker().x;
-				int prevY = ObjectLocations.getYellowATTACKmarker().y;
-				bRobot.setSpeed(5);
-				bRobot.forward();
-				try {
-					Thread.sleep(300);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				bRobot.stop();
-				try {
-					Thread.sleep(1300);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				
-				int currX = ObjectLocations.getYellowATTACKmarker().x;
-				int currY = ObjectLocations.getYellowATTACKmarker().y;
-				
-				double deltaX = currX - prevX;
-				double deltaY = currY - prevY;
-				
-				double d = Math.sqrt(1.0*deltaY*deltaY + 1.0*deltaX*deltaX);
-				
-				double c = PointUtils.euclideanDistance(new Point2D_I32(prevX, prevY), ObjectLocations.getBall());
-				double beta = Math.acos(Math.abs(prevX-ObjectLocations.getBall().x)/ c);
-				
-				int dy = currY - prevY;
-				int dx = currX - prevX;
-				
-				double alpha = Math.atan2(dy, dx);		
-				
-				double e = Math.pow((d*d) + (c*c) - (2*d*Math.cos(beta - alpha)), 0.5);
-				double gamma = Math.asin((d*Math.sin(beta-alpha))/e);
-				
-				turn = beta + gamma - alpha;
-				double ballX = ObjectLocations.getBall().x;
-				double ballY = ObjectLocations.getBall().y;
-				distance = Math.sqrt(Math.pow((ObjectLocations.getYellowATTACKmarker().x-ballX), 2) + Math.pow((ObjectLocations.getYellowATTACKmarker().y-ballY), 2));
-				
-				System.out.println(ballX + " " + ballY);
-				System.out.println("alpha " + alpha);
-				System.out.println("beta " + beta);
-				System.out.println("gamma " + gamma);
-				System.out.println("d " + d);
-				System.out.println("c" + c);
-				System.out.println("e" + e);
-				System.out.println("angle: " + Math.toDegrees(-turn));
-				System.out.println("distance: " + distance);
-				bRobot.rotateLEFT((int) Math.toDegrees(-turn));
-				while (distance != 0) {
-					bRobot.forward();
-					distance = Math.sqrt(Math.pow((ObjectLocations.getYellowATTACKmarker().x-ballX), 2) + Math.pow((ObjectLocations.getYellowATTACKmarker().y-ballY), 2));
-					System.out.println("distance: " + distance);
-				}
-				Button.waitForAnyPress();
-
-			}
-		}*/
-	
-		//double angle = turnAngle(bearing, pointBearing);
-//		System.out.println("angle: " + angle);
-//		System.exit(0);
-//		bRobot.rotateLEFT((int) angle);
-//
-//		bRobot.stop();
-//		
-//		bRobot.disconnect();
-		//System.exit(1);
 	}
 	
 	public static double turnAngle(double botBearing, double toBallBearing) {
@@ -204,5 +132,14 @@ public class Test2 {
 			return angle;
 		}
 		
+		public static byte[] intToByteArray(int a)
+		{
+		    byte[] ret = new byte[4];
+		    ret[3] = (byte) (a & 0xFF);   
+		    ret[2] = (byte) ((a >> 8) & 0xFF);   
+		    ret[1] = (byte) ((a >> 16) & 0xFF);   
+		    ret[0] = (byte) ((a >> 24) & 0xFF);
+		    return ret;
+		}		
 		
 }

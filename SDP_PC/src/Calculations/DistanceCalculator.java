@@ -2,7 +2,7 @@ package Calculations;
 
 public class DistanceCalculator {
 
-    public static double Distance(double x1, double y1, double x2, double y2) {
+    public static double Distance(int x1, int y1, int x2, int y2) {
 
         double xDistance = Math.abs(x1 - x2);
         double yDistance = Math.abs(y1 - y2);
