@@ -18,10 +18,15 @@ public class World implements PixelWorld, RealWorld {
 	StationaryObject[] stationaryObjects;
 
 	/**
+	 * A simple world model that in addition to holding all object in the world
+	 * determines what color and what zones belongs to what team.
 	 * 
-	 * @param ourColor The color we are playing as.
+	 * @param ourColor
+	 *            The color we are playing as.
 	 * 
-	 * @param ourSide The side we are playing from (i.e. the side on which our defender is).
+	 * @param ourSide
+	 *            The side we are playing from (i.e. the side on which our
+	 *            defender is).
 	 */
 	public World(boolean ourColor, boolean ourSide) {
 		this.ourColor = ourColor;
