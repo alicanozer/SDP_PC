@@ -43,7 +43,20 @@ public class Test2 {
 		double angle = 0.0;
 		double distance = 0.0;
 				
-		while(true){
+		
+		while(true) {
+			if(ObjectLocations.getBall() != null && ObjectLocations.getYellowDEFENDmarker() != null) {
+				if (ObjectLocations.getBall().y > ObjectLocations.getYellowDEFENDmarker().y) {
+					bRobot.forward();
+				} else if (ObjectLocations.getBall().y < ObjectLocations.getYellowDEFENDmarker().y) {
+					bRobot.backwards();
+				} else {
+					bRobot.stop();
+				}
+			}
+		}
+		
+		/*while(true){
 			if(ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null){
 				
 //				angle = AngleTurner(ObjectLocations.getBall().x, ObjectLocations.getBall().y);
@@ -118,7 +131,7 @@ public class Test2 {
 				Button.waitForAnyPress();
 
 			}
-		}
+		}*/
 	
 		//double angle = turnAngle(bearing, pointBearing);
 //		System.out.println("angle: " + angle);
