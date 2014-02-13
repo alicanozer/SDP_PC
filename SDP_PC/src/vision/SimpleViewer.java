@@ -72,7 +72,7 @@ public class SimpleViewer2 extends SimpleViewer implements Runnable{
 
 	public static void main(String args[]){
 
-		ObjectLocations.setYellowDefendingLeft(false);
+		ObjectLocations.setYellowDefendingLeft(true);
 
 		ObjectLocations.setYellowUs(true);
 		
@@ -283,20 +283,20 @@ public class SimpleViewer2 extends SimpleViewer implements Runnable{
 			//System.out.print(VisionOps.getDirection(ballPrvPos, ballCurPos)); 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		try {
 			String[] objs = {"ball"};
 			//ObjectLocations.drawAllDirections(g, objs);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		try {
 			ObjectLocations.drawCrosses(g);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 

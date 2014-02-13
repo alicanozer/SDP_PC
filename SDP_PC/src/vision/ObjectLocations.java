@@ -146,7 +146,7 @@ public class ObjectLocations {
 			ballDirectionAngle = VisionOps.getDirection(ball,ballLocal);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		setBall(ballLocal);
 		
@@ -160,7 +160,7 @@ public class ObjectLocations {
 							yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 						setYellowDEFENDmarker(p);
 					}
@@ -171,7 +171,7 @@ public class ObjectLocations {
 							yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 						setYellowATTACKmarker(p);
 					}
@@ -185,7 +185,7 @@ public class ObjectLocations {
 							blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 						setBlueATTACKmarker(p);
 					}
@@ -194,7 +194,7 @@ public class ObjectLocations {
 							blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 						setBlueDEFENDmarker(p);
 					}
@@ -211,7 +211,7 @@ public class ObjectLocations {
 							yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 						setYellowATTACKmarker(p);
 					}
@@ -221,7 +221,7 @@ public class ObjectLocations {
 							yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 						setYellowDEFENDmarker(p);
 					}
@@ -235,7 +235,7 @@ public class ObjectLocations {
 							blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 						setBlueDEFENDmarker(p);
 					}
@@ -244,7 +244,7 @@ public class ObjectLocations {
 							blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 						setBlueATTACKmarker(p);
 					}
@@ -261,21 +261,21 @@ public class ObjectLocations {
 							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 					else if(region12X < dot.x && dot.x < region23X)
 						try {
 							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 					else if (region23X < dot.x && dot.x < region34X){
 						try {
 							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 					}
 					else if(dot.x > region34X){
@@ -283,7 +283,7 @@ public class ObjectLocations {
 							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+//							e.printStackTrace();
 						}
 					}
 				}

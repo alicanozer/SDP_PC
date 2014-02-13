@@ -152,5 +152,20 @@ public class BluetoothRobot implements RobotController {
 		}
 	}
 	
+	@Override
+	public boolean isMoving() {
+		int[] commands = { bluetooth.MOVING, 0,0,0 }; 
+		
+		try {
+			bluetooth.sendCommand(commands);
+			System.out.println("Robot Stopped");
+		}catch (IOException e) {
+			System.out.println("Command could not be sent");
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
 	
 }

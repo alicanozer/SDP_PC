@@ -33,6 +33,7 @@ public class Bluetooth {
 	public final static int SPEED = 5;
 	public final static int ROTATELEFT = 6;
 	public final static int ROTATERIGHT = 7;
+	public final static int MOVING = 8;
 	public final static int QUIT = 9;
 	
 
