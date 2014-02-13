@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 import comms.Bluetooth;
 import comms.BluetoothRobot;
 import strategy.program.GoalieIntercept;
-import vision.SimpleViewer2;
+import vision.SimpleViewer;
 import world.World;
 
 public class Intercept {
@@ -26,10 +26,10 @@ public class Intercept {
 		BluetoothRobot bluetoothRobot = new BluetoothRobot(bluetooth);
 		
 		//Set up the vision
-		Thread visionThread = new Thread(new SimpleViewer2(world));
+		Thread visionThread = new Thread(new SimpleViewer(world));
 		visionThread.start();
 		
-		Thread strategy = new Thread(new GoalieIntercept(world));
+		Thread strategy = new Thread(new GoalieIntercept(world, bluetoothRobot));
 		strategy.start();
 	}
 }

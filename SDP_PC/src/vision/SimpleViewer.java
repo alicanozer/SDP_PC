@@ -50,7 +50,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  * @author bilyan, jason
  *
  */
-public class SimpleViewer2 extends SimpleViewer implements Runnable{
+public class SimpleViewer extends WindowAdapter implements CaptureCallback, Runnable{
 	private static int      width = 640, height = 480, std = V4L4JConstants.STANDARD_WEBCAM, channel = 0;
 	private static String   device = "/dev/video0";
 	private long lastFrame = System.currentTimeMillis(); // used for calculating FPS
@@ -81,7 +81,7 @@ public class SimpleViewer2 extends SimpleViewer implements Runnable{
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					new SimpleViewer2();
+					new SimpleViewer(new World(true, true));
 				}
 			});
 		} catch (Exception e) {
@@ -97,7 +97,7 @@ public class SimpleViewer2 extends SimpleViewer implements Runnable{
 	 * @param world 
 	 * @throws V4L4JException if any parameter if invalid
 	 */
-	public SimpleViewer2(PixelWorld world){
+	public SimpleViewer(PixelWorld world){
 		this.world = world;
 	}
 
