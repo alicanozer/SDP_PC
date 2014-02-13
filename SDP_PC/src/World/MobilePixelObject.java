@@ -9,38 +9,45 @@ import geometry.Vector;
  * 
  */
 public interface MobilePixelObject {
-	
+
 	/**
 	 * Get the position of the object at a given time.
 	 * 
-	 * @param time The time for which to get the position. This is relative to now, thus
-	 * positive values represent the future, negative values the past. The unit is milliseconds.
+	 * @param time
+	 *            The time for which to get the position. This is relative to
+	 *            now, thus positive values represent the future, negative
+	 *            values the past. The unit is milliseconds.
 	 * 
 	 * @return Returns the position of the object at the given time as a Vector.
 	 */
-	public Vector getPixelPosition(long time);
-	
+	public Vector getPixelPosition();
+
 	/**
 	 * Set the current position of the object.
 	 * 
-	 * @param position The position that the object is currently in.
+	 * @param position
+	 *            The position that the object is currently in.
 	 */
 	public void setPixelPosition(Vector position);
-	
+
 	/**
 	 * Get the orientation of the object at a given time.
 	 * 
-	 * @param time The time for which to get the orientation. This is relative to now, thus
-	 * positive values represent the future, negative values the past. The unit is milliseconds.
+	 * @param time
+	 *            The time for which to get the orientation. This is relative to
+	 *            now, thus positive values represent the future, negative
+	 *            values the past. The unit is milliseconds.
 	 * 
-	 * @return Returns the orientation of the object at the given time as a Vector.
+	 * @return Returns the orientation of the object at the given time as a
+	 *         Vector.
 	 */
-	public Vector getPixelOrientation(long time);
-	
+	public Vector getPixelOrientation();
+
 	/**
 	 * Set the current orientation of the object.
 	 * 
-	 * @param position The orientation that the object is currently in.
+	 * @param position
+	 *            The orientation that the object is currently in.
 	 */
 	public void setPixelOrientation(Vector position);
 }

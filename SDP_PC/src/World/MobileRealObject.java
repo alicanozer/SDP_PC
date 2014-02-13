@@ -12,34 +12,30 @@ import geometry.Vector;
  */
 public interface MobileRealObject {
 	/**
-	 * Get the position of the object at a given time.
+	 * Get the position of the object.
 	 * 
-	 * @param time The time for which to get the position. This is relative to now, thus
-	 * positive values represent the future, negative values the past. The unit is milliseconds.
-	 * 
-	 * @return Returns the position of the object at the given time as a Vector.
+	 * @return Returns the position of the object as a Vector.
 	 */
-	public Vector getRealPosition(long time);
+	public Vector getRealPosition();
+
 	/**
-	 * Get the orientation of the object at a given time. (Orientation == the way the object is facing)
+	 * Get the orientation of the object. (Orientation == the way the object is
+	 * facing)
 	 * 
-	 * @param time The time for which to get the orientation. This is relative to now, thus
-	 * positive values represent the future, negative values the past. The unit is milliseconds.
-	 * 
-	 * @return Returns the orientation of the object at the given time as a Vector. This vector is parallel 
-	 * to one that can be draw from the dot of the 'i' to the base of the 'i' (remember the dot of the i is 
-	 * the back of the robot). It's magnitude is arbitrary.
+	 * @return Returns the orientation of the object as a Vector. This vector is
+	 *         parallel to one that can be draw from the dot of the 'i' to the
+	 *         base of the 'i' (remember the dot of the i is the back of the
+	 *         robot). It's magnitude is arbitrary.
 	 */
-	public Vector getRealOrientation(long time);
+	public Vector getRealOrientation();
+
 	/**
-	 * Get the velocity of the object at a given time.
+	 * Get the velocity of the object.
 	 * 
-	 * @param time The time for which to get the velocity. This is relative to now, thus
-	 * positive values represent the future, negative values the past. The unit is milliseconds.
-	 * 
-	 * @return Returns the velocity of the object at the given time as a Vector. This vector is parallel 
-	 * to one that can be draw from the dot of the 'i' to the base of the 'i' (remember the dot of the i is 
-	 * the back of the robot). It's magnitude is equal to the speed.
+	 * @return Returns the velocity of the object as a Vector. This vector is
+	 *         parallel to one that can be draw from the dot of the 'i' to the
+	 *         base of the 'i' (remember the dot of the i is the back of the
+	 *         robot). It's magnitude is equal to the speed.
 	 */
-	public Vector getRealVelocity(long time);
+	public Vector getRealVelocity();
 }
