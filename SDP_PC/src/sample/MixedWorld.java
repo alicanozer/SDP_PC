@@ -11,7 +11,7 @@ import world.StationaryRealObject;
 public class MixedWorld implements RealWorld, PixelWorld {
 	public static final boolean YELLOW = true;
 	public static final boolean BLUE = false;
-	
+
 	public static final boolean LEFT = true;
 	public static final boolean RIGHT = false;
 
