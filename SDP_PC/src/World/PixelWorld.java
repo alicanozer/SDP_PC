@@ -11,7 +11,7 @@ public interface PixelWorld {
 	public static final int YELLOW_ATTACKER = 0;
 	public static final int YELLOW_DEFENDER = 1;
 	public static final int BLUE_ATTACKER = 2;
-	public static final int BLUE_DEFEMDER = 3;
+	public static final int BLUE_DEFENDER = 3;
 	public static final int BALL = 4;
 
 	// Integers constants to be used to reference the various stationary

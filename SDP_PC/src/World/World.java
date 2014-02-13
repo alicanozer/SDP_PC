@@ -54,7 +54,7 @@ public class World implements PixelWorld, RealWorld {
 			if (ourColor == YELLOW) {
 				pixelObject = YELLOW_DEFENDER;
 			} else {
-				pixelObject = BLUE_DEFEMDER;
+				pixelObject = BLUE_DEFENDER;
 			}
 			break;
 		case VILLAIN_ATTACKER:
