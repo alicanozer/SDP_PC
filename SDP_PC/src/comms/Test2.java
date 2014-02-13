@@ -36,41 +36,60 @@ public class Test2 {
 			e.printStackTrace();
 			System.out.println("i failed miserably and now I must die to repent for my sins... ");
 		}
-//		
-		
+//			
 		bRobot = new BluetoothRobot(RobotType.AttackUs, connection);
 		bRobot.connect();
+		bRobot.setSpeed(20);
 		
 		TurnToObject angle = new TurnToObject();
 		
 		while(true) {
-			if(ObjectLocations.getBall() != null && ObjectLocations.getYellowDEFENDmarker() != null) {
+			if(ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null) {
+				
 				double turnAngle = angle.Ball(ObjectLocations.getYellowATTACKmarker());
+								
 				int correct = (int) turnAngle;
-				bRobot.rotateLEFT(-correct);
-			
-				int x1 = ObjectLocations.getYellowATTACKmarker().x;
-				int y1 = ObjectLocations.getYellowATTACKmarker().y;
-				
-				int x2 = ObjectLocations.getBall().x;
-				int y2 = ObjectLocations.getBall().y;
-				
-				double threshold = DistanceCalculator.Distance(x1, y1, x2, y2);
-				int distance = 0;
-				
-				while (distance < threshold) {
-					bRobot.forward();
-					int[] data = connection.receiveData();
-					int convertToDistance = data[0]*256*256*256 + data[1]*256*256 + data[2]*256 + data[3]*1;
-					System.out.println(convertToDistance);
-					distance = convertToDistance;
+
+				System.out.println(correct);
+
+				if (correct > 0 && correct < 180) {
+					bRobot.rotateLEFT(correct);
+					Button.waitForAnyPress();
+				} else {
+					bRobot.rotateLEFT(-(360-correct));
+					Button.waitForAnyPress();
 				}
 				
-				bRobot.stop();
+//				CODE TO MOVE TO THE BALL				
+//				while (bRobot.isMoving()) {
+//					//DO NOTHING
+//				}
+				
+//				bRobot.stop();
+//				int x1 = ObjectLocations.getYellowATTACKmarker().x;
+//				int y1 = ObjectLocations.getYellowATTACKmarker().y;
+//				
+//				int x2 = ObjectLocations.getBall().x;
+//				int y2 = ObjectLocations.getBall().y;
+//				
+//				double threshold = DistanceCalculator.Distance(x1, y1, x2, y2);
+//				int distance = 0;
+//				
+//				while (distance < threshold) {
+//					bRobot.forward();
+//					int[] data = connection.receiveData();
+//					int convertToDistance = data[0]*256*256*256 + data[1]*256*256 + data[2]*256 + data[3]*1;
+//					System.out.println(convertToDistance);
+//					distance = convertToDistance;
+//				}
+//				
+//				bRobot.stop();
 			}
+		
 		}
 		
 	}
+	
 	
 	public static double turnAngle(double botBearing, double toBallBearing) {
 		botBearing = Math.toDegrees(botBearing);

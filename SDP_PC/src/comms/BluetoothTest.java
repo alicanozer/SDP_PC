@@ -37,7 +37,7 @@ public class BluetoothTest {
 //		}
 		
 		connection = new Bluetooth(HERCULES);
-		bRobot = new BluetoothRobot(RobotType.AttackUs);
+		bRobot = new BluetoothRobot(RobotType.AttackUs, connection);
 //		bRobot.connect();*/
 		
 		Robot us = new Robot(RobotType.AttackUs); 

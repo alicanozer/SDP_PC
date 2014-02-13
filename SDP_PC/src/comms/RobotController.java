@@ -26,4 +26,6 @@ public interface RobotController {
 		
 	public void setSpeed(int speed);
 	
+	public boolean isMoving();
+	
 }
