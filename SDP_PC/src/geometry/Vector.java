@@ -160,6 +160,30 @@ public class Vector {
 		return intersectY(this, direction, y);
 	}
 
+	/**
+	 * Does scalar multiplication of a vector and a scalar. The resulting vector will have its x and y components
+	 * each multiplied by s.
+	 * http://en.wikipedia.org/wiki/Scalar_multiplication
+	 * @param v - The vector of the multiplication
+	 * @param s - The scalar 
+	 * @return Returns a Vector that is the result of the multiplication,
+	 */
+	public static Vector scalarMultiplication(Vector v, double s) {
+		return new Vector(v.x*s, v.y*s);
+	}
+	
+	/**
+	 * Does scalar multiplication with a scalar. The resulting vector will have its x and y components
+	 * each multiplied by s.
+	 * http://en.wikipedia.org/wiki/Scalar_multiplication
+	 * 
+	 * @param s - The scalar
+	 *  
+	 * @return Returns a Vector that is the result of the multiplication,
+	 */
+	public Vector scalarMultiplication(double s) {
+		return new Vector(x*s, y*s);
+	}
 
 }
 
