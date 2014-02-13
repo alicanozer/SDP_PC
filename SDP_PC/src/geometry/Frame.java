@@ -39,6 +39,34 @@ public class Frame extends Vector {
 		super(x, y);
 		time = System.currentTimeMillis();
 	}
+	
+	/**
+	 * Creates a frame with the current time as the time component
+	 * 
+	 * @param vector The vector component of the frame.
+	 */
+	public Frame(Vector vector) {
+		super(vector.getX(), vector.getY());
+		time = System.currentTimeMillis();
+	}
+	
+	/**
+	 * Get the vector in this frame.
+	 * 
+	 * @return Returns the vector component of this frame.
+	 */
+	public Vector getVector() {
+		return new Vector(getX(), getY());
+	}
+	
+	/**
+	 * Get the time of this frame.
+	 * 
+	 * @return Returns the time component of this frame.
+	 */
+	public long getTime() {
+		return time;
+	}
 
 	/**
 	 * Subtracts another frame from this one.
