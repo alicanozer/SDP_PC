@@ -35,7 +35,14 @@ public class Frame extends Vector {
 		time = System.currentTimeMillis();
 	}
 	
-	public long timeDifference(Frame otherFrame) {
-		return Math.abs(time-otherFrame.time);
+	/**
+	 * Subtracts another frame from this one.
+	 * 
+	 * @param otherFrame The frame that is to be subtracted (right side of subtraction)
+	 * 
+	 * @return Returns a new frame that is the result of the subtraction.
+	 */
+	public Frame subtract(Frame otherFrame) {
+		return new Frame(getX()-otherFrame.getX(), getY()-otherFrame.getY(), time-otherFrame.time);
 	}
 }
