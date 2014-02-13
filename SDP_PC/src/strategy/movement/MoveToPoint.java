@@ -11,7 +11,7 @@ public class MoveToPoint {
 	private static final int distanceFromPointToStop = 20;
 
 	public void moveToPoint(ObjectLocations objs, RobotController robot,
-			double moveToX, double moveToY) throws InterruptedException {
+			int moveToX, int moveToY) throws InterruptedException {
 
 		objs.setYellowUs(true);
 		Robot us = new Robot(RobotType.Us);
