@@ -2,6 +2,7 @@ package world;
 
 import geometry.Frame;
 import geometry.Vector;
+import georegression.struct.point.Point2D_I32;
 
 /**
  * @author apljungquist
@@ -53,6 +54,14 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 		if (orientation != null) {
 			previousOrientation = currentOrientation;
 			currentOrientation = new Frame(orientation);
+		}
+	}
+
+	@Override
+	public void setPixelPosition(Point2D_I32 position) {
+		if (position != null) {
+			previousPosition = currentPosition;
+			currentPosition = new Frame(position.x, position.y);
 		}
 	}
 }

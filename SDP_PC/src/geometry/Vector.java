@@ -184,6 +184,15 @@ public class Vector {
 	public Vector scalarMultiplication(double s) {
 		return new Vector(x*s, y*s);
 	}
+	
+	/**
+	 * Get the magnitude of this vector.
+	 * 
+	 * @return Returns the magnitude of the vector.
+	 */
+	public double getMagnitude() {
+		return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2));
+	}
 
 }
 

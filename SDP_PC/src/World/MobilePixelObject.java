@@ -1,6 +1,7 @@
 package world;
 
 import geometry.Vector;
+import georegression.struct.point.Point2D_I32;
 
 /*
  * An interface defining what methods will be available to get and set a representation of one of the worlds
@@ -29,6 +30,14 @@ public interface MobilePixelObject {
 	 *            The position that the object is currently in.
 	 */
 	public void setPixelPosition(Vector position);
+	
+	/**
+	 * Set the current position of the object.
+	 * 
+	 * @param position
+	 *            The position that the object is currently in.
+	 */
+	public void setPixelPosition(Point2D_I32 findBall);
 
 	/**
 	 * Get the orientation of the object at a given time.
