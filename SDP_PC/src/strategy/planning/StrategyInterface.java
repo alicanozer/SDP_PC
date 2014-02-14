@@ -1,17 +1,20 @@
 package strategy.planning;
 
-import movement.RobotMover;
+import comms.RobotController;
+
 import vision.ObjectLocations;
+import World.RealWorld;
 
 public abstract class StrategyInterface implements Runnable {
 	protected boolean shouldidie;
 
-	ObjectLocations obj;
-	RobotMover mover;
+	RealWorld world;
+	RobotController robot;
 
-	public StrategyInterface(RobotMover mover) {
+	public StrategyInterface(RealWorld world, RobotController robot) {
 		this.shouldidie = false;
-		this.mover = mover;
+		this.world = world;
+		this.robot = robot;
 	}
 
 	public void kill() {
@@ -20,12 +23,12 @@ public abstract class StrategyInterface implements Runnable {
 		// NOTE: does NOT tell the robot to stop, it only breaks any loops in
 		// the mover
 		try {
-			mover.resetQueue();
+			robot.resetQueue();
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		mover.interruptMove();
+		robot.interruptMove();
 		try { // Sleep for a bit, because we want movement to die.
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
