@@ -12,11 +12,12 @@ import geometry.Vector;
  */
 public interface MobileRealObject {
 	/**
-	 * Get the position of the object.
+	 * Get the position of the object. Guaranteed to return a non-null Vector.
 	 * 
 	 * @return Returns the position of the object as a Vector.
+	 * @throws Exception Throws an exception if there is not enough history to complete the request.
 	 */
-	public Vector getRealPosition();
+	public Vector getRealPosition() throws Exception;
 
 	/**
 	 * Get the orientation of the object. (Orientation == the way the object is
@@ -30,12 +31,13 @@ public interface MobileRealObject {
 	public Vector getRealOrientation();
 
 	/**
-	 * Get the velocity of the object.
+	 * Get the velocity of the object.Guaranteed to return a non-null Vector.
 	 * 
 	 * @return Returns the velocity of the object as a Vector. This vector is
 	 *         parallel to one that can be draw from the dot of the 'i' to the
 	 *         base of the 'i' (remember the dot of the i is the back of the
 	 *         robot). It's magnitude is equal to the speed.
+	 * @throws Exception Throws an exception if there is not enough history to complete the request. 
 	 */
-	public Vector getRealVelocity();
+	public Vector getRealVelocity() throws Exception;
 }

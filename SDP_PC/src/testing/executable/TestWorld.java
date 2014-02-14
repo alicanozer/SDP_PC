@@ -27,45 +27,54 @@ public class TestWorld {
 		//PixelPos: 	(10, 10)
 		//RealPost:		(4.6, 4.6)
 		//RealVelocity: None
+		
 		waypoints[1] = new Vector(20, 10);
 		//PixelPos: 	(20, 10)
 		//RealPost:		(9.2, 4.6)
 		//RealVelocity: (4.6, 0)
+		
 		waypoints[2] = new Vector(20, 20);
 		//PixelPos: 	(20, 20)
 		//RealPost:		(9.2, 9.2)
 		//RealVelocity: (0, 4.6)
+		
 		waypoints[3] = new Vector(30, 30);
 		//PixelPos: 	(30, 30)
 		//RealPost:		(13.8, 13.8)
 		//RealVelocity: (4.6, 4.6)
+		
 		waypoints[4] = null;
 		//PixelPos: 	50, 40 		//If extrapolation using acceleration is implemented
-		//RealPost:		23, 18.4 	//If extrapolation using acceleration is implemented
+		//RealPost:		18.4, 18.4 	//If extrapolation using acceleration is implemented
 		//RealVelocity: 9.2, 4.6 	//If extrapolation using acceleration is implemented
+		
 		waypoints[5] = new Vector(80, 80);
 		//PixelPos: 	(80, 80)
 		//RealPost:		(36.8, 36.8)
 		//RealVelocity: (11.5, 11.5)
+		
 		waypoints[6] = new Vector(40, 80);
 		//PixelPos: 	
 		//RealPost:		
-		//RealVelocity: 
+		//RealVelocity:
+		
 		waypoints[7] = new Vector(0, 80);
 		//PixelPos: 	
 		//RealPost:		
 		//RealVelocity: 
+		
 		waypoints[8] = new Vector(0, 40);
 		//PixelPos: 	
 		//RealPost:		
-		//RealVelocity: 
+		//RealVelocity:
+		
 		waypoints[9] = new Vector(0, 0);
 		//PixelPos: 	0,0
 		//RealPost:		0,0
 		//RealVelocity: 0, ?
 		
-		// Notice how the speed always comes out to null because no time passes
-		// between the position updates.
+		// Notice how no history is accumulated since no time passes inbetween
+		// updates of position
 		testPosition(0);
 		// This test emulates updates for every frame in the video stream
 		// (25fps). The velocities will be crazy high.
@@ -88,22 +97,22 @@ public class TestWorld {
 		MobileRealObject realObj = world.getMobileObject(RealWorld.HERO_DEFENDER);
 		MobilePixelObject pixelObj = world.getMobileObject(PixelWorld.YELLOW_DEFENDER);
 		
-		System.out.println("\ngetPixelPosition(): "+pixelObj.getPixelPosition());
-		System.out.println("getRealPosition(): "+realObj.getRealPosition());
-		System.out.println("getRealVelocity(): "+realObj.getRealVelocity());
+		System.out.println("getPixelPosition(): "+pixelObj.getPixelPosition());
+		System.out.println(realObj);
+		System.out.println();
 		
 		for (Vector vector : waypoints) {
 			long t0 = System.currentTimeMillis();
-			System.out.println("\nsetPixelPosition "+vector);
+			System.out.println("setPixelPosition "+vector);
 			pixelObj.setPixelPosition(vector);
 			
 			System.out.println("getPixelPosition(): "+pixelObj.getPixelPosition());
-			System.out.println("getRealPosition(): "+realObj.getRealPosition());
-			System.out.println("getRealVelocity(): "+realObj.getRealVelocity());
+			System.out.println(realObj);
+			System.out.println();
 			long t1 = System.currentTimeMillis();
 			long dt = (t1 - t0);
 			if (updatePeriod > 0) {
-				Thread.sleep(updatePeriod-dt);
+				Thread.sleep(Math.max(updatePeriod-dt, 0));
 			}
 		}
 	}
