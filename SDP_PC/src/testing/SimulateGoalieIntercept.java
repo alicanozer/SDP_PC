@@ -42,7 +42,7 @@ public class SimulateGoalieIntercept {
 			
 			//At the same time as the strategy is running we will take us the freedom of moving the ball around a bit.
 			//We stop modifying the world when the ball has left the field or when the time runs up
-			for (int i = 0; i < 1000 && ball.getPixelPosition().getX() < 0; i++) {
+			for (int i = 0; i < 1000 && ball.getPixelPosition().getX() > 0; i++) {
 				//For the first 25 frames we don't move the ball
 				if (i > 25) {
 					if (i < 50) {
