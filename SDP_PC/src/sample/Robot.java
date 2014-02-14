@@ -4,6 +4,7 @@
 package sample;
 
 import geometry.Vector;
+import georegression.struct.point.Point2D_I32;
 import world.object.MobilePixelObject;
 import world.object.MobileRealObject;
 
@@ -27,7 +28,7 @@ public class Robot implements MobilePixelObject, MobileRealObject {
 	 * @see world.MobileRealObject#getRealPosition(long)
 	 */
 	@Override
-	public Vector getRealPosition(long time) {
+	public Vector getRealPosition() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -36,7 +37,7 @@ public class Robot implements MobilePixelObject, MobileRealObject {
 	 * @see world.MobileRealObject#getRealOrientation(long)
 	 */
 	@Override
-	public Vector getRealOrientation(long time) {
+	public Vector getRealOrientation() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -45,7 +46,7 @@ public class Robot implements MobilePixelObject, MobileRealObject {
 	 * @see world.MobileRealObject#getRealVelocity(long)
 	 */
 	@Override
-	public Vector getRealVelocity(long time) {
+	public Vector getRealVelocity() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -54,27 +55,30 @@ public class Robot implements MobilePixelObject, MobileRealObject {
 	 * @see world.MobilePixelObject#getPixelPosition(long)
 	 */
 	@Override
-	public Vector getPixelPosition(long time) {
+	public Vector getPixelPosition() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see world.MobilePixelObject#setPixelPosition(geometry.Vector)
-	 */
+	@Override
+	public void setPixelPosition(Point2D_I32 findBall) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Vector getPixelOrientation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void setPixelOrientation(Vector position) {
+		// TODO Auto-generated method stub
+		
+	}
 	@Override
 	public void setPixelPosition(Vector position) {
 		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see world.MobilePixelObject#setPixelPosition(geometry.Vector, long)
-	 */
-	@Override
-	public void setPixelPosition(Vector position, long time) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }

@@ -29,7 +29,7 @@ public class MixedWorld implements RealWorld, PixelWorld {
 	 * @see world.PixelWorld#getMobilePixelObject(int)
 	 */
 	@Override
-	public MobilePixelObject getMobileObject(int object) {
+	public Robot getMobileObject(int object) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -38,25 +38,7 @@ public class MixedWorld implements RealWorld, PixelWorld {
 	 * @see world.PixelWorld#getStationaryPixelObject(int)
 	 */
 	@Override
-	public StationaryPixelObject getStationaryObject(int object) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see world.RealWorld#getMobileRealObject(int)
-	 */
-	@Override
-	public MobileRealObject getMobileObject(int object) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see world.RealWorld#getStationaryRealObject(int)
-	 */
-	@Override
-	public StationaryRealObject getStationaryObject(int object) {
+	public MixedStationaryObject getStationaryObject(int object) {
 		// TODO Auto-generated method stub
 		return null;
 	}

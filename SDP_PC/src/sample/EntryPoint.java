@@ -14,7 +14,7 @@ public class EntryPoint {
 	 */
 	public static void main(String[] args) {
 		//Creates a new world model where the camera is 200cm above the table and is positioned over pixel 320,240 (the case before the image is cropped)
-		MixedWorld world = new MixedWorld(200, new Vector(320, 240), world.YELLOW, world.LEFT);
+		MixedWorld world = new MixedWorld(200, new Vector(320, 240), MixedWorld.YELLOW, MixedWorld.LEFT);
 		
 		//Only set height when different from default 18cm...
 		world.setMobileRealObject(World.HERO_DEFENDER, new Robot(10)); 
@@ -25,8 +25,10 @@ public class EntryPoint {
 		Vision vision = new Vision(world);
 		
 		//Set up bluetooth connections to the to robots.
-		BluetoothRobot attacker = new BluetoothRobot(BluetoothRobot.TRINITY);
-		BluetoothRobot defender = new BluetoothRobot(BluetoothRobot.HERCULES);
+//		BluetoothRobot attacker = new BluetoothRobot(BluetoothRobot.TEAM_TRINITY);
+//		BluetoothRobot defender = new BluetoothRobot(BluetoothRobot.HERCULES);
+		BluetoothRobot attacker = null;
+		BluetoothRobot defender = null;
 		
 		//Finally, pass the world representation and the two robot connections to some strategy
 		Thread strategy = new Thread(new Strategy(world, defender, attacker));
