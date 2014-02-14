@@ -51,6 +51,18 @@ public class Frame extends Vector {
 	}
 	
 	/**
+	 * Creates a new frame.
+	 * 
+	 * @param vector The vector component of the frame.
+	 * 
+	 * @param time The time component of the frame. 
+	 */
+	public Frame(Vector vector, long time) {
+		super(vector.getX(), vector.getY());
+		this.time = time;
+	}
+	
+	/**
 	 * Get the vector in this frame.
 	 * 
 	 * @return Returns the vector component of this frame.
