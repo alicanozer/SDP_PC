@@ -194,6 +194,16 @@ public class Vector {
 		return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2));
 	}
 
+	/**
+	 * Rotates the vector by a given number of degrees and returns the result
+	 * 
+	 * @param angle The number of degrees to rotate by.
+	 * 
+	 * return Returns the result of rotating the vector.
+	 */
+	public Vector getRotated(double angle) {
+		return new Vector(angle()+angle);
+	}
 }
 
 
