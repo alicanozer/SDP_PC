@@ -9,16 +9,20 @@ import java.awt.Shape;
  */
 public interface StationaryPixelObject {
 	/**
-	 * Get the shape of this object. Likely to be a rectangle (attacker zone), polygon (goalie zone) or maybe line (goal).
+	 * Get the shape of this object. Likely to be a rectangle (attacker zone),
+	 * polygon (goalie zone) or maybe line (goal).
 	 * 
-	 * @return Returns a shape representing the element as it appears in the image.
+	 * @return Returns a shape representing the element as it appears in the
+	 *         image.
 	 */
 	public Shape getPixelShape();
 	
 	/**
-	 * Set the shape of this object. 
+	 * Set the shape of this object.
 	 * 
-	 * @param shape A shape mathcing the shape of the object as it appears in the image.
+	 * @param shape
+	 *            A shape mathcing the shape of the object as it appears in the
+	 *            image.
 	 */
 	public void setPixelShape(Shape shape);
 }

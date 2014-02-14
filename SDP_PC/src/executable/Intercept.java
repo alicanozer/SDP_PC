@@ -11,6 +11,9 @@ import vision.SimpleViewer;
 import world.World;
 
 public class Intercept {
+	/*
+	 * Sets up Vision and Bluetooth to execute the GoalieIntercept strategy.
+	 */
 	public static void main(String[] args) {
 		//Set up the world model
 		World world = new World(World.YELLOW, World.LEFT);

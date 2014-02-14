@@ -23,8 +23,12 @@ public class World implements PixelWorld, RealWorld {
 	StationaryObject[] stationaryObjects;
 
 	/**
-	 * A simple world model that in addition to holding all object in the world
-	 * determines what color and what zones belongs to what team.
+	 * A simple world model with the following features:
+	 * <br>
+	 * - Allows access to object by role (HERO_DEFENDER) or by appearance (YELLOW_DEFENDER).
+	 * <br>
+	 * - Converts distances etc as they appear in an image to what they are in reality as in
+	 * {@link world.object.MobileObject#MobileObject(double) MobileObject} .
 	 * 
 	 * @param ourColor
 	 *            The color we are playing as.
@@ -32,6 +36,9 @@ public class World implements PixelWorld, RealWorld {
 	 * @param ourSide
 	 *            The side we are playing from (i.e. the side on which our
 	 *            defender is).
+	 * @param realUnitsPerPixel
+	 *            A conversion ration that will be used to convert pixel
+	 *            distances into real distances (cm)
 	 */
 	public World(boolean ourColor, boolean ourSide, double realUnitsPerPixel) {
 		this.ourColor = ourColor;
@@ -45,6 +52,23 @@ public class World implements PixelWorld, RealWorld {
 		for (int i = 0; i < NUM_STATIONARY_OBJECTS; i++) {
 			//TODO Has to be properly initialised. 
 		}
+	}
+
+	/**
+	 * A simple world model with the following features:
+	 * - Allows access to object by role (HERO_DEFENDER) or by appearance (YELLOW_DEFENDER).
+	 * - Can return distances and velocities in cm and cm/s.
+	 * - Makes a best guess of data where an actual reading is not available (i.e. it will not return null once warmed up).
+	 * 
+	 * @param ourColor
+	 *            The color we are playing as.
+	 * 
+	 * @param ourSide
+	 *            The side we are playing from (i.e. the side on which our
+	 *            defender is).
+	 */
+	public World(boolean ourColor, boolean ourSide) {
+		this(ourColor, ourSide, REAL_UNITS_PER_PIXEL);
 	}
 
 	@Override

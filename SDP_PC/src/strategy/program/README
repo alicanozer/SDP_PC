@@ -1,0 +1,1 @@
+This package contains top-level strategy files. I'd suggest they implement Runnable keep track of references to an instance of RealWorld as well as instances of RobotController.

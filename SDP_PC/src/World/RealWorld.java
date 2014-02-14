@@ -30,15 +30,20 @@ public interface RealWorld {
 	/**
 	 * Get one of the mobile objects in the world.
 	 * 
-	 * @param object The integer that identifies the object of interest. Options are defined as constants in this class.
+	 * @param object
+	 *            The integer that identifies the object of interest. Options
+	 *            are defined as constants in this class.
 	 * 
 	 * @return Returns the mobile object.
 	 */
 	public MobileRealObject getMobileObject(int object);
+
 	/**
 	 * Get one of the stationary objects in the world.
 	 * 
-	 * @param object The integer that identifies the object of interest. Options are defined as constants in this class.
+	 * @param object
+	 *            The integer that identifies the object of interest. Options
+	 *            are defined as constants in this class.
 	 * 
 	 * @return Returns the mobile object.
 	 */

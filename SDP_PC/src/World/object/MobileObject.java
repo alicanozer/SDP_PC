@@ -17,6 +17,19 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	
 	protected double realUnitsPerPixel;
 	
+	/**
+	 * Creates a new MobileObject. Features of this implementation include
+	 * <br>
+	 * - Ability to return distances and velocities in cm and cm/s.
+	 * <br>
+	 * - Ability to make a best guess of data where an actual reading is not available (i.e. it will not return null once warmed up).
+	 * <br>
+	 * TODO Correct real measurements for barrel distortion?
+	 * <br>
+	 * TODO Correct real measurements for perspective projection?
+	 * <br>
+	 * @param realUnitsPerPixel
+	 */
 	public MobileObject(double realUnitsPerPixel) {
 		this.realUnitsPerPixel = realUnitsPerPixel;
 	}

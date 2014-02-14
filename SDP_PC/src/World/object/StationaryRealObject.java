@@ -9,9 +9,11 @@ import java.awt.Shape;
  */
 public interface StationaryRealObject {
 	/**
-	 * Get the shape of this object. Likely to be a rectangle (attacker zone), polygon (goalie zone) or maybe line (goal)
+	 * Get the shape of this object. Likely to be a rectangle (attacker zone),
+	 * polygon (goalie zone) or maybe line (goal)
 	 * 
-	 * @return Returns a shape representing the element as it appears in the real world.
+	 * @return Returns a shape representing the element as it appears in the
+	 *         real world.
 	 */
 	public Shape getRealShape();
 }
