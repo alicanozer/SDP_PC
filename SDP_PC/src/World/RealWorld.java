@@ -1,5 +1,8 @@
 package world;
 
+import world.object.MobileRealObject;
+import world.object.StationaryRealObject;
+
 /*
  * An interface defining what methods will be available to get a representation of the world. Real implies 
  * that units will be cm rather than pixels and that the output may have been processed to compensate for 

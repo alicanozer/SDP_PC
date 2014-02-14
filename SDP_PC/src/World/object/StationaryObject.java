@@ -1,7 +1,7 @@
 /**
  * 
  */
-package world;
+package world.object;
 
 import java.awt.Shape;
 

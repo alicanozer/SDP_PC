@@ -4,8 +4,8 @@
 package sample;
 
 import geometry.Vector;
-import world.MobilePixelObject;
-import world.MobileRealObject;
+import world.object.MobilePixelObject;
+import world.object.MobileRealObject;
 
 /**
  * @author apljungquist

@@ -1,5 +1,8 @@
 package world;
 
+import world.object.MobileObject;
+import world.object.StationaryObject;
+
 public class World implements PixelWorld, RealWorld {
 
 	public static final boolean YELLOW = true;

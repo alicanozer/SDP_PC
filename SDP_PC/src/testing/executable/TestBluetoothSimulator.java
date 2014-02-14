@@ -1,8 +1,9 @@
-package testing;
+package testing.executable;
 
 import comms.RobotController;
-import world.MobilePixelObject;
+import testing.aid.BluetoothSimulator;
 import world.World;
+import world.object.MobilePixelObject;
 
 public class TestBluetoothSimulator {
 

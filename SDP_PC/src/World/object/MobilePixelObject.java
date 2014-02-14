@@ -1,4 +1,4 @@
-package world;
+package world.object;
 
 import geometry.Vector;
 import georegression.struct.point.Point2D_I32;

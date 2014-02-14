@@ -1,11 +1,12 @@
-package testing;
+package testing.executable;
 
 import strategy.program.GoalieIntercept;
+import testing.aid.BluetoothSimulator;
 import geometry.Vector;
-import world.MobilePixelObject;
 import world.PixelWorld;
 import world.RealWorld;
 import world.World;
+import world.object.MobilePixelObject;
 import comms.RobotController;
 
 public class SimulateGoalieIntercept {

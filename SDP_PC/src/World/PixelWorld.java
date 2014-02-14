@@ -1,5 +1,8 @@
 package world;
 
+import world.object.MobilePixelObject;
+import world.object.StationaryPixelObject;
+
 /*
  * An interface defining what methods will be available to get a representation of the world. Pixel 
  * implies that everything is exactly as it appears in the image and the primary unit is pixels.

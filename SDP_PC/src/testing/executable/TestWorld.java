@@ -1,10 +1,10 @@
-package testing;
+package testing.executable;
 
-import world.MobilePixelObject;
-import world.MobileRealObject;
 import world.PixelWorld;
 import world.RealWorld;
 import world.World;
+import world.object.MobilePixelObject;
+import world.object.MobileRealObject;
 import geometry.Vector;
 
 public class TestWorld {

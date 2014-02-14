@@ -1,11 +1,11 @@
 /**
  * 
  */
-package testing;
+package testing.aid;
 
 import geometry.Vector;
-import world.MobilePixelObject;
 import world.PixelWorld;
+import world.object.MobilePixelObject;
 import comms.RobotController;
 
 /**

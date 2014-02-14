@@ -1,12 +1,12 @@
 package sample;
 
 import geometry.Vector;
-import world.MobilePixelObject;
-import world.MobileRealObject;
 import world.PixelWorld;
 import world.RealWorld;
-import world.StationaryPixelObject;
-import world.StationaryRealObject;
+import world.object.MobilePixelObject;
+import world.object.MobileRealObject;
+import world.object.StationaryPixelObject;
+import world.object.StationaryRealObject;
 
 public class MixedWorld implements RealWorld, PixelWorld {
 	public static final boolean YELLOW = true;
