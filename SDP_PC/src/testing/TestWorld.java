@@ -9,9 +9,6 @@ import geometry.Vector;
 
 public class TestWorld {
 
-	static World world = new World(World.YELLOW, World.LEFT, 0.455769231);
-	static MobileRealObject realObj = world.getMobileObject(RealWorld.HERO_DEFENDER);
-	static MobilePixelObject pixelObj = world.getMobileObject(PixelWorld.YELLOW_DEFENDER);
 	
 	static Vector[] waypoints = new Vector[10];
 	
@@ -67,10 +64,6 @@ public class TestWorld {
 		//RealPost:		0,0
 		//RealVelocity: 0, ?
 		
-		System.out.println("getPixelPosition(): "+pixelObj.getPixelPosition());
-		System.out.println("getRealPosition(): "+realObj.getRealPosition());
-		System.out.println("getRealVelocity(): "+realObj.getRealVelocity());
-		
 		// Notice how the speed always comes out to null because no time passes
 		// between the position updates.
 		testPosition(0);
@@ -91,6 +84,14 @@ public class TestWorld {
 	 * @throws InterruptedException
 	 */
 	private static void testPosition(long updatePeriod) throws InterruptedException {
+		World world = new World(World.YELLOW, World.LEFT, 0.455769231);
+		MobileRealObject realObj = world.getMobileObject(RealWorld.HERO_DEFENDER);
+		MobilePixelObject pixelObj = world.getMobileObject(PixelWorld.YELLOW_DEFENDER);
+		
+		System.out.println("\ngetPixelPosition(): "+pixelObj.getPixelPosition());
+		System.out.println("getRealPosition(): "+realObj.getRealPosition());
+		System.out.println("getRealVelocity(): "+realObj.getRealVelocity());
+		
 		for (Vector vector : waypoints) {
 			long t0 = System.currentTimeMillis();
 			System.out.println("\nsetPixelPosition "+vector);
