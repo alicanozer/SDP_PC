@@ -45,10 +45,8 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 
 	@Override
 	public void setPixelPosition(Vector position) {
-		//TODO If time is the same, change only current to avoid division by 0 for velocity
 		if (position != null) {
-			previousPosition = currentPosition;
-			currentPosition = new Frame(position);
+			setPixelPosition(position.getX(), position.getY());
 		}
 	}
 
@@ -60,17 +58,37 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	@Override
 	public void setPixelOrientation(Vector orientation) {
 		if (orientation != null) {
-			previousOrientation = currentOrientation;
-			currentOrientation = new Frame(orientation);
+			setPixelOrientation(orientation.getX(), orientation.getY());
 		}
 	}
 
 	@Override
 	public void setPixelPosition(Point2D_I32 position) {
 		if (position != null) {
-			previousPosition = currentPosition;
-			currentPosition = new Frame(position.x, position.y);
+			setPixelPosition(position.getX(), position.getY());
 		}
+	}
+	
+	private void setPixelPosition(double x, double y) {
+		Frame newFrame = new Frame(x, y);
+		// Only shift the history if the time has changed. If it hasn't trying
+		// to calculate the velocity cause division by zero.
+		if (currentPosition != null && newFrame.subtract(currentPosition).getTime() > 1) {
+			previousPosition = currentPosition;
+		}
+		//Even if the time has not changed we allow changing the position.
+		currentPosition = newFrame;
+	}
+	
+	private void setPixelOrientation(double x, double y) {
+		Frame newFrame = new Frame(x, y);
+		// Only shift the history if the time has changed. If it hasn't trying
+		// to calculate the velocity cause division by zero.
+		if (currentOrientation != null && newFrame.subtract(currentOrientation).getTime() > 1) {
+			previousOrientation = currentOrientation;
+		}
+		//Even if the time has not changed we allow changing the orientation.
+		currentOrientation = newFrame;
 	}
 	
 	public String toString() {
