@@ -80,4 +80,11 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 			currentPosition = new Frame(position.x, position.y);
 		}
 	}
+	
+	public String toString() {
+		return "Orientation: " + getRealOrientation() + 
+				"\nPosition: " + getRealPosition() +
+				"\nVelocity: " + getRealVelocity();
+				
+	}
 }
