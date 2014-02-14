@@ -33,7 +33,13 @@ public class World implements PixelWorld, RealWorld {
 		this.ourSide = ourSide;
 
 		mobileObjects = new MobileObject[NUM_MOBILE_OBJECTS];
+		for (int i = 0; i < NUM_MOBILE_OBJECTS; i++) {
+			mobileObjects[i] = new MobileObject();
+		}
 		stationaryObjects = new StationaryObject[NUM_STATIONARY_OBJECTS];
+		for (int i = 0; i < NUM_STATIONARY_OBJECTS; i++) {
+			//TODO Has to be properly initialised. 
+		}
 	}
 
 	@Override
