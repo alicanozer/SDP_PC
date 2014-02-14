@@ -17,7 +17,7 @@ public class SimulateGoalieIntercept {
 	public static void main(String[] args) {
 		try {
 			//Create a new world
-			World world = new World(World.YELLOW, World.LEFT);
+			World world = new World(World.YELLOW, World.LEFT, World.REAL_UNITS_PER_PIXEL);
 			
 			//Create a virtual robot
 			RobotController btRobot = new BluetoothSimulator(world, World.YELLOW_DEFENDER);

@@ -84,7 +84,7 @@ public class TestWorld {
 	 * @throws InterruptedException
 	 */
 	private static void testPosition(long updatePeriod) throws InterruptedException {
-		World world = new World(World.YELLOW, World.LEFT, 0.455769231);
+		World world = new World(World.YELLOW, World.LEFT, World.REAL_UNITS_PER_PIXEL);
 		MobileRealObject realObj = world.getMobileObject(RealWorld.HERO_DEFENDER);
 		MobilePixelObject pixelObj = world.getMobileObject(PixelWorld.YELLOW_DEFENDER);
 		

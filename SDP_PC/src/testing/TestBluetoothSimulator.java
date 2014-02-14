@@ -8,7 +8,7 @@ public class TestBluetoothSimulator {
 
 	public static void main(String[] args) {
 		try {
-			World world = new World(true, true);
+			World world = new World(true, true, World.REAL_UNITS_PER_PIXEL);
 			RobotController btRobot = new BluetoothSimulator(world, World.YELLOW_DEFENDER);
 			MobilePixelObject pRobot = world.getMobileObject(World.YELLOW_DEFENDER);
 			

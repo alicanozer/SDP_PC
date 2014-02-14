@@ -10,6 +10,8 @@ public class World implements PixelWorld, RealWorld {
 
 	public static final int NUM_MOBILE_OBJECTS = 5;
 	public static final int NUM_STATIONARY_OBJECTS = 6;
+	
+	public static final double REAL_UNITS_PER_PIXEL = 0.455769231;
 
 	boolean ourColor;
 	boolean ourSide;
