@@ -25,7 +25,7 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 
 	@Override
 	public Vector getRealOrientation() {
-		return currentOrientation.getVector();
+		return currentOrientation == null ? null : currentOrientation.getVector();
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 
 	@Override
 	public Vector getPixelOrientation() {
-		return currentOrientation;
+		return currentOrientation == null ? null : currentOrientation.getVector();
 	}
 
 	@Override
