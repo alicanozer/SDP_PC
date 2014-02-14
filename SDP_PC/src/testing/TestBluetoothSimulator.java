@@ -10,7 +10,7 @@ public class TestBluetoothSimulator {
 		try {
 			World world = new World(true, true);
 			RobotController btRobot = new BluetoothSimulator(world, World.YELLOW_DEFENDER);
-			MobilePixelObject pRobot = world.getMobilePixelObject(World.YELLOW_DEFENDER);
+			MobilePixelObject pRobot = world.getMobileObject(World.YELLOW_DEFENDER);
 			
 			System.out.println(pRobot);
 			btRobot.forward();

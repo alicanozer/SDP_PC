@@ -34,7 +34,7 @@ public interface PixelWorld {
 	 * 
 	 * @return Returns the mobile object.
 	 */
-	public MobilePixelObject getMobilePixelObject(int object);
+	public MobilePixelObject getMobileObject(int object);
 
 	/**
 	 * Get one of the stationary objects in the world.
@@ -45,5 +45,5 @@ public interface PixelWorld {
 	 * 
 	 * @return Returns the mobile object.
 	 */
-	public StationaryPixelObject getStationaryPixelObject(int object);
+	public StationaryPixelObject getStationaryObject(int object);
 }

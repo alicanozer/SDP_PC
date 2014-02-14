@@ -23,8 +23,8 @@ public class SimulateGoalieIntercept {
 			RobotController btRobot = new BluetoothSimulator(world, World.YELLOW_DEFENDER);
 			
 			//Create shortcuts to access important objects in the world.
-			MobilePixelObject robot = world.getMobilePixelObject(PixelWorld.YELLOW_DEFENDER);
-			MobilePixelObject ball = world.getMobilePixelObject(PixelWorld.BALL);
+			MobilePixelObject robot = world.getMobileObject(PixelWorld.YELLOW_DEFENDER);
+			MobilePixelObject ball = world.getMobileObject(PixelWorld.BALL);
 			
 			//Place the ball and ensure it has 0 velocity
 			ball.setPixelPosition(new Vector(400,0));

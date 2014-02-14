@@ -269,15 +269,15 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback, Runn
 			
 			// Update the world model with the new positions. Leave out the
 			// orientation if it's not yet reliable.
-			world.getMobilePixelObject(PixelWorld.BALL)
+			world.getMobileObject(PixelWorld.BALL)
 					.setPixelPosition(ObjectLocations.getBall());
-			world.getMobilePixelObject(PixelWorld.BLUE_ATTACKER)
+			world.getMobileObject(PixelWorld.BLUE_ATTACKER)
 					.setPixelPosition(ObjectLocations.getBlueATTACKmarker());
-			world.getMobilePixelObject(PixelWorld.BLUE_DEFENDER)
+			world.getMobileObject(PixelWorld.BLUE_DEFENDER)
 					.setPixelPosition(ObjectLocations.getBlueDEFENDmarker());
-			world.getMobilePixelObject(PixelWorld.YELLOW_ATTACKER)
+			world.getMobileObject(PixelWorld.YELLOW_ATTACKER)
 					.setPixelPosition(ObjectLocations.getYellowATTACKmarker());
-			world.getMobilePixelObject(PixelWorld.YELLOW_DEFENDER)
+			world.getMobileObject(PixelWorld.YELLOW_DEFENDER)
 					.setPixelPosition(ObjectLocations.getYellowDEFENDmarker());
 
 			//System.out.print(VisionOps.getDirection(ballPrvPos, ballCurPos)); 

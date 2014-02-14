@@ -20,7 +20,7 @@ public class GoalieIntercept implements Runnable {
 	@Override
 	public void run() {
 		//While the ball is still stationary, do nothing.
-		while(world.getMobileRealObject(RealWorld.BALL) == null) {
+		while(world.getMobileObject(RealWorld.BALL) == null) {
 			System.out.println("No ball");
 			try {
 				Thread.sleep(40);
@@ -29,8 +29,8 @@ public class GoalieIntercept implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		while(world.getMobileRealObject(RealWorld.BALL).getRealVelocity().getMagnitude() < 1 && !interrupt) {
-			System.out.println("WAIT FOR IT..." + world.getMobileRealObject(RealWorld.BALL).getRealVelocity().getMagnitude());
+		while(world.getMobileObject(RealWorld.BALL).getRealVelocity().getMagnitude() < 1 && !interrupt) {
+			System.out.println("WAIT FOR IT..." + world.getMobileObject(RealWorld.BALL).getRealVelocity().getMagnitude());
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
@@ -47,20 +47,20 @@ public class GoalieIntercept implements Runnable {
 		
 		while (!interrupt) {
 			//Find the y at which the ball is expectod to hit the goal.
-			positionVector = world.getMobileRealObject(RealWorld.BALL).getRealPosition();
-			directionVector = world.getMobileRealObject(RealWorld.BALL).getRealVelocity();
+			positionVector = world.getMobileObject(RealWorld.BALL).getRealPosition();
+			directionVector = world.getMobileObject(RealWorld.BALL).getRealVelocity();
 			cartesian = getCartesian(positionVector, directionVector);
-			y = cartesian[1]+cartesian[0]*world.getMobileRealObject(RealWorld.HERO_DEFENDER).getRealPosition().getX();
+			y = cartesian[1]+cartesian[0]*world.getMobileObject(RealWorld.HERO_DEFENDER).getRealPosition().getX();
 			
-			if (Math.abs(world.getMobileRealObject(RealWorld.HERO_DEFENDER).getRealPosition().getY() - y) < 5) {
+			if (Math.abs(world.getMobileObject(RealWorld.HERO_DEFENDER).getRealPosition().getY() - y) < 5) {
 				//If the robot is already in the way of the ball, stop.
 				if (robot.isMoving()) {
 					robot.stop();
 				}
-			}else if (world.getMobileRealObject(RealWorld.HERO_DEFENDER).getRealPosition().getY() < y) {
+			}else if (world.getMobileObject(RealWorld.HERO_DEFENDER).getRealPosition().getY() < y) {
 				//If the robot is above the ball, move forward (downwards)
 				robot.forward();
-			}else if (world.getMobileRealObject(RealWorld.HERO_DEFENDER).getRealPosition().getY() - y > 0) {
+			}else if (world.getMobileObject(RealWorld.HERO_DEFENDER).getRealPosition().getY() - y > 0) {
 				//If the robot is below the ball, move backwards (upwards)
 				robot.backwards();
 			}

@@ -43,7 +43,7 @@ public class World implements PixelWorld, RealWorld {
 	}
 
 	@Override
-	public MobileRealObject getMobileRealObject(int object) {
+	public MobileObject getMobileObject(int object) {
 		// Holds the index that will be used to retrieve the mobile object.
 		int pixelObject = object;
 		// Sets the above index appropriately depending on what object is
@@ -87,7 +87,7 @@ public class World implements PixelWorld, RealWorld {
 	}
 
 	@Override
-	public StationaryRealObject getStationaryRealObject(int object) {
+	public StationaryObject getStationaryObject(int object) {
 		// Holds the index that will be used to retrieve the mobile object.
 		int pixelObject = object;
 		// Sets the above index appropriately depending on what object is
@@ -132,16 +132,6 @@ public class World implements PixelWorld, RealWorld {
 			break;
 		}
 		return stationaryObjects[pixelObject];
-	}
-
-	@Override
-	public MobilePixelObject getMobilePixelObject(int object) {
-		return mobileObjects[object];
-	}
-
-	@Override
-	public StationaryPixelObject getStationaryPixelObject(int object) {
-		return stationaryObjects[object];
 	}
 
 }

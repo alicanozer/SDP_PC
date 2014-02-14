@@ -31,7 +31,7 @@ public interface RealWorld {
 	 * 
 	 * @return Returns the mobile object.
 	 */
-	public MobileRealObject getMobileRealObject(int object);
+	public MobileRealObject getMobileObject(int object);
 	/**
 	 * Get one of the stationary objects in the world.
 	 * 
@@ -39,5 +39,5 @@ public interface RealWorld {
 	 * 
 	 * @return Returns the mobile object.
 	 */
-	public StationaryRealObject getStationaryRealObject(int object);
+	public StationaryRealObject getStationaryObject(int object);
 }
