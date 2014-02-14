@@ -16,15 +16,11 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	protected Frame currentOrientation;
 	
 	public MobileObject() {
-		previousOrientation = new Frame(1,1);
-		currentOrientation = new Frame(1,1);
-		previousPosition = new Frame(1,1);
-		currentPosition = new Frame(1,1);
 	}
 	
 	@Override
 	public Vector getRealPosition() {
-		return currentPosition.getVector();
+		return currentPosition == null ? null : currentPosition.getVector();
 	}
 
 	@Override
@@ -34,26 +30,22 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 
 	@Override
 	public Vector getRealVelocity() {
-		if (currentPosition == null || previousPosition == null) {
-			return new Vector(0, 0);
-			//TODO Decide and figure out how to handle null velocities
-		}
-		Frame delta = currentPosition.subtract(previousPosition);
-		if (delta.getTime() != 0) {
-			//TODO Figure out how to handle division by zero. One way is to make setting two frames at the same time disallowed.
-			return delta.getVector().scalarMultiplication(1000/delta.getTime()); }
-		else {
-			return new Vector(0,0);
+		if (previousPosition == null) {
+			return null;
+		}else {
+			Frame delta = currentPosition.subtract(previousPosition);
+			return delta.getVector().scalarMultiplication(1000/delta.getTime());
 		}
 	}
 
 	@Override
 	public Vector getPixelPosition() {
-		return currentPosition.getVector();
+		return currentPosition == null ? null : currentPosition.getVector();
 	}
 
 	@Override
 	public void setPixelPosition(Vector position) {
+		//TODO If time is the same, change only current to avoid division by 0 for velocity
 		if (position != null) {
 			previousPosition = currentPosition;
 			currentPosition = new Frame(position);
