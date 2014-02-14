@@ -28,13 +28,13 @@ public class World implements PixelWorld, RealWorld {
 	 *            The side we are playing from (i.e. the side on which our
 	 *            defender is).
 	 */
-	public World(boolean ourColor, boolean ourSide) {
+	public World(boolean ourColor, boolean ourSide, double realUnitsPerPixel) {
 		this.ourColor = ourColor;
 		this.ourSide = ourSide;
 
 		mobileObjects = new MobileObject[NUM_MOBILE_OBJECTS];
 		for (int i = 0; i < NUM_MOBILE_OBJECTS; i++) {
-			mobileObjects[i] = new MobileObject();
+			mobileObjects[i] = new MobileObject(realUnitsPerPixel);
 		}
 		stationaryObjects = new StationaryObject[NUM_STATIONARY_OBJECTS];
 		for (int i = 0; i < NUM_STATIONARY_OBJECTS; i++) {

@@ -15,12 +15,15 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	protected Frame previousOrientation;
 	protected Frame currentOrientation;
 	
-	public MobileObject() {
+	protected double realUnitsPerPixel;
+	
+	public MobileObject(double realUnitsPerPixel) {
+		this.realUnitsPerPixel = realUnitsPerPixel;
 	}
 	
 	@Override
 	public Vector getRealPosition() {
-		return currentPosition == null ? null : currentPosition.getVector();
+		return currentPosition == null ? null : currentPosition.getVector().scalarMultiplication(realUnitsPerPixel);
 	}
 
 	@Override
@@ -34,7 +37,7 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 			return null;
 		}else {
 			Frame delta = currentPosition.subtract(previousPosition);
-			return delta.getVector().scalarMultiplication(1000/delta.getTime());
+			return delta.getVector().scalarMultiplication(1000.0/delta.getTime()).scalarMultiplication(realUnitsPerPixel);
 		}
 	}
 

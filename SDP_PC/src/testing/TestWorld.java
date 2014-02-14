@@ -9,7 +9,7 @@ import geometry.Vector;
 
 public class TestWorld {
 
-	static World world = new World(World.YELLOW, World.LEFT);
+	static World world = new World(World.YELLOW, World.LEFT, 0.455769231);
 	static MobileRealObject realObj = world.getMobileObject(RealWorld.HERO_DEFENDER);
 	static MobilePixelObject pixelObj = world.getMobileObject(PixelWorld.YELLOW_DEFENDER);
 	
