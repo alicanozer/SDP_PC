@@ -35,7 +35,7 @@ public class BluetoothSimulator implements RobotController {
 		thread = new Thread();
 		thread.interrupt();
 		this.world = world;
-		this.robot = world.getMobilePixelObject(robot);
+		this.robot = world.getMobileObject(robot);
 	}
 
 	@Override
