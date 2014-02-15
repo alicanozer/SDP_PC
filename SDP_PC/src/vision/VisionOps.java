@@ -234,18 +234,23 @@ public class VisionOps {
 
 		case "blue":
 			if(true){ // new pitch but doesnt work
-				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 3, 3, null);
-				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 3, 3, null);
+				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 6, 6, null);
+				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 6, 6, null);
 
 				
-				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 2.96f,false); // was 1.97
-				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.49f,true); // was 3.14
+				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.00f,false); // was 1.97
+				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.60f,true); // was 3.14
 
-				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.35f,true); //was 0.25
-				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.25f,false); //was 0.25
+				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.50f,false); //was 0.25
+				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.60f,true); //was 0.25
+				
+				
+				//ImageUInt8 upperValueBlue = ThresholdImageOps.threshold(hsv.getBand(2),null, 140f,true); //was 0.25
+
 				BinaryImageOps.logicAnd(lowerHueBlue, upperHueBlue, binary);
 				BinaryImageOps.logicAnd(binary, upperSaturationBlue, binary);
 				BinaryImageOps.logicAnd(binary, lowerSaturationBlue, binary);
+				//BinaryImageOps.logicAnd(binary, upperValueBlue, binary);
 			}
 			else{// old pitch
 				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);

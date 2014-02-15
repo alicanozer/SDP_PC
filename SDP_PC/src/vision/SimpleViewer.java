@@ -201,7 +201,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 //		BlurImageOps.gaussian(input.getBand(1), input.getBand(1), 5, -1, null);
 //		img = ConvertBufferedImage.convertTo_F32(input, null, true);
 		
-		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
+		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
 
 		
 		//img = VisionOps.contourOps("lines", VisionOps.segmentMultiHSV(img, hues, saturations)[0]);
