@@ -609,7 +609,8 @@ public class VisionOps {
 		int green = C1.getGreen() - C2.getGreen();
 
 		//reference - http://www.compuphase.com/cmetric.htm
-		return Math.sqrt((2.0 + rmean/256.0)*red*red + 4*green*green + (2 + (256 - rmean)/256.0)*blue*blue);
+		//return Math.sqrt((2.0 + rmean/256.0)*red*red + 4*green*green + (2 + (256 - rmean)/256.0)*blue*blue);
+		return Math.sqrt(red*red + green*green + blue*blue);
 	}
 }
 
