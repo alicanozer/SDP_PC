@@ -602,7 +602,15 @@ public class VisionOps {
 		
 	}
 
+	public static double distanceRGB(Color C1, Color C2){
+		int rmean = (C1.getRed() + C2.getRed())/2; // the 255 here comes from implicit True Red
+		int red = C1.getRed() - C2.getRed();
+		int blue = C1.getBlue() - C2.getBlue();
+		int green = C1.getGreen() - C2.getGreen();
 
+		//reference - http://www.compuphase.com/cmetric.htm
+		return Math.sqrt((2.0 + rmean/256.0)*red*red + 4*green*green + (2 + (256 - rmean)/256.0)*blue*blue);
+	}
 }
 
 
