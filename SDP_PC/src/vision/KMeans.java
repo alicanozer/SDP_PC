@@ -3,6 +3,7 @@ package vision;
 import georegression.struct.point.Point2D_I32;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
@@ -17,19 +19,20 @@ import boofcv.gui.image.ShowImages;
 
 public class KMeans {
 
-	public static BufferedImage Cluster(BufferedImage img, int k, List<Point2D_I32> seeds){
+	public static Map<Integer, ArrayList<Point2D_I32>> Cluster(BufferedImage img, int k, int maxIters, List<Color> seeds){
 		Map<Integer,ArrayList<Point2D_I32>> clusterToPointMap = new HashMap<Integer,ArrayList<Point2D_I32>>();
+		//
+		// randomise seeds if no initial seeds given
+		//
+		if (seeds == null){
+			seeds = new ArrayList<Color>(k);
+			for(int i = 0; i < k; i++){
+				seeds.add(i, new Color(img.getRGB((int)(Math.random() * img.getWidth()), (int) (Math.random() * img.getHeight()))));
+			}
+		}
 		
+		List<Color> seedsOrig = seeds;
 		
-		List<Point2D_I32> seedsOrig = seeds;
-//		//
-//		// randomise seeds initially and initialises the cluster to point mappings
-//		//
-//		for(int i = 0; i < k; i++){
-//			seeds.add(i, new Point2D_I32((int)(Math.random() * img.getWidth()), (int) (Math.random() * img.getHeight())));
-//		}
-		
-		int maxIters = 30;
 		// main loop
 		for(int m = 0; m < maxIters ; m++){
 			
@@ -43,7 +46,7 @@ public class KMeans {
 					for(int w = 0; w < k; w++){				// loop over clusters
 						distancesToClusters.add(w, VisionOps.distanceRGB(
 								new Color(img.getRGB(i, j)), 
-								new Color(img.getRGB(seeds.get(w).x, seeds.get(w).y))));
+								seeds.get(w)));
 					}
 					//
 					// index will be the index of the cluster in the cluster array
@@ -53,22 +56,22 @@ public class KMeans {
 				}
 			}
 			//
-			// move seeds
+			// recalculate clusters
 			// 
 			for(int i = 0; i < k; i++){
-				Point2D_I32 newClusterMean = PointUtils.getListCentroid(clusterToPointMap.get(i));
+				Color newClusterMean = VisionOps.getColorCentroid(img,clusterToPointMap.get(i));
 				if(newClusterMean != null){
-					seeds.get(i).x = newClusterMean.x;
-					seeds.get(i).y = newClusterMean.y;
+					seeds.set(i, newClusterMean);
 				}
 			}
+			System.out.println("Iteration "+m);
 		}
-//		for(int i = 0; i < 2; i++){
-			for(Point2D_I32 p : clusterToPointMap.get(2)){
-				img.setRGB(p.x, p.y, 1);//img.getRGB(seedsOrig.get(4).x, seedsOrig.get(4).y));
-			}
+//		for(int i = 0; i < k; i++){
+//			for(Point2D_I32 p : clusterToPointMap.get(i)){
+//				img.setRGB(p.x, p.y, seedsOrig.get(i).getRGB());
+//			}
 //		}
-		return img;
+		return clusterToPointMap;
 	}
 		/**
 		 * Retunrs the index of the maximum element of the arrayList
@@ -93,22 +96,46 @@ public class KMeans {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		BufferedImage img1 = ImageIO.read(new File("test_images/00000008.jpg"));
-		List<Point2D_I32> seeds = new ArrayList<Point2D_I32>();
+		System.out.println("asd");
+		List<Color> seeds1 = new ArrayList<Color>();
+		List<Color> seeds2 = new ArrayList<Color>();
 		
-		seeds.add(new Point2D_I32(68,152)); //yellow
-		seeds.add(new Point2D_I32(192,152)); //blue
+		seeds1.add(new Color(img1.getRGB(68, 152))); //yellow
+		seeds1.add(new Color(img1.getRGB(192,152))); //blue
 
-		seeds.add(new Point2D_I32(315,157)); //ball
+		seeds1.add(new Color(img1.getRGB(315,157))); //ball
 		
-		seeds.add(new Point2D_I32(186,75)); //green
-		seeds.add(new Point2D_I32(260,150)); //white
-		seeds.add(new Point2D_I32(7,9)); //black
+		seeds1.add(new Color(img1.getRGB(186,75))); //green
+		seeds1.add(new Color(img1.getRGB(260,150))); //white
+		seeds1.add(new Color(img1.getRGB(7,9))); //black
 		
-
-		img1 = Cluster(img1,6,seeds);
+		seeds2.add(Color.yellow);
+		seeds2.add(Color.blue);
+		seeds2.add(Color.red);
+		seeds2.add(Color.green);
+		seeds2.add(Color.white);
+		seeds2.add(Color.black);
 		
-		img1.getGraphics().drawString("asd", 69, 153);
+		Map <Integer,Color> clusterToColorMap = new HashMap<Integer,Color>(6);
+		for(int i = 0 ; i < 6; i++){
+			clusterToColorMap.put(i, seeds2.get(i));
+		}
+		
 		ShowImages.showWindow(img1,"img1");
+		
+		Map<Integer, ArrayList<Point2D_I32>> points = Cluster(img1,6,100,seeds2);
+		
+		Graphics2D g = (Graphics2D) img1.getGraphics();
+		
+		for(Entry<Integer, ArrayList<Point2D_I32>> e: points.entrySet()){
+			for(Point2D_I32 p: e.getValue()){
+				g.setColor(clusterToColorMap.get(e.getKey()));
+				g.drawLine(p.x, p.y, p.x, p.y);
+			}
+		}
+		
+		
+		//ShowImages.showWindow(img1,"img1");
 	}
 
 }

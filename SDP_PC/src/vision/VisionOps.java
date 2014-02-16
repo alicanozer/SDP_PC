@@ -612,6 +612,19 @@ public class VisionOps {
 		//return Math.sqrt((2.0 + rmean/256.0)*red*red + 4*green*green + (2 + (256 - rmean)/256.0)*blue*blue);
 		return Math.sqrt(red*red + green*green + blue*blue);
 	}
+	public static Color getColorCentroid(BufferedImage img, ArrayList<Point2D_I32> l){
+		if(l.size() == 0 || l == null) return null;
+		int redMean = 0;
+		int greenMean = 0;
+		int blueMean = 0;
+		for(Point2D_I32 p : l){
+			Color c = new Color(img.getRGB(p.x, p.y));
+			redMean += c.getRed();
+			greenMean += c.getGreen();
+			blueMean += c.getBlue();
+		}
+		return new Color(redMean/l.size(), greenMean/l.size(), blueMean/l.size());
+	}
 }
 
 
