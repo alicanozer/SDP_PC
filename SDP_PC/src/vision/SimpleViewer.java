@@ -54,7 +54,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 	private long lastFrame = System.currentTimeMillis(); // used for calculating FPS
 	private int frameCounter = 0; // we let device capture frames from the 3rd onwards
 	private static ArrayList<Polygon> regions = new ArrayList<Polygon>();
-
+	private static int count = 0;
 	private VideoDevice     videoDevice;
 	private FrameGrabber    frameGrabber;
 
@@ -195,7 +195,7 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		lastFrame = thisFrame;
 		float[] hues = {0.5f}; 
 		float[] saturations = {0.4f};
-
+		KMeans.ClusterHeaps(img, 6, 1, null,15);
 //		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img,null,true,ImageFloat32.class);
 //		BlurImageOps.gaussian(input.getBand(0), input.getBand(0), 5, -1, null);
 //		BlurImageOps.gaussian(input.getBand(1), input.getBand(1), 5, -1, null);
@@ -231,11 +231,11 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
 
-		g.setColor(Color.BLACK);
-		// the 3 regions
-		g.drawLine(115, 0, 115, img.getHeight());
-		g.drawLine(260, 0, 260, img.getHeight());
-		g.drawLine(410, 0, 410, img.getHeight());
+//		g.setColor(Color.BLACK);
+//		// the 3 regions
+//		g.drawLine(115, 0, 115, img.getHeight());
+//		g.drawLine(260, 0, 260, img.getHeight());
+//		g.drawLine(410, 0, 410, img.getHeight());
 		
 		
 //		List<Contour> contoursUnfiltered = BinaryImageOps.contour(filtered, 8, null);
@@ -278,30 +278,30 @@ public class SimpleViewer extends WindowAdapter implements CaptureCallback{
 //			System.exit(0);
 //		}
 		
-		try {
-
-
-
-			ObjectLocations.updateObjectLocations(img);
-
-			//System.out.print(VisionOps.getDirection(ballPrvPos, ballCurPos)); 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-		}
-		try {
-			String[] objs = {"ball"};
-			//ObjectLocations.drawAllDirections(g, objs);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-		}
-		try {
-			ObjectLocations.drawCrosses(g);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-		}
+//		try {
+//
+//
+//
+//			ObjectLocations.updateObjectLocations(img);
+//
+//			//System.out.print(VisionOps.getDirection(ballPrvPos, ballCurPos)); 
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			//e.printStackTrace();
+//		}
+//		try {
+//			String[] objs = {"ball"};
+//			//ObjectLocations.drawAllDirections(g, objs);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			//e.printStackTrace();
+//		}
+//		try {
+//			ObjectLocations.drawCrosses(g);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			//e.printStackTrace();
+//		}
 		
 
 

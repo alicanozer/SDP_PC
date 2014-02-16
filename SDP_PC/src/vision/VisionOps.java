@@ -8,6 +8,7 @@ import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -623,7 +624,29 @@ public class VisionOps {
 			greenMean += c.getGreen();
 			blueMean += c.getBlue();
 		}
-		return new Color(redMean/l.size(), greenMean/l.size(), blueMean/l.size());
+		int size = l.size();
+		return new Color(redMean/size, greenMean/size, blueMean/size);
+	}
+	
+	public static Color getColorMedian(BufferedImage img, ArrayList<Point2D_I32> l){
+		int size = l.size();
+		if(size == 0 || l == null) return null;
+		
+		int[] reds = new int[size];
+		int[] greens = new int[size];
+		int[] blues = new int[size];
+		
+		for(int i = 0; i < size; i++){
+			Color c = new Color(img.getRGB(l.get(i).x, l.get(i).y));
+			reds[i] = c.getRed();
+			greens[i] = c.getGreen();
+			blues[i] = c.getBlue();
+		}
+		Arrays.sort(reds);
+		Arrays.sort(greens);
+		Arrays.sort(blues);
+		
+		return new Color(reds[size/2],greens[size/2],blues[size/2]);
 	}
 }
 
