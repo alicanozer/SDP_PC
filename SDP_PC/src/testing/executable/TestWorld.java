@@ -1,10 +1,8 @@
 package testing.executable;
 
-import world.PixelWorld;
-import world.PixelWorldColorless;
-import world.RealWorld;
+import static org.junit.Assert.*;
+
 import world.World;
-import world.object.MobileObject;
 import world.object.MobilePixelObject;
 import world.object.MobileRealObject;
 import geometry.Vector;
@@ -24,13 +22,13 @@ public class TestWorld {
 		
 		// Notice how no history is accumulated since no time passes inbetween
 		// updates of position
-//		testPosition(0);
-//		// This test emulates updates for every frame in the video stream
-//		// (25fps). The velocities will be crazy high.
-//		testPosition(1000/25);
-//		// This test emulates updates every second. The velocities should come
-//		// out as expected.
-//		testPosition(1000);
+		testPosition(0);
+		// This test emulates updates for every frame in the video stream
+		// (25fps). The velocities will be crazy high.
+		testPosition(1000/25);
+		// This test emulates updates every second. The velocities should come
+		// out as expected.
+		testPosition(1000);
 		
 		
 	}
@@ -99,9 +97,9 @@ public class TestWorld {
 		//RealPost:		0,0
 		//RealVelocity: 0, ?
 		
-		World world = new World(World.YELLOW, World.LEFT, World.REAL_UNITS_PER_PIXEL);
-		MobileRealObject realObj = world.getMobileObject(RealWorld.HERO_DEFENDER);
-		MobilePixelObject pixelObj = world.getMobileObject(PixelWorld.YELLOW_DEFENDER);
+		World world = new World(World.TeamColor.YELLOW, World.TeamSide.LEFT, World.REAL_UNITS_PER_PIXEL);
+		MobileRealObject realObj = world.getHeroDefender();
+		MobilePixelObject pixelObj = world.getYellowDefender();
 		
 		System.out.println("getPixelPosition(): "+pixelObj.getPixelPosition());
 		System.out.println(realObj);
@@ -124,57 +122,50 @@ public class TestWorld {
 	}
 
 	private static void testCorrespondances() {
-		World world = new World(World.BLUE, World.LEFT);
+		World world;
 		
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorld.YELLOW_ATTACKER, "yellow attacker", world);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.VILLAIN_ATTACKER, "villain attacker", world);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.HERO_DEFENDER, "hero defender", world);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.BALL, "ball", world);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorldColorless.ROBOT0, "robot0", world);
+		world = new World(World.TeamColor.BLUE, World.TeamSide.LEFT);
+		//Make sure all methods that should return the same object returns the same object
+		assertEquals(world.getBlueAttacker(), world.getBlueAttacker());
+		assertEquals(world.getBlueAttacker(), world.getHeroAttacker());
+		assertEquals(world.getBlueAttacker(), world.getRobot2());
+		//Make sure it equals no other objects (assumes getRobotX works)
+		assertNotEquals(world.getBlueAttacker(), world.getRobot0());
+		assertNotEquals(world.getBlueAttacker(), world.getRobot1());
+		assertNotEquals(world.getBlueAttacker(), world.getRobot3());
+		assertNotEquals (world.getBlueAttacker(), world.getBall());
 		
-		testCorrespondance(PixelWorld.BALL, "ball", PixelWorldColorless.BALL, "ball", world);
-		testCorrespondance(PixelWorld.BALL, "ball", RealWorld.BALL, "ball", world);
-
-		System.out.println("\nWe play BLUE from the LEFT");
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorld.BLUE_ATTACKER, "blue attacker", world);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.HERO_ATTACKER, "hero attacker", world);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorldColorless.ROBOT2, "robot 2", world);
+		world = new World(World.TeamColor.BLUE, World.TeamSide.RIGHT);
+		//Make sure all methods that should return the same object returns the same object
+		assertEquals (world.getBlueAttacker(), world.getBlueAttacker());
+		assertEquals (world.getBlueAttacker(), world.getHeroAttacker());
+		assertEquals (world.getBlueAttacker(), world.getRobot1());
+		//Make sure it equals no other objects (assumes getRobotX works)
+		assertNotEquals (world.getBlueAttacker(), world.getRobot0());
+		assertNotEquals (world.getBlueAttacker(), world.getRobot2());
+		assertNotEquals (world.getBlueAttacker(), world.getRobot3());
+		assertNotEquals (world.getBlueAttacker(), world.getBall());
 		
-		System.out.println("\nWe play BLUE from the RIGHT");
-		World world2 = new World(World.BLUE, World.RIGHT);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorld.BLUE_ATTACKER, "blue attacker", world2);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.HERO_ATTACKER, "hero attacker", world2);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorldColorless.ROBOT1, "robot1", world2);
+		world = new World(World.TeamColor.YELLOW, World.TeamSide.RIGHT);
+		//Make sure all methods that should return the same object returns the same object
+		assertEquals (world.getBlueAttacker(), world.getBlueAttacker());
+		assertEquals (world.getBlueAttacker(), world.getVillainAttacker());
+		assertEquals (world.getBlueAttacker(), world.getRobot2());
+		//Make sure it equals no other objects (assumes getRobotX works)
+		assertNotEquals (world.getBlueAttacker(), world.getRobot0());
+		assertNotEquals (world.getBlueAttacker(), world.getRobot1());
+		assertNotEquals (world.getBlueAttacker(), world.getRobot3());
+		assertNotEquals (world.getBlueAttacker(), world.getBall());
 		
-		System.out.println();
-		testCorrespondance(PixelWorldColorless.ROBOT1, "robot 1", PixelWorldColorless.ROBOT1, "robot1", world2);
-		testCorrespondance(PixelWorldColorless.ROBOT1, "robot 1", PixelWorld.BLUE_ATTACKER, "blue attacker", world2);
-		testCorrespondance(PixelWorldColorless.ROBOT1, "robot 1", PixelWorld.BLUE_DEFENDER, "blue defender", world2);
-		testCorrespondance(PixelWorldColorless.ROBOT1, "robot 1", PixelWorld.YELLOW_ATTACKER, "yellow attacker", world2);
-		testCorrespondance(PixelWorldColorless.ROBOT1, "robot 1", PixelWorld.YELLOW_DEFENDER, "yellow defender", world2);
-		
-		System.out.println("\nWe play YELLOW from the RIGHT");
-		World world3 = new World(World.YELLOW, World.RIGHT);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorld.BLUE_ATTACKER, "blue attacker", world3);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.VILLAIN_ATTACKER, "villain attacker", world3);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorldColorless.ROBOT2, "robot2", world3);
-		
-		System.out.println("\nWe play YELLOW from the LEFT");
-		World world4 = new World(World.YELLOW, World.LEFT);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorld.BLUE_ATTACKER, "blue attacker", world3);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.VILLAIN_ATTACKER, "villain attacker", world3);
-		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorldColorless.ROBOT1, "robot1", world3);
-		
-	}
-	
-	private static void testCorrespondance(int object1, String name1, int object2, String name2, World world) {
-		MobileObject mObj1 = world.getMobileObject(object1);
-		MobileObject mObj2 = world.getMobileObject(object2);
-		
-		if (mObj1 != mObj2) {
-			System.out.println(name1 + " != " + name2);
-		}else {
-			System.out.println(name1 + " == " + name2);
-		}
+		world = new World(World.TeamColor.YELLOW, World.TeamSide.LEFT);
+		//Make sure all methods that should return the same object returns the same object
+		assertEquals (world.getBlueAttacker(), world.getBlueAttacker());
+		assertEquals (world.getBlueAttacker(), world.getVillainAttacker());
+		assertEquals (world.getBlueAttacker(), world.getRobot1());
+		//Make sure it equals no other objects (assumes getRobotX works)
+		assertNotEquals (world.getBlueAttacker(), world.getRobot0());
+		assertNotEquals (world.getBlueAttacker(), world.getRobot2());
+		assertNotEquals (world.getBlueAttacker(), world.getRobot3());
+		assertNotEquals (world.getBlueAttacker(), world.getBall());
 	}
 }

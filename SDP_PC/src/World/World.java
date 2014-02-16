@@ -1,23 +1,30 @@
 package world;
 
 import world.object.MobileObject;
+import world.object.MobilePixelObject;
+import world.object.MobileRealObject;
 import world.object.StationaryObject;
+import world.object.StationaryPixelObject;
+import world.object.StationaryRealObject;
 
 public class World implements PixelWorld, RealWorld, PixelWorldColorless {
-
-	public static final boolean YELLOW = true;
-	public static final boolean BLUE = false;
-
-	public static final boolean LEFT = true;
-	public static final boolean RIGHT = false;
-
 	public static final int NUM_MOBILE_OBJECTS = 5;
 	public static final int NUM_STATIONARY_OBJECTS = 6;
 	
 	public static final double REAL_UNITS_PER_PIXEL = 0.455769231;
 
-	boolean ourColor;
-	boolean ourSide;
+	public enum TeamColor {
+		BLUE,
+		YELLOW
+	}
+	
+	public enum TeamSide {
+		LEFT,
+		RIGHT
+	}
+	
+	TeamColor ourColor;
+	TeamSide ourSide;
 	boolean yellowLeft;
 
 	MobileObject[] mobileObjects;
@@ -41,10 +48,10 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	 *            A conversion ration that will be used to convert pixel
 	 *            distances into real distances (cm)
 	 */
-	public World(boolean ourColor, boolean ourSide, double realUnitsPerPixel) {
+	public World(TeamColor ourColor, TeamSide ourSide, double realUnitsPerPixel) {
 		this.ourColor = ourColor;
 		this.ourSide = ourSide;
-		this.yellowLeft = (ourColor == YELLOW && ourSide == LEFT) || (ourColor == BLUE && ourSide == RIGHT);
+		this.yellowLeft = (ourColor ==TeamColor.YELLOW&& ourSide == TeamSide.LEFT) || (ourColor == TeamColor.BLUE && ourSide == TeamSide.RIGHT);
 		
 		mobileObjects = new MobileObject[NUM_MOBILE_OBJECTS];
 		for (int i = 0; i < NUM_MOBILE_OBJECTS; i++) {
@@ -69,131 +76,224 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	 *            The side we are playing from (i.e. the side on which our
 	 *            defender is).
 	 */
-	public World(boolean ourColor, boolean ourSide) {
+	public World(TeamColor ourColor, TeamSide ourSide) {
 		this(ourColor, ourSide, REAL_UNITS_PER_PIXEL);
 	}
 
 	@Override
-	public MobileObject getMobileObject(int object) {
-		// Holds the index that will be used to retrieve the mobile object.
-		int pixelObject = object;
-		// Sets the above index appropriately depending on what object is
-		// requested and what color we are playing as.
-		switch (object) {
-		case PixelWorld.YELLOW_ATTACKER:
-			if (yellowLeft) {
-				pixelObject = PixelWorldColorless.ROBOT2;
-			}else {
-				pixelObject = PixelWorldColorless.ROBOT1;
-			}
-			break;
-		case PixelWorld.YELLOW_DEFENDER:
-			if (yellowLeft) {
-				pixelObject = PixelWorldColorless.ROBOT0;
-			}else {
-				pixelObject = PixelWorldColorless.ROBOT3;
-			}
-			break;
-		case PixelWorld.BLUE_ATTACKER:
-			if (yellowLeft) {
-				pixelObject = PixelWorldColorless.ROBOT1;
-			}else {
-				pixelObject = PixelWorldColorless.ROBOT2;
-			}
-			break;
-		case PixelWorld.BLUE_DEFENDER:
-			if (yellowLeft) {
-				pixelObject = PixelWorldColorless.ROBOT3;
-			}else {
-				pixelObject = PixelWorldColorless.ROBOT0;
-			}
-			break;
-		case PixelWorld.BALL:
-			pixelObject = PixelWorldColorless.BALL;
-			break;
-		case RealWorld.HERO_ATTACKER:
-			if (ourSide == LEFT) {
-				pixelObject = PixelWorldColorless.ROBOT2;
-			}else {
-				pixelObject = PixelWorldColorless.ROBOT1;
-			}
-			break;
-		case RealWorld.HERO_DEFENDER:
-			if (ourSide == LEFT) {
-				pixelObject = PixelWorldColorless.ROBOT0;
-			}else {
-				pixelObject = PixelWorldColorless.ROBOT3;
-			}
-			break;
-		case RealWorld.VILLAIN_ATTACKER:
-			if (ourSide == LEFT) {
-				pixelObject = PixelWorldColorless.ROBOT1;
-			}else {
-				pixelObject = PixelWorldColorless.ROBOT2;
-			}
-			break;
-		case RealWorld.VILLAIN_DEFENDER:
-			if (ourSide == LEFT) {
-				pixelObject = PixelWorldColorless.ROBOT3;
-			}else {
-				pixelObject = PixelWorldColorless.ROBOT0;
-			}
-			break;
-		case RealWorld.BALL:
-			pixelObject = PixelWorldColorless.BALL;
-			break;
-		default:
-			break;
-		}
-		return mobileObjects[pixelObject];
+	public MobilePixelObject getRobot0() {
+		return mobileObjects[0];
 	}
 
 	@Override
-	public StationaryObject getStationaryObject(int object) {
-		// Holds the index that will be used to retrieve the mobile object.
-		int pixelObject = object;
-		// Sets the above index appropriately depending on what object is
-		// requested and what side we are playing from.
-		switch (object) {
-		case HERO_DEFENDER_ZONE:
-			if (ourSide == LEFT) {
-				pixelObject = LEFT_TEAM_DEFENDER_ZONE;
-			} else {
-				pixelObject = RIGHT_TEAM_DEFENDER_ZONE;
-			}
-		case VILLAIN_ATTACKER_ZONE:
-			if (ourSide == LEFT) {
-				pixelObject = RIGHT_TEAM_ATTACKER_ZONE;
-			} else {
-				pixelObject = LEFT_TEAM_ATTACKER_ZONE;
-			}
-		case HERO_ATTACKER_ZONE:
-			if (ourSide == LEFT) {
-				pixelObject = LEFT_TEAM_ATTACKER_ZONE;
-			} else {
-				pixelObject = RIGHT_TEAM_ATTACKER_ZONE;
-			}
-		case VILLAIN_DEFENDER_ZONE:
-			if (ourSide == LEFT) {
-				pixelObject = RIGHT_TEAM_DEFENDER_ZONE;
-			} else {
-				pixelObject = LEFT_TEAM_ATTACKER_ZONE;
-			}
-		case HERO_GOAL:
-			if (ourSide == LEFT) {
-				pixelObject = LEFT_TEAM_GOAL;
-			} else {
-				pixelObject = RIGHT_TEAM_GOAL;
-			}
-		case VILLAIN_GOAL:
-			if (ourSide == LEFT) {
-				pixelObject = RIGHT_TEAM_GOAL;
-			} else {
-				pixelObject = LEFT_TEAM_GOAL;
-			}
-			break;
+	public MobilePixelObject getRobot1() {
+		return mobileObjects[1];
+	}
+
+	@Override
+	public MobilePixelObject getRobot2() {
+		return mobileObjects[2];
+	}
+
+	@Override
+	public MobilePixelObject getRobot3() {
+		return mobileObjects[4];
+	}
+
+	@Override
+	public StationaryPixelObject getZone0() {
+		return stationaryObjects[0];
+	}
+
+	@Override
+	public StationaryPixelObject getZone1() {
+		return stationaryObjects[1];
+	}
+
+	@Override
+	public StationaryPixelObject getZone2() {
+		return stationaryObjects[2];
+	}
+
+	@Override
+	public StationaryPixelObject getZone3() {
+		return stationaryObjects[3];
+	}
+
+	@Override
+	public MobileRealObject getHeroAttacker() {
+		if (ourSide == TeamSide.LEFT) {
+			return mobileObjects[2];
+		}else {
+			return mobileObjects[1];
 		}
-		return stationaryObjects[pixelObject];
+	}
+
+	@Override
+	public MobileRealObject getHeroDefender() {
+		if (ourSide == TeamSide.LEFT) {
+			return mobileObjects[0];
+		}else {
+			return mobileObjects[3];
+		}
+	}
+
+	@Override
+	public MobileRealObject getVillainAttacker() {
+		if (ourSide == TeamSide.LEFT) {
+			return mobileObjects[1];
+		}else {
+			return mobileObjects[2];
+		}
+	}
+
+	@Override
+	public MobileRealObject getVillainDefender() {if (ourSide == TeamSide.LEFT) {
+		return mobileObjects[3];
+	}else {
+		return mobileObjects[0];
+	}
+	}
+
+	@Override
+	public StationaryRealObject getHeroAttackerZone() {
+		if (ourSide == TeamSide.LEFT) {
+			return stationaryObjects[2];
+		}else {
+			return stationaryObjects[1];
+		}
+	}
+
+	@Override
+	public StationaryRealObject getHeroDefenderZone() {
+		if (ourSide == TeamSide.LEFT) {
+			return stationaryObjects[0];
+		}else {
+			return stationaryObjects[3];
+		}
+	}
+
+	@Override
+	public StationaryRealObject getVillainAttackerZone() {
+		if (ourSide == TeamSide.LEFT) {
+			return stationaryObjects[1];
+		}else {
+			return stationaryObjects[2];
+		}
+	}
+
+	@Override
+	public StationaryRealObject getVillainDefenderZone() {
+		if (ourSide == TeamSide.LEFT) {
+			return stationaryObjects[3];
+		}else {
+			return stationaryObjects[0];
+		}
+	}
+
+	@Override
+	public StationaryRealObject getHeroGoal() {
+		if (ourSide == TeamSide.LEFT) {
+			return stationaryObjects[4];
+		}else {
+			return stationaryObjects[5];
+		}
+	}
+
+	@Override
+	public StationaryRealObject getVillainGoal() {
+		if (ourSide == TeamSide.LEFT) {
+			return stationaryObjects[5];
+		}else {
+			return stationaryObjects[4];
+		}
+	}
+
+	@Override
+	public MobilePixelObject getBlueAttacker() {
+		if (yellowLeft) {
+			return mobileObjects[1];
+		}else {
+			return mobileObjects[2];
+		}
+	}
+
+	@Override
+	public MobilePixelObject getBlueDefender() {
+		if (yellowLeft) {
+			return mobileObjects[3];
+		}else {
+			return mobileObjects[0];
+		}
+	}
+
+	@Override
+	public MobilePixelObject getYellowAttacker() {
+		if (yellowLeft) {
+			return mobileObjects[2];
+		}else {
+			return mobileObjects[1];
+		}
+	}
+
+	@Override
+	public MobilePixelObject getYellowDefender() {
+		if (yellowLeft) {
+			return mobileObjects[0];
+		}else {
+			return mobileObjects[3];
+		}
+	}
+
+	@Override
+	public MobileObject getBall() {
+		return mobileObjects[4];
+	}
+
+	@Override
+	public StationaryPixelObject getBlueAttackerZone() {
+		if (yellowLeft) {
+			return stationaryObjects[1];
+		}else {
+			return stationaryObjects[2];
+		}
+	}
+
+	@Override
+	public StationaryPixelObject getBlueDefenderZone() {
+		if (yellowLeft) {
+			return stationaryObjects[0];
+		}else {
+			return stationaryObjects[3];
+		}
+	}
+
+	@Override
+	public StationaryPixelObject getYellowAttackerZone() {
+		if (yellowLeft) {
+			return stationaryObjects[2];
+		}else {
+			return stationaryObjects[1];
+		}
+	}
+
+	@Override
+	public StationaryPixelObject getYellowDefenderZone() {
+		if (yellowLeft) {
+			return stationaryObjects[0];
+		}else {
+			return stationaryObjects[3];
+		}
+	}
+
+	@Override
+	public StationaryPixelObject getLeftGoal() {
+		return stationaryObjects[4];
+	}
+
+	@Override
+	public StationaryPixelObject getRightGoal() {
+		return stationaryObjects[5];
 	}
 
 }

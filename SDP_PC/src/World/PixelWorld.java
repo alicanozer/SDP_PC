@@ -8,45 +8,69 @@ import world.object.StationaryPixelObject;
  * implies that everything is exactly as it appears in the image and the primary unit is pixels.
  */
 public interface PixelWorld {
-	// Integers constants to be used to reference the various moving elements in
-	// the world.
-	// (I.e. the four robots and the ball)
-	public static final int YELLOW_ATTACKER = 20;
-	public static final int YELLOW_DEFENDER = 21;
-	public static final int BLUE_ATTACKER = 22;
-	public static final int BLUE_DEFENDER = 23;
-	public static final int BALL = 24;
-
-	// Integers constants to be used to reference the various stationary
-	// elements in the world.
-	// (I.e. the four zones and the two goals)
-	public static final int LEFT_TEAM_DEFENDER_ZONE = 20;
-	public static final int RIGHT_TEAM_ATTACKER_ZONE = 21;
-	public static final int LEFT_TEAM_ATTACKER_ZONE = 22;
-	public static final int RIGHT_TEAM_DEFENDER_ZONE = 23;
-
-	public static final int LEFT_TEAM_GOAL = 24;
-	public static final int RIGHT_TEAM_GOAL = 25;
+	/**
+	 * 
+	 * @return Returns the attacking robot playing in blue color.
+	 */
+	public MobilePixelObject getBlueAttacker();
 
 	/**
-	 * Get one of the mobile objects in the world.
 	 * 
-	 * @param object
-	 *            The integer that identifies the object of interest. Options
-	 *            are defined as constants in this class.
-	 * 
-	 * @return Returns the mobile object.
+	 * @return Returns the defending robot playing in blue color.
 	 */
-	public MobilePixelObject getMobileObject(int object);
+	public MobilePixelObject getBlueDefender();
 
 	/**
-	 * Get one of the stationary objects in the world.
 	 * 
-	 * @param object
-	 *            The integer that identifies the object of interest. Options
-	 *            are defined as constants in this class.
-	 * 
-	 * @return Returns the mobile object.
+	 * @return Returns the attacking robot playing in yellow color.
 	 */
-	public StationaryPixelObject getStationaryObject(int object);
+	public MobilePixelObject getYellowAttacker();
+
+	/**
+	 * 
+	 * @return Returns the defending robot playing in yellow color.
+	 */
+	public MobilePixelObject getYellowDefender();
+
+	/**
+	 * 
+	 * @return Returns the ball.
+	 */
+	public MobilePixelObject getBall();
+
+	/**
+	 * 
+	 * @return Returns the zone of the blue attacker.
+	 */
+	public StationaryPixelObject getBlueAttackerZone();
+
+	/**
+	 * 
+	 * @return Returns the zone of the blue defender.
+	 */
+	public StationaryPixelObject getBlueDefenderZone();
+
+	/**
+	 * 
+	 * @return Returns the zone of the yelow attacker.
+	 */
+	public StationaryPixelObject getYellowAttackerZone();
+
+	/**
+	 * 
+	 * @return Returns the zone of the yellow defender.
+	 */
+	public StationaryPixelObject getYellowDefenderZone();
+
+	/**
+	 * 
+	 * @return Returns the left goal.
+	 */
+	public StationaryPixelObject getLeftGoal();
+
+	/**
+	 * 
+	 * @return Returns the right goal.
+	 */
+	public StationaryPixelObject getRightGoal();
 }

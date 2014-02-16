@@ -9,43 +9,69 @@ import world.object.StationaryRealObject;
  * perspective projection, barrel distortion etc.
  */
 public interface RealWorld {
-	//Integers constants to be used to reference the various moving elements in the world.
-	//(I.e. the four robots and the ball)
-	public static final int HERO_ATTACKER = 10;
-	public static final int HERO_DEFENDER = 11;
-	public static final int VILLAIN_ATTACKER = 12;
-	public static final int VILLAIN_DEFENDER = 13;
-	public static final int BALL = 14;
-	
-	//Integers constants to be used to reference the various stationary elements in the world.
-	//(I.e. the four zones and the two goals)
-	public static final int HERO_DEFENDER_ZONE = 10;
-	public static final int VILLAIN_ATTACKER_ZONE = 11;
-	public static final int HERO_ATTACKER_ZONE = 12;
-	public static final int VILLAIN_DEFENDER_ZONE = 13;
-	
-	public static final int HERO_GOAL = 14;
-	public static final int VILLAIN_GOAL = 15;
-	
 	/**
-	 * Get one of the mobile objects in the world.
 	 * 
-	 * @param object
-	 *            The integer that identifies the object of interest. Options
-	 *            are defined as constants in this class.
-	 * 
-	 * @return Returns the mobile object.
+	 * @return Returns the attacking robot on our team.
 	 */
-	public MobileRealObject getMobileObject(int object);
+	public MobileRealObject getHeroAttacker();
 
 	/**
-	 * Get one of the stationary objects in the world.
 	 * 
-	 * @param object
-	 *            The integer that identifies the object of interest. Options
-	 *            are defined as constants in this class.
-	 * 
-	 * @return Returns the mobile object.
+	 * @return Returns the defending robot on our team.
 	 */
-	public StationaryRealObject getStationaryObject(int object);
+	public MobileRealObject getHeroDefender();
+
+	/**
+	 * 
+	 * @return Returns the attacking robot on the opposing team.
+	 */
+	public MobileRealObject getVillainAttacker();
+
+	/**
+	 * 
+	 * @return Returns the defending robot on the opposing team.
+	 */
+	public MobileRealObject getVillainDefender();
+
+	/**
+	 * 
+	 * @return Returns the ball.
+	 */
+	public MobileRealObject getBall();
+
+	/**
+	 * 
+	 * @return Returns the zone of the attacking robot on our team.
+	 */
+	public StationaryRealObject getHeroAttackerZone();
+
+	/**
+	 * 
+	 * @return Returns the zone of the defending robot on our team.
+	 */
+	public StationaryRealObject getHeroDefenderZone();
+
+	/**
+	 * 
+	 * @return Returns the zone of the attacking robot on the opposing team.
+	 */
+	public StationaryRealObject getVillainAttackerZone();
+
+	/**
+	 * 
+	 * @return Returns the zone of the defending robot on the opposing team.
+	 */
+	public StationaryRealObject getVillainDefenderZone();
+
+	/**
+	 * 
+	 * @return Returns the goal that we want to defend.
+	 */
+	public StationaryRealObject getHeroGoal();
+
+	/**
+	 * 
+	 * @return Returns the goal that we want to attack.
+	 */
+	public StationaryRealObject getVillainGoal();
 }
