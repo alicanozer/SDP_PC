@@ -9,12 +9,11 @@ import georegression.struct.point.Point2D_I32;
  * 
  */
 public class MobileObject implements MobilePixelObject, MobileRealObject {
-
-	protected Frame[] positions;
-	protected Frame[] velocities;
-	protected boolean dirtyVelocities;
-	protected Frame[] accelerations;
-	protected boolean dirtyAccelerations;
+	protected Frame[] realPositions;
+	protected Frame[] realVelocities;
+	protected boolean dirtyRealVelocities;
+	protected Frame[] realAccelerations;
+	protected boolean dirtyRealAccelerations;
 	
 	protected Frame[] orientations;
 	
@@ -35,12 +34,12 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	 */
 	public MobileObject(double realUnitsPerPixel) {
 		this.realUnitsPerPixel = realUnitsPerPixel;
-		this.positions = new Frame[3];
-		this.velocities = new Frame[2];
-		this.accelerations = new Frame[1];
+		this.realPositions = new Frame[3];
+		this.realVelocities = new Frame[2];
+		this.realAccelerations = new Frame[1];
 		
-		dirtyVelocities = true;
-		dirtyAccelerations = true;
+		dirtyRealVelocities = true;
+		dirtyRealAccelerations = true;
 		
 		this.orientations = new Frame[1];		
 	}
@@ -49,22 +48,22 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	public Vector getRealPosition() throws Exception {
 		//Check so that the history is sufficiently long to successfully complete request.
 		//We need at least two past positions to determine our the current position.
-		if (positions[1] == null) {
+		if (realPositions[1] == null) {
 			throw new Exception("Not enough history available");
 		}
 		//Make sure all velocities are up to date.
-		if (dirtyVelocities) {
-			updateVelocities();
+		if (dirtyRealVelocities) {
+			updateRealVelocities();
 		}
 		
 		//Calculate the change in time since the last recorded position
-		long deltaTime = System.currentTimeMillis()-positions[0].getTime();
+		long deltaTime = System.currentTimeMillis()-realPositions[0].getTime();
 		
 		//Calculate the current position of an object traveling at velocities[0] deltaTime milliseconds ago
-		Vector currentPosition = positions[0].add(velocities[0].getVector().scalarMultiplication(deltaTime/1000.0));
+		Vector currentPosition = realPositions[0].add(realVelocities[0].getVector().scalarMultiplication(deltaTime/1000.0));
 		
 		//Return the current position in real units.
-		return currentPosition.scalarMultiplication(realUnitsPerPixel);
+		return currentPosition.scalarMultiplication(world.getRealUnitsPerPixel());
 	}
 
 	@Override
@@ -76,70 +75,71 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	public Vector getRealVelocity() throws Exception {
 		//Check so that the history is sufficiently long to successfully complete request.
 		//We need three past positions to determine our the current velocity.
-		if (positions[2] == null) {
+		if (realPositions[2] == null) {
 			throw new Exception("Not enough history available");
 		}
 		//Make sure all accelerations are up to date.
-		if (dirtyAccelerations) {
-			updateAccelerations();
+		if (dirtyRealAccelerations) {
+			updateRealAccelerations();
 		}
 		
 		//Calculate the change in time since the last recorded velocity.
-		long deltaTime = System.currentTimeMillis()-velocities[0].getTime(); 
+		long deltaTime = System.currentTimeMillis()-realVelocities[0].getTime(); 
 		
 		//Calculate how much the velocity would have changed in this time given that the last know acceleration was accelerations[0]
-		Vector currentVelocity = velocities[0].getVector().add(accelerations[0].getVector().scalarMultiplication(deltaTime/1000.0));
+		Vector currentVelocity = realVelocities[0].getVector().add(realAccelerations[0].getVector().scalarMultiplication(deltaTime/1000.0));
 		
 		//Return this velocity in real units.
-		return currentVelocity.scalarMultiplication(realUnitsPerPixel);
+		return currentVelocity.scalarMultiplication(world.getRealUnitsPerPixel());
 	}
 	
 	/**
-	 * Updates the accelerations array.
+	 * Updates the realVelocities array.
 	 */
-	protected void updateAccelerations() {
+	protected void updateRealVelocities() {
+		//Shift the history one step
+		for (int i = realVelocities.length-1; i > 0; i--) {
+			realVelocities[i] = realVelocities[i-1]; 
+		}
+		//Calculate the latest velocity from the latest positions.
+		realVelocities[0] = calculateDerivative(realPositions[0], realPositions[1]);
+		//Indicate that velocities are up to date.
+		dirtyRealVelocities = false;
+	}
+	
+	/**
+	 * Updates the realAccelerations array.
+	 */
+	protected void updateRealAccelerations() {
 		//Make sure the velocities are up to date as they will be used in calculations.
-		if (dirtyVelocities) {
-			updateVelocities();
+		if (dirtyRealVelocities) {
+			updateRealVelocities();
 		}
 		//Shift the history one step
 		shiftAccelerations();
 		//Calculate the latest acceleration from the latest velocities
-		accelerations[0] = calculateDerivative(velocities[0], velocities[1]);
+		realAccelerations[0] = calculateDerivative(realVelocities[0], realVelocities[1]);
 		//Indicate that all acceleration values are up to date.
-		dirtyAccelerations = false;
+		dirtyRealAccelerations = false;
 	}
-	/**
-	 * Updates the velocities array.
-	 */
-	protected void updateVelocities() {
-		//Shift the history one step
-		for (int i = velocities.length-1; i > 0; i--) {
-			velocities[i] = velocities[i-1]; 
-		}
-		//Calculate the latest velocity from the latest positions.
-		velocities[0] = calculateDerivative(positions[0], positions[1]);
-		//Indicate that velocities are up to date.
-		dirtyVelocities = false;
-	}
-
+	
 	@Override
 	public Vector getPixelPosition() {
-		return positions[0] == null ? null : positions[0].getVector();
+		return realPositions[0] == null ? null : realPositions[0].getVector();
 	}
-
+	
 	@Override
 	public void setPixelPosition(Vector position) {
 		if (position != null) {
 			setPixelPosition(position.getX(), position.getY());
 		}
 	}
-
+	
 	@Override
 	public Vector getPixelOrientation() {
 		return orientations[0] == null ? null : orientations[0].getVector();
 	}
-
+	
 	@Override
 	public void setPixelOrientation(Vector orientation) {
 		if (orientation != null) {
@@ -158,15 +158,15 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 		Frame newFrame = new Frame(x, y);
 		// Only shift the history if the time has changed. If it hasn't trying
 		// to calculate the velocity cause division by zero.
-		if (positions[0] != null && newFrame.subtract(positions[0]).getTime() > 1) {
-			positions[2] = positions[1];
-			positions[1] = positions[0];
+		if (realPositions[0] != null && newFrame.subtract(realPositions[0]).getTime() > 1) {
+			realPositions[2] = realPositions[1];
+			realPositions[1] = realPositions[0];
 		}
 		//Even if the time has not changed we allow changing the position.
-		positions[0] = newFrame;
+		realPositions[0] = newFrame;
 		//Whenever the last known position changes it makes accelerations and velocities outdated.
-		dirtyAccelerations = true;
-		dirtyVelocities = true;
+		dirtyRealVelocities = true;
+		dirtyRealAccelerations = true;
 	}
 	
 	private void setPixelOrientation(double x, double y) {
@@ -227,8 +227,8 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	 * to the history.
 	 */
 	protected void shiftPositions() {
-		for (int i = positions.length-1; i > 0; i--) {
-			positions[i] = positions[i-1]; 
+		for (int i = realPositions.length-1; i > 0; i--) {
+			realPositions[i] = realPositions[i-1]; 
 		}
 	}
 	
@@ -237,8 +237,8 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	 * to the history.
 	 */
 	protected void shiftVelocities() {
-		for (int i = velocities.length-1; i > 0; i--) {
-			velocities[i] = velocities[i-1]; 
+		for (int i = realVelocities.length-1; i > 0; i--) {
+			realVelocities[i] = realVelocities[i-1]; 
 		}
 	}
 	
@@ -247,8 +247,8 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	 * to the history.
 	 */
 	protected void shiftAccelerations() {
-		for (int i = accelerations.length-1; i > 0; i--) {
-			accelerations[i] = accelerations[i-1]; 
+		for (int i = realAccelerations.length-1; i > 0; i--) {
+			realAccelerations[i] = realAccelerations[i-1]; 
 		}
 	}
 }
