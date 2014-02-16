@@ -10,6 +10,7 @@ import georegression.struct.point.Point2D_I32;
  * 
  */
 public class MobileObject implements MobilePixelObject, MobileRealObject {
+	protected Frame[] pixelPositions;
 	protected Frame[] realPositions;
 	protected Frame[] realVelocities;
 	protected boolean dirtyRealVelocities;
@@ -35,6 +36,7 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	 * @param realUnitsPerPixel
 	 */
 	public MobileObject() {
+		this.pixelPositions = new Frame[3];
 		this.realPositions = new Frame[3];
 		this.realVelocities = new Frame[2];
 		this.realAccelerations = new Frame[1];
@@ -137,7 +139,7 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	
 	@Override
 	public Vector getPixelPosition() {
-		return realPositions[0] == null ? null : realPositions[0].getVector();
+		return pixelPositions[0] == null ? null : pixelPositions[0].getVector();
 	}
 	
 	@Override
@@ -170,12 +172,12 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 		Frame newFrame = new Frame(x, y);
 		// Only shift the history if the time has changed. If it hasn't trying
 		// to calculate the velocity cause division by zero.
-		if (realPositions[0] != null && newFrame.subtract(realPositions[0]).getTime() > 1) {
-			realPositions[2] = realPositions[1];
-			realPositions[1] = realPositions[0];
+		if (pixelPositions[0] != null && newFrame.subtract(pixelPositions[0]).getTime() > 1) {
+			pixelPositions[2] = pixelPositions[1];
+			pixelPositions[1] = pixelPositions[0];
 		}
 		//Even if the time has not changed we allow changing the position.
-		realPositions[0] = newFrame;
+		pixelPositions[0] = newFrame;
 		//Whenever the last known position changes it makes accelerations and velocities outdated.
 		dirtyRealVelocities = true;
 		dirtyRealAccelerations = true;
