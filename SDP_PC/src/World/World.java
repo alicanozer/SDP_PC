@@ -1,5 +1,6 @@
 package world;
 
+import geometry.Vector;
 import world.object.MobileObject;
 import world.object.MobilePixelObject;
 import world.object.MobileRealObject;
@@ -12,6 +13,13 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	public static final int NUM_STATIONARY_OBJECTS = 6;
 	
 	public static final double REAL_UNITS_PER_PIXEL = 0.455769231;
+	protected double realUnitsPerPixel;
+	
+	//The distance from the table to the camera in cm.
+	protected double realCameraElevation;
+	// The position in the image that the camera sits right above (in an
+	// uncropped image this would be the center of the image 320,240).
+	protected Vector pixelCameraPosition;
 
 	public enum TeamColor {
 		BLUE,
@@ -55,7 +63,7 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 		
 		mobileObjects = new MobileObject[NUM_MOBILE_OBJECTS];
 		for (int i = 0; i < NUM_MOBILE_OBJECTS; i++) {
-			mobileObjects[i] = new MobileObject(realUnitsPerPixel);
+			mobileObjects[i] = new MobileObject(this);
 		}
 		stationaryObjects = new StationaryObject[NUM_STATIONARY_OBJECTS];
 		for (int i = 0; i < NUM_STATIONARY_OBJECTS; i++) {
@@ -294,6 +302,18 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	@Override
 	public StationaryPixelObject getRightGoal() {
 		return stationaryObjects[5];
+	}
+
+	public double getRealUnitsPerPixel() {
+		return realUnitsPerPixel;
+	}
+	
+	public double getRealCameraElevation() {
+		return realCameraElevation;
+	}
+	
+	public Vector getPixelCameraPosition() {
+		return pixelCameraPosition;
 	}
 
 }

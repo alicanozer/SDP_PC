@@ -1,5 +1,6 @@
 package world.object;
 
+import world.World;
 import geometry.Frame;
 import geometry.Vector;
 import georegression.struct.point.Point2D_I32;
@@ -17,7 +18,8 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	
 	protected Frame[] orientations;
 	
-	protected double realUnitsPerPixel;
+	double height;
+	protected World world;
 	
 	/**
 	 * Creates a new MobileObject. Features of this implementation include
@@ -32,8 +34,7 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	 * <br>
 	 * @param realUnitsPerPixel
 	 */
-	public MobileObject(double realUnitsPerPixel) {
-		this.realUnitsPerPixel = realUnitsPerPixel;
+	public MobileObject() {
 		this.realPositions = new Frame[3];
 		this.realVelocities = new Frame[2];
 		this.realAccelerations = new Frame[1];
@@ -42,6 +43,17 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 		dirtyRealAccelerations = true;
 		
 		this.orientations = new Frame[1];		
+	}
+	
+	public MobileObject(World world) {
+		this();
+		this.height = 0;
+		this.world = world;
+	}
+	
+	public MobileObject(World world, double height) {
+		this(world);
+		this.height = height;
 	}
 	
 	@Override
@@ -250,5 +262,13 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 		for (int i = realAccelerations.length-1; i > 0; i--) {
 			realAccelerations[i] = realAccelerations[i-1]; 
 		}
+	}
+	
+	public double getHeight() {
+		return height;
+	}
+
+	public void setHeight(double height) {
+		this.height = height;
 	}
 }
