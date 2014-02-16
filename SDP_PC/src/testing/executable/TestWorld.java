@@ -1,8 +1,10 @@
 package testing.executable;
 
 import world.PixelWorld;
+import world.PixelWorldColorless;
 import world.RealWorld;
 import world.World;
+import world.object.MobileObject;
 import world.object.MobilePixelObject;
 import world.object.MobileRealObject;
 import geometry.Vector;
@@ -10,13 +12,37 @@ import geometry.Vector;
 public class TestWorld {
 
 	
-	static Vector[] waypoints = new Vector[10];
+	
 	
 	/**
 	 * @param args
 	 * @throws InterruptedException 
 	 */
 	public static void main(String[] args) throws InterruptedException {
+		
+		testCorrespondances();
+		
+		// Notice how no history is accumulated since no time passes inbetween
+		// updates of position
+//		testPosition(0);
+//		// This test emulates updates for every frame in the video stream
+//		// (25fps). The velocities will be crazy high.
+//		testPosition(1000/25);
+//		// This test emulates updates every second. The velocities should come
+//		// out as expected.
+//		testPosition(1000);
+		
+		
+	}
+	
+	/**
+	 * 
+	 * @param updatePeriod The minimum amount of time in between two updates of the world
+	 * 
+	 * @throws InterruptedException
+	 */
+	private static void testPosition(long updatePeriod) throws InterruptedException {
+		Vector[] waypoints = new Vector[10];
 		
 		// Bellow are the different waypoints which the robot will be placed at
 		// as well as the property values expected in between the changes
@@ -73,26 +99,6 @@ public class TestWorld {
 		//RealPost:		0,0
 		//RealVelocity: 0, ?
 		
-		// Notice how no history is accumulated since no time passes inbetween
-		// updates of position
-		testPosition(0);
-		// This test emulates updates for every frame in the video stream
-		// (25fps). The velocities will be crazy high.
-		testPosition(1000/25);
-		// This test emulates updates every second. The velocities should come
-		// out as expected.
-		testPosition(1000);
-		
-		
-	}
-	
-	/**
-	 * 
-	 * @param updatePeriod The minimum amount of time in between two updates of the world
-	 * 
-	 * @throws InterruptedException
-	 */
-	private static void testPosition(long updatePeriod) throws InterruptedException {
 		World world = new World(World.YELLOW, World.LEFT, World.REAL_UNITS_PER_PIXEL);
 		MobileRealObject realObj = world.getMobileObject(RealWorld.HERO_DEFENDER);
 		MobilePixelObject pixelObj = world.getMobileObject(PixelWorld.YELLOW_DEFENDER);
@@ -117,4 +123,58 @@ public class TestWorld {
 		}
 	}
 
+	private static void testCorrespondances() {
+		World world = new World(World.BLUE, World.LEFT);
+		
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorld.YELLOW_ATTACKER, "yellow attacker", world);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.VILLAIN_ATTACKER, "villain attacker", world);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.HERO_DEFENDER, "hero defender", world);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.BALL, "ball", world);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorldColorless.ROBOT0, "robot0", world);
+		
+		testCorrespondance(PixelWorld.BALL, "ball", PixelWorldColorless.BALL, "ball", world);
+		testCorrespondance(PixelWorld.BALL, "ball", RealWorld.BALL, "ball", world);
+
+		System.out.println("\nWe play BLUE from the LEFT");
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorld.BLUE_ATTACKER, "blue attacker", world);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.HERO_ATTACKER, "hero attacker", world);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorldColorless.ROBOT2, "robot 2", world);
+		
+		System.out.println("\nWe play BLUE from the RIGHT");
+		World world2 = new World(World.BLUE, World.RIGHT);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorld.BLUE_ATTACKER, "blue attacker", world2);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.HERO_ATTACKER, "hero attacker", world2);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorldColorless.ROBOT1, "robot1", world2);
+		
+		System.out.println();
+		testCorrespondance(PixelWorldColorless.ROBOT1, "robot 1", PixelWorldColorless.ROBOT1, "robot1", world2);
+		testCorrespondance(PixelWorldColorless.ROBOT1, "robot 1", PixelWorld.BLUE_ATTACKER, "blue attacker", world2);
+		testCorrespondance(PixelWorldColorless.ROBOT1, "robot 1", PixelWorld.BLUE_DEFENDER, "blue defender", world2);
+		testCorrespondance(PixelWorldColorless.ROBOT1, "robot 1", PixelWorld.YELLOW_ATTACKER, "yellow attacker", world2);
+		testCorrespondance(PixelWorldColorless.ROBOT1, "robot 1", PixelWorld.YELLOW_DEFENDER, "yellow defender", world2);
+		
+		System.out.println("\nWe play YELLOW from the RIGHT");
+		World world3 = new World(World.YELLOW, World.RIGHT);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorld.BLUE_ATTACKER, "blue attacker", world3);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.VILLAIN_ATTACKER, "villain attacker", world3);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorldColorless.ROBOT2, "robot2", world3);
+		
+		System.out.println("\nWe play YELLOW from the LEFT");
+		World world4 = new World(World.YELLOW, World.LEFT);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorld.BLUE_ATTACKER, "blue attacker", world3);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", RealWorld.VILLAIN_ATTACKER, "villain attacker", world3);
+		testCorrespondance(PixelWorld.BLUE_ATTACKER, "blue attacker", PixelWorldColorless.ROBOT1, "robot1", world3);
+		
+	}
+	
+	private static void testCorrespondance(int object1, String name1, int object2, String name2, World world) {
+		MobileObject mObj1 = world.getMobileObject(object1);
+		MobileObject mObj2 = world.getMobileObject(object2);
+		
+		if (mObj1 != mObj2) {
+			System.out.println(name1 + " != " + name2);
+		}else {
+			System.out.println(name1 + " == " + name2);
+		}
+	}
 }

@@ -3,7 +3,7 @@ package world;
 import world.object.MobileObject;
 import world.object.StationaryObject;
 
-public class World implements PixelWorld, RealWorld {
+public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 
 	public static final boolean YELLOW = true;
 	public static final boolean BLUE = false;
@@ -18,6 +18,7 @@ public class World implements PixelWorld, RealWorld {
 
 	boolean ourColor;
 	boolean ourSide;
+	boolean yellowLeft;
 
 	MobileObject[] mobileObjects;
 	StationaryObject[] stationaryObjects;
@@ -43,7 +44,8 @@ public class World implements PixelWorld, RealWorld {
 	public World(boolean ourColor, boolean ourSide, double realUnitsPerPixel) {
 		this.ourColor = ourColor;
 		this.ourSide = ourSide;
-
+		this.yellowLeft = (ourColor == YELLOW && ourSide == LEFT) || (ourColor == BLUE && ourSide == RIGHT);
+		
 		mobileObjects = new MobileObject[NUM_MOBILE_OBJECTS];
 		for (int i = 0; i < NUM_MOBILE_OBJECTS; i++) {
 			mobileObjects[i] = new MobileObject(realUnitsPerPixel);
@@ -78,36 +80,67 @@ public class World implements PixelWorld, RealWorld {
 		// Sets the above index appropriately depending on what object is
 		// requested and what color we are playing as.
 		switch (object) {
-		case HERO_ATTACKER:
-			if (ourColor == YELLOW) {
-				pixelObject = YELLOW_ATTACKER;
-			} else {
-				pixelObject = BLUE_ATTACKER;
+		case PixelWorld.YELLOW_ATTACKER:
+			if (yellowLeft) {
+				pixelObject = PixelWorldColorless.ROBOT2;
+			}else {
+				pixelObject = PixelWorldColorless.ROBOT1;
 			}
 			break;
-		case HERO_DEFENDER:
-			if (ourColor == YELLOW) {
-				pixelObject = YELLOW_DEFENDER;
-			} else {
-				pixelObject = BLUE_DEFENDER;
+		case PixelWorld.YELLOW_DEFENDER:
+			if (yellowLeft) {
+				pixelObject = PixelWorldColorless.ROBOT0;
+			}else {
+				pixelObject = PixelWorldColorless.ROBOT3;
 			}
 			break;
-		case VILLAIN_ATTACKER:
-			if (ourColor == YELLOW) {
-				pixelObject = BLUE_ATTACKER;
-			} else {
-				pixelObject = YELLOW_ATTACKER;
+		case PixelWorld.BLUE_ATTACKER:
+			if (yellowLeft) {
+				pixelObject = PixelWorldColorless.ROBOT1;
+			}else {
+				pixelObject = PixelWorldColorless.ROBOT2;
 			}
 			break;
-		case VILLAIN_DEFENDER:
-			if (ourColor == YELLOW) {
-				pixelObject = BLUE_ATTACKER;
-			} else {
-				pixelObject = YELLOW_ATTACKER;
+		case PixelWorld.BLUE_DEFENDER:
+			if (yellowLeft) {
+				pixelObject = PixelWorldColorless.ROBOT3;
+			}else {
+				pixelObject = PixelWorldColorless.ROBOT0;
+			}
+			break;
+		case PixelWorld.BALL:
+			pixelObject = PixelWorldColorless.BALL;
+			break;
+		case RealWorld.HERO_ATTACKER:
+			if (ourSide == LEFT) {
+				pixelObject = PixelWorldColorless.ROBOT2;
+			}else {
+				pixelObject = PixelWorldColorless.ROBOT1;
+			}
+			break;
+		case RealWorld.HERO_DEFENDER:
+			if (ourSide == LEFT) {
+				pixelObject = PixelWorldColorless.ROBOT0;
+			}else {
+				pixelObject = PixelWorldColorless.ROBOT3;
+			}
+			break;
+		case RealWorld.VILLAIN_ATTACKER:
+			if (ourSide == LEFT) {
+				pixelObject = PixelWorldColorless.ROBOT1;
+			}else {
+				pixelObject = PixelWorldColorless.ROBOT2;
+			}
+			break;
+		case RealWorld.VILLAIN_DEFENDER:
+			if (ourSide == LEFT) {
+				pixelObject = PixelWorldColorless.ROBOT3;
+			}else {
+				pixelObject = PixelWorldColorless.ROBOT0;
 			}
 			break;
 		case RealWorld.BALL:
-			pixelObject = PixelWorld.BALL;
+			pixelObject = PixelWorldColorless.BALL;
 			break;
 		default:
 			break;
