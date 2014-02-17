@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 
 import strategy.movement.TurnToBall;
 import vision.ObjectLocations;
-import vision.SimpleViewer;
+import vision.FrameHandler;
 
 import World.Robot;
 import World.RobotType;
