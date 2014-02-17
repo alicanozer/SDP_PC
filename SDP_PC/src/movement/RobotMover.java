@@ -4,7 +4,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 
+import World.Robot;
+import World.WorldState;
+
+import comms.RobotController;
+
 public class RobotMover {
+	private WorldState worldState;
+	private RobotController robot;
+	private Robot us;
+	
 	/** A reentrant mutex lock for the movement queue */
 	private ReentrantLock queueLock = new ReentrantLock(true);
 	/** A flag to permit busy-waiting */
@@ -17,6 +26,7 @@ public class RobotMover {
 	private Semaphore jobSem = new Semaphore(0, true);
 	/** A thread-safe queue for movement commands */
 	private ConcurrentLinkedQueue<MoverConfig> moveQueue = new ConcurrentLinkedQueue<MoverConfig>();
+	
 	
 	/** Settings info class to permit queueing of movements */
 	private class MoverConfig {

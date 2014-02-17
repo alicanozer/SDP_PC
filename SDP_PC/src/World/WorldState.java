@@ -1,8 +1,11 @@
 package World;
 
+import geometry.Vector;
+import vision.ObjectLocations;
 import Calculations.AngleCalculator;
 import World.Robot;
 import World.Ball;
+import World.RobotType;
 import Calculations.*;
 
 public class WorldState {
@@ -72,5 +75,30 @@ public class WorldState {
 		this.color = 0;
 		this.pitch = 0;
 		this.goalInfo = goalInfo;
+		}
+	
+
+	public Ball getBall() {
+		return this.ball;
+	}
+	
+	public void setBall() {
+		this.ball.setPosition(new Vector(ObjectLocations.getBall().x,ObjectLocations.getBall().y));
+	}
+	
+	public Robot getOurAttackRobot() {
+		return this.ourAttackRobot;
+	}
+	
+	public void setOurAttackRobot() {
+		this.ourAttackRobot.setPosition(new Vector(ObjectLocations.getYellowATTACKmarker().x,ObjectLocations.getYellowATTACKmarker().y));
+	}
+	
+	public Robot getOurDefenseRobot() {
+		return this.ourAttackRobot;
+	}
+	
+	public void setOurDefenseRobot() {
+		this.ourAttackRobot.setPosition(new Vector(ObjectLocations.getYellowDEFENDmarker().x,ObjectLocations.getYellowDEFENDmarker().y));
 	}
 }

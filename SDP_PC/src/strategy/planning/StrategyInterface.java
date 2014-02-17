@@ -1,5 +1,8 @@
 package strategy.planning;
 
+import comms.BluetoothRobot;
+
+import World.WorldState;
 import movement.RobotMover;
 import vision.ObjectLocations;
 
@@ -7,11 +10,13 @@ public abstract class StrategyInterface implements Runnable {
 	protected boolean shouldidie;
 
 	ObjectLocations obj;
-	RobotMover mover;
+	BluetoothRobot bRobot;
+	WorldState world;
 
-	public StrategyInterface(RobotMover mover) {
+	public StrategyInterface(WorldState world, BluetoothRobot bRobot) {
+		this.world = world;
 		this.shouldidie = false;
-		this.mover = mover;
+		this.bRobot = bRobot;
 	}
 
 	public void kill() {

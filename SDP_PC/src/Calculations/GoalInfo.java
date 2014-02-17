@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import vision.ObjectLocations;
+
 public class GoalInfo {
 	
 	public final int width = 640;
@@ -18,11 +20,11 @@ public class GoalInfo {
 	Point2D_I32 rightGoalTop = getRightGoalTop();
 	Point2D_I32 rightGoalBottom = getRightGoalBottom();
 	
-	public final BufferedImage img;
+	public final ObjectLocations obj;
 
 	
-	public GoalInfo(BufferedImage img){
-		this.img = img;
+	public GoalInfo(ObjectLocations obj){
+		this.obj = obj;
 	}
 	
 	/**
