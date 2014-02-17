@@ -9,7 +9,7 @@ import strategy.movement.TurnToBall;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import vision.PointUtils;
-import vision.SimpleViewer;
+import vision.FrameHandler;
 import Calculations.DistanceCalculator;
 import World.Robot;
 import World.RobotType;
@@ -28,7 +28,7 @@ public class Test2 {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					new SimpleViewer();
+					new FrameHandler();
 				}
 			});
 		} catch (Exception e) {
