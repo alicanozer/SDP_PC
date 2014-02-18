@@ -8,6 +8,7 @@ import lejos.nxt.Button;
 import strategy.movement.TurnToBall;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
+import vision.PitchConstants;
 import vision.PointUtils;
 import vision.FrameHandler;
 import Calculations.DistanceCalculator;
@@ -28,7 +29,7 @@ public class Test2 {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					new FrameHandler();
+					new FrameHandler(true, PitchConstants.newPitch);
 				}
 			});
 		} catch (Exception e) {

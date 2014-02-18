@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 import lejos.nxt.Button;
 import strategy.movement.TurnToBall;
 import vision.ObjectLocations;
+import vision.PitchConstants;
 import vision.PointUtils;
 import vision.FrameHandler;
 import World.Robot;
@@ -28,7 +29,7 @@ public class Defend {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					new FrameHandler();
+					new FrameHandler(true, PitchConstants.newPitch);
 				}
 			});
 		} catch (Exception e) {
