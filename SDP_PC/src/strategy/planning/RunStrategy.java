@@ -1,10 +1,7 @@
 package strategy.planning;
 
-import javax.swing.JButton;
-
 import comms.Bluetooth;
 import comms.BluetoothRobot;
-import comms.RobotController;
 
 import Calculations.GoalInfo;
 import World.RobotType;
@@ -12,8 +9,15 @@ import World.RobotType;
 import vision.PitchConstants;
 import vision.VisionRunner;
 import World.WorldState;
-
-public class TestStrat {
+/**
+ * Runs the vision, starts a bluetooth connection with HERCULES and starts the
+ * strategy. 
+ * 
+ * To test with your own strategy replace 'TestStrategy' with the class name of your strategy.
+ * @author s0925284
+ *
+ */
+public class RunStrategy {
 
 	static BluetoothRobot bRobot;
 	public static final String HERCULES = "0016530D4ED8";
@@ -22,8 +26,6 @@ public class TestStrat {
 	private Thread strategyThread;
 	private StrategyInterface strategy;
 	private WorldState worldstate;
-
-	private final JButton stratStartButton = new JButton("Strat Start");
 
 	public static void main(String[] args) throws Exception {
 
@@ -48,18 +50,21 @@ public class TestStrat {
 		GoalInfo goalInfo = new GoalInfo(pitchconstants);
 		WorldState worldstate = new WorldState(goalInfo);
 
-		TestStrat teststrat = new TestStrat(worldstate, bRobot);
+		RunStrategy teststrat = new RunStrategy(worldstate, bRobot);
 
 	}
 
+	/**
+	 * Starts the strategy thread. Checks if a strategy is already running first.
+	 */
 	private void startStrategy() {
 		assert (strategyThread == null || !strategyThread.isAlive()) : "Strategy is already running";
-		strategy = new TestStrategy(worldstate, bRobot);
+		strategy = new TestStrategy(worldstate, bRobot); //Put your strategy class here.
 		strategyThread = new Thread(strategy);
 		strategyThread.start();
 	}
 
-	public TestStrat (final WorldState worldstate, final BluetoothRobot robot){
+	public RunStrategy (final WorldState worldstate, final BluetoothRobot robot){
 		this.worldstate = worldstate;
 		this.bRobot = robot;
 
