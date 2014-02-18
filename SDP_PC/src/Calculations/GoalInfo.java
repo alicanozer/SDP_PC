@@ -9,8 +9,8 @@ import vision.ObjectLocations;
 
 public class GoalInfo {
 	
-	public final int width = 10;
-	public final int height = 10;
+	public final int width = 540;
+	public final int height = 320;
 	public final int goalWidth = 15;
 	public final int goalRadius = 60;
 	Point2D_I32 leftGoalCentre = getLeftGoalCenter();
@@ -20,9 +20,7 @@ public class GoalInfo {
 	Point2D_I32 rightGoalTop = getRightGoalTop();
 	Point2D_I32 rightGoalBottom = getRightGoalBottom();
 	
-	public final PitchConstants pitchconstants;
-
-
+	PitchConstants pitchconstants = PitchConstants.newPitch;
 	
 	public GoalInfo(PitchConstants pitchconstants){
 		this.pitchconstants = pitchconstants;
@@ -92,26 +90,28 @@ public class GoalInfo {
 		Point2D_I32 result = getRightGoalCenter();
 		result.setY(result.getY() + goalRadius);
 		return result;
-	}public Point2D_I32 getBotRightCorner() {
-		Point2D_I32 result = new Point2D_I32(604, 400);
-
-		return result;
 	}
-	public Point2D_I32 getTopLeftCorner() {
-		Point2D_I32 result = new Point2D_I32(35, 92);
-
-		return result;
-	}
-	public Point2D_I32 getTopRightCorner() {
-		Point2D_I32 result = new Point2D_I32(601, 84);
-
-		return result;
-	}
-	public Point2D_I32 getBotLeftCorner() {
-		Point2D_I32 result = new Point2D_I32(35, 392);
-
-		return result;
-	}
+	
+//	public Point2D_I32 getBotRightCorner() {
+//		Point2D_I32 result = new Point2D_I32(604, 400);
+//
+//		return result;
+//	}
+//	public Point2D_I32 getTopLeftCorner() {
+//		Point2D_I32 result = new Point2D_I32(35, 92);
+//
+//		return result;
+//	}
+//	public Point2D_I32 getTopRightCorner() {
+//		Point2D_I32 result = new Point2D_I32(601, 84);
+//
+//		return result;
+//	}
+//	public Point2D_I32 getBotLeftCorner() {
+//		Point2D_I32 result = new Point2D_I32(35, 392);
+//
+//		return result;
+//	}
 	
 	public void drawGoalLine(Graphics2D g) {
 
