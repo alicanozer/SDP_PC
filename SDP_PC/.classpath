@@ -29,5 +29,6 @@
 	<classpathentry exported="true" kind="lib" path="xstream-1.4.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="bluecove.jar"/>
 	<classpathentry exported="true" kind="lib" path="bluecove-gpl.jar"/>
+	<classpathentry kind="lib" path="pccomm.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
