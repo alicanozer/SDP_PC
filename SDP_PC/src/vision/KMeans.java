@@ -22,8 +22,84 @@ import sun.awt.image.ToolkitImage;
 import boofcv.gui.image.ShowImages;
 
 public class KMeans {
+
+	private static Point2D_I32 findAverageXY(ArrayList<Point2D_I32> list){
+		int tX = 0;
+		int tY = 0;
+		for (int i = 0; i<list.size(); i++){
+			tX = tX + list.get(i).x;
+			tY = tY + list.get(i).y;
+		}
+		Point2D_I32 cent = new Point2D_I32(tX/list.size(),tY/list.size());
+		return cent;
+	}
+
+	private static int min(double[] list){ //find position of min value
+		double mini=list[0];
+		int pos =0;
+		for (int i = 1; i < list.length; i++) {
+			if(mini>list[i]) {
+				mini=list[i];
+				pos = i;
+			}
+		}
+		return pos;
+	}
+
+	public static ArrayList<Point2D_I32> Cluster2DPoints(ArrayList<Point2D_I32> dataset, int k, int max){
+		ArrayList<Point2D_I32> centers = new ArrayList<Point2D_I32>();
+		HashMap<Point2D_I32, ArrayList<Point2D_I32>> dataMap = new HashMap<Point2D_I32, ArrayList<Point2D_I32>>();
+
+		int minX = 0;
+		int maxX = 540;
+		int minY = 0;
+		int maxY = 320;
+
+		for (int x = 0;x<k;x++){ //init k random points and add to list of centers
+			int randX = minX + (int)(Math.random() * ((maxX - minX) + 1));
+			int randY = minY + (int)(Math.random() * ((maxY - minY) + 1));
+
+			Point2D_I32 temp = new Point2D_I32(randX,randY);
+			centers.add(temp);
+
+			//init dataMap as center key data point array pairs
+			ArrayList<Point2D_I32> tempA = new ArrayList<Point2D_I32>();
+			dataMap.put(temp, tempA);
+		}
+
+		int it = 0;
+		while (it < max){
+
+			//assign each point in dataset to closest center, put into dataMap
+			for (int i = 0;i<dataset.size();i++){
+				for (int j = 0;j<centers.size();j++){
+					double[] dists = new double[k];
+					int dX = Math.abs((dataset.get(i).x - centers.get(j).x));
+					int dY = Math.abs((dataset.get(i).y - centers.get(j).y));
+					dists[j] = Math.sqrt((dX*dX + dY*dY)); //find closest distance from cur point to center
+					dataMap.get(centers.get(min(dists))).add(dataset.get(i)); //add point into map with center as key
+				}
+			}
+
+			//update center to average of assigned points
+			for (int i = 0;i<centers.size();i++){
+				ArrayList<Point2D_I32> temp = new ArrayList<Point2D_I32>();
+				temp = (dataMap.get(centers.get(i))); //sets of points belonging to cetner.get(i)
+				Point2D_I32 avg = findAverageXY(temp); //average of points for this center becomes the new center
+
+				centers.add(avg);
+				dataMap.put(avg, temp);
+				dataMap.remove(centers.get(i));
+				centers.remove(i);
+			}
+			
+			it++;
+		}
+		return centers;
+	}
+
 	private KMeans(){
-		
+
 	}
 	public static Map<Integer, ArrayList<Point2D_I32>> Cluster(BufferedImage img, int k, int maxIters, List<Color> seeds){
 		Map<Integer,ArrayList<Point2D_I32>> clusterToPointMap = new HashMap<Integer,ArrayList<Point2D_I32>>();
@@ -239,7 +315,7 @@ public class KMeans {
 		time1 = System.currentTimeMillis();
 		Cluster(img1,100,10,null);
 		System.out.println("Kmeans took: " + (System.currentTimeMillis() - time1)/1000.0);
-		
+
 
 		//				
 		//		Graphics2D g = (Graphics2D) img1.getGraphics();
