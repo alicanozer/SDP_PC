@@ -203,7 +203,7 @@ public class KMeans {
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		BufferedImage img1 = ImageIO.read(new File("test_images/00000008.jpg"));
+		BufferedImage img1 = ImageIO.read(new File("test_images/img2.jpg"));
 		long time1 = System.currentTimeMillis();
 		//		BufferedImage img1 = new BufferedImage(img1_in.getWidth()/2, img1_in.getHeight()/2,BufferedImage.TYPE_INT_RGB);
 		//		System.out.println("Scaling took: " + (System.currentTimeMillis() - time1)/1000.0);
@@ -237,7 +237,7 @@ public class KMeans {
 		}
 
 		time1 = System.currentTimeMillis();
-		ClusterHeaps(img1,6,1,seeds1,15);
+		Cluster(img1,100,10,null);
 		System.out.println("Kmeans took: " + (System.currentTimeMillis() - time1)/1000.0);
 		
 
