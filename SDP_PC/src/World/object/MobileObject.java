@@ -10,6 +10,7 @@ import georegression.struct.point.Point2D_I32;
  * 
  */
 public class MobileObject implements MobilePixelObject, MobileRealObject {
+
 	protected Frame[] pixelPositions;
 	protected Frame[] realPositions;
 	protected Frame[] realVelocities;
@@ -74,10 +75,7 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 		long deltaTime = System.currentTimeMillis()-realPositions[0].getTime();
 		
 		//Calculate the current position of an object traveling at velocities[0] deltaTime milliseconds ago
-		Vector currentPosition = realPositions[0].add(realVelocities[0].getVector().scalarMultiplication(deltaTime/1000.0));
-		
-		//Return the current position in real units.
-		return currentPosition.scalarMultiplication(world.getRealUnitsPerPixel());
+		return realPositions[0].add(realVelocities[0].getVector().scalarMultiplication(deltaTime/1000.0));
 	}
 
 	@Override
@@ -101,10 +99,7 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 		long deltaTime = System.currentTimeMillis()-realVelocities[0].getTime(); 
 		
 		//Calculate how much the velocity would have changed in this time given that the last know acceleration was accelerations[0]
-		Vector currentVelocity = realVelocities[0].getVector().add(realAccelerations[0].getVector().scalarMultiplication(deltaTime/1000.0));
-		
-		//Return this velocity in real units.
-		return currentVelocity.scalarMultiplication(world.getRealUnitsPerPixel());
+		return realVelocities[0].getVector().add(realAccelerations[0].getVector().scalarMultiplication(deltaTime/1000.0));
 	}
 	
 	/**
@@ -168,22 +163,75 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 		}
 	}
 	
-	private void setPixelPosition(double x, double y) {
+	protected void setPixelPosition(double x, double y) {
 		Frame newFrame = new Frame(x, y);
 		// Only shift the history if the time has changed. If it hasn't trying
 		// to calculate the velocity cause division by zero.
 		if (pixelPositions[0] != null && newFrame.subtract(pixelPositions[0]).getTime() > 1) {
-			pixelPositions[2] = pixelPositions[1];
-			pixelPositions[1] = pixelPositions[0];
+			shiftPixelPositions();
 		}
 		//Even if the time has not changed we allow changing the position.
 		pixelPositions[0] = newFrame;
+		setRealPosition(newFrame);
 		//Whenever the last known position changes it makes accelerations and velocities outdated.
 		dirtyRealVelocities = true;
 		dirtyRealAccelerations = true;
 	}
 	
-	private void setPixelOrientation(double x, double y) {
+	/**
+	 * Sets the real position frame given on a pixel position frame.
+	 * 
+	 * @param pixelPosition
+	 *            The pixel position frame to be used as base for calculating
+	 *            the real position frame.
+	 */
+	protected void setRealPosition(Frame pixelPosition) {
+		//Make space for the new position in the history.
+		shiftRealPositions();
+		
+		Vector position = correctForPerspective(pixelPosition.getVector());
+		position = convertToReal(position);
+		
+		realPositions[0] = new Frame(position, pixelPosition.getTime());
+	}
+	
+	/**
+	 * Corrects the position as perceived to the real position on the table. The
+	 * discrepancy between the two positions arises because of the height of the
+	 * robot and perspective projection. <br>
+	 * NB, call this method before converting to real units.
+	 * 
+	 * @param position The perceived position.
+	 * @return The corrected position.
+	 */
+	protected Vector correctForPerspective(Vector position) {
+		// Calculate the factor by which to scale the distance (the ratio of the
+		// height of the similar triangles).
+		double scalingFactor = (world.getRealCameraElevation()-height)/world.getRealCameraElevation();
+		// Calculate the perceived position of the object in relation to the
+		// camera (the base of the big triangle).
+		Vector positionRelativeToCamera = position.subtract(world.getPixelCameraPosition());
+		// Calculate the actual position of the object in relation to the camera
+		// (the base of the small triangle).
+		positionRelativeToCamera = positionRelativeToCamera.scalarMultiplication(scalingFactor);
+		// Calculate the actual position of the object in relation to the world
+		// origin. As the camera position is in pixels it is important that this
+		// function is called before the distances are converted to cm
+		Vector result = positionRelativeToCamera.add(world.getPixelCameraPosition());
+		return result;
+	}
+	
+	/**
+	 * Convert a position in pixels to cm.
+	 * 
+	 * @param position The position to be converted.
+	 * @return Returns the position in cm.
+	 */
+	protected Vector convertToReal(Vector position) {
+		return position.scalarMultiplication(world.getRealUnitsPerPixel());
+	}
+	
+	protected void setPixelOrientation(double x, double y) {
 		Frame newFrame = new Frame(x, y);
 		// Only shift the history if the time has changed. If it hasn't trying
 		// to calculate the velocity cause division by zero.
@@ -237,12 +285,22 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	}
 	
 	/**
-	 * Shifts the position history one step. Do this before adding a new value
+	 * Shifts the real position history one step. Do this before adding a new value
 	 * to the history.
 	 */
-	protected void shiftPositions() {
+	protected void shiftRealPositions() {
 		for (int i = realPositions.length-1; i > 0; i--) {
 			realPositions[i] = realPositions[i-1]; 
+		}
+	}
+	
+	/**
+	 * Shifts the real position history one step. Do this before adding a new value
+	 * to the history.
+	 */
+	protected void shiftPixelPositions() {
+		for (int i = pixelPositions.length-1; i > 0; i--) {
+			pixelPositions[i] = pixelPositions[i-1]; 
 		}
 	}
 	
@@ -272,5 +330,19 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 
 	public void setHeight(double height) {
 		this.height = height;
+	}
+	
+	/**
+	 * @return The world in which the robot exists.
+	 */
+	public World getWorld() {
+		return world;
+	}
+
+	/**
+	 * @param world The world to in which the robot exists.
+	 */
+	public void setWorld(World world) {
+		this.world = world;
 	}
 }

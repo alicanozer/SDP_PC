@@ -304,16 +304,46 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 		return stationaryObjects[5];
 	}
 
+	/**
+	 * @return the realUnitsPerPixel
+	 */
 	public double getRealUnitsPerPixel() {
 		return realUnitsPerPixel;
 	}
-	
+
+	/**
+	 * @param realUnitsPerPixel the realUnitsPerPixel to set
+	 */
+	public void setRealUnitsPerPixel(double realUnitsPerPixel) {
+		this.realUnitsPerPixel = realUnitsPerPixel;
+	}
+
+	/**
+	 * @return the realCameraElevation
+	 */
 	public double getRealCameraElevation() {
 		return realCameraElevation;
 	}
-	
+
+	/**
+	 * @param realCameraElevation the realCameraElevation to set
+	 */
+	public void setRealCameraElevation(double realCameraElevation) {
+		this.realCameraElevation = realCameraElevation;
+	}
+
+	/**
+	 * @return the pixelCameraPosition
+	 */
 	public Vector getPixelCameraPosition() {
 		return pixelCameraPosition;
 	}
 
+	/**
+	 * @param pixelCameraPosition the pixelCameraPosition to set
+	 */
+	public void setPixelCameraPosition(Vector pixelCameraPosition) {
+		this.pixelCameraPosition = pixelCameraPosition;
+	}
+	
 }
