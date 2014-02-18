@@ -20,11 +20,11 @@ public class GoalInfo {
 	Point2D_I32 rightGoalTop = getRightGoalTop();
 	Point2D_I32 rightGoalBottom = getRightGoalBottom();
 	
-	public final ObjectLocations obj;
+	public final BufferedImage img;
 
 	
-	public GoalInfo(ObjectLocations obj){
-		this.obj = obj;
+	public GoalInfo(BufferedImage img){
+		this.img = img;
 	}
 	
 	/**
