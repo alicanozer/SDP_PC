@@ -163,14 +163,18 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		long thisFrame = System.currentTimeMillis();
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
-		lastFrame = thisFrame;
+		
+		
+		VisionRunner.sendFrame(new Frame(img,thisFrame));
+		
+		
 		//KMeans.ClusterHeaps(img, 6, 1, null,15);
 		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
-
+		
 
 		try {
 			ObjectLocations.updateObjectLocations(img);
@@ -189,5 +193,6 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		}
 		g.dispose();
 		frame.recycle();
+		lastFrame = thisFrame;
 	}
 }
