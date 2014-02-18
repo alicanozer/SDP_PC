@@ -54,12 +54,13 @@ public class KMeans {
 		int maxX = 540;
 		int minY = 0;
 		int maxY = 320;
-
+	
 		for (int x = 0;x<k;x++){ //init k random points and add to list of centers
 			int randX = minX + (int)(Math.random() * ((maxX - minX) + 1));
 			int randY = minY + (int)(Math.random() * ((maxY - minY) + 1));
 
 			Point2D_I32 temp = new Point2D_I32(randX,randY);
+			System.out.println("initialize center at "+temp);
 			centers.add(temp);
 
 			//init dataMap as center key data point array pairs
@@ -78,6 +79,7 @@ public class KMeans {
 					int dY = Math.abs((dataset.get(i).y - centers.get(j).y));
 					dists[j] = Math.sqrt((dX*dX + dY*dY)); //find closest distance from cur point to center
 					dataMap.get(centers.get(min(dists))).add(dataset.get(i)); //add point into map with center as key
+					System.out.println("closest center to "+dataset.get(i)+" is "+centers.get(min(dists)));
 				}
 			}
 
@@ -85,12 +87,15 @@ public class KMeans {
 			for (int i = 0;i<centers.size();i++){
 				ArrayList<Point2D_I32> temp = new ArrayList<Point2D_I32>();
 				temp = (dataMap.get(centers.get(i))); //sets of points belonging to cetner.get(i)
+				if (temp.size()>0){
 				Point2D_I32 avg = findAverageXY(temp); //average of points for this center becomes the new center
+				System.out.println("average point for center "+centers.get(i)+" : "+avg+" , updating center to "+avg);
 
 				centers.add(avg);
 				dataMap.put(avg, temp);
 				dataMap.remove(centers.get(i));
 				centers.remove(i);
+				}
 			}
 			
 			it++;

@@ -75,12 +75,15 @@ public class TestVision {
 		g.setColor(Color.RED);
 		g.drawString("test ", 10, 10);
 		
+		ArrayList<Point2D_I32> dataPoints = new ArrayList<Point2D_I32>();
+		
 		for(int i = 0; i < contours.size(); i++){
 			if(contours.get(i).external.size() > 15 && contours.get(i).external.size() < 100){
 				contoursT.add(contours.get(i));
 				Point2D_I32 p = PointUtils.getContourCentroid(contours.get(i));
 				if (p.y>15&&p.y<280&&p.x>20&&p.x<510){ // filter points by horizontal and region boundaries
 				System.out.println("p at "+p.x+" , "+p.y);
+				dataPoints.add(p);
 				g.setColor(Color.WHITE);
 				g.drawLine(p.x-5, p.y-5, p.x+5, p.y+5);
 				g.drawLine(p.x+5, p.y-5, p.x-5, p.y+5);}
@@ -100,7 +103,7 @@ public class TestVision {
 		g.drawLine(510,0,510,500);
 		
 		
-		
+		System.out.println(KMeans.Cluster2DPoints(dataPoints, 5, 20));		
 		
 		ShowImages.showWindow(visualEdgeContour,"Contour from Canny Binary");
 
