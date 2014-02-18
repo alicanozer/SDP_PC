@@ -9,8 +9,8 @@ import vision.ObjectLocations;
 
 public class GoalInfo {
 	
-	public final int width = getCroppedWidth();
-	public final int height = getCroppedHeight();
+	public final int width = 10;
+	public final int height = 10;
 	public final int goalWidth = 15;
 	public final int goalRadius = 60;
 	Point2D_I32 leftGoalCentre = getLeftGoalCenter();
