@@ -8,6 +8,7 @@ import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -602,7 +603,51 @@ public class VisionOps {
 		
 	}
 
+	public static double distanceRGB(Color C1, Color C2){
+		int rmean = (C1.getRed() + C2.getRed())/2; // the 255 here comes from implicit True Red
+		int red = C1.getRed() - C2.getRed();
+		int blue = C1.getBlue() - C2.getBlue();
+		int green = C1.getGreen() - C2.getGreen();
 
+		//reference - http://www.compuphase.com/cmetric.htm
+		//return Math.sqrt((2.0 + rmean/256.0)*red*red + 4*green*green + (2 + (256 - rmean)/256.0)*blue*blue);
+		return Math.sqrt(red*red + green*green + blue*blue);
+	}
+	public static Color getColorCentroid(BufferedImage img, ArrayList<Point2D_I32> l){
+		if(l.size() == 0 || l == null) return null;
+		int redMean = 0;
+		int greenMean = 0;
+		int blueMean = 0;
+		for(Point2D_I32 p : l){
+			Color c = new Color(img.getRGB(p.x, p.y));
+			redMean += c.getRed();
+			greenMean += c.getGreen();
+			blueMean += c.getBlue();
+		}
+		int size = l.size();
+		return new Color(redMean/size, greenMean/size, blueMean/size);
+	}
+	
+	public static Color getColorMedian(BufferedImage img, ArrayList<Point2D_I32> l){
+		int size = l.size();
+		if(size == 0 || l == null) return null;
+		
+		int[] reds = new int[size];
+		int[] greens = new int[size];
+		int[] blues = new int[size];
+		
+		for(int i = 0; i < size; i++){
+			Color c = new Color(img.getRGB(l.get(i).x, l.get(i).y));
+			reds[i] = c.getRed();
+			greens[i] = c.getGreen();
+			blues[i] = c.getBlue();
+		}
+		Arrays.sort(reds);
+		Arrays.sort(greens);
+		Arrays.sort(blues);
+		
+		return new Color(reds[size/2],greens[size/2],blues[size/2]);
+	}
 }
 
 

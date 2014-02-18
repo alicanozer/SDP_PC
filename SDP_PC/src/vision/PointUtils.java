@@ -3,6 +3,7 @@ package vision;
 
 
 import java.awt.Polygon;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ddogleg.struct.FastQueue;
@@ -19,6 +20,21 @@ import georegression.struct.shapes.Polygon2D_I32;
  *
  */
 public class PointUtils {
+	
+	public static Point2D_I32 getListCentroid(ArrayList<Point2D_I32> l){
+		if (l == null || l.size() == 0) return null;
+		int xMean = 0;
+		int yMean = 0;
+		
+		for(Point2D_I32 p: l){
+			xMean += p.x;
+			yMean += p.y;
+		}
+		xMean /= l.size();
+		yMean /= l.size();
+
+		return new Point2D_I32(xMean,yMean);
+	}
 	/*
 	 * Gets the centroid of a Contour
 	 */
