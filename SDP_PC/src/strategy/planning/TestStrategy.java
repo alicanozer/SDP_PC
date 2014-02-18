@@ -1,5 +1,7 @@
 package strategy.planning;
 
+import lejos.nxt.Button;
+import vision.ObjectLocations;
 import comms.BluetoothRobot;
 
 import Calculations.DistanceCalculator;
@@ -18,22 +20,30 @@ public class TestStrategy extends StrategyInterface{
 	public TestStrategy(WorldState world, BluetoothRobot bRobot) {
 		super(world, bRobot);
 		ball = world.ball;
-		ourAttackRobot = world.getOurAttackRobot();
+		ourAttackRobot = world.ourAttackRobot;
 	}
 
 	@Override
 	public void run() {
 		while (!shouldidie && !Strategy.alldie) {
+			if(ball!=null && ourAttackRobot!=null) {
+				int x1 = (int) ourAttackRobot.x;
+				int y1 = (int) ourAttackRobot.y;
 
-			int x1 = (int) ourAttackRobot.x;
-			int y1 = (int) ourAttackRobot.y;
+				int x2 = (int) ball.x;
+				int y2 = (int) ball.y;
 
-			int x2 = (int) ball.x;
-			int y2 = (int) ball.y;
-
-			double distance = DistanceCalculator.Distance(x1, y1, x2, y2);
-			System.out.println("distance: ");
-			System.out.println(distance);
+				double distance = DistanceCalculator.Distance(x1, y1, x2, y2);
+				System.out.println("distance: ");
+				System.out.println(distance);
+				System.out.println("ball: ");
+				System.out.println(ball.x + " " + ball.y);				
+				System.out.println(ObjectLocations.getBall());
+				System.out.println("robot: ");
+				System.out.println(ourAttackRobot.x + " " + ourAttackRobot.y);
+				System.out.println(ObjectLocations.getYellowATTACKmarker());
+				Button.waitForAnyPress();
+			}
 		}
 		bRobot.stop();
 	}
