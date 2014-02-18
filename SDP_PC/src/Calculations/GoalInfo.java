@@ -3,14 +3,14 @@ package Calculations;
 import georegression.struct.point.Point2D_I32;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+import vision.PitchConstants;
 
 import vision.ObjectLocations;
 
 public class GoalInfo {
 	
-	public final int width = 640;
-	public final int height = 480;
+	public final int width = getCroppedWidth();
+	public final int height = getCroppedHeight();
 	public final int goalWidth = 15;
 	public final int goalRadius = 60;
 	Point2D_I32 leftGoalCentre = getLeftGoalCenter();
@@ -20,11 +20,12 @@ public class GoalInfo {
 	Point2D_I32 rightGoalTop = getRightGoalTop();
 	Point2D_I32 rightGoalBottom = getRightGoalBottom();
 	
-	public final BufferedImage img;
+	public final PitchConstants pitchconstants;
+
 
 	
-	public GoalInfo(BufferedImage img){
-		this.img = img;
+	public GoalInfo(PitchConstants pitchconstants){
+		this.pitchconstants = pitchconstants;
 	}
 	
 	/**
