@@ -39,12 +39,8 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	StationaryObject[] stationaryObjects;
 
 	/**
-	 * A simple world model with the following features:
-	 * <br>
-	 * - Allows access to object by role (HERO_DEFENDER) or by appearance (YELLOW_DEFENDER).
-	 * <br>
-	 * - Converts distances etc as they appear in an image to what they are in reality as in
-	 * {@link world.object.MobileObject#MobileObject(double) MobileObject} .
+	 * A simple world model that routes the user to the correct object and
+	 * provides some information about the world.
 	 * 
 	 * @param ourColor
 	 *            The color we are playing as.
@@ -60,6 +56,7 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 		this.ourColor = ourColor;
 		this.ourSide = ourSide;
 		this.yellowLeft = (ourColor ==TeamColor.YELLOW&& ourSide == TeamSide.LEFT) || (ourColor == TeamColor.BLUE && ourSide == TeamSide.RIGHT);
+		this.realUnitsPerPixel = realUnitsPerPixel;
 		
 		mobileObjects = new MobileObject[NUM_MOBILE_OBJECTS];
 		for (int i = 0; i < NUM_MOBILE_OBJECTS; i++) {
@@ -70,12 +67,34 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 			//TODO Has to be properly initialised. 
 		}
 	}
+	
+	/**
+	 * A simple world model that routes the user to the correct object and
+	 * provides some information about the world.
+	 * 
+	 * @param ourColor
+	 *            The color we are playing as.
+	 * 
+	 * @param ourSide
+	 *            The side we are playing from (i.e. the side on which our
+	 *            defender is).
+	 * @param realUnitsPerPixel
+	 *            A conversion ration that will be used to convert pixel
+	 *            distances into real distances (cm)
+	 * @param realCameraElevation
+	 *            The distance crom the table to the camera.
+	 * @param pixelCameraPosition
+	 *            The point which is straight below the camera in the picture.
+	 */
+	public World(TeamColor ourColor, TeamSide ourSide, double realUnitsPerPixel, double realCameraElevation, Vector pixelCameraPosition) {
+		this(ourColor, ourSide, realUnitsPerPixel);
+		this.realCameraElevation = realCameraElevation;
+		this.pixelCameraPosition = pixelCameraPosition;
+	}
 
 	/**
-	 * A simple world model with the following features:
-	 * - Allows access to object by role (HERO_DEFENDER) or by appearance (YELLOW_DEFENDER).
-	 * - Can return distances and velocities in cm and cm/s.
-	 * - Makes a best guess of data where an actual reading is not available (i.e. it will not return null once warmed up).
+	 * A simple world model that routes the user to the correct object and
+	 * provides some information about the world.
 	 * 
 	 * @param ourColor
 	 *            The color we are playing as.
@@ -319,6 +338,8 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	}
 
 	/**
+	 * Get the realCameraElevation.
+	 * 
 	 * @return the realCameraElevation
 	 */
 	public double getRealCameraElevation() {
@@ -333,10 +354,11 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	}
 
 	/**
+	 * Get the pixelCameraPosition. If not set returns a default value (0, 0).
 	 * @return the pixelCameraPosition
 	 */
 	public Vector getPixelCameraPosition() {
-		return pixelCameraPosition;
+		return pixelCameraPosition != null ? pixelCameraPosition : new Vector(0,0);
 	}
 
 	/**

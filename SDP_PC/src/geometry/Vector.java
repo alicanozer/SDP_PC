@@ -4,6 +4,26 @@ import java.lang.Math;
 
 public class Vector {
 	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = false;
+		if (obj instanceof Vector) {
+			Vector other = (Vector) obj;
+			if (this.x == other.x && this.y == other.y) {
+				result = true;
+			}
+		}
+		return false;
+	};
+	
+	public boolean equals(Vector otherVector) {
+		if (this.x == otherVector.getX() && this.y == otherVector.getY()) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 	private double x;
 	private double y;
 
