@@ -1,12 +1,10 @@
 package comms;
 
-import geometry.Vector;
 import lejos.nxt.Button;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import vision.PitchConstants;
 import vision.VisionRunner;
-import Calculations.DistanceCalculator;
 import World.RobotType;
 
 public class Test3 {
@@ -26,19 +24,16 @@ public class Test3 {
 	bRobot.connect();
 	bRobot.setSpeed(20);
 	
-	TurnToObject angle = new TurnToObject();
-	
 	while (true) {
 		if (ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null && ObjectLocations.getYellowATTACKdot() != null) {
-			
+						
 			try {
 				//Turn to Ball
-				double turn = angle.Ball(RobotType.AttackUs);
+				double turn = TurnToObject.Ball(RobotType.AttackUs);
 				System.out.println(turn);
 				bRobot.rotateLEFT((int) turn);
 				Button.waitForAnyPress();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

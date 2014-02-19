@@ -108,6 +108,10 @@ public class ObjectLocations {
 		lock = true;
 		//leaving critical section
 	}
+	public static boolean getYellowDefendingLeft() {
+		return yellowLeft;
+	}
+	
 	public static void setYellowUs(boolean flag){
 		while(!lock);
 
