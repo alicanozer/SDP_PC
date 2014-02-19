@@ -15,12 +15,21 @@ public class Frame {
 	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
+	public long getNumber(){
+		return this.number;
+	}
 	private BufferedImage frame;
 	private long timeStamp;
+	private long number;
+	private static long frameCount = 0;	
 	public Frame(BufferedImage frame, long timeStamp) {
 		this.frame = frame;
 		this.timeStamp = timeStamp;
+		this.number = frameCount;
+		frameCount++;
 	}
-	
+	public String toString(){
+		return frame.toString() + "@" + timeStamp;
+	}
 
 }

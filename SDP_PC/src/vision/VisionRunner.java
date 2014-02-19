@@ -2,7 +2,7 @@ package vision;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.swing.SwingUtilities;
 
@@ -10,9 +10,10 @@ public class VisionRunner {
 	/**
 	 * blocking array that holds the N most recent frames.
 	 */
-	public static ArrayBlockingQueue<Frame> frameQueue;
+	public static LinkedBlockingDeque<Frame> frameQueue;
 	public static ArrayList<Boolean> set;
 	public static int histLen;
+
 	private VisionRunner(){};
 	/**
 	 * Starts of the vision in a separate thread
@@ -20,11 +21,9 @@ public class VisionRunner {
 	 * @param consts PitchConstants object, use predefined static fields in the class itself
 	 */
 	public static void start(final boolean debug, final PitchConstants consts, int histLen){
+		
 		VisionRunner.histLen = histLen;
-		/*
-		 * the true in the constructor ensures that the most recent frame is at the top of the queue
-		 */
-		frameQueue = new ArrayBlockingQueue<Frame>(histLen,true);
+		frameQueue = new LinkedBlockingDeque<Frame>(histLen);
 		
 		ObjectLocations.setYellowDefendingLeft(true);
 		ObjectLocations.setYellowUs(true);
@@ -37,22 +36,28 @@ public class VisionRunner {
 				}
 			});
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("i failed miserably and now I must die to repent for my sins... ");
 		}
-		System.out.println("Vision started successfully!");
+		System.err.println("Vision started successfully!");
 	}
 	/**
 	 * Send a frame to VisionRunner. The frame is sent and set asynchronously
-	 * @param frame
+	 * @param frame - the frame sent
 	 */
 	public  static void  sendFrame(Frame frame){
-		if(!VisionRunner.frameQueue.offer(frame)){
-			if(frameQueue.poll() != null){
-				VisionRunner.frameQueue.offer(frame);
+		if(!VisionRunner.frameQueue.offerLast(frame)){
+			if(frameQueue.pollFirst() != null){
+				VisionRunner.frameQueue.offerLast(frame);
 			}
 		}
 	}
-	
+	public static boolean checkFrames(){
+		Frame[] frames = new Frame[frameQueue.size()];
+		frames = frameQueue.toArray(frames);
+		for(int i = 0; i < frames.length -1; i++){
+			if(frames[i].getNumber() > frames[i+1].getNumber()) return false;
+		}
+		return true;
+	}
 }
