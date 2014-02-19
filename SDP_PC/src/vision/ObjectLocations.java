@@ -145,8 +145,7 @@ public class ObjectLocations {
 		try {
 			ballDirectionAngle = VisionOps.getDirection(ball,ballLocal);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+
 		}
 		setBall(ballLocal);
 		
@@ -159,8 +158,7 @@ public class ObjectLocations {
 							//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
 							yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 						setYellowDEFENDmarker(p);
 					}
@@ -170,8 +168,7 @@ public class ObjectLocations {
 							//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 3 )
 							yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 						setYellowATTACKmarker(p);
 					}
@@ -184,8 +181,7 @@ public class ObjectLocations {
 						try {
 							blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 						setBlueATTACKmarker(p);
 					}
@@ -193,8 +189,7 @@ public class ObjectLocations {
 						try {
 							blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 						setBlueDEFENDmarker(p);
 					}
@@ -210,8 +205,7 @@ public class ObjectLocations {
 							//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 7 )
 							yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 						setYellowATTACKmarker(p);
 					}
@@ -220,8 +214,7 @@ public class ObjectLocations {
 							//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
 							yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 						setYellowDEFENDmarker(p);
 					}
@@ -234,8 +227,7 @@ public class ObjectLocations {
 						try {
 							blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 						setBlueDEFENDmarker(p);
 					}
@@ -243,8 +235,7 @@ public class ObjectLocations {
 						try {
 							blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 						setBlueATTACKmarker(p);
 					}
@@ -253,6 +244,7 @@ public class ObjectLocations {
 		}
 		
 		dots = dotsLocal;
+		
 		if(yellowLeft){
 			for(Point2D_I32 dot : dots){
 				if(dot != null){
@@ -260,30 +252,26 @@ public class ObjectLocations {
 						try {
 							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 					else if(region12X < dot.x && dot.x < region23X)
 						try {
 							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 					else if (region23X < dot.x && dot.x < region34X){
 						try {
 							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 					}
 					else if(dot.x > region34X){
 						try {
 							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
+
 						}
 					}
 				}
