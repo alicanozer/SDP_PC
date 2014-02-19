@@ -31,9 +31,7 @@ public class TestStrategy extends StrategyInterface{
 			int x2 = (int) ball.x;
 			int y2 = (int) ball.y;
 
-			double distance = DistanceCalculator.Distance(x1, y1, x2, y2);
 			System.out.println("distance: ");
-			System.out.println(distance);
 		}
 		bRobot.stop();
 	}

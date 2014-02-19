@@ -21,8 +21,6 @@ public class Defend {
 	
 	public static void main(String[] args) throws IOException {
 		
-		
-		
 		ObjectLocations.setYellowDefendingLeft(true);
 		ObjectLocations.setYellowUs(true);
 		try {
@@ -44,7 +42,7 @@ public class Defend {
 		while(true) {
 			if(ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null) {
 				if (ObjectLocations.getBall().y > ObjectLocations.getYellowDEFENDmarker().y) {
-					bRobot.forward();
+					bRobot.forward(0);
 				} else if (ObjectLocations.getBall().y < ObjectLocations.getYellowDEFENDmarker().y) {
 					bRobot.backwards();
 				} else {

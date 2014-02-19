@@ -4,6 +4,7 @@ import georegression.struct.point.Point2D_I32;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
@@ -22,8 +23,11 @@ public class ObjectLocations {
 	private static Point2D_I32 yellowDEFENDmarker = null;
 	private static Point2D_I32 blueATTACKmarker = null;
 	private static Point2D_I32 blueDEFENDmarker = null;
+	private static Point2D_I32 yellowATTACKdot = null;
+	private static Point2D_I32 yellowDEFENDdot = null;
+	private static Point2D_I32 blueATTACKdot = null;
+	private static Point2D_I32 blueDEFENDdot = null;	
 	
-
 	public static double getBallDirectionAngle() {
 		while(!lock);
 		return ballDirectionAngle;
@@ -113,6 +117,9 @@ public class ObjectLocations {
 		lock = true;
 		//leaving critical section
 		
+	}
+	public static boolean getYellowUs() {
+		return yellowUs;
 	}
 	/**
 	 * main method, only call this one on the new grabbed frame! do not attempt to set objects yourselves...
@@ -259,13 +266,15 @@ public class ObjectLocations {
 					if (dot.x < region12X)
 						try {
 							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
-						} catch (Exception e) {
+							setYellowDEFENDdot(dot);
+							} catch (Exception e) {
 							// TODO Auto-generated catch block
 //							e.printStackTrace();
 						}
 					else if(region12X < dot.x && dot.x < region23X)
 						try {
 							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
+							setBlueATTACKdot(dot);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 //							e.printStackTrace();
@@ -273,6 +282,7 @@ public class ObjectLocations {
 					else if (region23X < dot.x && dot.x < region34X){
 						try {
 							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
+							setYellowATTACKdot(dot);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 //							e.printStackTrace();
@@ -281,6 +291,7 @@ public class ObjectLocations {
 					else if(dot.x > region34X){
 						try {
 							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
+							setYellowDEFENDdot(dot);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 //							e.printStackTrace();
@@ -297,6 +308,30 @@ public class ObjectLocations {
 
 	}
 
+	public static Point2D_I32 getYellowATTACKdot() {
+		return yellowATTACKdot;
+	}
+	public static void setYellowATTACKdot(Point2D_I32 yellowATTACKdot) {
+		ObjectLocations.yellowATTACKdot = yellowATTACKdot;
+	}
+	public static Point2D_I32 getYellowDEFENDdot() {
+		return yellowDEFENDdot;
+	}
+	public static void setYellowDEFENDdot(Point2D_I32 yellowDEFENDdot) {
+		ObjectLocations.yellowDEFENDdot = yellowDEFENDdot;
+	}
+	public static Point2D_I32 getBlueATTACKdot() {
+		return blueATTACKdot;
+	}
+	public static void setBlueATTACKdot(Point2D_I32 blueATTACKdot) {
+		ObjectLocations.blueATTACKdot = blueATTACKdot;
+	}
+	public static Point2D_I32 getBlueDEFENDdot() {
+		return blueDEFENDdot;
+	}
+	public static void setBlueDEFENDdot(Point2D_I32 blueDEFENDdot) {
+		ObjectLocations.blueDEFENDdot = blueDEFENDdot;
+	}
 	private static void setBall(Point2D_I32 pos) {
 		while(!lock);
 		//entering critical section
@@ -468,20 +503,45 @@ public class ObjectLocations {
 		}
 		
 		g.setColor(Color.MAGENTA);
-		g.draw(new Line2D.Double(ball.x, ball.y, (ball.x + Math.sin(ballDirectionAngle)*100), (ball.y + Math.cos(ballDirectionAngle)*100)));
+		try {
+			g.draw(new Line2D.Double(ball.x, ball.y, (ball.x + Math.sin(ballDirectionAngle)*100), (ball.y + Math.cos(ballDirectionAngle)*100)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+
+		}
 		
-		g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerDirectionAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerDirectionAngle)*100)));
-		g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerDicrectionAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerDicrectionAngle)*100)));
+		try {
+			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerDirectionAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerDirectionAngle)*100)));
+			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerDicrectionAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerDicrectionAngle)*100)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+
+		}
 		
-		g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerDirectionAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerDirectionAngle)*100)));
-		g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerDirectionAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerDirectionAngle)*100)));
+		try {
+			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerDirectionAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerDirectionAngle)*100)));
+			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerDirectionAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerDirectionAngle)*100)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+
+		}
 		
 		g.setColor(Color.YELLOW);
-		g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerOrientationAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerOrientationAngle)*100)));
-		g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerOrientationAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerOrientationAngle)*100)));
+		try {
+			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerOrientationAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerOrientationAngle)*100)));
+			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerOrientationAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerOrientationAngle)*100)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+
+		}
 		
-		g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerOrientationAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerOrientationAngle)*100)));
-		g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerOrientationAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerOrientationAngle)*100)));
+		try {
+			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerOrientationAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerOrientationAngle)*100)));
+			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerOrientationAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerOrientationAngle)*100)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+
+		}
 		
 		
 		g.setColor(c);

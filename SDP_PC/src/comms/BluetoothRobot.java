@@ -88,8 +88,8 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void rotateLEFT(int angle) {
-		int[] commands = { bluetooth.ROTATELEFT, angle,0,0 }; 
+	public void rotateLEFT(int turn) {
+		int[] commands = { bluetooth.ROTATELEFT, turn,0,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands);
@@ -115,8 +115,8 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void forward() {
-	int[] commands = { bluetooth.FORWARDS, 0,0,0 }; 
+	public void forward(double distance) {
+	int[] commands = { bluetooth.FORWARDS, (int) distance,0,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands);
