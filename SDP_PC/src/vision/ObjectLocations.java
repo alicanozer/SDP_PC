@@ -243,8 +243,9 @@ public class ObjectLocations {
 			}
 		}
 		
-		dots = dotsLocal;
+		//setting orientation angles
 		
+		dots = dotsLocal;
 		if(yellowLeft){
 			for(Point2D_I32 dot : dots){
 				if(dot != null){
@@ -275,10 +276,40 @@ public class ObjectLocations {
 						}
 					}
 				}
-
 			}
 		}
+		else{ // blue if left
+			for(Point2D_I32 dot : dots){
+				if(dot != null){
+					if (dot.x < region12X)
+						try {
+							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
+						} catch (Exception e) {
 
+						}
+					else if(region12X < dot.x && dot.x < region23X)
+						try {
+							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
+						} catch (Exception e) {
+
+						}
+					else if (region23X < dot.x && dot.x < region34X){
+						try {
+							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
+						} catch (Exception e) {
+
+						}
+					}
+					else if(dot.x > region34X){
+						try {
+							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
+						} catch (Exception e) {
+
+						}
+					}
+				}
+			}
+		}
 		
 		
 		
