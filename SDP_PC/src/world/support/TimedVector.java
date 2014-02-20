@@ -94,4 +94,48 @@ public class TimedVector extends Vector {
 		return new TimedVector(getX() - otherTimedVector.getX(),
 				getY() - otherTimedVector.getY(), time - otherTimedVector.time);
 	}
+	
+	/**
+	 * Adds both the vector component and time component of another vector to this one and returns the result.
+	 * @param other The timed vector to add onto this.
+	 * @return Returns a new timed vector with the result.
+	 */
+	public TimedVector add(TimedVector other) {
+		return add(other.getVector(), other.getTime());
+	}
+	
+	/**
+	 * Adds both the vector component and time component of another vector to this one and returns the result.
+	 * @param v The vector component to be added to this timed vector.
+	 * @param t The time component to be added onto this timed vector.
+	 * @return Returns a new timed vector with the result.
+	 */
+	public TimedVector add(Vector v, long t) {
+		return new TimedVector(add(v), time+t);
+	}
+	
+	public boolean approxEquals(TimedVector other) {
+		boolean result = false;
+		if (Math.abs(getX()-other.getX()) < 0.1 && Math.abs(getY()-other.getY()) < 0.1 && Math.abs(getTime()-other.getTime()) < 5) {
+			result = true;
+		}
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = false;
+		if (obj instanceof TimedVector) {
+			TimedVector other = (TimedVector) obj;
+			if (other.getX() == getX() && other.getY() == getY() && other.getTime() == getTime()) {
+				result = true;
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public String toString() {
+		return "(" + getX() + ", " + getY() + " @ " + getTime() + ")";
+	}
 }
