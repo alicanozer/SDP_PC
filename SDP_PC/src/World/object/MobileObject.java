@@ -1,7 +1,7 @@
 package world.object;
 
 import world.World;
-import geometry.Frame;
+import world.support.TimedVector;
 import geometry.Vector;
 import georegression.struct.point.Point2D_I32;
 
