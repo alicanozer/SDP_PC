@@ -100,6 +100,11 @@ public class TurnToObject {
 		}
 	}
 	
+	/**
+	 * Gets the angle of robot to score!
+	 * 
+	 * @returns angle to shoot
+	 */
 	public static double shootAngle() {
 		
 		GoalInfo info = new GoalInfo(PitchConstants.newPitch);
@@ -108,46 +113,31 @@ public class TurnToObject {
 		
 		if (ObjectLocations.getYellowUs()) {
 			if (ObjectLocations.getYellowDefendingLeft()) {
-				double LG = getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), info.getRightGoalTop());
-				double RG = getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), info.getRightGoalBottom());
-				double CG = getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), info.getRightGoalCenter());
-					
-				double goalie = getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBlueDEFENDmarker());
-									
-				if (goalie < LG && goalie > CG) {
-					//Denfender on the left to cetnre of goal
-					return (RG+5);
-				} else if (goalie > RG && goalie < CG) {
-					//Denfender on the right to centre of goal
-					return (LG-5);					
-				} else {
-					//Goalie not blocking the goal
-					return CG;
+			
+				Point2D_I32 RGTop = info.getRightGoalTop();
+				Point2D_I32 RGCentre = info.getRightGoalCenter();
+				Point2D_I32 RGBottom = info.getRightGoalBottom();
+
+				System.out.println("Defender: " + ObjectLocations.getBlueDEFENDmarker().y);
+				System.out.println("Goal Top: " + RGTop.y);
+				System.out.println("Goal Centre: " + RGCentre.y);
+				System.out.println("Goal Bottom: " + RGBottom.y);				
+				
+				if (ObjectLocations.getBlueDEFENDmarker().y > RGTop.y && ObjectLocations.getBlueDEFENDmarker().y < RGCentre.y ) {
+					Point2D_I32 point = new Point2D_I32(RGBottom.x, RGBottom.y-10);
+					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), point);
+				} else if (ObjectLocations.getBlueDEFENDmarker().y < RGBottom.y && ObjectLocations.getBlueDEFENDmarker().y > RGCentre.y ) {
+					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), new Point2D_I32(RGTop.x, RGTop.y+10));
+				} else if (ObjectLocations.getBlueDEFENDmarker().y == RGCentre.y ) {
+					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), new Point2D_I32(RGTop.x, RGTop.y+10));
+				} else if (ObjectLocations.getBlueDEFENDmarker().y > RGBottom.y || ObjectLocations.getBlueDEFENDmarker().y < RGTop.y) {
+					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), RGCentre);
 				}
-			} else {
-				double LG = getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), info.getLeftGoalTop());
-				double RG = getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), info.getLeftGoalBottom());
-				double CG = getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), info.getLeftGoalCenter());
-					
-				double goalie = getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBlueDEFENDmarker());
-									
-				if (goalie < LG && goalie > CG) {
-					//Denfender on the left to cetnre of goal
-					return (RG+5);
-				} else if (goalie > RG && goalie < CG) {
-					//Denfender on the right to centre of goal
-					return (LG-5);					
-				} else {
-					//Goalie not blocking the goal
-					return CG;
-				}
+			
 			}
-		} else {
-			//Add same code only for blue marker and blue dot
-			return 0.0;
 		}
 		
-		
+		return 0.0;
 	}
 	
 	/**
@@ -176,19 +166,24 @@ public class TurnToObject {
 		double totalMagnitude = magnitude * magnitude2;
 		
 		double angleBetweenDotObject = Math.acos(dotProduct/totalMagnitude);
-		
-		//Check which quadrant the object is in with respect to the robot
-		Vector subtraction = Vector.subtract(dotToMarker, dotToObject);
-		
+				
 		//If object is right of the marker return negative angle
-		if (subtraction.getX() < 0) {
-			System.out.println(subtraction.getX());
-			return (Math.toDegrees((Math.PI*2) - angleBetweenDotObject));
+		if (xDiff < 0 && yDiff > 0) {
+			return (Math.toDegrees(angleBetweenDotObject));
 			//return (-Math.toDegrees(angleBetweenDotObject));
+		} else if (xDiff < 0 && yDiff < 0) {
+			return Math.toDegrees(angleBetweenDotObject);
+		} else if (xDiff > 0 && yDiff < 0) {
+			//If object is left of the marker return original angle
+			return -Math.toDegrees(angleBetweenDotObject);
+		} else if (xDiff > 0 && yDiff > 0) {
+			//If object is left of the marker return original angle
+			return -Math.toDegrees(angleBetweenDotObject);
+		} else if (xDiff == 0 && yDiff == 0) {
+			return 0.0;
 		}
-
-		//If object is left of the marker return original angle
-		return Math.toDegrees(angleBetweenDotObject);
+		
+		return 0.0;
 		
 	}
 	

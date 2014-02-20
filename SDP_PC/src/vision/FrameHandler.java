@@ -34,6 +34,7 @@ import boofcv.struct.image.ImageSInt16;
 import boofcv.struct.image.ImageSInt32;
 import boofcv.struct.image.ImageUInt8;
 import boofcv.struct.image.MultiSpectral;
+import Calculations.GoalInfo;
 import au.edu.jcu.v4l4j.FrameGrabber;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.V4L4JConstants;
@@ -169,7 +170,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 		
 		//KMeans.ClusterHeaps(img, 6, 1, null,15);
-		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
+		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
@@ -186,6 +187,20 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			g.drawLine(consts.getRegion12X(), 0, consts.getRegion12X(), img.getHeight());
 			g.drawLine(consts.getRegion23X(), 0, consts.getRegion23X(), img.getHeight());
 			g.drawLine(consts.getRegion34X(), 0, consts.getRegion34X(), img.getHeight());
+			
+			//Drawing Goal Markers
+			GoalInfo info = new GoalInfo(consts);
+			g.setColor(Color.WHITE);
+			
+			g.drawLine(info.getRightGoalTop().x-10, info.getRightGoalTop().y, info.getRightGoalTop().x+10, info.getRightGoalTop().y);
+			g.drawLine(info.getRightGoalTop().x, info.getRightGoalTop().y-10, info.getRightGoalTop().x, info.getRightGoalTop().y+10);
+			
+			g.drawLine(info.getRightGoalBottom().x-10, info.getRightGoalBottom().y, info.getRightGoalBottom().x+10, info.getRightGoalBottom().y);
+			g.drawLine(info.getRightGoalBottom().x, info.getRightGoalBottom().y-10, info.getRightGoalBottom().x, info.getRightGoalBottom().y+10);
+			
+			g.drawLine(info.getRightGoalCenter().x-10, info.getRightGoalCenter().y, info.getRightGoalCenter().x+10, info.getRightGoalCenter().y);
+			g.drawLine(info.getRightGoalCenter().x, info.getRightGoalCenter().y-10, info.getRightGoalCenter().x, info.getRightGoalCenter().y+10);
+			
 			try {
 				ObjectLocations.drawCrosses(g);
 			} catch (Exception e) {

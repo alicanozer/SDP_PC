@@ -18,20 +18,23 @@ public class Test3 {
 	ObjectLocations.setYellowDefendingLeft(true);
 	ObjectLocations.setYellowUs(true);
 	
-	VisionRunner.start(true,PitchConstants.newPitch);
+	VisionRunner.start(true,PitchConstants.newPitch,10);
 	
 	bRobot = new BluetoothRobot(RobotType.AttackUs, connection);
 	bRobot.connect();
 	bRobot.setSpeed(20);
 	
 	while (true) {
-		if (ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null && ObjectLocations.getYellowATTACKdot() != null) {
+		if (ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null && ObjectLocations.getYellowATTACKdot() != null && ObjectLocations.getBlueDEFENDmarker() != null) {
 						
 			try {
 				//Turn to Ball
-				double turn = TurnToObject.Ball(RobotType.AttackUs);
-				System.out.println(turn);
+				double turn2 = TurnToObject.Ball(RobotType.AttackUs);
+				System.out.println("angle to ball:" +turn2);				
+				double turn = TurnToObject.shootAngle();
+				System.out.println("angle to goal:"+turn);
 //				bRobot.rotateLEFT((int) turn);
+				System.out.println("_____++_+!*&*^*^&*^*");
 				Button.waitForAnyPress();
 			} catch (Exception e) {
 				e.printStackTrace();

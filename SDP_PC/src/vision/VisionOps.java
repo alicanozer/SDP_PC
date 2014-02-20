@@ -235,14 +235,14 @@ public class VisionOps {
 
 		case "blue":
 			if(true){ // new pitch but doesnt work
-				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 6, 6, null);
-				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 6, 6, null);
+//				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 6, 6, null);
+//				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 6, 6, null);
 
 				
-				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.00f,false); // was 1.97
-				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.60f,true); // was 3.14
+				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.00f,false); // was 3.00
+				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.75f,true); // was 3.60
 
-				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.50f,false); //was 0.25
+				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.39f,false); //was 0.50
 				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.60f,true); //was 0.25
 				
 				
@@ -270,7 +270,7 @@ public class VisionOps {
 			break;
 		case "yellow":
 			if(true){ // new pitch
-				if(false) { // bright
+				if(true) { // bright
 //					BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
 //					BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
 					ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.34f,false); // was 0.34

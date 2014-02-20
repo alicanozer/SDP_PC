@@ -12,7 +12,7 @@ public class GoalInfo {
 	public final int width = 540;
 	public final int height = 320;
 	public final int goalWidth = 15;
-	public final int goalRadius = 60;
+	public final int goalRadius = 75;
 	Point2D_I32 leftGoalCentre = getLeftGoalCenter();
 	Point2D_I32 leftGoalTop = getLeftGoalTop();
 	Point2D_I32 leftGoalBottom = getLeftGoalBottom();
