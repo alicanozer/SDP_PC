@@ -20,7 +20,6 @@ import World.WorldState;
 public class RunStrategy {
 
 	static BluetoothRobot bRobot;
-	public static final String HERCULES = "0016530D4ED8";
 	private static Bluetooth connection;
 
 	private Thread strategyThread;
@@ -59,7 +58,7 @@ public class RunStrategy {
 	 */
 	private void startStrategy() {
 		assert (strategyThread == null || !strategyThread.isAlive()) : "Strategy is already running";
-		strategy = new TestStrategy(worldstate, bRobot); //Put your strategy class here.
+		strategy = new TestStrategy(bRobot); //Put your strategy class here.
 		strategyThread = new Thread(strategy);
 		strategyThread.start();
 	}

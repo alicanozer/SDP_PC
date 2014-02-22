@@ -19,10 +19,8 @@ public abstract class StrategyInterface implements Runnable {
 
 	ObjectLocations obj;
 	BluetoothRobot bRobot;
-	WorldState world;
 
-	public StrategyInterface(WorldState world, BluetoothRobot bRobot) {
-		this.world = world;
+	public StrategyInterface(BluetoothRobot bRobot) {
 		this.shouldidie = false;
 		this.bRobot = bRobot;
 	}

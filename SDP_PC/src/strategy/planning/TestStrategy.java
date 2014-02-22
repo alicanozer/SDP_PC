@@ -1,27 +1,24 @@
 package strategy.planning;
 
+import georegression.struct.point.Point2D_I32;
 import lejos.nxt.Button;
 import vision.ObjectLocations;
 import comms.BluetoothRobot;
 
 import Calculations.BallPossession;
 import Calculations.DistanceCalculator;
-import World.Ball;
-import World.Robot;
 import World.RobotType;
-import World.WorldState;
 
 public class TestStrategy extends StrategyInterface{
 
-	private Robot ourAttackRobot;
-	private WorldState world;
-	private Ball ball;
+	private Point2D_I32 ourAttackRobot;
+	private Point2D_I32 ball;
 	static BluetoothRobot bRobot;
 
-	public TestStrategy(WorldState world, BluetoothRobot bRobot) {
-		super(world, bRobot);
-		ball = world.ball;
-		ourAttackRobot = world.ourAttackRobot;
+	public TestStrategy(BluetoothRobot bRobot) {
+		super(bRobot);
+		ball = ObjectLocations.getBall();
+		ourAttackRobot = ObjectLocations.getYellowATTACKmarker();
 	}
 
 	@Override
@@ -31,13 +28,8 @@ public class TestStrategy extends StrategyInterface{
 			while(true) {
 
 				if(ball!=null && ourAttackRobot!=null) {
-					int x1 = (int) ourAttackRobot.x;
-					int y1 = (int) ourAttackRobot.y;
 
-					int x2 = (int) ball.x;
-					int y2 = (int) ball.y;
-
-					double distance = DistanceCalculator.Distance(x1, y1, x2, y2);
+					double distance = DistanceCalculator.Distance(ourAttackRobot, ball);
 					System.out.println("distance: ");
 					System.out.println(distance);
 					System.out.println("ball: ");
