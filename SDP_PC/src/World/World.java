@@ -52,59 +52,22 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	 *            A conversion ration that will be used to convert pixel
 	 *            distances into real distances (cm)
 	 */
-	public World(TeamColor ourColor, TeamSide ourSide, double realUnitsPerPixel) {
+	public World(TeamColor ourColor, TeamSide ourSide, double realUnitsPerPixel, PositionProvider positionProvider, Vector cameraPixelPosition, double cameraElevation) {
 		this.ourColor = ourColor;
 		this.ourSide = ourSide;
 		this.yellowLeft = (ourColor ==TeamColor.YELLOW&& ourSide == TeamSide.LEFT) || (ourColor == TeamColor.BLUE && ourSide == TeamSide.RIGHT);
 		this.realUnitsPerPixel = realUnitsPerPixel;
+		this.pixelCameraPosition = cameraPixelPosition;
+		this.realCameraElevation = cameraElevation;
 		
 		mobileObjects = new MobileObject[NUM_MOBILE_OBJECTS];
 		for (int i = 0; i < NUM_MOBILE_OBJECTS; i++) {
-			mobileObjects[i] = new MobileObject(this);
+			mobileObjects[i] = new MobileObject(i, positionProvider, this, (i==4?5:18));
 		}
 		stationaryObjects = new StationaryObject[NUM_STATIONARY_OBJECTS];
 		for (int i = 0; i < NUM_STATIONARY_OBJECTS; i++) {
 			//TODO Has to be properly initialised. 
 		}
-	}
-	
-	/**
-	 * A simple world model that routes the user to the correct object and
-	 * provides some information about the world.
-	 * 
-	 * @param ourColor
-	 *            The color we are playing as.
-	 * 
-	 * @param ourSide
-	 *            The side we are playing from (i.e. the side on which our
-	 *            defender is).
-	 * @param realUnitsPerPixel
-	 *            A conversion ration that will be used to convert pixel
-	 *            distances into real distances (cm)
-	 * @param realCameraElevation
-	 *            The distance crom the table to the camera.
-	 * @param pixelCameraPosition
-	 *            The point which is straight below the camera in the picture.
-	 */
-	public World(TeamColor ourColor, TeamSide ourSide, double realUnitsPerPixel, double realCameraElevation, Vector pixelCameraPosition) {
-		this(ourColor, ourSide, realUnitsPerPixel);
-		this.realCameraElevation = realCameraElevation;
-		this.pixelCameraPosition = pixelCameraPosition;
-	}
-
-	/**
-	 * A simple world model that routes the user to the correct object and
-	 * provides some information about the world.
-	 * 
-	 * @param ourColor
-	 *            The color we are playing as.
-	 * 
-	 * @param ourSide
-	 *            The side we are playing from (i.e. the side on which our
-	 *            defender is).
-	 */
-	public World(TeamColor ourColor, TeamSide ourSide) {
-		this(ourColor, ourSide, REAL_UNITS_PER_PIXEL);
 	}
 
 	@Override

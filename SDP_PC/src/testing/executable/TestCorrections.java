@@ -36,7 +36,7 @@ public class TestCorrections {
 		for (Vector robotPosition : positions) {
 			for (Vector cameraPosition : positions) {
 				for (double cameraHeight : heights) {
-					assertTrue(robotPosition.equals(Corrections.correctPerspective(robotPosition, 0, cameraPosition, cameraHeight)));
+					assertEquals(robotPosition, Corrections.correctPerspective(robotPosition, 0, cameraPosition, cameraHeight));
 				}
 			}
 		}
@@ -45,7 +45,7 @@ public class TestCorrections {
 		for (Vector robotPosition : positions) {
 			for (double robotHeight : heights) {
 				for (double cameraHeight : heights) {
-					assertTrue(robotPosition.equals(Corrections.correctPerspective(robotPosition, robotHeight, robotPosition, cameraHeight)));
+					assertEquals(robotPosition, Corrections.correctPerspective(robotPosition, robotHeight, robotPosition, cameraHeight));
 				}
 			}
 		}
@@ -57,7 +57,7 @@ public class TestCorrections {
 				for (double robotHeight : heights) {
 					for (double cameraHeight : heights) {
 						if (robotHeight != 0 && !robotPosition.equals(cameraPosition) && robotHeight != cameraHeight) {
-							assertFalse(robotPosition.equals(Corrections.correctPerspective(robotPosition, robotHeight, cameraPosition, cameraHeight)));
+							assertNotEquals(robotPosition, Corrections.correctPerspective(robotPosition, robotHeight, cameraPosition, cameraHeight));
 						}
 					}
 				}

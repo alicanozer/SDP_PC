@@ -13,16 +13,8 @@ public class Vector {
 				result = true;
 			}
 		}
-		return false;
+		return result;
 	};
-	
-	public boolean equals(Vector otherVector) {
-		if (this.x == otherVector.getX() && this.y == otherVector.getY()) {
-			return true;
-		}else {
-			return false;
-		}
-	}
 	
 	private double x;
 	private double y;

@@ -1,33 +1,16 @@
 /**
  * 
  */
-package world.object;
+package world.support;
 
 import geometry.Vector;
-import world.support.TimedVector;
 
 /**
  * @author apljungquist
  *
  */
-public class RateOfChangePredictor {
+public class RateOfChangePredictor{
 
-	/**
-	 * Predict the current value of a vector based on two previous values.
-	 * 
-	 * @param ultimate The last (or later) timed vector to use in the prediction.
-	 * @param penultimate The second to last (or earlier) timed vector to use in the prediction.
-	 * @return Returns a timed vector with the current time and the predicted value for that time.
-	 */
-	public static TimedVector findCurrent(TimedVector ultimate, TimedVector penultimate) {
-		//Calculate the change in time since the last record.
-		long deltaTime = System.currentTimeMillis()-ultimate.getTime();
-		//Get the rate of change between to two last records.
-		TimedVector rateOfChange = findRateOfChange(ultimate, penultimate);
-		//Assuming the rate of change is constant, calculate the current value
-		TimedVector current = ultimate.add(rateOfChange.scalarMultiplication(deltaTime/1000.0), deltaTime);
-		return current;
-	}
 	
 	/**
 	 * Calculates the rate of change between two timed vectors. The vector in the
@@ -49,6 +32,23 @@ public class RateOfChangePredictor {
 		Vector rateOfChange = delta.getVector().scalarMultiplication(1000.0 / delta.getTime());
 		//Return a frame with the above rate of change as the vector and the time of the first given frame as time.
 		return new TimedVector(rateOfChange, ultimate.getTime());
-
+		
+	}
+	
+	/**
+	 * Predict the current value of a vector based on two previous values.
+	 * 
+	 * @param ultimate The last (or later) timed vector to use in the prediction.
+	 * @param penultimate The second to last (or earlier) timed vector to use in the prediction.
+	 * @return Returns a timed vector with the current time and the predicted value for that time.
+	 */
+	public static TimedVector findCurrent(TimedVector ultimate, TimedVector penultimate) {
+		//Calculate the change in time since the last record.
+		long deltaTime = System.currentTimeMillis()-ultimate.getTime();
+		//Get the rate of change between to two last records.
+		TimedVector rateOfChange = findRateOfChange(ultimate, penultimate);
+		//Assuming the rate of change is constant, calculate the current value
+		TimedVector current = ultimate.add(rateOfChange.scalarMultiplication(deltaTime/1000.0), deltaTime);
+		return current;
 	}
 }
