@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import world.object.RateOfChangePredictor;
+import world.support.RateOfChangePredictor;
 import world.support.TimedVector;
 
 /**
