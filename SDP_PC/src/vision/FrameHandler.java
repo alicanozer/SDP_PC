@@ -170,7 +170,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 		
 		//KMeans.ClusterHeaps(img, 6, 1, null,15);
-		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
+		img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
@@ -189,17 +189,16 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			g.drawLine(consts.getRegion34X(), 0, consts.getRegion34X(), img.getHeight());
 			
 			//Drawing Goal Markers
-			GoalInfo info = new GoalInfo(consts);
 			g.setColor(Color.WHITE);
 			
-			g.drawLine(info.getRightGoalTop().x-10, info.getRightGoalTop().y, info.getRightGoalTop().x+10, info.getRightGoalTop().y);
-			g.drawLine(info.getRightGoalTop().x, info.getRightGoalTop().y-10, info.getRightGoalTop().x, info.getRightGoalTop().y+10);
+			g.drawLine(GoalInfo.getLeftGoalCenterNew().getX()-10, GoalInfo.getLeftGoalCenterNew().getY(), GoalInfo.getLeftGoalCenterNew().getX()+10, GoalInfo.getLeftGoalCenterNew().getY());
+			g.drawLine(GoalInfo.getLeftGoalTopNew().getX()-10, GoalInfo.getLeftGoalTopNew().getY(), GoalInfo.getLeftGoalTopNew().getX()+10, GoalInfo.getLeftGoalTopNew().getY());
+			g.drawLine(GoalInfo.getLeftGoalBottomNew().getX()-10, GoalInfo.getLeftGoalBottomNew().getY(),GoalInfo.getLeftGoalBottomNew().getX()+10, GoalInfo.getLeftGoalBottomNew().getY());
+
+			g.drawLine(GoalInfo.getRightGoalCenterNew().getX()-10, GoalInfo.getRightGoalCenterNew().getY(), GoalInfo.getRightGoalCenterNew().getX()+10, GoalInfo.getRightGoalCenterNew().getY());
+			g.drawLine(GoalInfo.getRightGoalTopNew().getX()-10, GoalInfo.getRightGoalTopNew().getY(), GoalInfo.getRightGoalTopNew().getX()+10, GoalInfo.getRightGoalTopNew().getY());
+			g.drawLine(GoalInfo.getRightGoalBottomNew().getX()-10, GoalInfo.getRightGoalBottomNew().getY(), GoalInfo.getRightGoalBottomNew().getX()+10, GoalInfo.getRightGoalBottomNew().getY());
 			
-			g.drawLine(info.getRightGoalBottom().x-10, info.getRightGoalBottom().y, info.getRightGoalBottom().x+10, info.getRightGoalBottom().y);
-			g.drawLine(info.getRightGoalBottom().x, info.getRightGoalBottom().y-10, info.getRightGoalBottom().x, info.getRightGoalBottom().y+10);
-			
-			g.drawLine(info.getRightGoalCenter().x-10, info.getRightGoalCenter().y, info.getRightGoalCenter().x+10, info.getRightGoalCenter().y);
-			g.drawLine(info.getRightGoalCenter().x, info.getRightGoalCenter().y-10, info.getRightGoalCenter().x, info.getRightGoalCenter().y+10);
 			
 			try {
 				ObjectLocations.drawCrosses(g);

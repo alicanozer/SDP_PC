@@ -44,7 +44,7 @@ public class Defend {
 				if (ObjectLocations.getBall().y > ObjectLocations.getYellowDEFENDmarker().y) {
 					bRobot.forward(0);
 				} else if (ObjectLocations.getBall().y < ObjectLocations.getYellowDEFENDmarker().y) {
-					bRobot.backwards();
+					bRobot.backwards(0);
 				} else {
 					bRobot.stop();
 				}	
