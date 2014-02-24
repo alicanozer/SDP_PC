@@ -203,7 +203,22 @@ public class TurnToObject {
 		System.out.println("dx: " + check.getX() + "dy: " + check.getY());
 		
 		//If object is right of the marker return negative angle
-		if (check.getX() > 0) return -Math.toDegrees(angleBetweenDotObject);
+		if (check.getX() > 0 && check.getY() > 0) {
+			System.out.println("Quadrant 1");
+			return Math.toDegrees(angleBetweenDotObject);
+		}
+		if (check.getX() < 0 && check.getY() > 0) {
+			System.out.println("Quadrant 2");
+			return -Math.toDegrees(angleBetweenDotObject);
+		}
+		if (check.getX() > 0 && check.getY() < 0) {
+			System.out.println("Quadrant 3");
+			return -Math.toDegrees(angleBetweenDotObject);
+		}
+		if (check.getX() < 0 && check.getY() < 0) {
+			System.out.println("Quadrant 4");
+			return Math.toDegrees(angleBetweenDotObject);
+		}
 		
 		return Math.toDegrees(angleBetweenDotObject);
 		

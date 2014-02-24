@@ -274,9 +274,9 @@ public class VisionOps {
 //					BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
 //					BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
 					ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.34f,false); // was 0.34
-					ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.90f,true); // was 0.69
+					ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.69f,true); // was 0.90
 
-					ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.47f,false); // was 0.62
+					ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.62f,false); // was 0.47
 					ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.86f,true); // was 0.86
 
 					//values are 0..255
