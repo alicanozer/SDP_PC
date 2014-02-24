@@ -1,5 +1,8 @@
 package strategy.planning;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 import comms.Bluetooth;
 import comms.BluetoothRobot;
 
@@ -29,6 +32,7 @@ public class RunStrategy {
 	public static void main(String[] args) throws Exception {
 
 		VisionRunner.start(true,PitchConstants.newPitch,10);
+		
 
 		bRobot = new BluetoothRobot(RobotType.AttackUs, connection);
 		bRobot.connect();
@@ -46,10 +50,8 @@ public class RunStrategy {
 		System.out.println("Robot ready!");
 
 		PitchConstants pitchconstants = PitchConstants.newPitch;
-		GoalInfo goalInfo = new GoalInfo(pitchconstants);
-		WorldState worldstate = new WorldState(goalInfo);
 
-		RunStrategy teststrat = new RunStrategy(worldstate, bRobot);
+		RunStrategy teststrat = new RunStrategy(bRobot);
 
 	}
 
@@ -58,13 +60,12 @@ public class RunStrategy {
 	 */
 	private void startStrategy() {
 		assert (strategyThread == null || !strategyThread.isAlive()) : "Strategy is already running";
-		strategy = new TestStrategy(bRobot); //Put your strategy class here.
+		strategy = new InterceptBall(bRobot); //Put your strategy class here.
 		strategyThread = new Thread(strategy);
 		strategyThread.start();
 	}
 
-	public RunStrategy (final WorldState worldstate, final BluetoothRobot robot){
-		this.worldstate = worldstate;
+	public RunStrategy (final BluetoothRobot robot){
 		this.bRobot = robot;
 
 		Strategy.reset();
