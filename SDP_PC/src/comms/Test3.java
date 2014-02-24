@@ -31,7 +31,7 @@ public class Test3 {
 				//Turn to Ball
 				double turn2 = TurnToObject.Ball(RobotType.AttackUs);
 				System.out.println("angle to ball:" + turn2);
-
+				bRobot.rotateLEFT((int) turn2);
 				Button.waitForAnyPress();
 			} catch (Exception e) {
 				e.printStackTrace();
