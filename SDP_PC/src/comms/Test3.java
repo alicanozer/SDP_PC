@@ -25,16 +25,18 @@ public class Test3 {
 	bRobot.setSpeed(20);
 	
 	while (true) {
-		if (ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null && ObjectLocations.getYellowATTACKdot() != null && ObjectLocations.getBlueDEFENDmarker() != null) {
+		if (ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null && ObjectLocations.getYellowATTACKdot() != null) {
 						
 			try {
 				//Turn to Ball
 				double turn2 = TurnToObject.Ball(RobotType.AttackUs);
-				System.out.println("angle to ball:" +turn2);				
-				double turn = TurnToObject.shootAngle();
-				System.out.println("angle to goal:"+turn);
+				System.out.println("angle to ball:" + turn2);				
+//				double turn = TurnToObject.shootAngle();
+//				System.out.println("angle to goal:" + turn);
 //				bRobot.rotateLEFT((int) turn);
-				System.out.println("_____++_+!*&*^*^&*^*");
+//				double turn3 = TurnToObject.alignHorizontal(RobotType.AttackUs);
+//				bRobot.rotateLEFT((int) turn3);
+//				System.out.println("angle to 90: " + turn3);
 				Button.waitForAnyPress();
 			} catch (Exception e) {
 				e.printStackTrace();

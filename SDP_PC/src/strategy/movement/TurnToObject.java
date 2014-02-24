@@ -139,6 +139,36 @@ public class TurnToObject {
 		
 		return 0.0;
 	}
+
+	/**
+	 * Gets the angle of robot to be parallel to the y-axis
+	 *
+	 * @return angle
+	 */
+	public static double alignHorizontal(RobotType type) {
+		if (ObjectLocations.getYellowUs()) {
+			if (type == RobotType.AttackUs){
+				//Attacking Yellow Robot
+				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getYellowATTACKdot().x, ObjectLocations.getYellowATTACKdot().y + 5);
+				return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ninty);
+			} else {
+				//Defending Yellow Robot
+				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getYellowDEFENDdot().x, ObjectLocations.getYellowDEFENDdot().y + 5);
+				return getAngleToObject(ObjectLocations.getYellowDEFENDdot(), ObjectLocations.getYellowDEFENDmarker(), ninty);
+			} 
+		} else {
+			if (type == RobotType.AttackUs){
+				//Attacking Blue Robot
+				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getBlueATTACKdot().x, ObjectLocations.getBlueATTACKdot().y + 5);
+				return getAngleToObject(ObjectLocations.getBlueATTACKdot(), ObjectLocations.getBlueATTACKmarker(), ninty);				
+			}else {
+				//Defending Blue Robot
+				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getBlueDEFENDdot().x, ObjectLocations.getBlueDEFENDdot().y + 5);
+				return getAngleToObject(ObjectLocations.getBlueDEFENDdot(), ObjectLocations.getBlueDEFENDmarker(), ninty);
+
+			}
+		}
+	}
 	
 	/**
 	 * Gets the angle of robot to a Point2D_I32 object
@@ -166,24 +196,16 @@ public class TurnToObject {
 		double totalMagnitude = magnitude * magnitude2;
 		
 		double angleBetweenDotObject = Math.acos(dotProduct/totalMagnitude);
-				
-		//If object is right of the marker return negative angle
-		if (xDiff < 0 && yDiff > 0) {
-			return (Math.toDegrees(angleBetweenDotObject));
-			//return (-Math.toDegrees(angleBetweenDotObject));
-		} else if (xDiff < 0 && yDiff < 0) {
-			return Math.toDegrees(angleBetweenDotObject);
-		} else if (xDiff > 0 && yDiff < 0) {
-			//If object is left of the marker return original angle
-			return -Math.toDegrees(angleBetweenDotObject);
-		} else if (xDiff > 0 && yDiff > 0) {
-			//If object is left of the marker return original angle
-			return -Math.toDegrees(angleBetweenDotObject);
-		} else if (xDiff == 0 && yDiff == 0) {
-			return 0.0;
-		}
 		
-		return 0.0;
+		//Check if ball is right or left of the marker
+		Vector check = Vector.subtract(dotToMarker, dotToObject);
+		
+		System.out.println("dx: " + check.getX() + "dy: " + check.getY());
+		
+		//If object is right of the marker return negative angle
+		if (check.getX() > 0) return -Math.toDegrees(angleBetweenDotObject);
+		
+		return Math.toDegrees(angleBetweenDotObject);
 		
 	}
 	
