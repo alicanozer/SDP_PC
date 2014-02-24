@@ -20,7 +20,7 @@ public interface RobotController {
 	
 	public void rotateRIGHT(int angle);
 	
-	public void forward();
+	public void forward(double distance);
 	
 	public void backwards();
 		

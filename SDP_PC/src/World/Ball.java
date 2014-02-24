@@ -1,4 +1,4 @@
-package world.state;
+package World;
 
 public class Ball extends Entity {
 	

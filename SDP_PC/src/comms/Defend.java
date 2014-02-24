@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 import lejos.nxt.Button;
 import strategy.movement.TurnToBall;
 import vision.ObjectLocations;
+import vision.PitchConstants;
 import vision.PointUtils;
 import vision.FrameHandler;
 import World.Robot;
@@ -20,15 +21,13 @@ public class Defend {
 	
 	public static void main(String[] args) throws IOException {
 		
-		
-		
 		ObjectLocations.setYellowDefendingLeft(true);
 		ObjectLocations.setYellowUs(true);
 		try {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					new FrameHandler();
+					new FrameHandler(true, PitchConstants.newPitch);
 				}
 			});
 		} catch (Exception e) {
@@ -43,9 +42,9 @@ public class Defend {
 		while(true) {
 			if(ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null) {
 				if (ObjectLocations.getBall().y > ObjectLocations.getYellowDEFENDmarker().y) {
-					bRobot.forward();
+					bRobot.forward(0);
 				} else if (ObjectLocations.getBall().y < ObjectLocations.getYellowDEFENDmarker().y) {
-					bRobot.backwards();
+					bRobot.backwards(0);
 				} else {
 					bRobot.stop();
 				}	

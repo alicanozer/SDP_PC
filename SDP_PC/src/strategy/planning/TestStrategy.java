@@ -1,35 +1,50 @@
 package strategy.planning;
 
-import geometry.Vector;
-import movement.RobotMover;
+import georegression.struct.point.Point2D_I32;
+import lejos.nxt.Button;
 import vision.ObjectLocations;
-import World.WorldState;
-import World.Ball;
-import World.Robot;
+import comms.BluetoothRobot;
+
+import Calculations.BallPossession;
+import Calculations.DistanceCalculator;
+import World.RobotType;
 
 public class TestStrategy extends StrategyInterface{
 
-	private Robot ourAttackRobot;
-	private Robot ourDefenseRobot;
-	private Ball ball;
-	
-	ObjectLocations objs;
-	
-	public TestStrategy(RobotMover mover) {
-		super(mover);
-		
-		ball = new Ball();
-		ball.setPosition(new Vector(ObjectLocations.getBall().x,ObjectLocations.getBall().y));
+	private Point2D_I32 ourAttackRobot;
+	private Point2D_I32 ball;
+	static BluetoothRobot bRobot;
 
-
-		
-		//need line to get our robot.
+	public TestStrategy(BluetoothRobot bRobot) {
+		super(bRobot);
+		ball = ObjectLocations.getBall();
+		ourAttackRobot = ObjectLocations.getYellowATTACKmarker();
 	}
-	
+
+	@Override
 	public void run() {
 		while (!shouldidie && !Strategy.alldie) {
-			
-			
+
+			while(true) {
+
+				if(ball!=null && ourAttackRobot!=null) {
+
+					double distance = DistanceCalculator.Distance(ourAttackRobot, ball);
+					System.out.println("distance: ");
+					System.out.println(distance);
+					System.out.println("ball: ");
+					System.out.println(ball.x + " " + ball.y);				
+					System.out.println(ObjectLocations.getBall());
+					System.out.println("robot: ");
+					System.out.println(ourAttackRobot.x + " " + ourAttackRobot.y);
+					System.out.println(ObjectLocations.getYellowATTACKmarker());
+					System.out.println("possession: ");
+					System.out.println(BallPossession.hasPossession(RobotType.AttackUs));
+					Button.waitForAnyPress();
+				}
+			}
+
 		}
+		bRobot.stop();
 	}
 }

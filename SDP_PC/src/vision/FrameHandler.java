@@ -34,6 +34,7 @@ import boofcv.struct.image.ImageSInt16;
 import boofcv.struct.image.ImageSInt32;
 import boofcv.struct.image.ImageUInt8;
 import boofcv.struct.image.MultiSpectral;
+import Calculations.GoalInfo;
 import au.edu.jcu.v4l4j.FrameGrabber;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.V4L4JConstants;
@@ -163,14 +164,18 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		long thisFrame = System.currentTimeMillis();
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
-		lastFrame = thisFrame;
+		
+		
+		VisionRunner.sendFrame(new Frame(img,thisFrame));
+		
+		
 		//KMeans.ClusterHeaps(img, 6, 1, null,15);
-		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
+		img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
-
+		
 
 		try {
 			ObjectLocations.updateObjectLocations(img);
@@ -182,6 +187,19 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			g.drawLine(consts.getRegion12X(), 0, consts.getRegion12X(), img.getHeight());
 			g.drawLine(consts.getRegion23X(), 0, consts.getRegion23X(), img.getHeight());
 			g.drawLine(consts.getRegion34X(), 0, consts.getRegion34X(), img.getHeight());
+			
+			//Drawing Goal Markers
+			g.setColor(Color.WHITE);
+			
+			g.drawLine(GoalInfo.getLeftGoalCenterNew().getX()-10, GoalInfo.getLeftGoalCenterNew().getY(), GoalInfo.getLeftGoalCenterNew().getX()+10, GoalInfo.getLeftGoalCenterNew().getY());
+			g.drawLine(GoalInfo.getLeftGoalTopNew().getX()-10, GoalInfo.getLeftGoalTopNew().getY(), GoalInfo.getLeftGoalTopNew().getX()+10, GoalInfo.getLeftGoalTopNew().getY());
+			g.drawLine(GoalInfo.getLeftGoalBottomNew().getX()-10, GoalInfo.getLeftGoalBottomNew().getY(),GoalInfo.getLeftGoalBottomNew().getX()+10, GoalInfo.getLeftGoalBottomNew().getY());
+
+			g.drawLine(GoalInfo.getRightGoalCenterNew().getX()-10, GoalInfo.getRightGoalCenterNew().getY(), GoalInfo.getRightGoalCenterNew().getX()+10, GoalInfo.getRightGoalCenterNew().getY());
+			g.drawLine(GoalInfo.getRightGoalTopNew().getX()-10, GoalInfo.getRightGoalTopNew().getY(), GoalInfo.getRightGoalTopNew().getX()+10, GoalInfo.getRightGoalTopNew().getY());
+			g.drawLine(GoalInfo.getRightGoalBottomNew().getX()-10, GoalInfo.getRightGoalBottomNew().getY(), GoalInfo.getRightGoalBottomNew().getX()+10, GoalInfo.getRightGoalBottomNew().getY());
+			
+			
 			try {
 				ObjectLocations.drawCrosses(g);
 			} catch (Exception e) {
@@ -189,5 +207,6 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		}
 		g.dispose();
 		frame.recycle();
+		lastFrame = thisFrame;
 	}
 }
