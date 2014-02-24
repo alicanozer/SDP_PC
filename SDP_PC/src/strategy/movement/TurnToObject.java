@@ -3,7 +3,6 @@ package strategy.movement;
 import geometry.Vector;
 import georegression.struct.point.Point2D_I32;
 import vision.ObjectLocations;
-import vision.PitchConstants;
 import Calculations.GoalInfo;
 import World.RobotType;
 
@@ -107,7 +106,6 @@ public class TurnToObject {
 	 */
 	public static double shootAngle() {
 		
-		GoalInfo info = new GoalInfo(PitchConstants.newPitch);
 		Point2D_I32 Top;
 		Point2D_I32 Centre;
 		Point2D_I32 Bottom;
@@ -115,9 +113,9 @@ public class TurnToObject {
 		if (ObjectLocations.getYellowDefendingLeft()) {
 			
 			//Right Goal
-			Top = info.getRightGoalTop();
-			Centre = info.getRightGoalCenter();
-			Bottom = info.getRightGoalBottom();
+			Top = GoalInfo.getRightGoalTopNew();
+			Centre = GoalInfo.getRightGoalCenterNew();
+			Bottom = GoalInfo.getRightGoalBottomNew();
 			
 			System.out.println("Goal Top: " + Top.y);
 			System.out.println("Goal Centre: " + Centre.y);
@@ -126,9 +124,9 @@ public class TurnToObject {
 		} else {
 		
 			//Left Goal
-			Top = info.getLeftGoalTop();
-			Centre = info.getLeftGoalCenter();
-			Bottom = info.getLeftGoalBottom();
+			Top = GoalInfo.getLeftGoalTopNew();
+			Centre = GoalInfo.getLeftGoalCenterNew();
+			Bottom = GoalInfo.getLeftGoalBottomNew();
 			
 			System.out.println("Goal Top: " + Top.y);
 			System.out.println("Goal Centre: " + Centre.y);

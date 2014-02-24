@@ -240,10 +240,10 @@ public class VisionOps {
 
 				
 				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.00f,false); // was 3.00
-				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.75f,true); // was 3.60
+				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.90f,true); // was 3.60
 
-				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.39f,false); //was 0.50
-				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.60f,true); //was 0.25
+				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.01f,false); //was 0.50
+				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.99f,true); //was 0.25
 				
 				
 				//ImageUInt8 upperValueBlue = ThresholdImageOps.threshold(hsv.getBand(2),null, 140f,true); //was 0.25
@@ -286,14 +286,14 @@ public class VisionOps {
 					BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
 				}
 				else{// dark
-//					BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
-					BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
+					BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 2, 2, null);
+					BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 2, 7, null);
 					
-					ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.70f,false); // was 0.34
+					ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.50f,false); // was 0.34
 					ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.95f,true); // was 0.69
 
-					ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.30f,false); // was 0.62
-					ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.70f,true); // was 0.86
+					ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.60f,false); // was 0.62
+					ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.8f,true); // was 0.86
 
 					//values are 0..255
 

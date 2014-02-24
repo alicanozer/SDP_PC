@@ -1,6 +1,6 @@
 package strategy.planning;
 
-import strategy.calculations.DistanceCalculator;
+import Calculations.DistanceCalculator;
 import vision.ObjectLocations;
 import geometry.Vector;
 import georegression.struct.point.Point2D_I32;
@@ -34,7 +34,7 @@ public class InterceptBall extends StrategyInterface{
 		System.out.println("ball position: " + ball);
 		Vector intersection = Intersection.IntersectionVector(ball, ourAttackRobot.getPosition(), dot);
 		System.out.println("intersection point: " + intersection);
-		double distance = DistanceCalculator.Distance(ourAttackRobot.x, ourAttackRobot.y, intersection.getX(), intersection.getY());
+		double distance = DistanceCalculator.DistanceQuadruple(ourAttackRobot.x, ourAttackRobot.y, intersection.getX(), intersection.getY());
 		System.out.println("distance: " + distance);
 		bRobot.forward(distance);
 		
