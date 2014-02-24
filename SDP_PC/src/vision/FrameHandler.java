@@ -51,15 +51,16 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  */
 public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private static int      width = 640, height = 480, std = V4L4JConstants.STANDARD_WEBCAM, channel = 0;
-	private static String   device = "/dev/video0";
+	private static String   device = "/dev/video1";
 	private long lastFrame = System.currentTimeMillis(); 
 	private VideoDevice     videoDevice;
 	private FrameGrabber    frameGrabber;
 	private JLabel          label;
 	private JFrame          frame;
-
+	private long frameCounter = 0;
 	private boolean debug;
 	private PitchConstants consts;
+	private PitchColours colors;
 
 
 
@@ -161,16 +162,31 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	@Override
 	public void nextFrame(VideoFrame frame) {
 		BufferedImage img = frame.getBufferedImage();
+		
+		if(frameCounter < 3){
+			frame.recycle();
+			frameCounter++;
+			return;
+		}
+		else if (frameCounter == 3){
+			frameCounter++;
+			colors = ExampleSegmentColor.selectColoursOfPitch(img);
+			return;
+		}
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
+		
 		long thisFrame = System.currentTimeMillis();
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
 		
-		
 		VisionRunner.sendFrame(new Frame(img,thisFrame));
 		
+		System.out.println("max blue:" + colors.getBlueValue()[0][0] + " " + colors.getBlueValue()[0][1] + " " + colors.getBlueValue()[0][2]);
+		System.out.println("min blue:" + colors.getBlueValue()[1][0] + " " + colors.getBlueValue()[1][1] + " " + colors.getBlueValue()[1][2]);
 		
+		System.out.println("max black:" + colors.getBlackValue()[0][0] + " " + colors.getBlackValue()[0][1] + " " + colors.getBlackValue()[0][2]);
+		System.out.println("min black:" + colors.getBlackValue()[1][0] + " " + colors.getBlackValue()[1][1] + " " + colors.getBlackValue()[1][2]);
 		//KMeans.ClusterHeaps(img, 6, 1, null,15);
-		img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
+		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
@@ -178,7 +194,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 
 		try {
-			ObjectLocations.updateObjectLocations(img);
+			ObjectLocations.updateObjectLocations(img,colors);
 		} catch (Exception e) {
 
 		}

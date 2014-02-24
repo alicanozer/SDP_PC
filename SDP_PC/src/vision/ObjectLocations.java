@@ -130,8 +130,9 @@ public class ObjectLocations {
 	/**
 	 * main method, only call this one on the new grabbed frame! do not attempt to set objects yourselves...
 	 * @param img
+	 * @param colors 
 	 */
-	public static void updateObjectLocations(BufferedImage img){
+	public static void updateObjectLocations(BufferedImage img, PitchColours colors){
 		Point2D_I32 ballLocal = VisionOps.findBall(img);
 		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkers(img);
 		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkers(img);

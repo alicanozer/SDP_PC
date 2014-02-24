@@ -2,17 +2,17 @@ package vision;
 
 public class PitchColours {
 	
-	private float[] blueValue;
-	private float[] yellowValue;
-	private float[] blackValue;
-	private float[] redValue;
-	private float[] greenPlateValue;
-	private float[] greenPitchValue;
-	private float[] whiteValue;
+	private float[][] blueValue;
+	private float[][] yellowValue;
+	private float[][] blackValue;
+	private float[][] redValue;
+	private float[][] greenPlateValue;
+	private float[][] greenPitchValue;
+	private float[][] whiteValue;
 	
-	public PitchColours(float[] blueValue, float[] yellowValue, float[] blackValue,
-			float[] redValue, float[] greenPlateValue, float[] greenPitchValue,
-			float[] whiteValue)
+	public PitchColours(float[][] blueValue, float[][] yellowValue, float[][] blackValue,
+			float[][] redValue, float[][] greenPlateValue, float[][] greenPitchValue,
+			float[][] whiteValue)
 	{
 		this.blueValue = blueValue;
 		this.yellowValue = yellowValue;
@@ -24,58 +24,58 @@ public class PitchColours {
 	}
 	
 	
-	public float[] getBlueValue(){
+	public float[][] getBlueValue(){
 		return blueValue;
 	}
 	
-	public float[] getYellowValue(){
+	public float[][] getYellowValue(){
 		return yellowValue;
 	}
 	
-	public float[] getBlackValue(){
+	public float[][] getBlackValue(){
 		return blackValue;
 	}
 	
-	public float[] getRedValue(){
+	public float[][] getRedValue(){
 		return redValue;
 	}
-	public float[] getGreenPlateValue(){
+	public float[][] getGreenPlateValue(){
 		return greenPlateValue;
 	}
 	
-	public float[] getGreenPitchValue(){
+	public float[][] getGreenPitchValue(){
 		return greenPitchValue;
 	}
 	
-	public float[] getWhiteValue(){
+	public float[][] getWhiteValue(){
 		return whiteValue;
 	}
 	
-	public void setBlueValue(float[] blueValue){
+	public void setBlueValue(float[][] blueValue){
 		this.blueValue = blueValue;
 	}
 	
-	public void setYellowValue(float[] yellowValue){
+	public void setYellowValue(float[][] yellowValue){
 		this.yellowValue = yellowValue;
 	}
 	
-	public void setBlackValue(float[] blackValue){
+	public void setBlackValue(float[][] blackValue){
 		this.blackValue = blackValue;
 	}
 	
-	public void setRedValue(float[] redValue){
+	public void setRedValue(float[][] redValue){
 		this.redValue = redValue;
 	}
 	
-	public void setGreenPlateValue(float[] greenPlateValue){
+	public void setGreenPlateValue(float[][] greenPlateValue){
 		this.greenPlateValue = greenPlateValue;
 	}
 	
-	public void setGreenPitchValue(float[] greenPitchValue){
+	public void setGreenPitchValue(float[][] greenPitchValue){
 		this.greenPitchValue = greenPitchValue;
 	}
 	
-	public void setWhiteValue(float[] whiteValue){
+	public void setWhiteValue(float[][] whiteValue){
 		this.whiteValue = whiteValue;
 	}
 	
