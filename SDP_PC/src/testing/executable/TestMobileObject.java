@@ -9,13 +9,14 @@ import testing.aid.DummyPositionProvider;
 import world.PositionProvider;
 import world.World;
 import world.object.MobileObject;
+import world.object.Zones;
 import world.support.TimedVector;
 
 public class TestMobileObject {	
-	@Test
-	public void test() {
+	@Test	
+	public void testPositions() {
 		DummyPositionProvider positions = new DummyPositionProvider();
-		World world = new World(World.TeamColor.BLUE, World.TeamSide.LEFT, 0.5, positions, new Vector(3, 3), 200);
+		World world = new World(World.TeamColor.BLUE, World.TeamSide.LEFT, 0.5, positions, new Vector(3, 3), 200, Zones.Pitch.ONE);
 		MobileObject mobileObject = world.getBall();
 		mobileObject.setHeight(0);
 		
@@ -107,6 +108,19 @@ public class TestMobileObject {
 		System.out.println(mobileObject.getRealPosition());
 		System.out.println(mobileObject.getRealVelocity());
 		positions.step();
+		} catch (Exception e) {
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+	public void testReachablePixel() {
+		World world = new World(World.TeamColor.BLUE, World.TeamSide.LEFT, 0.5, null, new Vector(3, 3), 200, Zones.Pitch.ONE);
+		try {
+			assertFalse(world.getHeroAttacker().reachablePosition(new Vector(110*World.REAL_UNITS_PER_PIXEL, 220*World.REAL_UNITS_PER_PIXEL)));
+			assertTrue(world.getHeroDefender().reachablePosition(new Vector(170*World.REAL_UNITS_PER_PIXEL-11, 85*World.REAL_UNITS_PER_PIXEL+11)));
+			assertFalse(world.getHeroDefender().reachablePosition(new Vector(170*World.REAL_UNITS_PER_PIXEL, 85*World.REAL_UNITS_PER_PIXEL+11)));
+			assertFalse(world.getHeroDefender().reachablePosition(new Vector(170*World.REAL_UNITS_PER_PIXEL+11, 85*World.REAL_UNITS_PER_PIXEL+11)));
 		} catch (Exception e) {
 			fail("Unexpected exception");
 		}
