@@ -2,8 +2,11 @@ package vision;
 
 
 
+import java.awt.Color;
 import java.awt.Polygon;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.ddogleg.struct.FastQueue;
@@ -145,5 +148,24 @@ public class PointUtils {
 		double y = Math.pow(p.y - q.y, pnorm);
 		
 		return Math.pow(x + y, 1.0/pnorm);
+	}
+	
+	
+	public static Point2D_I32 getPointMedian(ArrayList<Point2D_I32> l){
+		int size = l.size();
+		if(size == 0 || l == null) return null;
+		
+		int[] xs = new int[size];
+		int[] ys = new int[size];
+
+		
+		for(int i = 0; i < size; i++){
+			xs[i] = l.get(i).x;
+			ys[i] = l.get(i).y;
+		}
+		Arrays.sort(xs);
+		Arrays.sort(ys);
+		
+		return new Point2D_I32(xs[size/2],ys[size/2]);
 	}
 }

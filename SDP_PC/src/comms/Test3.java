@@ -1,7 +1,6 @@
 package comms;
 
 import lejos.nxt.Button;
-import strategy.movement.MoveToPoint;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import vision.PitchConstants;
@@ -30,7 +29,9 @@ public class Test3 {
 						
 			try {
 				//Turn to Ball
-				MoveToPoint = new MoveToPoint(bRobot, RobotType.AttackUs, ObjectLocations.getBall());
+				double turn2 = TurnToObject.Ball(RobotType.AttackUs);
+				System.out.println("angle to ball:" + turn2);
+
 				Button.waitForAnyPress();
 			} catch (Exception e) {
 				e.printStackTrace();

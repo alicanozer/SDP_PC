@@ -130,17 +130,29 @@ public class ObjectLocations {
 	/**
 	 * main method, only call this one on the new grabbed frame! do not attempt to set objects yourselves...
 	 * @param img
+	 * @param colors 
+	 * @param whitePoints 
 	 */
-	public static void updateObjectLocations(BufferedImage img){
-		Point2D_I32 ballLocal = VisionOps.findBall(img);
-		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkers(img);
-		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkers(img);
+	public static void updateObjectLocations(BufferedImage img, PitchColours colors){
+		Point2D_I32 ballLocal = VisionOps.findBall(img,colors.getRedValue());
+		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkers(img,colors.getYellowValue());
+		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkers(img,colors.getBlueValue());
+
 
 		ArrayList<Point2D_I32> dotsLocal = new ArrayList<Point2D_I32>();
 
 		if(yellowMarkers != null){
 			for(Point2D_I32 p: yellowMarkers){
-				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
+				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30,colors.getBlackValue());
+//				Point2D_I32 newCentre = VisionOps.getDotPosition(
+//						img, 
+//						p, 
+//						30, 
+//						2, 
+//						1, 
+//						colors.getBlackValue(), 
+//						colors.getYellowValue(), 
+//						colors.getGreenPlateValue());   //.getMeanDotNearMarker(img,p,40,colors.getBlackValue());
 				if(newCentre != null)
 					dotsLocal.add(newCentre); // window 44 works well
 			}
@@ -148,7 +160,16 @@ public class ObjectLocations {
 
 		if(blueMarkers != null){
 			for(Point2D_I32 p: blueMarkers){
-				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
+				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30,colors.getBlackValue());
+//				Point2D_I32 newCentre = VisionOps.getDotPosition(
+//						img, 
+//						p, 
+//						30, 
+//						2, 
+//						1, 
+//						colors.getBlackValue(), 
+//						colors.getBlueValue(), 
+//						colors.getGreenPlateValue()); 
 				if(newCentre != null)
 					dotsLocal.add(newCentre); // window 44 works well
 			}

@@ -3,6 +3,7 @@ package strategy.movement;
 import geometry.Vector;
 import georegression.struct.point.Point2D_I32;
 import vision.ObjectLocations;
+import vision.PitchConstants;
 import Calculations.GoalInfo;
 import World.RobotType;
 
@@ -106,64 +107,35 @@ public class TurnToObject {
 	 */
 	public static double shootAngle() {
 		
-		Point2D_I32 Top;
-		Point2D_I32 Centre;
-		Point2D_I32 Bottom;
+		GoalInfo info = new GoalInfo(PitchConstants.newPitch);
 		
-		if (ObjectLocations.getYellowDefendingLeft()) {
-			
-			//Right Goal
-			Top = GoalInfo.getRightGoalTopNew();
-			Centre = GoalInfo.getRightGoalCenterNew();
-			Bottom = GoalInfo.getRightGoalBottomNew();
-			
-			System.out.println("Goal Top: " + Top.y);
-			System.out.println("Goal Centre: " + Centre.y);
-			System.out.println("Goal Bottom: " + Bottom.y);
+		//Only works for left goal at the moment
 		
-		} else {
-		
-			//Left Goal
-			Top = GoalInfo.getLeftGoalTopNew();
-			Centre = GoalInfo.getLeftGoalCenterNew();
-			Bottom = GoalInfo.getLeftGoalBottomNew();
-			
-			System.out.println("Goal Top: " + Top.y);
-			System.out.println("Goal Centre: " + Centre.y);
-			System.out.println("Goal Bottom: " + Bottom.y);
-			
-		}
-			
 		if (ObjectLocations.getYellowUs()) {
-				//Yellow Attacking
-				System.out.println("Defender: " + ObjectLocations.getBlueDEFENDmarker().y);				
+			if (ObjectLocations.getYellowDefendingLeft()) {
+			
+				Point2D_I32 RGTop = info.getRightGoalTop();
+				Point2D_I32 RGCentre = info.getRightGoalCenter();
+				Point2D_I32 RGBottom = info.getRightGoalBottom();
+
+				System.out.println("Defender: " + ObjectLocations.getBlueDEFENDmarker().y);
+				System.out.println("Goal Top: " + RGTop.y);
+				System.out.println("Goal Centre: " + RGCentre.y);
+				System.out.println("Goal Bottom: " + RGBottom.y);				
 				
-				if (ObjectLocations.getBlueDEFENDmarker().y > Top.y && ObjectLocations.getBlueDEFENDmarker().y < Centre.y ) {
-					Point2D_I32 point = new Point2D_I32(Bottom.x, Bottom.y-10);
+				if (ObjectLocations.getBlueDEFENDmarker().y > RGTop.y && ObjectLocations.getBlueDEFENDmarker().y < RGCentre.y ) {
+					Point2D_I32 point = new Point2D_I32(RGBottom.x, RGBottom.y-10);
 					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), point);
-				} else if (ObjectLocations.getBlueDEFENDmarker().y < Bottom.y && ObjectLocations.getBlueDEFENDmarker().y > Centre.y ) {
-					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), new Point2D_I32(Top.x, Top.y+10));
-				} else if (ObjectLocations.getBlueDEFENDmarker().y == Centre.y ) {
-					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), new Point2D_I32(Top.x, Top.y+10));
-				} else if (ObjectLocations.getBlueDEFENDmarker().y > Bottom.y || ObjectLocations.getBlueDEFENDmarker().y < Top.y) {
-					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), Centre);
+				} else if (ObjectLocations.getBlueDEFENDmarker().y < RGBottom.y && ObjectLocations.getBlueDEFENDmarker().y > RGCentre.y ) {
+					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), new Point2D_I32(RGTop.x, RGTop.y+10));
+				} else if (ObjectLocations.getBlueDEFENDmarker().y == RGCentre.y ) {
+					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), new Point2D_I32(RGTop.x, RGTop.y+10));
+				} else if (ObjectLocations.getBlueDEFENDmarker().y > RGBottom.y || ObjectLocations.getBlueDEFENDmarker().y < RGTop.y) {
+					return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), RGCentre);
 				}
 			
-			} else {
-				//Blue Attacking
-				System.out.println("Defender: " + ObjectLocations.getYellowDEFENDmarker().y);				
-				
-				if (ObjectLocations.getYellowDEFENDmarker().y > Top.y && ObjectLocations.getYellowDEFENDmarker().y < Centre.y ) {
-					Point2D_I32 point = new Point2D_I32(Bottom.x, Bottom.y-10);
-					return getAngleToObject(ObjectLocations.getBlueATTACKdot(), ObjectLocations.getBlueATTACKmarker(), point);
-				} else if (ObjectLocations.getYellowDEFENDmarker().y < Bottom.y && ObjectLocations.getYellowDEFENDmarker().y > Centre.y ) {
-					return getAngleToObject(ObjectLocations.getBlueATTACKdot(), ObjectLocations.getBlueATTACKmarker(), new Point2D_I32(Top.x, Top.y+10));
-				} else if (ObjectLocations.getYellowDEFENDmarker().y == Centre.y ) {
-					return getAngleToObject(ObjectLocations.getBlueATTACKdot(), ObjectLocations.getBlueATTACKmarker(), new Point2D_I32(Top.x, Top.y+10));
-				} else if (ObjectLocations.getYellowDEFENDmarker().y > Bottom.y || ObjectLocations.getYellowDEFENDmarker().y < Top.y) {
-					return getAngleToObject(ObjectLocations.getBlueATTACKdot(), ObjectLocations.getBlueATTACKmarker(), Centre);
-				}
 			}
+		}
 		
 		return 0.0;
 	}

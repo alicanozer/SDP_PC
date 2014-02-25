@@ -39,7 +39,7 @@ public class TestStrategy extends StrategyInterface{
 					System.out.println(ourAttackRobot.x + " " + ourAttackRobot.y);
 					System.out.println(ObjectLocations.getYellowATTACKmarker());
 					System.out.println("possession: ");
-					//System.out.println(BallPossession.hasPossession(RobotType.AttackUs));
+					System.out.println(BallPossession.hasPossession(RobotType.AttackUs));
 					Button.waitForAnyPress();
 				}
 			}

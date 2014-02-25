@@ -78,7 +78,7 @@ public class PitchConstants {
 	private int hLowerBound;
 	
 
-	public static final PitchConstants newPitch = new PitchConstants(55,90,540,320,115,260,410,15,280);
+	public static final PitchConstants newPitch = new PitchConstants(60,98,520,280,115,260,410,15,280);
 	public static final PitchConstants oldPitch = new PitchConstants(0,0,0,0,130,280,430,0,0); //TODO : fill in
 
 }
