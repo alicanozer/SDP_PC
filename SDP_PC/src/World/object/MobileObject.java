@@ -1,5 +1,7 @@
 package world.object;
 
+import java.awt.Shape;
+
 import world.PositionProvider;
 import world.World;
 import world.support.Corrections;
@@ -14,6 +16,7 @@ import geometry.Vector;
 public class MobileObject implements MobilePixelObject, MobileRealObject {
 	World world;
 	double height;
+	Zone zone;
 	int objectNumber;
 	PositionProvider positionProvider;
 	
@@ -22,11 +25,12 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	TimedVector[] realVelocities;
 	long currentFrameNumber;
 	
-	public MobileObject(int objectNumber, PositionProvider positionProvider, World world, double height) {
+	public MobileObject(int objectNumber, PositionProvider positionProvider, World world, double height, Zone zone) {
 		this.objectNumber = objectNumber;
 		this.positionProvider = positionProvider;
 		this.world = world;
 		this.height = height;
+		this.zone = zone;
 		
 		pixelPositions = new TimedVector[2];
 		realPositions = new TimedVector[2];
@@ -109,5 +113,9 @@ public class MobileObject implements MobilePixelObject, MobileRealObject {
 	
 	public void setHeight(double height) {
 		this.height = height;
+	}
+	
+	public boolean reachablePosition(Vector point) throws Exception {
+		return zone.containsCircleReal(point, 10, 8);
 	}
 }

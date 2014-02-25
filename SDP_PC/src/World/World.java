@@ -3,10 +3,10 @@ package world;
 import geometry.Vector;
 import world.object.MobileObject;
 import world.object.MobilePixelObject;
-import world.object.MobileRealObject;
 import world.object.StationaryObject;
 import world.object.StationaryPixelObject;
 import world.object.StationaryRealObject;
+import world.object.Zones;
 
 public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	public static final int NUM_MOBILE_OBJECTS = 5;
@@ -52,7 +52,7 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	 *            A conversion ration that will be used to convert pixel
 	 *            distances into real distances (cm)
 	 */
-	public World(TeamColor ourColor, TeamSide ourSide, double realUnitsPerPixel, PositionProvider positionProvider, Vector cameraPixelPosition, double cameraElevation) {
+	public World(TeamColor ourColor, TeamSide ourSide, double realUnitsPerPixel, PositionProvider positionProvider, Vector cameraPixelPosition, double cameraElevation, Zones.Pitch pitch) {
 		this.ourColor = ourColor;
 		this.ourSide = ourSide;
 		this.yellowLeft = (ourColor ==TeamColor.YELLOW&& ourSide == TeamSide.LEFT) || (ourColor == TeamColor.BLUE && ourSide == TeamSide.RIGHT);
@@ -62,7 +62,7 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 		
 		mobileObjects = new MobileObject[NUM_MOBILE_OBJECTS];
 		for (int i = 0; i < NUM_MOBILE_OBJECTS; i++) {
-			mobileObjects[i] = new MobileObject(i, positionProvider, this, (i==4?5:18));
+			mobileObjects[i] = new MobileObject(i, positionProvider, this, (i==4?5:18), Zones.zone(pitch, i));
 		}
 		stationaryObjects = new StationaryObject[NUM_STATIONARY_OBJECTS];
 		for (int i = 0; i < NUM_STATIONARY_OBJECTS; i++) {
@@ -111,7 +111,7 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	}
 
 	@Override
-	public MobileRealObject getHeroAttacker() {
+	public MobileObject getHeroAttacker() {
 		if (ourSide == TeamSide.LEFT) {
 			return mobileObjects[2];
 		}else {
@@ -120,7 +120,7 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	}
 
 	@Override
-	public MobileRealObject getHeroDefender() {
+	public MobileObject getHeroDefender() {
 		if (ourSide == TeamSide.LEFT) {
 			return mobileObjects[0];
 		}else {
@@ -129,7 +129,7 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	}
 
 	@Override
-	public MobileRealObject getVillainAttacker() {
+	public MobileObject getVillainAttacker() {
 		if (ourSide == TeamSide.LEFT) {
 			return mobileObjects[1];
 		}else {
@@ -138,7 +138,7 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	}
 
 	@Override
-	public MobileRealObject getVillainDefender() {if (ourSide == TeamSide.LEFT) {
+	public MobileObject getVillainDefender() {if (ourSide == TeamSide.LEFT) {
 		return mobileObjects[3];
 	}else {
 		return mobileObjects[0];
