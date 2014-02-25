@@ -51,7 +51,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  */
 public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private static int      width = 640, height = 480, std = V4L4JConstants.STANDARD_WEBCAM, channel = 0;
-	private static String   device = "/dev/video1";
+	private static String   device = "/dev/video0";
 	private long lastFrame = System.currentTimeMillis(); 
 	private VideoDevice     videoDevice;
 	private FrameGrabber    frameGrabber;
@@ -194,7 +194,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 		
 		//KMeans.ClusterHeaps(img, 6, 1, null,15);
-		img = VisionOps.newDisplay(VisionOps.extractContour(img, colors.getBlueValue()),img.getWidth(), img.getHeight());
+		img = VisionOps.newDisplay(VisionOps.extractContour(img, colors.getRedValue()),img.getWidth(), img.getHeight());
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);

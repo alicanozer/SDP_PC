@@ -25,7 +25,7 @@ public class VisionRunner {
 		VisionRunner.histLen = histLen;
 		frameQueue = new LinkedBlockingDeque<Frame>(histLen);
 		
-		ObjectLocations.setYellowDefendingLeft(true);
+		ObjectLocations.setYellowDefendingLeft(false);
 		ObjectLocations.setYellowUs(true);
 		
 		try {

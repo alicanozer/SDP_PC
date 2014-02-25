@@ -440,9 +440,12 @@ public class VisionOps {
 		//filtered = BinaryImageOps.erode8(filtered, null);
 		List<Contour> contoursUnfiltered = BinaryImageOps.contour(filtered, 8, null);
 		List<Contour> contoursFiltered = new ArrayList<Contour>();
+		/*
+		 * Size filtering
+		 */
 		for(Contour c: contoursUnfiltered) {
 			Point2D_I32 p = PointUtils.getContourCentroid(c);
-			if(c.external.size() > 30 && c.external.size() < 300 && p.x > 15 && p.x < img.getWidth() - 15) contoursFiltered.add(c);
+			if(c.external.size() > 12 && c.external.size() < 300 && p.x > 15 && p.x < img.getWidth() - 15) contoursFiltered.add(c);
 		}
 
 		return contoursFiltered;

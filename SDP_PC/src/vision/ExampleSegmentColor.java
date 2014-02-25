@@ -94,31 +94,31 @@ public class ExampleSegmentColor {
 		setThreeHSV(blue3);
 		setMinMaxHSVRange(blueRange,blue3);
 		
-		System.out.println("Please click a yellow object");
+		System.out.println("Please click 3 times on a yellow object");
 		setThreeHSV(yellow3);
 		setMinMaxHSVRange(yellowRange,yellow3);
 		
-		System.out.println("Please click a black dot object");
+		System.out.println("Please click 3 times on a black dot object");
 		setThreeHSV(black3);
 		setMinMaxHSVRange(blackRange,black3);
 		
-		System.out.println("Please click the red ball");
+		System.out.println("Please click 3 times on the red ball");
 		setThreeHSV(red3);
 		setMinMaxHSVRange(redRange,red3);
 		
-		System.out.println("Please click a green plate object");
+		System.out.println("Please click 3 times on a green plate object");
 		setThreeHSV(greenPlate3);
 		setMinMaxHSVRange(greenPlateRange,greenPlate3);
 		
-		System.out.println("Please click a green pitch object");
+		System.out.println("Please click 3 times on a green pitch object");
 		setThreeHSV(greenPitch3);
 		setMinMaxHSVRange(greenPitchRange,greenPitch3);
 		
-		System.out.println("Please click a white edge object");
+		System.out.println("Please click 3 times on a white edge object");
 		setThreeHSV(white3);
 		setMinMaxHSVRange(whiteRange,white3);
 		
-		System.out.println("You have selected all objects");
+		System.out.println("You have selected all objects!");
 		
 		// Display pre-selected colors
 		
