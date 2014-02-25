@@ -4,6 +4,7 @@ import georegression.struct.point.Point2D_I32;
 import lejos.nxt.Button;
 import vision.ObjectLocations;
 import comms.BluetoothRobot;
+import comms.BluetoothRobotOld;
 
 import Calculations.BallPossession;
 import Calculations.DistanceCalculator;
@@ -13,10 +14,10 @@ public class TestStrategy extends StrategyInterface{
 
 	private Point2D_I32 ourAttackRobot;
 	private Point2D_I32 ball;
-	static BluetoothRobot bRobot;
+	static BluetoothRobotOld bRobot;
 
-	public TestStrategy(BluetoothRobot bRobot) {
-		super(bRobot);
+	public TestStrategy(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
+		super(attackRobot, defenceRobot);
 		ball = ObjectLocations.getBall();
 		ourAttackRobot = ObjectLocations.getYellowATTACKmarker();
 	}
