@@ -9,8 +9,8 @@ Establishing Connection
 To create a new connection first initialise new Bluetooth Robot objects:
 
 
-    static BluetoothRobotTwin attackRobot;
-    static BluetoothRobotTwin defenceRobot;
+    static BluetoothRobot attackRobot;
+    static BluetoothRobot defenceRobot;
     
 then create a new bluetooth object:
 
