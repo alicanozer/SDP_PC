@@ -33,16 +33,18 @@ public class Bluetooth {
 	public final static String DEFENCE = "0016530970C6"; //team trinity
 	
 	// Commands
-	public final static int NOTHING = 0;
-	public final static int FORWARDS = 1;
-	public final static int BACKWARDS = 2;
-	public final static int STOP = 3;
-	public final static int KICK = 4;
-	public final static int SPEED = 5;
-	public final static int ROTATELEFT = 6;
-	public final static int ROTATERIGHT = 7;
-	public final static int MOVING = 8;
-	public final static int QUIT = 9;
+	private final static int NOTHING = 0;
+	private final static int FORWARDS = 1;
+	private final static int BACKWARDS = 2;
+	private final static int STOP = 3;
+	private final static int GRAB = 4;
+	private final static int KICK = 5;
+	private final static int SPEED = 6;
+	//private final static int ROTATESPEED = 7;
+	private final static int ROTATELEFT = 7;
+	private final static int ROTATERIGHT = 8;
+	private final static int MOVING = 9;
+	private final static int QUIT = 10;
 	
 	/**
 	 * Creates a new bluetooth object and opens the relevant bluetooth connection.
