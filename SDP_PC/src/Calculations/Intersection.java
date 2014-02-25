@@ -10,6 +10,10 @@ public class Intersection {
 		ball = ObjectLocations.getBall();
 		double ballDirection = ObjectLocations.getBallDirectionAngle();
 
+		System.out.println("ball: " + ball);
+		System.out.println("marker: " + marker);
+		System.out.println("dot: " + dot);
+		
 		double xDiff1 = marker.getX() - dot.x;
 		double yDiff1 = marker.getY() - dot.y;
 
