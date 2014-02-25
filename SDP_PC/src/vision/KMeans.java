@@ -34,11 +34,11 @@ public class KMeans {
 		return cent;
 	}
 
-	private static int min(double[] list){ //find position of min value
+	static int min(double[] list){ //find position of min value
 		double mini=list[0];
 		int pos =0;
 		for (int i = 1; i < list.length; i++) {
-			if(mini>list[i]) {
+			if(mini>list[i]&&list[i]!=0) {
 				mini=list[i];
 				pos = i;
 			}
@@ -67,19 +67,31 @@ public class KMeans {
 			ArrayList<Point2D_I32> tempA = new ArrayList<Point2D_I32>();
 			dataMap.put(temp, tempA);
 		}
-
+		
+		
 		int it = 0;
 		while (it < max){
 
 			//assign each point in dataset to closest center, put into dataMap
 			for (int i = 0;i<dataset.size();i++){
+				double[] dists = new double[k];
 				for (int j = 0;j<centers.size();j++){
-					double[] dists = new double[k];
 					int dX = Math.abs((dataset.get(i).x - centers.get(j).x));
 					int dY = Math.abs((dataset.get(i).y - centers.get(j).y));
 					dists[j] = Math.sqrt((dX*dX + dY*dY)); //find closest distance from cur point to center
+					
+					/*System.out.println(dists[j]);
+					System.out.print("dists ");
+					for (int a = 0; a<dists.length; a++){
+						System.out.print(dists[a]+", ");
+					}
+					System.out.println("min dist "+dists[min(dists)]+ " at pos "+min(dists));
+					System.out.println("comparing center "+centers.get(j));
+					*/
 					dataMap.get(centers.get(min(dists))).add(dataset.get(i)); //add point into map with center as key
-					System.out.println("closest center to "+dataset.get(i)+" is "+centers.get(min(dists)));
+					
+					System.out.println("closest center to "+dataset.get(i)+" is "+centers.get(min(dists))+" at "+dists[min(dists)]);
+					System.out.println();
 				}
 			}
 
