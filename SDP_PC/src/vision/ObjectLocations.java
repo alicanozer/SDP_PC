@@ -135,7 +135,6 @@ public class ObjectLocations {
 	 */
 	public static void updateObjectLocations(BufferedImage img, PitchColours colors){
 		Point2D_I32 ballLocal = VisionOps.findBall(img,colors.getRedValue());
-		if(ballLocal != null) System.out.println(ballLocal);
 		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkers(img,colors.getYellowValue());
 		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkers(img,colors.getBlueValue());
 
