@@ -6,13 +6,24 @@ This readme gives a quick runthrough of how to establish a connection, send comm
 Establishing Connection
 -----------------------
 
-To create a new connection first initialise a new Bluetooth object:
+To create a new connection first initialise new Bluetooth Robot objects:
 
-    private static Bluetooth myConnection;
+
+    static BluetoothRobotTwin attackRobot;
+    static BluetoothRobotTwin defenceRobot;
     
-then create the new Bluetooth object with the robot name being either HERCULES or TEAM_TRINITY.
+then create a new bluetooth object:
 
-    myConnection = new Bluetooth(ROBOT_NAME);
+    Bluetooth myConnection = new Bluetooth(connectionType);
+    
+where connection type can be: *"attack"*, *"defence"* or *"both"*. If you would like to connect to only one robot then pass the relevant string connection type or if you would like to connect to both robots then pass *"both"*.
+
+Next create the new BluetoothRobot objects:
+
+    attackRobot = new BluetoothRobot(RobotType.AttackUs, myConnection);
+    defenceRobot = new BluetoothRobot(RobotType.DefendUs, myConnection);
+    
+You should now be able to send commands to the robots you connected to.
     
 Sending Commands
 ----------------
