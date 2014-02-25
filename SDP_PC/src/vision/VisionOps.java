@@ -436,19 +436,21 @@ public class VisionOps {
 		BinaryImageOps.logicAnd(binary, upperValue, binary);
 
 
-		ImageUInt8 filtered = BinaryImageOps.dilate8(binary,null);
-		//filtered = BinaryImageOps.erode8(filtered, null);
+		ImageUInt8 filtered = BinaryImageOps.erode4(binary,null);
+		filtered = BinaryImageOps.dilate8(filtered, null);
+		
 		List<Contour> contoursUnfiltered = BinaryImageOps.contour(filtered, 8, null);
 		List<Contour> contoursFiltered = new ArrayList<Contour>();
 		/*
 		 * Size filtering
 		 */
-		for(Contour c: contoursUnfiltered) {
-			Point2D_I32 p = PointUtils.getContourCentroid(c);
-			if(c.external.size() > 12 && c.external.size() < 300 && p.x > 15 && p.x < img.getWidth() - 15) contoursFiltered.add(c);
-		}
+//		boolean flag = true;
+//		for(Contour c: contoursUnfiltered) {
+//			Point2D_I32 p = PointUtils.getContourCentroid(c);
+//			if(c.external.size() > 10 && c.external.size() < 300 && p.x > 15 && p.x < img.getWidth() - 15) contoursFiltered.add(c);
+//		}
 
-		return contoursFiltered;
+		return contoursUnfiltered;
 	}
 	
 	
@@ -609,9 +611,9 @@ public class VisionOps {
 		 * populating seeds array
 		 */
 		List<Color> seeds = new ArrayList<Color>();
-		seeds.add(new Color(dotColors[0],dotColors[1],dotColors[2])); // black dot
-		seeds.add(new Color(markerColors[0],markerColors[1],markerColors[2])); //green stuff
-		seeds.add(new Color(plateColors[0],plateColors[1],plateColors[2])); //yellow
+		seeds.add(new Color((int)dotColors[0],(int)dotColors[1],(int)dotColors[2])); // black dot
+		seeds.add(new Color((int)markerColors[0],(int)markerColors[1],(int)markerColors[2])); //green stuff
+		seeds.add(new Color((int)plateColors[0],(int)plateColors[1],(int)plateColors[2])); //yellow
 		/*
 		 * running kMeans color clustering
 		 */
@@ -671,7 +673,7 @@ public class VisionOps {
 		
 		for(int i = 0; i < contoursFull.size(); i++){
 			System.out.println("contour size " + contoursFull.get(i).external.size());
-			if(contoursFull.get(i).external.size() > 15 ){
+			if(contoursFull.get(i).external.size() > 10 ){
 				contours.add(contoursFull.get(i));
 			}
 		}

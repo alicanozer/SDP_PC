@@ -51,7 +51,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  */
 public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private static int      width = 640, height = 480, std = V4L4JConstants.STANDARD_WEBCAM, channel = 0;
-	private static String   device = "/dev/video0";
+	private static String   device = "/dev/video1";
 	private long lastFrame = System.currentTimeMillis(); 
 	private VideoDevice     videoDevice;
 	private FrameGrabber    frameGrabber;
@@ -61,6 +61,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private boolean debug;
 	private PitchConstants consts;
 	private PitchColours colors;
+	private ArrayList<Point2D_I32> whitePoints;
 
 
 
@@ -162,7 +163,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	@Override
 	public void nextFrame(VideoFrame frame) {
 		BufferedImage img = frame.getBufferedImage();
-		
+		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		if(frameCounter < 3){
 			frame.recycle();
 			frameCounter++;
@@ -171,9 +172,42 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		else if (frameCounter == 3){
 			frameCounter++;
 			colors = ExampleSegmentColor.selectColoursOfPitch(img);
+			try {
+				List<Color> colorsList = new ArrayList<Color>();
+				BufferedImage pitchImg = img;
+				//set white
+				float[] fsW = new float[3];
+				ColorHsv.hsvToRgb(
+						(colors.getWhiteValue()[0][0]+colors.getWhiteValue()[1][0])/2,
+						(colors.getWhiteValue()[0][1]+colors.getWhiteValue()[1][1])/2,
+						(colors.getWhiteValue()[0][2]+colors.getWhiteValue()[1][2])/2,
+						fsW);
+
+				Color white = new Color((int)fsW[0],(int)fsW[1],(int)fsW[2]);
+				List<Color> colorList = new ArrayList<Color>();
+				colorList.add(white);
+				//add pitch
+				float[] fsP = new float[3];
+				ColorHsv.hsvToRgb(
+						(colors.getGreenPitchValue()[0][0]+colors.getGreenPitchValue()[1][0])/2,
+						(colors.getGreenPitchValue()[0][1]+colors.getGreenPitchValue()[1][1])/2,
+						(colors.getGreenPitchValue()[0][2]+colors.getGreenPitchValue()[1][2])/2,
+						fsP);
+
+				Color pitch = new Color((int)fsP[0],(int)fsP[1],(int)fsP[2]);
+
+				colorList.add(pitch);
+				
+				whitePoints = KMeans.Cluster(pitchImg, 2, 1, colorList).get(0);
+				ShowImages.showWindow(pitchImg,"pitchImg");
+				
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			return;
 		}
-		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
+		
 		
 		long thisFrame = System.currentTimeMillis();
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
@@ -204,7 +238,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		try {
 			ObjectLocations.updateObjectLocations(img,colors);
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 		if(debug){
 			g.setColor(Color.BLACK);

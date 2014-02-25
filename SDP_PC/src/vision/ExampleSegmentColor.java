@@ -27,6 +27,7 @@ public class ExampleSegmentColor {
 				float[] color = new float[3];
 				int rgb = img.getRGB(e.getX(),e.getY());
 				ColorHsv.rgbToHsv((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF , rgb&0xFF,color);
+//				System.out.println("h: " + color[0]+ ", s: " + color[1] + ", v:" + color[2]);
 				ExampleSegmentColor.colour = color;
 				ExampleSegmentColor.flag = true;
 				return;
@@ -142,7 +143,7 @@ public class ExampleSegmentColor {
 	 * @param meanFloatArray
 	 * @param floatArray3
 	 */
-	private static void setMeanHSV3(float[] meanFloatArray, float[][] floatArray3) {
+	public static void setMeanHSV3(float[] meanFloatArray, float[][] floatArray3) {
 		// merge colors
 		float h = 0; 
 		float s = 0;
@@ -167,7 +168,6 @@ public class ExampleSegmentColor {
 			floatArray3[i] = colour;
 			flag = false;
 		}
-		flag = false;
 	}
 	private float minArray(float[] ar){
 		float min = Float.POSITIVE_INFINITY;
