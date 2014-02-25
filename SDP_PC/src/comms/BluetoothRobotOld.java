@@ -6,14 +6,14 @@ import lejos.pc.comm.NXTConnector;
 import World.Robot;
 import World.RobotType;
 
-public class BluetoothRobot extends Robot implements RobotController {
+public class BluetoothRobotOld extends Robot implements RobotControllerOld {
 
-	private Bluetooth bluetooth;
+	private BluetoothOld bluetooth;
 	public static final String TEAM_TRINITY = "0016530970C6";
 	public static final String HERCULES = "0016530D4ED8";
 	NXTConnector connector = new NXTConnector();
 	
-	public BluetoothRobot(RobotType type, Bluetooth bluetooth) {
+	public BluetoothRobotOld(RobotType type, BluetoothOld bluetooth) {
 		super(type);
 		this.bluetooth = bluetooth;
 	}
@@ -21,7 +21,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 	@Override
 	public void connect() {
 		try {
-			bluetooth = new Bluetooth(HERCULES);
+			bluetooth = new BluetoothOld(HERCULES);
 		}catch (Exception e) {
 			System.err.println();
 		}
