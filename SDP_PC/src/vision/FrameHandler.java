@@ -180,13 +180,21 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 		VisionRunner.sendFrame(new Frame(img,thisFrame));
 		
-		System.out.println("max blue:" + colors.getBlueValue()[0][0] + " " + colors.getBlueValue()[0][1] + " " + colors.getBlueValue()[0][2]);
-		System.out.println("min blue:" + colors.getBlueValue()[1][0] + " " + colors.getBlueValue()[1][1] + " " + colors.getBlueValue()[1][2]);
+//		System.out.println("max blue:" + colors.getBlueValue()[0][0] + " " + colors.getBlueValue()[0][1] + " " + colors.getBlueValue()[0][2]);
+//		System.out.println("min blue:" + colors.getBlueValue()[1][0] + " " + colors.getBlueValue()[1][1] + " " + colors.getBlueValue()[1][2]);
+//		
+//		System.out.println("max black:" + colors.getBlackValue()[0][0] + " " + colors.getBlackValue()[0][1] + " " + colors.getBlackValue()[0][2]);
+//		System.out.println("min black:" + colors.getBlackValue()[1][0] + " " + colors.getBlackValue()[1][1] + " " + colors.getBlackValue()[1][2]);
+//		
+//		System.out.println("max yellow:" + colors.getYellowValue()[0][0] + " " + colors.getYellowValue()[0][1] + " " + colors.getYellowValue()[0][2]);
+//		System.out.println("min yellow:" + colors.getYellowValue()[1][0] + " " + colors.getYellowValue()[1][1] + " " + colors.getYellowValue()[1][2]);
+//		
+//		System.out.println("max red:" + colors.getRedValue()[0][0] + " " + colors.getRedValue()[0][1] + " " + colors.getRedValue()[0][2]);
+//		System.out.println("min red:" + colors.getRedValue()[1][0] + " " + colors.getRedValue()[1][1] + " " + colors.getRedValue()[1][2]);
 		
-		System.out.println("max black:" + colors.getBlackValue()[0][0] + " " + colors.getBlackValue()[0][1] + " " + colors.getBlackValue()[0][2]);
-		System.out.println("min black:" + colors.getBlackValue()[1][0] + " " + colors.getBlackValue()[1][1] + " " + colors.getBlackValue()[1][2]);
+		
 		//KMeans.ClusterHeaps(img, 6, 1, null,15);
-		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
+		img = VisionOps.newDisplay(VisionOps.extractContour(img, colors.getBlueValue()),img.getWidth(), img.getHeight());
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
