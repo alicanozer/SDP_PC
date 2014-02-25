@@ -19,8 +19,8 @@ public class InterceptBall extends StrategyInterface{
 	private Point2D_I32 ball;
 	private Point2D_I32 dot;
 
-	public InterceptBall(BluetoothRobot bRobot) {
-		super(bRobot);
+	public InterceptBall(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
+		super(attackRobot,defenceRobot);
 		while (ball==null) {
 			if (ObjectLocations.getBall()!=null){
 				ball = ObjectLocations.getBall();
@@ -46,7 +46,7 @@ public class InterceptBall extends StrategyInterface{
 		double distance = DistanceCalculator.DistanceQuadruple(intersection.getX(), intersection.getY(), ourAttackRobot.getPosition().getX(), ourAttackRobot.getPosition().getY());
 		System.out.println("distance: " + distance);
 		try {
-			MoveToPoint.moveToPoint(bRobot, ObjectLocations.getYellowATTACKmarker(), dot, intersection.getX(), intersection.getY());
+			MoveToPoint.moveToPoint(attackRobot, ObjectLocations.getYellowATTACKmarker(), dot, intersection.getX(), intersection.getY());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

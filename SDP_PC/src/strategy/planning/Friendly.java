@@ -18,8 +18,8 @@ public class Friendly extends StrategyInterface{
 	state currentState; // = MoveToBall
 	private state newState = currentState;
 
-	public Friendly(BluetoothRobot bRobot) {
-		super(bRobot);
+	public Friendly(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
+		super(attackRobot, defenceRobot);
 		// TODO Auto-generated constructor stub
 	}
 

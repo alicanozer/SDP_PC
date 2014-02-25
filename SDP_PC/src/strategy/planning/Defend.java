@@ -9,6 +9,7 @@ import vision.ObjectLocations;
 import geometry.Vector;
 import georegression.struct.point.Point2D_I32;
 import comms.BluetoothRobot;
+import comms.BluetoothRobotOld;
 
 public class Defend extends StrategyInterface {
 
@@ -21,10 +22,9 @@ public class Defend extends StrategyInterface {
 	//	private Point2D_I32 ourAttackRobot;
 	
 	private Point2D_I32 ball;
-	static BluetoothRobot bRobot;
 
-	public Defend(BluetoothRobot bRobot) {
-		super(bRobot);
+	public Defend(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
+		super(attackRobot, defenceRobot);
 		ball = ObjectLocations.getBall();
 	
 		//		ourDefendRobot.setPosition(new Vector(ObjectLocations.getYellowDEFENDmarker().x,ObjectLocations.getYellowDEFENDmarker().y));
@@ -55,8 +55,7 @@ public class Defend extends StrategyInterface {
 				} else {
 					
 					System.out.println("Someone else has the ball.");
-					bRobot.forward(10);
-					bRobot.backwards();
+					attackRobot.forward("AttackUs", 10);
 				
 				}
 			}
