@@ -1,6 +1,6 @@
 package comms;
 
-public interface RobotController {
+public interface RobotControllerOld {
 
 	public void connect() throws Exception;
 	
