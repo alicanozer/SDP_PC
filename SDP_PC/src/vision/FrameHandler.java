@@ -165,8 +165,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	 */
 	@Override
 	public void nextFrame(VideoFrame frame){
-		BufferedImage img = null;
-		img = frame.getBufferedImage();//ImageIO.read(new File("test_images/000000013.jpg"));
+		BufferedImage img = frame.getBufferedImage();
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		if(frameCounter < 3){
 			frame.recycle();
@@ -208,7 +207,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 
 		try {
-			ObjectLocations.updateObjectLocations(img,colors);
+			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
