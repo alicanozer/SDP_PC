@@ -408,10 +408,10 @@ public class VisionOps {
 	}
 	
 	
-	public static List<Contour> extractContour(BufferedImage img,float[][] fs){
+	public static List<Contour> extractContour(BufferedImage img){
 		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img,null,true,ImageFloat32.class);
 		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
-
+		float[][] fs = new float[3][3];
 		// Convert into HSV
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
@@ -464,11 +464,10 @@ public class VisionOps {
 	/**
 	 * 
 	 * @param img
-	 * @param fs 
 	 * @return
 	 */
-	public static Point2D_I32 findBall(BufferedImage img, float[][] fs){
-		List<Contour> contours = extractContour(img,fs);
+	public static Point2D_I32 findBall(BufferedImage img){
+		List<Contour> contours = extractContour(img);
 		if(contours.size() > 1 ){
 //			System.out.println("WARNING: MORE THAN 1 ball detected");
 			return null;
@@ -487,12 +486,11 @@ public class VisionOps {
 	 * finds the marker according to colour
 	 * @param img
 	 * @param type
-	 * @param fs 
 	 * @return
 	 */
-	private static ArrayList<Point2D_I32> findMarkers(BufferedImage img, String type, float[][] fs){
+	private static ArrayList<Point2D_I32> findMarkers(BufferedImage img, String type){
 		if(type == "yellow"){
-			List<Contour> contours = extractContour(img,fs);//segmentHSV(img, 0.7f, 0.95f));
+			List<Contour> contours = extractContour(img);//segmentHSV(img, 0.7f, 0.95f));
 			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
 //				System.out.println("WARNING: ONLY ONE yellow marker was detected");
@@ -510,7 +508,7 @@ public class VisionOps {
 			return ret;
 		}
 		else if(type == "blue"){
-			List<Contour> contours = extractContour(img,fs);//segmentHSV(img, 3.31f, 0.538f));
+			List<Contour> contours = extractContour(img);//segmentHSV(img, 3.31f, 0.538f));
 			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
 //				System.out.println("WARNING: ONLY ONE blue marker was detected");
@@ -533,20 +531,18 @@ public class VisionOps {
 	/**
 	 * Finds the positions of the Blue Markers
 	 * @param img
-	 * @param fs 
 	 * @return
 	 */
-	public static ArrayList<Point2D_I32> findBlueMarkers(BufferedImage img, float[][] fs){
-		return findMarkers(img,"blue",fs);
+	public static ArrayList<Point2D_I32> findBlueMarkers(BufferedImage img){
+		return findMarkers(img,"blue");
 	}
 	/**
 	 * Finds the positions of the Yellow Markers
 	 * @param img
-	 * @param fs 
 	 * @return
 	 */
-	public static ArrayList<Point2D_I32> findYellowMarkers(BufferedImage img, float[][] fs){
-		return findMarkers(img,"yellow",fs);
+	public static ArrayList<Point2D_I32> findYellowMarkers(BufferedImage img){
+		return findMarkers(img,"yellow");
 	}
 	/**
 	 * 
@@ -638,7 +634,7 @@ public class VisionOps {
 	public static Point2D_I32 getMeanDotNearMarker(
 			BufferedImage img, 
 			Point2D_I32 p, // this is a marker position 
-			int windowSize, float[][] fs)
+			int windowSize)
 	{
 		int x = p.getX();
 		int y = p.getY();
@@ -659,8 +655,8 @@ public class VisionOps {
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
 		
-		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null, fs[1][2]-5,false); 
-		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null, fs[0][2]+5,true); 
+		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null, 20,false); 
+		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null, 80,true); 
 
 		BinaryImageOps.logicAnd(upperValue, lowerValue, binary);
 		
