@@ -133,12 +133,13 @@ public class ObjectLocations {
 	 * @param colors 
 	 * @param whitePoints 
 	 */
-	public static void updateObjectLocations(BufferedImage img, PitchColours colors){
+	public static void updateObjectLocations(
+			BufferedImage img, 
+			float[][] colors,
+			float[] distanceThresholds){
 		Point2D_I32 ballLocal = VisionOps.findBall(img);
 		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkers(img);
 		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkers(img);
-
-
 		ArrayList<Point2D_I32> dotsLocal = new ArrayList<Point2D_I32>();
 
 		if(yellowMarkers != null){

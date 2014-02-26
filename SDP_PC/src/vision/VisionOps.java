@@ -501,8 +501,7 @@ public class VisionOps {
 	public static HashMap<Integer,ArrayList<Point2D_I32>> getMultipleObjects(
 			BufferedImage image, 
 			float[][] colors,
-			float[] distanceThresholds,
-			boolean yellowLeft)
+			float[] distanceThresholds)
 	{
 		if(!(colors.length == distanceThresholds.length) || colors.length != 3){
 			return null;
