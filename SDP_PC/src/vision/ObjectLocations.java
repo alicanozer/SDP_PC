@@ -85,21 +85,16 @@ public class ObjectLocations {
 	// we assume the leftmost region of the pitch is region 1
 	private static boolean yellowLeft; // flag whether the yellow team is defending the left goal
 	private static boolean yellowUs;   // flag whether we are the yellow team
-
-
-	//new pitch
-	//	private static int region12X = 130;
-	//	private static int region23X = 280;
-	//	private static int region34X = 430;
-	//old pitch
-	private static int region12X = 115;
-	private static int region23X = 260;
-	private static int region34X = 410;
-
-	// lock, dunno if needed
+	
+	private static PitchConstants consts;
+	
+	public static PitchConstants getConsts() {
+		return consts;
+	}
+	public static void setConsts(PitchConstants consts) {
+		ObjectLocations.consts = consts;
+	}
 	private static boolean lock = true;
-
-
 
 	public static void setYellowDefendingLeft(boolean flag){
 		while(!lock);
@@ -188,7 +183,7 @@ public class ObjectLocations {
 			//set yellow
 			if(yellowMarkers != null){
 				for(Point2D_I32 p: yellowMarkers){
-					if(p.x < region12X) {
+					if(p.x < consts.getRegion12X()) {
 						try {
 							//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
 							yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
@@ -198,7 +193,7 @@ public class ObjectLocations {
 						setYellowDEFENDmarker(p);
 					}
 
-					if(region23X < p.x && p.x < region34X) {
+					if(consts.getRegion23X() < p.x && p.x < consts.getRegion34X()) {
 						try {
 							//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 3 )
 							yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
@@ -212,7 +207,7 @@ public class ObjectLocations {
 			//set blue
 			if(blueMarkers != null){
 				for(Point2D_I32 p: blueMarkers){
-					if(region12X < p.x && p.x < region23X) {
+					if(consts.getRegion12X() < p.x && p.x < consts.getRegion23X()) {
 						try {
 							blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
 						} catch (Exception e) {
@@ -220,7 +215,7 @@ public class ObjectLocations {
 						}
 						setBlueATTACKmarker(p);
 					}
-					if(p.x > region34X) {
+					if(p.x > consts.getRegion34X()) {
 						try {
 							blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
 						} catch (Exception e) {
@@ -235,7 +230,7 @@ public class ObjectLocations {
 			//set yellow
 			if(yellowMarkers != null){
 				for(Point2D_I32 p: yellowMarkers){
-					if(region12X < p.x && p.x < region23X) {
+					if(consts.getRegion12X() < p.x && p.x < consts.getRegion23X()) {
 						try {
 							//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 7 )
 							yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
@@ -244,7 +239,7 @@ public class ObjectLocations {
 						}
 						setYellowATTACKmarker(p);
 					}
-					if(p.x > region34X) {
+					if(p.x > consts.getRegion34X()) {
 						try {
 							//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
 							yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
@@ -258,7 +253,7 @@ public class ObjectLocations {
 			//set blue
 			if(blueMarkers != null){
 				for(Point2D_I32 p: blueMarkers){
-					if(p.x < region12X) {
+					if(p.x < consts.getRegion12X()) {
 						try {
 							blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
 						} catch (Exception e) {
@@ -266,7 +261,7 @@ public class ObjectLocations {
 						}
 						setBlueDEFENDmarker(p);
 					}
-					if(region23X < p.x && p.x < region34X) {
+					if(consts.getRegion23X() < p.x && p.x < consts.getRegion34X()) {
 						try {
 							blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
 						} catch (Exception e) {
@@ -285,7 +280,7 @@ public class ObjectLocations {
 		if(yellowLeft){
 			for(Point2D_I32 dot : dots){
 				if(dot != null){
-					if (dot.x < region12X)
+					if (dot.x < consts.getRegion12X())
 						try {
 							double newAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance); 
@@ -297,7 +292,7 @@ public class ObjectLocations {
 //							e.printStackTrace();
 
 						}
-					else if(region12X < dot.x && dot.x < region23X)
+					else if(consts.getRegion12X() < dot.x && dot.x < consts.getRegion23X())
 						try {
 							double newAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance);
@@ -306,7 +301,7 @@ public class ObjectLocations {
 						} catch (Exception e) {
 
 						}
-					else if (region23X < dot.x && dot.x < region34X){
+					else if (consts.getRegion23X() < dot.x && dot.x < consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance); 
@@ -316,7 +311,7 @@ public class ObjectLocations {
 
 						}
 					}
-					else if(dot.x > region34X){
+					else if(dot.x > consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance); // 10 degrees is 0.17 radians
@@ -332,7 +327,7 @@ public class ObjectLocations {
 		else{ // blue if left
 			for(Point2D_I32 dot : dots){
 				if(dot != null){
-					if (dot.x < region12X)
+					if (dot.x < consts.getRegion12X())
 						try {
 							double newAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance); 
@@ -340,7 +335,7 @@ public class ObjectLocations {
 						} catch (Exception e) {
 
 						}
-					else if(region12X < dot.x && dot.x < region23X)
+					else if(consts.getRegion12X() < dot.x && dot.x < consts.getRegion23X())
 						try {
 							double newAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance);
@@ -348,7 +343,7 @@ public class ObjectLocations {
 						} catch (Exception e) {
 
 						}
-					else if (region23X < dot.x && dot.x < region34X){
+					else if (consts.getRegion23X() < dot.x && dot.x < consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance); 
@@ -357,7 +352,7 @@ public class ObjectLocations {
 
 						}
 					}
-					else if(dot.x > region34X){
+					else if(dot.x > consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance); 

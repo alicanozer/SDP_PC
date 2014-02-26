@@ -12,6 +12,7 @@ public class PitchConstants {
 		this.region34X = region34x;
 		this.hUpperBound = hUpperBound;
 		this.hLowerBound = hLowerBound;
+		this.middleLine = croppedWidth/2; //TODO: this or regin23X ?
 	}
 	public int getUpperLeftX() {
 		return upperLeftX;
@@ -76,6 +77,7 @@ public class PitchConstants {
 	private int region34X;
 	private int hUpperBound;
 	private int hLowerBound;
+	private int middleLine;
 	
 
 	public static final PitchConstants newPitch = new PitchConstants(60,98,520,280,115,260,410,15,280);
