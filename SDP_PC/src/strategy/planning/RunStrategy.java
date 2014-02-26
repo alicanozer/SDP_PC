@@ -2,16 +2,14 @@ package strategy.planning;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-
 import comms.Bluetooth;
 import comms.BluetoothRobot;
-
+import comms.BluetoothRobotOld;
 import Calculations.GoalInfo;
 import World.RobotType;
-
 import vision.PitchConstants;
 import vision.VisionRunner;
-import World.WorldState;
+
 /**
  * Runs the vision, starts a bluetooth connection with HERCULES and starts the
  * strategy. 
@@ -22,22 +20,20 @@ import World.WorldState;
  */
 public class RunStrategy {
 
-	static BluetoothRobot bRobot;
-	private static Bluetooth connection;
+    static BluetoothRobot attackRobot;
+    static BluetoothRobot defenceRobot;
 
 	private Thread strategyThread;
 	private StrategyInterface strategy;
-	private WorldState worldstate;
 
 	public static void main(String[] args) throws Exception {
 
 		VisionRunner.start(true,PitchConstants.newPitch,10);
 		
+		Bluetooth myConnection = new Bluetooth("attack");
+		attackRobot = new BluetoothRobot(RobotType.AttackUs, myConnection);
 
-		bRobot = new BluetoothRobot(RobotType.AttackUs, connection);
-		bRobot.connect();
-
-		while (!bRobot.isConnected()) {
+		while (!attackRobot.isAttackConnected()) {
 			// Reduce CPU cost
 			try {
 				Thread.sleep(10);
@@ -51,7 +47,7 @@ public class RunStrategy {
 
 		PitchConstants pitchconstants = PitchConstants.newPitch;
 
-		RunStrategy teststrat = new RunStrategy(bRobot);
+		RunStrategy teststrat = new RunStrategy(attackRobot, defenceRobot);
 
 	}
 
@@ -60,13 +56,13 @@ public class RunStrategy {
 	 */
 	private void startStrategy() {
 		assert (strategyThread == null || !strategyThread.isAlive()) : "Strategy is already running";
-		strategy = new InterceptBall(bRobot); //Put your strategy class here.
+		strategy = new InterceptBall(attackRobot, defenceRobot); //Put your strategy class here.
 		strategyThread = new Thread(strategy);
 		strategyThread.start();
 	}
 
-	public RunStrategy (final BluetoothRobot robot){
-		this.bRobot = robot;
+	public RunStrategy (final BluetoothRobot attackRobot, final BluetoothRobot defenceRobot){
+		this.attackRobot = attackRobot;
 
 		Strategy.reset();
 		startStrategy();

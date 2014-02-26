@@ -3,24 +3,23 @@ package strategy.planning;
  * Strategy for our first friendly. Still an outline.
  */
 
+import vision.ObjectLocations;
 import Calculations.BallPossession;
 import World.RobotType;
-import World.WorldState;
-
 import comms.BluetoothRobot;
 
 public class Friendly extends StrategyInterface{
 
 	enum state {
 		//TODO add different strategy states e.g. Defending, Attacking, MoveToBall?
-		Defend,
+		Defend, Attack, Passing, 
 	}
 
 	state currentState; // = MoveToBall
 	private state newState = currentState;
 
-	public Friendly(BluetoothRobot bRobot) {
-		super(bRobot);
+	public Friendly(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
+		super(attackRobot, defenceRobot);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -39,26 +38,36 @@ public class Friendly extends StrategyInterface{
 
 			//if ball in their attack zone then DEFEND
 			//else normal defence?
-			if (BallPossession.hasPossession(RobotType.DefendThem)) {
-				//STOP THE BALL!
-				newState = state.Defend;
+			if (ObjectLocations.getYellowUs()) {
+				if (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getBlueDEFENDmarker())) {
+					//DEFENCE STRATEGY!
+					newState = state.Defend;
+				} else if (BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getYellowDEFENDmarker())) {
+					//PASSING STRATEGY!
+				} else if (BallPossession.hasPossession(RobotType.AttackUs, ObjectLocations.getYellowATTACKmarker())) {
+					//SHOOTING STRATEGY!
+				} else if (BallPossession.hasPossession(RobotType.AttackThem, ObjectLocations.getBlueATTACKmarker())) {
+					//DEFENCE STRATEGY!
+				} else {
+					//When no-one has the ball, INTERCEPT!!
+				}
+			} else {
+				if (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getYellowDEFENDmarker())) {
+					//DEFENCE STRATEGY!
+					newState = state.Defend;
+				} else if (BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getBlueDEFENDmarker())) {
+					//PASSING STRATEGY!
+				} else if (BallPossession.hasPossession(RobotType.AttackUs, ObjectLocations.getBlueATTACKmarker())) {
+					//SHOOTING STRATEGY!
+				} else if (BallPossession.hasPossession(RobotType.AttackThem, ObjectLocations.getYellowATTACKmarker())) {
+					//DEFENCE STRATEGY!
+				} else {
+					//When no-one has the ball, INTERCEPT!!
+				}
 			}
-
-			//if ball in our defence possession then pass to attack
-			if (BallPossession.hasPossession(RobotType.DefendUs)) {
-				//PASS!
-				//newstate = state.Pass
-			}
-
-			//if ball in our attack possession then shoot
-			if (BallPossession.hasPossession(RobotType.AttackUs)) {
-				//SHOOT! SCORE!
-				//newstate = state.Shoot
-			}
-
+			
 			// If state did not change, do nothing
 			// Otherwise kill old strategy and start new one
-			// TODO Add possible states
 			if (currentState != newState) {
 				currentState = newState;
 				if (strategyThread.isAlive()) {

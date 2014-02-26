@@ -6,42 +6,43 @@ import lejos.pc.comm.NXTConnector;
 import World.Robot;
 import World.RobotType;
 
-public class BluetoothRobot extends Robot implements RobotController {
+public class BluetoothRobotOld extends Robot implements RobotControllerOld {
 
-	private Bluetooth bluetooth;
+	private BluetoothOld bluetooth;
 	public static final String TEAM_TRINITY = "0016530970C6";
 	public static final String HERCULES = "0016530D4ED8";
 	NXTConnector connector = new NXTConnector();
 	
-	public BluetoothRobot(RobotType type, Bluetooth bluetooth) {
+	public BluetoothRobotOld(RobotType type, BluetoothOld bluetooth) {
 		super(type);
 		this.bluetooth = bluetooth;
 	}
 	
+	@Override
 	public void connect() {
 		try {
-			bluetooth = new Bluetooth(HERCULES);
+			bluetooth = new BluetoothOld(HERCULES);
 		}catch (Exception e) {
 			System.err.println();
 		}
 	}
 	
 	@Override
-	public boolean isAttackConnected() {
-		return bluetooth.isAttackConnected();
+	public boolean isConnected() {
+		return bluetooth.isConnected();
 	}
 	
 	@Override
-	public boolean isDefenceConnected() {
-		return bluetooth.isDefenceConnected();
+	public boolean isReady() {
+		return bluetooth.isRobotReady();
 	}
 	
 	@Override
-	public void disconnect(String robotType) {
+	public void disconnect() {
 		int[] commands = { bluetooth.QUIT, 0, 0, 0 };
 		
 		try {
-			bluetooth.sendCommand(commands, robotType);
+			bluetooth.sendCommand(commands);
 			Thread.sleep(100);
 		}catch (IOException e){
 			System.out.println("Command could not be sent");
@@ -51,16 +52,16 @@ public class BluetoothRobot extends Robot implements RobotController {
 			e1.printStackTrace();
 		}
 		
-		//bluetooth.closeBluetoothConnection(connector);
+		bluetooth.closeBluetoothConnection(connector);
 		System.out.println("Connection Disconnected");
 	}
 	
 	@Override
-	public void stop(String robotType) {
+	public void stop() {
 		int[] commands = { bluetooth.STOP, 0, 0, 0 };
 		
 		try {
-			bluetooth.sendCommand(commands, robotType);
+			bluetooth.sendCommand(commands);
 			System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
@@ -69,11 +70,11 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void kick(String robotType) {
+	public void kick() {
 		int[] commands = { bluetooth.KICK, 0, 0, 0 };
 		
 		try {
-			bluetooth.sendCommand(commands, robotType);
+			bluetooth.sendCommand(commands);
 			System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
@@ -82,17 +83,17 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void move(String robotType, int speedX, int speedY) {
+	public void move(int speedX, int speedY) {
 		
 	}
 
 	@Override
-	public void rotateLEFT(String robotType, int turn) {
+	public void rotateLEFT(int turn) {
 		int angle = turn/3;
 		int[] commands = { bluetooth.ROTATELEFT, angle, angle, angle}; 
 		
 		try {
-			bluetooth.sendCommand(commands, robotType);
+			bluetooth.sendCommand(commands);
 			System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
@@ -101,12 +102,12 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void rotateRIGHT(String robotType, int angle) {
+	public void rotateRIGHT(int angle) {
 		
 		int[] commands = { bluetooth.ROTATERIGHT, 0,0,0 }; 
 		
 		try {
-			bluetooth.sendCommand(commands, robotType);
+			bluetooth.sendCommand(commands);
 			System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
@@ -115,11 +116,11 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void forward(String robotType, double distance) {
+	public void forward(double distance) {
 	int[] commands = { bluetooth.FORWARDS, (int) distance,0,0 }; 
 		
 		try {
-			bluetooth.sendCommand(commands, robotType);
+			bluetooth.sendCommand(commands);
 			System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
@@ -129,12 +130,12 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void backwards(String robotType) {
+	public void backwards() {
 		
 	int[] commands = { bluetooth.BACKWARDS, 0,0,0 }; 
 		
 		try {
-			bluetooth.sendCommand(commands, robotType);
+			bluetooth.sendCommand(commands);
 			System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
@@ -143,11 +144,11 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 	
 	@Override
-	public void setSpeed(String robotType, int speed) {
+	public void setSpeed(int speed) {
 		int[] commands = { bluetooth.SPEED, speed,0,0 }; 
 		
 		try {
-			bluetooth.sendCommand(commands, robotType);
+			bluetooth.sendCommand(commands);
 			System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
@@ -156,11 +157,11 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 	
 	@Override
-	public boolean isMoving(String robotType) {
+	public boolean isMoving() {
 		int[] commands = { bluetooth.MOVING, 0,0,0 }; 
 		
 		try {
-			bluetooth.sendCommand(commands, robotType);
+			bluetooth.sendCommand(commands);
 			System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");

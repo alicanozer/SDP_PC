@@ -1,6 +1,7 @@
 package comms;
 
 import lejos.nxt.Button;
+import strategy.movement.MoveToPoint;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import vision.PitchConstants;
@@ -9,9 +10,9 @@ import World.RobotType;
 
 public class Test3 {
 
-	static BluetoothRobot bRobot;
+	static BluetoothRobotOld bRobot;
 	public static final String HERCULES = "0016530D4ED8";
-	private static Bluetooth connection;
+	private static BluetoothOld connection;
 	
 	public static void main(String[] args) {
  	
@@ -20,7 +21,7 @@ public class Test3 {
 	
 	VisionRunner.start(true,PitchConstants.newPitch,10);
 	
-	bRobot = new BluetoothRobot(RobotType.AttackUs, connection);
+	bRobot = new BluetoothRobotOld(RobotType.AttackUs, connection);
 	bRobot.connect();
 	bRobot.setSpeed(20);
 
@@ -29,9 +30,7 @@ public class Test3 {
 						
 			try {
 				//Turn to Ball
-				double turn2 = TurnToObject.Ball(RobotType.AttackUs);
-				System.out.println("angle to ball:" + turn2);
-
+				MoveToPoint = new MoveToPoint(bRobot, RobotType.AttackUs, ObjectLocations.getBall());
 				Button.waitForAnyPress();
 			} catch (Exception e) {
 				e.printStackTrace();

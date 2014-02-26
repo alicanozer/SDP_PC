@@ -1,7 +1,7 @@
 package strategy.planning;
 
 import comms.BluetoothRobot;
-import World.WorldState;
+import comms.BluetoothRobotOld;
 import movement.RobotMover;
 import vision.ObjectLocations;
 /**
@@ -18,11 +18,13 @@ public abstract class StrategyInterface implements Runnable {
 	protected boolean shouldidie;
 
 	ObjectLocations obj;
-	BluetoothRobot bRobot;
+	BluetoothRobot attackRobot;
+	BluetoothRobot defenceRobot;
 
-	public StrategyInterface(BluetoothRobot bRobot) {
+	public StrategyInterface(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
 		this.shouldidie = false;
-		this.bRobot = bRobot;
+		this.attackRobot = attackRobot;
+		this.defenceRobot = defenceRobot;
 	}
 	
 	//TO DO: kill() doesn't work. Have no way of currently breaking loops in mover.
@@ -32,7 +34,7 @@ public abstract class StrategyInterface implements Runnable {
 		// NOTE: does NOT tell the robot to stop, it only breaks any loops in
 		// the mover
 		try {
-			bRobot.wait(10);
+			attackRobot.wait();
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
