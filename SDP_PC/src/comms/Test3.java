@@ -19,7 +19,7 @@ public class Test3 {
 	ObjectLocations.setYellowDefendingLeft(true);
 	ObjectLocations.setYellowUs(true);
 	
-	VisionRunner.start(true,PitchConstants.newPitch,10);
+	VisionRunner.startDebugVision(true,PitchConstants.newPitch,10);
 	
 	bRobot = new BluetoothRobotOld(RobotType.AttackUs, connection);
 	bRobot.connect();
