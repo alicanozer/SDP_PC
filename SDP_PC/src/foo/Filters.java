@@ -2,7 +2,11 @@ package foo;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-
+/**
+ * Some naive image processing to test things out. Don't bother looking at it. 
+ * @author apljungquist
+ *
+ */
 public class Filters {
 	
 	private Color[] referenceColors;

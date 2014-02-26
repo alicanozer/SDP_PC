@@ -6,6 +6,11 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
+/**
+ * Essentially a component displaying an image.
+ * @author apljungquist
+ *
+ */
 public class ImageComponent extends JComponent{
 	
 	private BufferedImage img;

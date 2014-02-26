@@ -1,22 +1,29 @@
 package foo;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.text.NumberFormat;
 
-import javax.swing.*;
-
-///*
-// * RadioButtonDemo.java requires these files:
-// *   images/Bird.gif
-// *   images/Cat.gif
-// *   images/Dog.gif
-// *   images/Rabbit.gif
-// *   images/Pig.gif
-// */
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+/**
+ * The colorpicker takes some image source and allows us to pick colors from images from that source.
+ * It keeps track of the colors and thresholds we set and can be queried for them.
+ * @author apljungquist
+ *
+ */
 public class ColorPicker extends JPanel implements ActionListener, MouseListener {
+	//String constants that will be used for displaying radio buttons and handling events
 	static String redString = "Red";
 	static String yellowString = "Yellow";
 	static String blueString = "Blue";
@@ -26,22 +33,28 @@ public class ColorPicker extends JPanel implements ActionListener, MouseListener
 	static String whiteString = "White";
 	static String dotString = "Dot";
 	
+	//String constants that will be used for han
 	static String refreshString = "Refresh";
 	static String thresholdString = "Threshold";
 	
+	//We will need to access these from multiple functions.
 	JFormattedTextField thresholdField;
 	ImageComponent imageComponent;
 	ImageSink imageSink;
 
-	int colorIndex;
-	public Color[] colors = new Color[8];
-	public double[] thresholds = new double[8];
+	//This is for keeping track of selected colors and thresholds.
+	//I put them in arrays to make implementation easier.
+	//See beginning of constructor for assumptions of which index belongs to what color.
 	
-//	JLabel picture;
+	int colorIndex; //This is used to keep track of which color we are currently manipulating
+	private Color[] colors = new Color[8];
+	private double[] thresholds = new double[8];
+	
 
 	public ColorPicker(ImageSink imageSink) {
 		super(new BorderLayout());
 		
+		//Default values for all the colors. Prevents nulls and lets us skip picking some colors after starting the program.
 		colors = new Color[8];
 		colors[0] = new Color(140,   0,   0);//Red
 		colors[1] = new Color(160,  80,   0);//Yellow
@@ -55,100 +68,96 @@ public class ColorPicker extends JPanel implements ActionListener, MouseListener
 		this.imageSink = imageSink;
 		
 		// Create the radio buttons.
-		JRadioButton birdButton = new JRadioButton(redString);
-		birdButton.setMnemonic(KeyEvent.VK_B);
-		birdButton.setActionCommand(redString);
-		birdButton.setSelected(true);
+		JRadioButton redButton = new JRadioButton(redString);
+		redButton.setMnemonic(KeyEvent.VK_B);
+		redButton.setActionCommand(redString);
+		redButton.setSelected(true);
 
-		JRadioButton catButton = new JRadioButton(yellowString);
-		catButton.setMnemonic(KeyEvent.VK_Y);
-		catButton.setActionCommand(yellowString);
+		JRadioButton yellowButton = new JRadioButton(yellowString);
+		yellowButton.setMnemonic(KeyEvent.VK_Y);
+		yellowButton.setActionCommand(yellowString);
 
-		JRadioButton dogButton = new JRadioButton(blueString);
-		dogButton.setMnemonic(KeyEvent.VK_B);
-		dogButton.setActionCommand(blueString);
+		JRadioButton blueButton = new JRadioButton(blueString);
+		blueButton.setMnemonic(KeyEvent.VK_B);
+		blueButton.setActionCommand(blueString);
 
-		JRadioButton rabbitButton = new JRadioButton(lightGreenString);
-		rabbitButton.setMnemonic(KeyEvent.VK_L);
-		rabbitButton.setActionCommand(lightGreenString);
+		JRadioButton lightGreenButton = new JRadioButton(lightGreenString);
+		lightGreenButton.setMnemonic(KeyEvent.VK_L);
+		lightGreenButton.setActionCommand(lightGreenString);
 
-		JRadioButton pigButton = new JRadioButton(darkGreenString);
-		pigButton.setMnemonic(KeyEvent.VK_D);
-		pigButton.setActionCommand(darkGreenString);
+		JRadioButton darkGreenButton = new JRadioButton(darkGreenString);
+		darkGreenButton.setMnemonic(KeyEvent.VK_D);
+		darkGreenButton.setActionCommand(darkGreenString);
 		
 		JRadioButton blackButton = new JRadioButton(blackString);
-		pigButton.setMnemonic(KeyEvent.VK_N);
-		pigButton.setActionCommand(blackString);
+		blackButton.setMnemonic(KeyEvent.VK_N);
+		blackButton.setActionCommand(blackString);
 		
 		JRadioButton whiteButton = new JRadioButton(whiteString);
-		pigButton.setMnemonic(KeyEvent.VK_W);
-		pigButton.setActionCommand(whiteString);
+		whiteButton.setMnemonic(KeyEvent.VK_W);
+		whiteButton.setActionCommand(whiteString);
 		
 		JRadioButton dotButton = new JRadioButton(dotString);
-		pigButton.setMnemonic(KeyEvent.VK_I);
-		pigButton.setActionCommand(dotString);
+		dotButton.setMnemonic(KeyEvent.VK_I);
+		dotButton.setActionCommand(dotString);
 
 		// Group the radio buttons.
 		ButtonGroup group = new ButtonGroup();
-		group.add(birdButton);
-		group.add(catButton);
-		group.add(dogButton);
-		group.add(rabbitButton);
-		group.add(pigButton);
+		group.add(redButton);
+		group.add(yellowButton);
+		group.add(blueButton);
+		group.add(lightGreenButton);
+		group.add(darkGreenButton);
 		group.add(blackButton);
 		group.add(whiteButton);
 		group.add(dotButton);
 		
 
 		// Register a listener for the radio buttons.
-		birdButton.addActionListener(this);
-		catButton.addActionListener(this);
-		dogButton.addActionListener(this);
-		rabbitButton.addActionListener(this);
-		pigButton.addActionListener(this);
+		redButton.addActionListener(this);
+		yellowButton.addActionListener(this);
+		blueButton.addActionListener(this);
+		lightGreenButton.addActionListener(this);
+		darkGreenButton.addActionListener(this);
 		blackButton.addActionListener(this);
 		whiteButton.addActionListener(this);
 		dotButton.addActionListener(this);
 
+		//Create the component that will show the image
 		imageComponent = new ImageComponent();
 		imageComponent.addMouseListener(this);
 		
+		//Create the button to refresh the image
 		JButton refreshButton = new JButton(refreshString);
 		refreshButton.setActionCommand(refreshString);
 		refreshButton.addActionListener(this);
 		
+		//Create the field that will take threshold values
 		thresholdField = new JFormattedTextField(NumberFormat.getNumberInstance());
 		thresholdField.setActionCommand(thresholdString);
 		thresholdField.addActionListener(this);
-//		// Set up the picture label.
-//		picture = new JLabel(createImageIcon("images/" + redString + ".gif"));
-
-//		// The preferred size is hard-coded to be the width of the
-//		// widest image and the height of the tallest image.
-//		// A real program would compute this.
-//		picture.setPreferredSize(new Dimension(177, 122));
 
 		// Put the radio buttons in a column in a panel.
 		JPanel radioPanel = new JPanel(new GridLayout(0, 1));
-		radioPanel.add(birdButton);
-		radioPanel.add(catButton);
-		radioPanel.add(dogButton);
-		radioPanel.add(rabbitButton);
-		radioPanel.add(pigButton);
+		radioPanel.add(redButton);
+		radioPanel.add(yellowButton);
+		radioPanel.add(blueButton);
+		radioPanel.add(lightGreenButton);
+		radioPanel.add(darkGreenButton);
 		radioPanel.add(blackButton);
 		radioPanel.add(whiteButton);
 		radioPanel.add(dotButton);
 
+		//Add everything to the panel
 		add(imageComponent, BorderLayout.LINE_START);
 		add(refreshButton, BorderLayout.CENTER);
 		add(thresholdField, BorderLayout.PAGE_END);
 		add(radioPanel, BorderLayout.LINE_END);
-//		add(picture, BorderLayout.CENTER);
-		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 	}
 
 	/** Listens to the radio buttons. */
 	public void actionPerformed(ActionEvent e) {
+		//If the refresh button is clicked, get a frame from the image sink and show it
 		if (e.getActionCommand().equals(refreshString)) {
 			try {
 				imageComponent.setImage(imageSink.getLatest());
@@ -157,9 +166,13 @@ public class ColorPicker extends JPanel implements ActionListener, MouseListener
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		}else if(e.getActionCommand().equals(thresholdString)) {
+		}
+		//Else if the threshold is modified update the appropriate threshold
+		else if(e.getActionCommand().equals(thresholdString)) {
 			thresholds[colorIndex] = Double.parseDouble(thresholdField.getText());
-		}else if (e.getActionCommand().equals(redString)) {
+		}
+		//Else if one of the radiobuttons are selected, set the colorIndex appropriately.
+		else if (e.getActionCommand().equals(redString)) {
 			colorIndex = 0;
 		}else if (e.getActionCommand().equals(yellowString)) {
 			colorIndex = 1;
@@ -176,41 +189,14 @@ public class ColorPicker extends JPanel implements ActionListener, MouseListener
 		}else if (e.getActionCommand().equals(dotString)) {
 			colorIndex = 7;
 		}
+		
+		//Whenever something is clicked make sure the threshold field shows the right value
 		thresholdField.setText(String.valueOf(thresholds[colorIndex]));
-	}
-
-
-	/**
-	 * Create the GUI and show it. For thread safety, this method should be
-	 * invoked from the event-dispatching thread.
-	 */
-	public static void createAndShowGUI(ImageSink imageSink) {
-		// Create and set up the window.
-		JFrame frame = new JFrame("RadioButtonDemo");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// Create and set up the content pane.
-		JComponent newContentPane = new ColorPicker(new ImageSink());
-		newContentPane.setOpaque(true); // content panes must be opaque
-		frame.setContentPane(newContentPane);
-
-		// Display the window.
-		frame.pack();
-		frame.setVisible(true);
-	}
-
-	public static void main(String[] args) {
-		// Schedule a job for the event-dispatching thread:
-		// creating and showing this application's GUI.
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				createAndShowGUI(new ImageSink());
-			}
-		});
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		//When the image is clicked store the clicked color.
 		this.colors[colorIndex] = new Color(imageComponent.getImage().getRGB(e.getX(), e.getY()));
 		
 	}
@@ -241,6 +227,10 @@ public class ColorPicker extends JPanel implements ActionListener, MouseListener
 	
 	public Color getColor(int index) {
 		return colors[index];
+	}
+	
+	public Color[] getColors() {
+		return colors;
 	}
 	
 	public double getThreshold(int index) {
