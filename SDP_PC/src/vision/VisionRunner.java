@@ -27,7 +27,7 @@ public class VisionRunner {
 		
 		ObjectLocations.setYellowDefendingLeft(true);
 		ObjectLocations.setYellowUs(true);
-		
+		ObjectLocations.setConsts(consts);
 		try {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
