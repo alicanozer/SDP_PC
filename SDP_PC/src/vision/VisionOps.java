@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -40,7 +41,7 @@ public class VisionOps {
 	 * @param saturations
 	 * @return
 	 */
-	public static MultiSpectral<ImageFloat32>[] segmentMultiHSV(BufferedImage image, float[] hues , float[] saturations){
+	public static MultiSpectral<ImageFloat32>[] segmentMultiHSV(BufferedImage image, float[] hues , float[] saturations, float[] distanceThresholds){
 
 		if(!(hues.length == saturations.length)){
 			return null;
@@ -53,7 +54,6 @@ public class VisionOps {
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
 		// Pixels which are more than this different from the selected color are set to black
-		float maxDist2 = 0.16f; // was 0.16f
 
 		// Extract hue and saturation bands which are independent of intensity
 		ImageFloat32 H = hsv.getBand(0);
@@ -79,7 +79,7 @@ public class VisionOps {
 
 					// this distance measure is a bit naive, but good enough for this demonstration
 					float dist2 = dh*dh + ds*ds;
-					if( dist2 <= maxDist2 ) {
+					if( dist2 <= distanceThresholds[k] ) {
 						for(int z = 0; z < 3; z++){
 							output[k].getBand(z).unsafe_set(x, y, input.getBand(z).unsafe_get(x, y));
 						}
@@ -453,12 +453,131 @@ public class VisionOps {
 		return contoursUnfiltered;
 	}
 	
+//	/**
+//	 * Performs HSV color segmentation on the given frame for each color in the array colors and returns a list of list of contours
+//	 * @param img frame image, as received from FrameHandler
+//	 * @param colors a X(3)x3 array of floats, each row is a color, elements are H, S, and V, respectively. You should only ever give it RED, YELLOW, and BLUE
+//	 * @param constatns the Pitch context - needed to infer which points belong to a defender and which points belong to an attacker for both yellow and blue
+//	 * @param yellowLeft context - are we defending left, used to infer which points belong to a defender and which points belong to an attacker for both yellow and blue
+//	 * @return a list of lists of contours with the order of the lists following the order of the contours
+//	 */
+//	List<List<Contour>> getSpecificObjects(BufferedImage img, float[][] colors, PitchConstants constatns, boolean yellowLeft, float[] distanceThresholds){
+//		// initialising hue and sat arrays
+//		float[] hues = new float[colors.length];
+//		float[] sats = new float[colors.length];
+//		
+//		// populating hue and sats array. note that colors has 1 color per row, and in each row
+//		// element 0 is hue, element 1 is saturation
+//		for(int i = 0; i < colors.length; i++){
+//			hues[i] = colors[i][0];
+//			sats[i] = colors[i][1];
+//		}
+//		// getting segmented multispectral images
+//		MultiSpectral<ImageFloat32>[] output = segmentMultiHSV(img, hues, sats, distanceThresholds);
+//		ImageSInt32[] 
+//		// creating binary images
+//				
+//		output[0].getBand(0).
+//		ImageUInt8[] binary = new ImageUInt8[colors.length];
+//		for(int i = 0; i < colors.length; i++){
+//			binary[i] = new ImageUInt8(img.getWidth(), img.getHeight());
+//		}
+//		// get binary images from multispectral images by thresholding over any image band
+//		// say 0 and only allowing those pixels to pass who have a value of greater than 0.0001
+//		// this relies on the fact that multiSegmentHSV sets all relevant pixels to some != 0
+//		// value and all not relevant pixels to 0
+//		// after this operation
+//		for(int i = 0; i < colors.length; i ++){
+//			ThresholdImageOps.threshold(output[i].getBand(0), binary[i], 0.0001f, false);
+//		}
+//		List<ArrayList<Contour>> contours = new ArrayList<ArrayList<Contour>>(colors.length);
+//		for(int i = 0; i < colors.length; i++){
+//			contours.get(i) = BinaryImageOps.contour(binary[i],8,null);
+//		}
+//		return null;
+//	}
+//	
 	
+	public static HashMap<Integer,ArrayList<Point2D_I32>> getMultipleObjects(
+			BufferedImage image, 
+			float[][] colors,
+			float[] distanceThresholds,
+			boolean yellowLeft)
+	{
+		if(!(colors.length == distanceThresholds.length) || colors.length != 3){
+			return null;
+		}
+		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(image,null,true,ImageFloat32.class);
+		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
+
+		// Convert into HSV
+		ColorHsv.rgbToHsv_F32(input,hsv);
+
+		// Extract hue and saturation bands which are independent of intensity
+		ImageFloat32 H = hsv.getBand(0);
+		ImageFloat32 S = hsv.getBand(1);
+		
+		// initialising hue and sat arrays
+		float[] hues = new float[colors.length];
+		float[] sats = new float[colors.length];
+		
+		// populating hue and sats array. note that colors has 1 color per row, and in each row
+		// element 0 is hue, element 1 is saturation
+		for(int i = 0; i < colors.length; i++){
+			hues[i] = colors[i][0];
+			sats[i] = colors[i][1];
+		}
+		// Adjust the relative importance of Hue and Saturation
+		float adjustUnits = (float)(Math.PI/2.0);
+
+		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = new HashMap<Integer,ArrayList<Point2D_I32>>();
+		objectsToLocations.put(0, new ArrayList<Point2D_I32>());
+		objectsToLocations.put(1, new ArrayList<Point2D_I32>());
+		objectsToLocations.put(2, new ArrayList<Point2D_I32>());
+		
+		for(int y = 0; y < hsv.height; y++ ) {
+			for(int x = 0; x < hsv.width; x++ ) {
+				for(int k = 0; k < hues.length; k++){
+					// remember Hue is an angle in radians, so simple subtraction doesn't work
+					float dh = UtilAngle.dist(H.unsafe_get(x,y), hues[k]);
+					float ds = (S.unsafe_get(x,y) - sats[k])*adjustUnits;
+					
+					float dist = dh*dh + ds*ds;
+					if(dist <= distanceThresholds[k] ) {
+						// simply add all the points wherever they are
+						objectsToLocations.get(k).add(new Point2D_I32(x,y));
+					}
+				}
+			}
+		}
+		return objectsToLocations;
+	}
+
+	public static Point2D_I32 findBallFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations){
+		return PointUtils.getListCentroid(objectsToLocations.get(0));
+	}
 	
+	public static ArrayList<Point2D_I32> findYellowMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine){
+		return findMarkersFromMapping(objectsToLocations,middleLine,1);
+	}
 	
+	public static ArrayList<Point2D_I32> findBlueMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine){
+		return findMarkersFromMapping(objectsToLocations,middleLine,2);
+	}
 	
-	
-	
+	public static ArrayList<Point2D_I32> findMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine, int key){
+		ArrayList<Point2D_I32> leftPoints = new ArrayList<Point2D_I32>();
+		ArrayList<Point2D_I32> rightPoints = new ArrayList<Point2D_I32>();
+		
+		for(Point2D_I32 p: objectsToLocations.get(key)){
+			if(p.x < middleLine) leftPoints.add(p);
+			else rightPoints.add(p);
+		}
+		ArrayList<Point2D_I32> markers = new ArrayList<Point2D_I32>(2);
+		markers.add(PointUtils.getListCentroid(leftPoints));
+		markers.add(PointUtils.getListCentroid(rightPoints));
+		return markers;
+	}
 	
 	
 	/**

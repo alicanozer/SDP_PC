@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="src/"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="bluecove-gpl.jar"/>
 	<classpathentry kind="lib" path="bluecove.jar"/>
 	<classpathentry kind="lib" path="BoofCV_V4L4J.jar"/>
-	<classpathentry kind="lib" path="BoofCV.jar"/>
+	<classpathentry kind="lib" path="BoofCV.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://boofcv.org/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="BoofCVXuggler.jar"/>
 	<classpathentry kind="lib" path="DDogleg.jar"/>
 	<classpathentry kind="lib" path="EJML.jar"/>
