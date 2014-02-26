@@ -20,7 +20,7 @@ public class VisionRunner {
 	 * @param debug boolean flag, true if we want to display debugging info
 	 * @param consts PitchConstants object, use predefined static fields in the class itself
 	 */
-	public static void start(final boolean debug, final PitchConstants consts, int histLen){
+	public static void startDebugVision(final PitchConstants consts, int histLen){
 		
 		VisionRunner.histLen = histLen;
 		frameQueue = new LinkedBlockingDeque<Frame>(histLen);
@@ -32,7 +32,7 @@ public class VisionRunner {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					new FrameHandler(debug,consts);
+					new FrameHandler(true,consts);
 				}
 			});
 		} catch (Exception e) {
@@ -40,6 +40,12 @@ public class VisionRunner {
 			System.out.println("i failed miserably and now I must die to repent for my sins... ");
 		}
 		System.err.println("Vision started successfully!");
+	}
+	public static void startNormalVision(int histLen){
+		
+	}
+	public static void startStaticVideoVision(int histLen){
+		
 	}
 	/**
 	 * Send a frame to VisionRunner. The frame is sent and set asynchronously

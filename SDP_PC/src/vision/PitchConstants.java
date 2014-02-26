@@ -14,6 +14,9 @@ public class PitchConstants {
 		this.hLowerBound = hLowerBound;
 		this.middleLine = croppedWidth/2; //TODO: this or regin23X ?
 	}
+	public int getMiddleLine() {
+		return middleLine;
+	}
 	public int getUpperLeftX() {
 		return upperLeftX;
 	}

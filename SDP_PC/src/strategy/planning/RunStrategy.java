@@ -28,7 +28,7 @@ public class RunStrategy {
 
 	public static void main(String[] args) throws Exception {
 
-		VisionRunner.start(true,PitchConstants.newPitch,10);
+		VisionRunner.startDebugVision(true,PitchConstants.newPitch,10);
 		
 		Bluetooth myConnection = new Bluetooth("attack");
 		attackRobot = new BluetoothRobot(RobotType.AttackUs, myConnection);

@@ -9,6 +9,7 @@ import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import boofcv.struct.image.ImageFloat32;
 import boofcv.struct.image.MultiSpectral;
@@ -132,9 +133,10 @@ public class ObjectLocations {
 			BufferedImage img, 
 			float[][] colors,
 			float[] distanceThresholds){
-		Point2D_I32 ballLocal = VisionOps.findBall(img);
-		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkers(img);
-		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkers(img);
+		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = VisionOps.getMultipleObjects(img, colors, distanceThresholds);
+		Point2D_I32 ballLocal = VisionOps.findBallFromMapping(objectsToLocations);
+		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
+		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
 		ArrayList<Point2D_I32> dotsLocal = new ArrayList<Point2D_I32>();
 
 		if(yellowMarkers != null){
