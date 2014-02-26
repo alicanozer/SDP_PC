@@ -176,25 +176,14 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 				List<Color> colorsList = new ArrayList<Color>();
 				BufferedImage pitchImg = img;
 				//set white
-				float[] fsW = new float[3];
-				ColorHsv.hsvToRgb(
-						(colors.getWhiteValue()[0][0]+colors.getWhiteValue()[1][0])/2,
-						(colors.getWhiteValue()[0][1]+colors.getWhiteValue()[1][1])/2,
-						(colors.getWhiteValue()[0][2]+colors.getWhiteValue()[1][2])/2,
-						fsW);
 
-				Color white = new Color((int)fsW[0],(int)fsW[1],(int)fsW[2]);
+				Color white = new Color((int) colors.getWhiteValue()[0],(int) colors.getWhiteValue()[1],(int) colors.getWhiteValue()[2]);
 				List<Color> colorList = new ArrayList<Color>();
 				colorList.add(white);
 				//add pitch
 				float[] fsP = new float[3];
-				ColorHsv.hsvToRgb(
-						(colors.getGreenPitchValue()[0][0]+colors.getGreenPitchValue()[1][0])/2,
-						(colors.getGreenPitchValue()[0][1]+colors.getGreenPitchValue()[1][1])/2,
-						(colors.getGreenPitchValue()[0][2]+colors.getGreenPitchValue()[1][2])/2,
-						fsP);
 
-				Color pitch = new Color((int)fsP[0],(int)fsP[1],(int)fsP[2]);
+				Color pitch = new Color((int) colors.getGreenPitchValue()[0],(int) colors.getGreenPitchValue()[1],(int) colors.getGreenPitchValue()[2]);
 
 				colorList.add(pitch);
 				
@@ -214,41 +203,6 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 		VisionRunner.sendFrame(new Frame(img,thisFrame));
 		
-		ImageUInt8 gray = ConvertBufferedImage.convertFrom(img,(ImageUInt8)null);
-		ImageUInt8 edgeImage = new ImageUInt8(gray.width,gray.height);
-		ImageUInt8 filtered =  gray;//BinaryImageOps.erode8(gray,null);
-//		filtered = BinaryImageOps.dilate8(filtered, null);
-
-		CannyEdge<ImageUInt8,ImageSInt16> canny = FactoryEdgeDetectors.canny(5,true, true, ImageUInt8.class, ImageSInt16.class);
-		canny.process(gray,0.08f,0.15f,filtered);
-
-		List<Contour> contours = BinaryImageOps.contour(filtered, 8, null);
-		BufferedImage visualEdgeContour = VisualizeBinaryData.renderExternal(contours, null,gray.width, gray.height, null);
-
-
-		List<Contour> contoursT = new ArrayList<Contour>();
-
-		Graphics2D g1 = visualEdgeContour.createGraphics();
-		g1.drawImage(visualEdgeContour, 0, 0, visualEdgeContour.getWidth(), visualEdgeContour.getHeight(), null);
-		g1.setColor(Color.RED);
-		g1.drawString("test ", 10, 10);
-
-		ArrayList<Point2D_I32> dataPoints = new ArrayList<Point2D_I32>();
-
-		for(int i = 0; i < contours.size(); i++){
-			if(contours.get(i).external.size() > 10 && contours.get(i).external.size() < 200){
-				contoursT.add(contours.get(i));
-				Point2D_I32 p = PointUtils.getContourCentroid(contours.get(i));
-				if (p.y>15&&p.y<280&&p.x>20&&p.x<510){ // filter points by horizontal and region boundaries
-					System.out.println("p at "+p.x+" , "+p.y);
-					dataPoints.add(p);
-					g1.setColor(Color.WHITE);
-					g1.drawLine(p.x-5, p.y-5, p.x+5, p.y+5);
-					g1.drawLine(p.x+5, p.y-5, p.x-5, p.y+5);}
-			}
-
-		}
-
 		
 //		System.out.println("max blue:" + colors.getBlueValue()[0][0] + " " + colors.getBlueValue()[0][1] + " " + colors.getBlueValue()[0][2]);
 //		System.out.println("min blue:" + colors.getBlueValue()[1][0] + " " + colors.getBlueValue()[1][1] + " " + colors.getBlueValue()[1][2]);
@@ -268,40 +222,40 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
 
 		Graphics2D g = (Graphics2D) label.getGraphics();
-		g.drawImage(visualEdgeContour, 0, 0, width, height, null);
+		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
 		
-//
-//		try {
-//			ObjectLocations.updateObjectLocations(img,colors);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		if(debug){
-//			g.setColor(Color.BLACK);
-//			g.drawLine(consts.getRegion12X(), 0, consts.getRegion12X(), img.getHeight());
-//			g.drawLine(consts.getRegion23X(), 0, consts.getRegion23X(), img.getHeight());
-//			g.drawLine(consts.getRegion34X(), 0, consts.getRegion34X(), img.getHeight());
-//			
-//			//Drawing Goal Markers
-//			g.setColor(Color.WHITE);
-//			
-//			g.drawLine(GoalInfo.getLeftGoalCenterNew().getX()-10, GoalInfo.getLeftGoalCenterNew().getY(), GoalInfo.getLeftGoalCenterNew().getX()+10, GoalInfo.getLeftGoalCenterNew().getY());
-//			g.drawLine(GoalInfo.getLeftGoalTopNew().getX()-10, GoalInfo.getLeftGoalTopNew().getY(), GoalInfo.getLeftGoalTopNew().getX()+10, GoalInfo.getLeftGoalTopNew().getY());
-//			g.drawLine(GoalInfo.getLeftGoalBottomNew().getX()-10, GoalInfo.getLeftGoalBottomNew().getY(),GoalInfo.getLeftGoalBottomNew().getX()+10, GoalInfo.getLeftGoalBottomNew().getY());
-//
-//			g.drawLine(GoalInfo.getRightGoalCenterNew().getX()-10, GoalInfo.getRightGoalCenterNew().getY(), GoalInfo.getRightGoalCenterNew().getX()+10, GoalInfo.getRightGoalCenterNew().getY());
-//			g.drawLine(GoalInfo.getRightGoalTopNew().getX()-10, GoalInfo.getRightGoalTopNew().getY(), GoalInfo.getRightGoalTopNew().getX()+10, GoalInfo.getRightGoalTopNew().getY());
-//			g.drawLine(GoalInfo.getRightGoalBottomNew().getX()-10, GoalInfo.getRightGoalBottomNew().getY(), GoalInfo.getRightGoalBottomNew().getX()+10, GoalInfo.getRightGoalBottomNew().getY());
-//			
-//			
-//			try {
-//				ObjectLocations.drawCrosses(g);
-//			} catch (Exception e) {
-//			}
-//		}
-//		g.dispose();
+
+		try {
+			ObjectLocations.updateObjectLocations(img,colors);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(debug){
+			g.setColor(Color.BLACK);
+			g.drawLine(consts.getRegion12X(), 0, consts.getRegion12X(), img.getHeight());
+			g.drawLine(consts.getRegion23X(), 0, consts.getRegion23X(), img.getHeight());
+			g.drawLine(consts.getRegion34X(), 0, consts.getRegion34X(), img.getHeight());
+			
+			//Drawing Goal Markers
+			g.setColor(Color.WHITE);
+			
+			g.drawLine(GoalInfo.getLeftGoalCenterNew().getX()-10, GoalInfo.getLeftGoalCenterNew().getY(), GoalInfo.getLeftGoalCenterNew().getX()+10, GoalInfo.getLeftGoalCenterNew().getY());
+			g.drawLine(GoalInfo.getLeftGoalTopNew().getX()-10, GoalInfo.getLeftGoalTopNew().getY(), GoalInfo.getLeftGoalTopNew().getX()+10, GoalInfo.getLeftGoalTopNew().getY());
+			g.drawLine(GoalInfo.getLeftGoalBottomNew().getX()-10, GoalInfo.getLeftGoalBottomNew().getY(),GoalInfo.getLeftGoalBottomNew().getX()+10, GoalInfo.getLeftGoalBottomNew().getY());
+
+			g.drawLine(GoalInfo.getRightGoalCenterNew().getX()-10, GoalInfo.getRightGoalCenterNew().getY(), GoalInfo.getRightGoalCenterNew().getX()+10, GoalInfo.getRightGoalCenterNew().getY());
+			g.drawLine(GoalInfo.getRightGoalTopNew().getX()-10, GoalInfo.getRightGoalTopNew().getY(), GoalInfo.getRightGoalTopNew().getX()+10, GoalInfo.getRightGoalTopNew().getY());
+			g.drawLine(GoalInfo.getRightGoalBottomNew().getX()-10, GoalInfo.getRightGoalBottomNew().getY(), GoalInfo.getRightGoalBottomNew().getX()+10, GoalInfo.getRightGoalBottomNew().getY());
+			
+			
+			try {
+				ObjectLocations.drawCrosses(g);
+			} catch (Exception e) {
+			}
+		}
+		g.dispose();
 		frame.recycle();
 		lastFrame = thisFrame;
 	}

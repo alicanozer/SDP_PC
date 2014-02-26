@@ -70,13 +70,13 @@ public class ExampleSegmentColor {
 		//BufferedImage image = UtilImageIO.loadImage("test_images/00000008.jpg");
 		// contains h,s,v
 		
-		float[][] blueRange = new float[2][3];
-		float[][] yellowRange = new float[2][3];
-		float[][] blackRange = new float[2][3];
-		float[][] redRange = new float[2][3];
-		float[][] greenPlateRange = new float[2][3];
-		float[][] greenPitchRange = new float[2][3];
-		float[][] whiteRange = new float[2][3];
+		float[] blue = new float[3];
+		float[] yellow= new float[3];
+		float[] black= new float[3];
+		float[] red= new float[3];
+		float[] greenPlate= new float[3];
+		float[] greenPitch= new float[3];
+		float[] white = new float[3];
 		
 		
 		float[][] blue3 = new float[3][3];
@@ -93,37 +93,37 @@ public class ExampleSegmentColor {
 		
 		System.out.println("Please click 3 times on a blue object");
 		setThreeHSV(blue3);
-		setMinMaxHSVRange(blueRange,blue3);
+		setMeanHSV3(blue,blue3);
 		
 		System.out.println("Please click 3 times on a yellow object");
 		setThreeHSV(yellow3);
-		setMinMaxHSVRange(yellowRange,yellow3);
+		setMeanHSV3(yellow,yellow3);
 		
 		System.out.println("Please click 3 times on a black dot object");
 		setThreeHSV(black3);
-		setMinMaxHSVRange(blackRange,black3);
+		setMeanHSV3(black,black3);
 		
 		System.out.println("Please click 3 times on the red ball");
 		setThreeHSV(red3);
-		setMinMaxHSVRange(redRange,red3);
+		setMeanHSV3(red,red3);
 		
 		System.out.println("Please click 3 times on a green plate object");
 		setThreeHSV(greenPlate3);
-		setMinMaxHSVRange(greenPlateRange,greenPlate3);
+		setMeanHSV3(greenPlate,greenPlate3);
 		
 		System.out.println("Please click 3 times on a green pitch object");
 		setThreeHSV(greenPitch3);
-		setMinMaxHSVRange(greenPitchRange,greenPitch3);
+		setMeanHSV3(greenPitch,greenPitch3);
 		
 		System.out.println("Please click 3 times on a white edge object");
 		setThreeHSV(white3);
-		setMinMaxHSVRange(whiteRange,white3);
+		setMeanHSV3(white,white3);
 		
 		System.out.println("You have selected all objects!");
 		
 		// Display pre-selected colors
 		
-		PitchColours colours = new PitchColours(blueRange, yellowRange, blackRange, redRange, greenPlateRange, greenPitchRange, whiteRange);
+		PitchColours colours = new PitchColours(blue, yellow, black, red, greenPlate, greenPitch, white);
 		return colours;
 	}
 	private static void setMinMaxHSVRange(float[][] minMaxArray, float[][] floatArray3){
@@ -145,9 +145,9 @@ public class ExampleSegmentColor {
 	 */
 	public static void setMeanHSV3(float[] meanFloatArray, float[][] floatArray3) {
 		// merge colors
-		float h = 0; 
-		float s = 0;
-		float v = 0;
+		float h = 0f; 
+		float s = 0f;
+		float v = 0f;
 		for(int i = 0; i < 3; i ++){
 			h += floatArray3[i][0];
 			s += floatArray3[i][1];
