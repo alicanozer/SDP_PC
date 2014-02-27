@@ -65,6 +65,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private PitchConstants consts;
 	private PitchColours colors;
 	private ArrayList<Point2D_I32> whitePoints;
+	private int frameLoop = 1;
 
 
 
@@ -165,9 +166,10 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	 */
 	@Override
 	public void nextFrame(VideoFrame frame){
+		if (frameLoop == 101) frameLoop = 1;
 		BufferedImage img = null;
 		try {
-			img = ImageIO.read(new File("test_images/000000012.jpg"));
+			img = ImageIO.read(new File("static_vision_images/image" + frameLoop+".jpg"));
 		} catch (IOException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -208,13 +210,14 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 
 		
+		
 		float[] distanceThresholds = new float[3];
 		distanceThresholds[0] = 0.001f;
-		distanceThresholds[1] = 0.0008f;
-		distanceThresholds[2] = 0.0008f;
+		distanceThresholds[1] = 0.00015f;
+		distanceThresholds[2] = 0.006f;
 		
 		try {
-			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),distanceThresholds);
+			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),distanceThresholds,3);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -222,6 +225,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
+
+		g.draw(PitchConstants.pitchPolygon);
 		if(debug){
 			g.setColor(Color.BLACK);
 			g.drawLine(consts.getRegion12X(), 0, consts.getRegion12X(), img.getHeight());
@@ -248,5 +253,6 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		g.dispose();
 		frame.recycle();
 		lastFrame = thisFrame;
+		frameLoop++;
 	}
 }

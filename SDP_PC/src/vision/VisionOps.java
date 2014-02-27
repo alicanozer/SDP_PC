@@ -503,7 +503,8 @@ public class VisionOps {
 			BufferedImage image, 
 			float[][] colors,
 			float[] distanceThresholds,
-			boolean debug)
+			boolean debug,
+			int radius)
 	{
 		if(!(colors.length == distanceThresholds.length) || colors.length != 3){
 			return null;
@@ -517,6 +518,10 @@ public class VisionOps {
 		// Extract hue and saturation bands which are independent of intensity
 		ImageFloat32 H = hsv.getBand(0);
 		ImageFloat32 S = hsv.getBand(1);
+		
+//		BlurImageOps.gaussian(H, H, -1,radius,null);
+//		BlurImageOps.gaussian(S, S, -1, radius,null);
+		
 		
 		// initialising hue and sat arrays
 		float[] hues = new float[colors.length];
@@ -545,7 +550,7 @@ public class VisionOps {
 					float ds = (S.unsafe_get(x,y) - sats[k])*adjustUnits;
 					
 					float dist = dh*dh + ds*ds;
-					if(dist <= distanceThresholds[k] ) {
+					if(dist <= distanceThresholds[k] && PitchConstants.pitchPolygon.contains(x, y)) {
 						// simply add all the points wherever they are
 						objectsToLocations.get(k).add(new Point2D_I32(x,y));
 						isBlack = false; // pixel is fron object, don't make it black
@@ -586,8 +591,6 @@ public class VisionOps {
 			else rightPoints.add(p);
 		}
 		ArrayList<Point2D_I32> markers = new ArrayList<Point2D_I32>(2);
-		System.out.println("left " + leftPoints.size());
-		System.out.println("right " + rightPoints.size());
 		markers.add(PointUtils.getListCentroid(leftPoints));
 		markers.add(PointUtils.getListCentroid(rightPoints));
 		return markers;

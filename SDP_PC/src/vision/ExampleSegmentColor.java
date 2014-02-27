@@ -1,5 +1,6 @@
 package vision;
 
+import java.awt.Polygon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -12,6 +13,7 @@ import boofcv.io.image.UtilImageIO;
 public class ExampleSegmentColor {
 	static boolean flag = false;
 	static float[] colour = new float[3];
+	static int[] point = new int[2];
 	static BufferedImage img;
 	static ImagePanel gui;
 	
@@ -20,22 +22,31 @@ public class ExampleSegmentColor {
 	 * the HSV values, and calls the function below to display similar pixels.
 	 */
 	private static void getClickedColor() {
-		
 		gui.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				float[] color = new float[3];
 				int rgb = img.getRGB(e.getX(),e.getY());
 				ColorHsv.rgbToHsv((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF , rgb&0xFF,color);
-//				System.out.println("h: " + color[0]+ ", s: " + color[1] + ", v:" + color[2]);
 				ExampleSegmentColor.colour = color;
 				ExampleSegmentColor.flag = true;
 				return;
 			}
 		});
-
-//		float[] colour = new float[3];
-//		return colour;
+	}
+	
+	private static void getClickedCoords() {
+		gui.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int[] point = new int[2];
+				point[0] = e.getX();
+				point[1] = e.getY();
+				ExampleSegmentColor.point = point;
+				ExampleSegmentColor.flag = true;
+				return;
+			}
+		});
 	}
 	/**
 	 * create the image panel once only
@@ -56,7 +67,7 @@ public class ExampleSegmentColor {
 	private static void looper(){
 		while(flag == false){
 			try {
-		        Thread.sleep(1);
+		        Thread.sleep(100);
 		    } catch (InterruptedException e) {
 		        // We've been interrupted: no more messages.
 		        return;
@@ -87,9 +98,15 @@ public class ExampleSegmentColor {
 		float[][] greenPitch3 = new float[3][3];
 		float[][] white3 = new float[3][3];
 		
-		
-		
+		// pitch stuff
+		int[] xs = new int[8];
+		int[] ys = new int[8];
+
 		createImagePanel(image);
+		System.out.println("Please click on the 8 corners of the inside of the pitch");
+		setPitchPolygon(xs, ys);
+		Polygon p = new Polygon(xs,ys,8);
+		PitchConstants.pitchPolygon = p;
 		
 		System.out.println("Please click 3 times on a blue object");
 		setThreeHSV(blue3);
@@ -166,6 +183,16 @@ public class ExampleSegmentColor {
 			getClickedColor();
 			looper();
 			floatArray3[i] = colour;
+			flag = false;
+		}
+	}
+	
+	private static void setPitchPolygon(int[] xs, int ys[]) {
+		for(int i = 0; i < 8; i ++){
+			getClickedCoords();
+			looper();
+			xs[i] = point[0];
+			ys[i] = point[1];
 			flag = false;
 		}
 	}

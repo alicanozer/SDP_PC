@@ -20,12 +20,12 @@ public class VisionRunner {
 	 * @param debug boolean flag, true if we want to display debugging info
 	 * @param consts PitchConstants object, use predefined static fields in the class itself
 	 */
-	public static void startDebugVision(final PitchConstants consts, int histLen){
+	public static void startDebugVision(final PitchConstants consts, int histLen,boolean yellowDefendLeft){
 		
 		VisionRunner.histLen = histLen;
 		frameQueue = new LinkedBlockingDeque<Frame>(histLen);
 		
-		ObjectLocations.setYellowDefendingLeft(false);
+		ObjectLocations.setYellowDefendingLeft(yellowDefendLeft);
 		ObjectLocations.setYellowUs(true);
 		ObjectLocations.setConsts(consts);
 		try {
