@@ -133,7 +133,7 @@ public class ObjectLocations {
 			BufferedImage img, 
 			float[][] colors,
 			float[] distanceThresholds){
-		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = VisionOps.getMultipleObjects(img, colors, distanceThresholds);
+		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = VisionOps.getMultipleObjects(img, colors, distanceThresholds,true);
 		Point2D_I32 ballLocal = VisionOps.findBallFromMapping(objectsToLocations);
 		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
 		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
@@ -185,45 +185,49 @@ public class ObjectLocations {
 			//set yellow
 			if(yellowMarkers != null){
 				for(Point2D_I32 p: yellowMarkers){
-					if(p.x < consts.getRegion12X()) {
-						try {
-							//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
-							yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
-						} catch (Exception e) {
+					if(p != null){
+						if(p.x < consts.getRegion12X()) {
+							try {
+								//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
+								yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
+							} catch (Exception e) {
 
+							}
+							setYellowDEFENDmarker(p);
 						}
-						setYellowDEFENDmarker(p);
-					}
 
-					if(consts.getRegion23X() < p.x && p.x < consts.getRegion34X()) {
-						try {
-							//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 3 )
-							yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
-						} catch (Exception e) {
+						if(consts.getRegion23X() < p.x && p.x < consts.getRegion34X()) {
+							try {
+								//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 3 )
+								yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
+							} catch (Exception e) {
 
+							}
+							setYellowATTACKmarker(p);
 						}
-						setYellowATTACKmarker(p);
 					}
 				}
 			}
 			//set blue
 			if(blueMarkers != null){
 				for(Point2D_I32 p: blueMarkers){
-					if(consts.getRegion12X() < p.x && p.x < consts.getRegion23X()) {
-						try {
-							blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
-						} catch (Exception e) {
+					if(p!= null){
+						if(consts.getRegion12X() < p.x && p.x < consts.getRegion23X()) {
+							try {
+								blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
+							} catch (Exception e) {
 
+							}
+							setBlueATTACKmarker(p);
 						}
-						setBlueATTACKmarker(p);
-					}
-					if(p.x > consts.getRegion34X()) {
-						try {
-							blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
-						} catch (Exception e) {
+						if(p.x > consts.getRegion34X()) {
+							try {
+								blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
+							} catch (Exception e) {
 
+							}
+							setBlueDEFENDmarker(p);
 						}
-						setBlueDEFENDmarker(p);
 					}
 				}
 			}
@@ -232,44 +236,48 @@ public class ObjectLocations {
 			//set yellow
 			if(yellowMarkers != null){
 				for(Point2D_I32 p: yellowMarkers){
-					if(consts.getRegion12X() < p.x && p.x < consts.getRegion23X()) {
-						try {
-							//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 7 )
-							yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
-						} catch (Exception e) {
+					if(p != null){
+						if(consts.getRegion12X() < p.x && p.x < consts.getRegion23X()) {
+							try {
+								//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 7 )
+								yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
+							} catch (Exception e) {
 
+							}
+							setYellowATTACKmarker(p);
 						}
-						setYellowATTACKmarker(p);
-					}
-					if(p.x > consts.getRegion34X()) {
-						try {
-							//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
-							yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
-						} catch (Exception e) {
+						if(p.x > consts.getRegion34X()) {
+							try {
+								//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
+								yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
+							} catch (Exception e) {
 
+							}
+							setYellowDEFENDmarker(p);
 						}
-						setYellowDEFENDmarker(p);
 					}
 				}
 			}
 			//set blue
 			if(blueMarkers != null){
 				for(Point2D_I32 p: blueMarkers){
-					if(p.x < consts.getRegion12X()) {
-						try {
-							blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
-						} catch (Exception e) {
+					if(p != null){
+						if(p.x < consts.getRegion12X()) {
+							try {
+								blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
+							} catch (Exception e) {
 
+							}
+							setBlueDEFENDmarker(p);
 						}
-						setBlueDEFENDmarker(p);
-					}
-					if(consts.getRegion23X() < p.x && p.x < consts.getRegion34X()) {
-						try {
-							blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
-						} catch (Exception e) {
+						if(consts.getRegion23X() < p.x && p.x < consts.getRegion34X()) {
+							try {
+								blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
+							} catch (Exception e) {
 
+							}
+							setBlueATTACKmarker(p);
 						}
-						setBlueATTACKmarker(p);
 					}
 				}
 			}
@@ -526,13 +534,14 @@ public class ObjectLocations {
 	 */
 	public static  void drawCrosses(Graphics2D g){
 		Color c = g.getColor();
-		g.setColor(Color.WHITE);
+		g.setColor(Color.RED);
 		if (ObjectLocations.ball != null) {
 			// drawing X over ball			//		
 			g.drawLine(ObjectLocations.ball.x - 10, ObjectLocations.ball.y, ObjectLocations.ball.x + 10, ObjectLocations.ball.y);
 			g.drawLine(ObjectLocations.ball.x, ObjectLocations.ball.y - 10, ObjectLocations.ball.x, ObjectLocations.ball.y + 10);
 		}
 		// WRONG position of yellowDEFENDmarker
+		g.setColor(Color.YELLOW);
 		if(yellowDEFENDmarker != null){
 			g.drawLine(yellowDEFENDmarker.x - 10, yellowDEFENDmarker.y, yellowDEFENDmarker.x + 10, yellowDEFENDmarker.y );
 			g.drawLine(yellowDEFENDmarker.x, yellowDEFENDmarker.y - 10, yellowDEFENDmarker.x, yellowDEFENDmarker.y + 10);
@@ -544,19 +553,20 @@ public class ObjectLocations {
 			g.drawLine(yellowATTACKmarker.x, yellowATTACKmarker.y - 10, yellowATTACKmarker.x, yellowATTACKmarker.y + 10);
 			//g.drawOval(yellowATTACKmarker.x - 22, yellowATTACKmarker.y - 22, 44, 44);
 		}
+		g.setColor(Color.BLUE);
 		if(blueDEFENDmarker != null){
 			g.drawLine(blueDEFENDmarker.x - 10, blueDEFENDmarker.y, blueDEFENDmarker.x + 10, blueDEFENDmarker.y );
 			g.drawLine(blueDEFENDmarker.x, blueDEFENDmarker.y - 10, blueDEFENDmarker.x, blueDEFENDmarker.y + 10);
 			//g.drawOval(blueDEFENDmarker.x - 22, blueDEFENDmarker.y - 22, 44, 44);
 		}
-
+		g.setColor(Color.BLUE);
 		if(blueATTACKmarker != null){
 			g.drawLine(blueATTACKmarker.x - 10, blueATTACKmarker.y, blueATTACKmarker.x + 10, blueATTACKmarker.y );
 			g.drawLine(blueATTACKmarker.x, blueATTACKmarker.y - 10, blueATTACKmarker.x, blueATTACKmarker.y + 10);
 			//g.drawOval(blueATTACKmarker.x - 22, blueATTACKmarker.y - 22, 44, 44);
 		}
 
-		g.setColor(Color.RED);
+		g.setColor(Color.BLACK);
 		if(dots != null){
 			for(Point2D_I32 p: dots){
 				if(p != null){

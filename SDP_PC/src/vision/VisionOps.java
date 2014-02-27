@@ -502,7 +502,8 @@ public class VisionOps {
 	public static HashMap<Integer,ArrayList<Point2D_I32>> getMultipleObjects(
 			BufferedImage image, 
 			float[][] colors,
-			float[] distanceThresholds)
+			float[] distanceThresholds,
+			boolean debug)
 	{
 		if(!(colors.length == distanceThresholds.length) || colors.length != 3){
 			return null;
@@ -535,6 +536,7 @@ public class VisionOps {
 		objectsToLocations.put(1, new ArrayList<Point2D_I32>());
 		objectsToLocations.put(2, new ArrayList<Point2D_I32>());
 		
+		boolean isBlack = true; // for drawing all non-object pixels as black
 		for(int y = 0; y < hsv.height; y++ ) {
 			for(int x = 0; x < hsv.width; x++ ) {
 				for(int k = 0; k < hues.length; k++){
@@ -546,8 +548,16 @@ public class VisionOps {
 					if(dist <= distanceThresholds[k] ) {
 						// simply add all the points wherever they are
 						objectsToLocations.get(k).add(new Point2D_I32(x,y));
+						isBlack = false; // pixel is fron object, don't make it black
 					}
 				}
+				// we've processed all colors for the given pixel and see
+				// if it belongs to any object. if it doesn't and debug 
+				// is on, we color it black
+				if(debug && isBlack) {
+					image.setRGB(x, y, 0);
+				}
+				isBlack = true;
 			}
 		}
 		return objectsToLocations;
@@ -569,11 +579,15 @@ public class VisionOps {
 		ArrayList<Point2D_I32> leftPoints = new ArrayList<Point2D_I32>();
 		ArrayList<Point2D_I32> rightPoints = new ArrayList<Point2D_I32>();
 		
-		for(Point2D_I32 p: objectsToLocations.get(key)){
+		ArrayList<Point2D_I32> points = objectsToLocations.get(key);
+		
+		for(Point2D_I32 p: points){
 			if(p.x < middleLine) leftPoints.add(p);
 			else rightPoints.add(p);
 		}
 		ArrayList<Point2D_I32> markers = new ArrayList<Point2D_I32>(2);
+		System.out.println("left " + leftPoints.size());
+		System.out.println("right " + rightPoints.size());
 		markers.add(PointUtils.getListCentroid(leftPoints));
 		markers.add(PointUtils.getListCentroid(rightPoints));
 		return markers;
@@ -755,6 +769,7 @@ public class VisionOps {
 			Point2D_I32 p, // this is a marker position 
 			int windowSize)
 	{
+		if(p == null) return null;
 		int x = p.getX();
 		int y = p.getY();
 		BufferedImage cropped;
@@ -787,17 +802,14 @@ public class VisionOps {
 		List<Contour> contours = new ArrayList<Contour>();
 		
 		for(int i = 0; i < contoursFull.size(); i++){
-			System.out.println("contour size " + contoursFull.get(i).external.size());
 			if(contoursFull.get(i).external.size() > 10 ){
 				contours.add(contoursFull.get(i));
 			}
 		}
 		if(contours.size() == 0){
-			System.out.println("WARNING: " + contours.size() + " dots detected");
 			return null;
 		}
 		else if(contours.size() > 1){
-			System.out.println("WARNING: " + contours.size() + " dots detected");
 			// using the mean
 			Point2D_I32 mean = new Point2D_I32();
 			Point2D_I32 iwm = new Point2D_I32();
