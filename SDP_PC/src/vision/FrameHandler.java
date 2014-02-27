@@ -165,7 +165,13 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	 */
 	@Override
 	public void nextFrame(VideoFrame frame){
-		BufferedImage img = frame.getBufferedImage();
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File("test_images/000000012.jpg"));
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}//frame.getBufferedImage();
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		if(frameCounter < 3){
 			frame.recycle();
@@ -200,17 +206,22 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 		VisionRunner.sendFrame(new Frame(img,thisFrame));
 		
+
+		
+		float[] distanceThresholds = new float[3];
+		distanceThresholds[0] = 0.001f;
+		distanceThresholds[1] = 0.0008f;
+		distanceThresholds[2] = 0.0008f;
+		
+		try {
+			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),distanceThresholds);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
-		
-
-		try {
-			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		if(debug){
 			g.setColor(Color.BLACK);
 			g.drawLine(consts.getRegion12X(), 0, consts.getRegion12X(), img.getHeight());
