@@ -132,11 +132,14 @@ public class ObjectLocations {
 	public static void updateObjectLocations(
 			BufferedImage img, 
 			float[][] colors,
-			float[] distanceThresholds){
-		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = VisionOps.getMultipleObjects(img, colors, distanceThresholds,true);
+			float[] distanceThresholds,
+			int radius){
+		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = VisionOps.getMultipleObjects(img, colors, distanceThresholds,false,radius);
 		Point2D_I32 ballLocal = VisionOps.findBallFromMapping(objectsToLocations);
 		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
 		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
+
+		
 		ArrayList<Point2D_I32> dotsLocal = new ArrayList<Point2D_I32>();
 
 		if(yellowMarkers != null){

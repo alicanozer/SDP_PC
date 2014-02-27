@@ -1,5 +1,7 @@
 package vision;
 
+import java.awt.Polygon;
+
 public class PitchConstants {
 	public PitchConstants(int upperLeftX, int upperLeftY, int croppedWidth,
 			int croppedHeight, int region12x, int region23x, int region34x, int hUpperBound, int hLowerBound) {
@@ -71,6 +73,7 @@ public class PitchConstants {
 	public void sethLowerBound(int hLowerBound) {
 		this.hLowerBound = hLowerBound;
 	}
+	public static Polygon pitchPolygon;
 	private int upperLeftX;
 	private int upperLeftY;
 	private int croppedWidth;
