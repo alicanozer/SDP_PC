@@ -1,7 +1,11 @@
 package vision;
 
 import georegression.struct.point.Point2D_I32;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
@@ -12,6 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import boofcv.alg.color.ColorHsv;
 import boofcv.alg.feature.detect.edge.CannyEdge;
@@ -29,6 +39,8 @@ import boofcv.struct.image.MultiSpectral;
 
 
 public class TestVision {
+	static JPanel panel = new JPanel();
+	static JSlider slider = new JSlider(JSlider.VERTICAL,0,1000,25);
 	private static PitchConstants consts;
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception{
@@ -121,7 +133,43 @@ public class TestVision {
 		/*double[] testList = {5.3,1.0,2,0};
 		System.out.println(KMeans.min(testList ));*/
 
-		ShowImages.showWindow(visualEdgeContour,"K means cluster centers");
-
+		//ShowImages.showWindow(visualEdgeContour,"K means cluster centers");
+		
+		CreateSlider();
+		slider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if (slider.getValueIsAdjusting()){
+					System.out.println((float)slider.getValue()/1000);
+				}
+			}
+		});
+		
 	}
+	
+
+	public static void CreateSlider(){
+		panel.setLayout(new BorderLayout());
+		slider.setMinorTickSpacing(1);
+		slider.setMajorTickSpacing(25);
+		slider.setPaintTicks(true);
+		java.util.Hashtable<Integer,JLabel> labelTable = new java.util.Hashtable<Integer,JLabel>();
+		labelTable.put(new Integer(1000), new JLabel("1.0"));  
+	    labelTable.put(new Integer(750), new JLabel("0.75"));  
+	    labelTable.put(new Integer(500), new JLabel("0.50"));  
+	    labelTable.put(new Integer(250), new JLabel("0.25"));  
+	    labelTable.put(new Integer(0), new JLabel("0.0")); 
+		slider.setLabelTable(labelTable);
+		slider.setPaintLabels(true);
+		panel.add(slider);
+		
+		JFrame frame = new JFrame("Slider");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		panel.setPreferredSize(new Dimension(200,650));
+		frame.setContentPane(panel);;
+		frame.pack();frame.setVisible(true);
+		
+	}
+	
+	
 }
