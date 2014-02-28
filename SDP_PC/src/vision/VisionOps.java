@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import boofcv.alg.color.ColorHsv;
@@ -39,7 +41,7 @@ public class VisionOps {
 	 * @param saturations
 	 * @return
 	 */
-	public static MultiSpectral<ImageFloat32>[] segmentMultiHSV(BufferedImage image, float[] hues , float[] saturations){
+	public static MultiSpectral<ImageFloat32>[] segmentMultiHSV(BufferedImage image, float[] hues , float[] saturations, float[] distanceThresholds){
 
 		if(!(hues.length == saturations.length)){
 			return null;
@@ -52,7 +54,6 @@ public class VisionOps {
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
 		// Pixels which are more than this different from the selected color are set to black
-		float maxDist2 = 0.16f; // was 0.16f
 
 		// Extract hue and saturation bands which are independent of intensity
 		ImageFloat32 H = hsv.getBand(0);
@@ -78,7 +79,7 @@ public class VisionOps {
 
 					// this distance measure is a bit naive, but good enough for this demonstration
 					float dist2 = dh*dh + ds*ds;
-					if( dist2 <= maxDist2 ) {
+					if( dist2 <= distanceThresholds[k] ) {
 						for(int z = 0; z < 3; z++){
 							output[k].getBand(z).unsafe_set(x, y, input.getBand(z).unsafe_get(x, y));
 						}
@@ -235,15 +236,15 @@ public class VisionOps {
 
 		case "blue":
 			if(true){ // new pitch but doesnt work
-				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 6, 6, null);
-				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 6, 6, null);
+//				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 6, 6, null);
+//				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 6, 6, null);
 
 				
-				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.00f,false); // was 1.97
-				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.60f,true); // was 3.14
+				ImageUInt8 lowerHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.00f,false); // was 3.00
+				ImageUInt8 upperHueBlue = ThresholdImageOps.threshold(hsv.getBand(0),null, 3.90f,true); // was 3.60
 
-				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.50f,false); //was 0.25
-				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.60f,true); //was 0.25
+				ImageUInt8 lowerSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.01f,false); //was 0.50
+				ImageUInt8 upperSaturationBlue = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.99f,true); //was 0.25
 				
 				
 				//ImageUInt8 upperValueBlue = ThresholdImageOps.threshold(hsv.getBand(2),null, 140f,true); //was 0.25
@@ -270,20 +271,38 @@ public class VisionOps {
 			break;
 		case "yellow":
 			if(true){ // new pitch
+				if(false) { // bright
+//					BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
+//					BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
+					ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.34f,false); // was 0.34
+					ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.69f,true); // was 0.90
 
-//				BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
-//				BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
-				ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.34f,false); // was 0.34
-				ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.90f,true); // was 0.69
+					ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.47f,false); // was 0.47
+					ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.86f,true); // was 0.86
 
-				ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.47f,false); // was 0.62
-				ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.86f,true); // was 0.86
+					//values are 0..255
 
-				//values are 0..255
+					BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
+					BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
+					BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
+				}
+				else{// dark
+					BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 2, 2, null);
+					BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 2, 7, null);
+					
+					ImageUInt8 lowerHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.50f,false); // was 0.34
+					ImageUInt8 upperHueYellow = ThresholdImageOps.threshold(hsv.getBand(0),null, 0.95f,true); // was 0.69
 
-				BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
-				BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
-				BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
+					ImageUInt8 lowerSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.60f,false); // was 0.62
+					ImageUInt8 upperSaturationYellow = ThresholdImageOps.threshold(hsv.getBand(1),null, 0.8f,true); // was 0.86
+
+					//values are 0..255
+
+					BinaryImageOps.logicAnd(lowerHueYellow, upperHueYellow, binary);
+					BinaryImageOps.logicAnd(binary, lowerSaturationYellow, binary);
+					BinaryImageOps.logicAnd(binary, upperSaturationYellow, binary);
+				}
+
 
 				
 			}
@@ -387,13 +406,203 @@ public class VisionOps {
 
 		return contours;
 	}
+	
+	
+	public static List<Contour> extractContour(BufferedImage img){
+		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img,null,true,ImageFloat32.class);
+		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
+		float[][] fs = new float[3][3];
+		// Convert into HSV
+		ColorHsv.rgbToHsv_F32(input,hsv);
+
+		ImageUInt8 binary = new ImageUInt8(input.width,input.height);
+
+		//BlurImageOps.gaussian(hsv.getBand(0), hsv.getBand(0), 4, 4, null);
+		//BlurImageOps.gaussian(hsv.getBand(1), hsv.getBand(1), 4, 4, null);
+		ImageUInt8 lowerHue = ThresholdImageOps.threshold(hsv.getBand(0),null, fs[1][0],false); 
+		ImageUInt8 upperHue = ThresholdImageOps.threshold(hsv.getBand(0),null, fs[0][0],true); 
+
+		ImageUInt8 lowerSaturation = ThresholdImageOps.threshold(hsv.getBand(1),null, fs[1][1],false); 
+		ImageUInt8 upperSaturation = ThresholdImageOps.threshold(hsv.getBand(1),null, fs[0][1],true); 
+
+		
+		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null, fs[1][2],false); 
+		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null, fs[0][2],true); 
+
+		BinaryImageOps.logicAnd(lowerHue, upperHue, binary);
+		BinaryImageOps.logicAnd(binary, lowerSaturation, binary);
+		BinaryImageOps.logicAnd(binary, upperSaturation, binary);
+		BinaryImageOps.logicAnd(binary, lowerValue, binary);
+		BinaryImageOps.logicAnd(binary, upperValue, binary);
+
+
+		ImageUInt8 filtered = BinaryImageOps.erode4(binary,null);
+		filtered = BinaryImageOps.dilate8(filtered, null);
+		
+		List<Contour> contoursUnfiltered = BinaryImageOps.contour(filtered, 8, null);
+		List<Contour> contoursFiltered = new ArrayList<Contour>();
+		/*
+		 * Size filtering
+		 */
+//		boolean flag = true;
+//		for(Contour c: contoursUnfiltered) {
+//			Point2D_I32 p = PointUtils.getContourCentroid(c);
+//			if(c.external.size() > 10 && c.external.size() < 300 && p.x > 15 && p.x < img.getWidth() - 15) contoursFiltered.add(c);
+//		}
+
+		return contoursUnfiltered;
+	}
+	
+//	/**
+//	 * Performs HSV color segmentation on the given frame for each color in the array colors and returns a list of list of contours
+//	 * @param img frame image, as received from FrameHandler
+//	 * @param colors a X(3)x3 array of floats, each row is a color, elements are H, S, and V, respectively. You should only ever give it RED, YELLOW, and BLUE
+//	 * @param constatns the Pitch context - needed to infer which points belong to a defender and which points belong to an attacker for both yellow and blue
+//	 * @param yellowLeft context - are we defending left, used to infer which points belong to a defender and which points belong to an attacker for both yellow and blue
+//	 * @return a list of lists of contours with the order of the lists following the order of the contours
+//	 */
+//	List<List<Contour>> getSpecificObjects(BufferedImage img, float[][] colors, PitchConstants constatns, boolean yellowLeft, float[] distanceThresholds){
+//		// initialising hue and sat arrays
+//		float[] hues = new float[colors.length];
+//		float[] sats = new float[colors.length];
+//		
+//		// populating hue and sats array. note that colors has 1 color per row, and in each row
+//		// element 0 is hue, element 1 is saturation
+//		for(int i = 0; i < colors.length; i++){
+//			hues[i] = colors[i][0];
+//			sats[i] = colors[i][1];
+//		}
+//		// getting segmented multispectral images
+//		MultiSpectral<ImageFloat32>[] output = segmentMultiHSV(img, hues, sats, distanceThresholds);
+//		ImageSInt32[] 
+//		// creating binary images
+//				
+//		output[0].getBand(0).
+//		ImageUInt8[] binary = new ImageUInt8[colors.length];
+//		for(int i = 0; i < colors.length; i++){
+//			binary[i] = new ImageUInt8(img.getWidth(), img.getHeight());
+//		}
+//		// get binary images from multispectral images by thresholding over any image band
+//		// say 0 and only allowing those pixels to pass who have a value of greater than 0.0001
+//		// this relies on the fact that multiSegmentHSV sets all relevant pixels to some != 0
+//		// value and all not relevant pixels to 0
+//		// after this operation
+//		for(int i = 0; i < colors.length; i ++){
+//			ThresholdImageOps.threshold(output[i].getBand(0), binary[i], 0.0001f, false);
+//		}
+//		List<ArrayList<Contour>> contours = new ArrayList<ArrayList<Contour>>(colors.length);
+//		for(int i = 0; i < colors.length; i++){
+//			contours.get(i) = BinaryImageOps.contour(binary[i],8,null);
+//		}
+//		return null;
+//	}
+//	
+	
+	public static HashMap<Integer,ArrayList<Point2D_I32>> getMultipleObjects(
+			BufferedImage image, 
+			float[][] colors,
+			float[] distanceThresholds,
+			boolean debug,
+			int radius)
+	{
+		if(!(colors.length == distanceThresholds.length) || colors.length != 3){
+			return null;
+		}
+		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(image,null,true,ImageFloat32.class);
+		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
+
+		// Convert into HSV
+		ColorHsv.rgbToHsv_F32(input,hsv);
+
+		// Extract hue and saturation bands which are independent of intensity
+		ImageFloat32 H = hsv.getBand(0);
+		ImageFloat32 S = hsv.getBand(1);
+		
+//		BlurImageOps.gaussian(H, H, -1,radius,null);
+//		BlurImageOps.gaussian(S, S, -1, radius,null);
+		
+		
+		// initialising hue and sat arrays
+		float[] hues = new float[colors.length];
+		float[] sats = new float[colors.length];
+		
+		// populating hue and sats array. note that colors has 1 color per row, and in each row
+		// element 0 is hue, element 1 is saturation
+		for(int i = 0; i < colors.length; i++){
+			hues[i] = colors[i][0];
+			sats[i] = colors[i][1];
+		}
+		// Adjust the relative importance of Hue and Saturation
+		float adjustUnits = (float)(Math.PI/2.0);
+
+		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = new HashMap<Integer,ArrayList<Point2D_I32>>();
+		objectsToLocations.put(0, new ArrayList<Point2D_I32>());
+		objectsToLocations.put(1, new ArrayList<Point2D_I32>());
+		objectsToLocations.put(2, new ArrayList<Point2D_I32>());
+		
+		boolean isBlack = true; // for drawing all non-object pixels as black
+		for(int y = 0; y < hsv.height; y++ ) {
+			for(int x = 0; x < hsv.width; x++ ) {
+				for(int k = 0; k < hues.length; k++){
+					// remember Hue is an angle in radians, so simple subtraction doesn't work
+					float dh = UtilAngle.dist(H.unsafe_get(x,y), hues[k]);
+					float ds = (S.unsafe_get(x,y) - sats[k])*adjustUnits;
+					
+					float dist = dh*dh + ds*ds;
+					if(dist <= distanceThresholds[k] && PitchConstants.pitchPolygon.contains(x, y)) {
+						// simply add all the points wherever they are
+						objectsToLocations.get(k).add(new Point2D_I32(x,y));
+						isBlack = false; // pixel is fron object, don't make it black
+					}
+				}
+				// we've processed all colors for the given pixel and see
+				// if it belongs to any object. if it doesn't and debug 
+				// is on, we color it black
+				if(debug && isBlack) {
+					image.setRGB(x, y, 0);
+				}
+				isBlack = true;
+			}
+		}
+		return objectsToLocations;
+	}
+
+	public static Point2D_I32 findBallFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations){
+		return PointUtils.getListCentroid(objectsToLocations.get(0));
+	}
+	
+	public static ArrayList<Point2D_I32> findYellowMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine){
+		return findMarkersFromMapping(objectsToLocations,middleLine,1);
+	}
+	
+	public static ArrayList<Point2D_I32> findBlueMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine){
+		return findMarkersFromMapping(objectsToLocations,middleLine,2);
+	}
+	
+	public static ArrayList<Point2D_I32> findMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine, int key){
+		ArrayList<Point2D_I32> leftPoints = new ArrayList<Point2D_I32>();
+		ArrayList<Point2D_I32> rightPoints = new ArrayList<Point2D_I32>();
+		
+		ArrayList<Point2D_I32> points = objectsToLocations.get(key);
+		
+		for(Point2D_I32 p: points){
+			if(p.x < middleLine) leftPoints.add(p);
+			else rightPoints.add(p);
+		}
+		ArrayList<Point2D_I32> markers = new ArrayList<Point2D_I32>(2);
+		markers.add(PointUtils.getListCentroid(leftPoints));
+		markers.add(PointUtils.getListCentroid(rightPoints));
+		return markers;
+	}
+	
+	
 	/**
 	 * 
 	 * @param img
 	 * @return
 	 */
 	public static Point2D_I32 findBall(BufferedImage img){
-		List<Contour> contours = newHSVSegment("ball",img);//,segmentHSV(img, 6.21f, 0.88f));
+		List<Contour> contours = extractContour(img);
 		if(contours.size() > 1 ){
 //			System.out.println("WARNING: MORE THAN 1 ball detected");
 			return null;
@@ -404,6 +613,10 @@ public class VisionOps {
 		}
 		else return PointUtils.getContourCentroid(contours.get(0));
 	}
+	
+	
+	
+	
 	/**
 	 * finds the marker according to colour
 	 * @param img
@@ -412,7 +625,7 @@ public class VisionOps {
 	 */
 	private static ArrayList<Point2D_I32> findMarkers(BufferedImage img, String type){
 		if(type == "yellow"){
-			List<Contour> contours = newHSVSegment("yellow",img);//segmentHSV(img, 0.7f, 0.95f));
+			List<Contour> contours = extractContour(img);//segmentHSV(img, 0.7f, 0.95f));
 			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
 //				System.out.println("WARNING: ONLY ONE yellow marker was detected");
@@ -430,7 +643,7 @@ public class VisionOps {
 			return ret;
 		}
 		else if(type == "blue"){
-			List<Contour> contours = newHSVSegment("blue",img);//segmentHSV(img, 3.31f, 0.538f));
+			List<Contour> contours = extractContour(img);//segmentHSV(img, 3.31f, 0.538f));
 			ArrayList<Point2D_I32> ret = new ArrayList<Point2D_I32>();
 			if(contours.size() == 1 ){
 //				System.out.println("WARNING: ONLY ONE blue marker was detected");
@@ -479,14 +692,86 @@ public class VisionOps {
  * @param img
  * @param p
  * @param windowSize
+ * @param fs 
  * @return
  */
+	
+	
+	public static Point2D_I32 getDotPosition(
+			BufferedImage img, 
+			Point2D_I32 markerPosition, 
+			int windowSize,
+			int sigma,
+			int maxIters,
+			float[][] blackRange, 
+			float[][] markerRange, 
+			float[][] plateRange)
+	{
+		/*
+		 * blurring teh image
+		 */
+		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img,null,true,ImageFloat32.class);
+		BlurImageOps.gaussian(input.getBand(0), input.getBand(0), sigma, -1, null); // sigma is 2
+		BlurImageOps.gaussian(input.getBand(1), input.getBand(1), sigma, -1, null);
+		BlurImageOps.gaussian(input.getBand(2), input.getBand(2), sigma, -1, null);
+		img = ConvertBufferedImage.convertTo_F32(input, null, true);
+		/*
+		 * converting HSV to RGB
+		 */
+		float[] dotColors = new float[3];
+		ColorHsv.hsvToRgb(
+				(blackRange[0][0]+blackRange[1][0])/2,
+				(blackRange[0][1]+blackRange[1][1])/2,
+				(blackRange[0][2]+blackRange[1][2])/2,
+				dotColors);
+		
+		float[] markerColors = new float[3];
+		ColorHsv.hsvToRgb(
+				(markerRange[0][0]+markerRange[1][0])/2,
+				(markerRange[0][1]+markerRange[1][1])/2,
+				(markerRange[0][2]+markerRange[1][2])/2,
+				markerColors);
+		
+		float[] plateColors = new float[3];
+		ColorHsv.hsvToRgb(
+				(plateRange[0][0]+plateRange[1][0])/2,
+				(plateRange[0][1]+plateRange[1][1])/2,
+				(plateRange[0][2]+plateRange[1][2])/2,
+				plateColors);
+		/*
+		 * populating seeds array
+		 */
+		List<Color> seeds = new ArrayList<Color>();
+		seeds.add(new Color((int)dotColors[0],(int)dotColors[1],(int)dotColors[2])); // black dot
+		seeds.add(new Color((int)markerColors[0],(int)markerColors[1],(int)markerColors[2])); //green stuff
+		seeds.add(new Color((int)plateColors[0],(int)plateColors[1],(int)plateColors[2])); //yellow
+		/*
+		 * running kMeans color clustering
+		 */
+		Map<Integer,ArrayList<Point2D_I32>> map =  KMeans.Cluster(img, 3, maxIters, seeds);
+		/*
+		 * filter all points that suck
+		 */
+		ArrayList<Point2D_I32> list = map.get(0); // points that map to the DOT cluster
+		ArrayList<Point2D_I32> newList = new ArrayList<Point2D_I32>(); // filtered list of see above
+		Point2D_I32 centre = new Point2D_I32(windowSize/2,windowSize/2);
+		for(Point2D_I32 p: list){
+			if(PointUtils.euclideanDistance(p, centre) > 14 && PointUtils.euclideanDistance(p, centre) < 15) newList.add(p);
+		}
+		
+		Point2D_I32 mean = PointUtils.getListCentroid(newList);
+		
+		mean.x = mean.x + markerPosition.x - windowSize/2;
+		mean.y = mean.y + markerPosition.y - windowSize/2;
+		return mean;
+	}
 
 	public static Point2D_I32 getMeanDotNearMarker(
 			BufferedImage img, 
 			Point2D_I32 p, // this is a marker position 
 			int windowSize)
 	{
+		if(p == null) return null;
 		int x = p.getX();
 		int y = p.getY();
 		BufferedImage cropped;
@@ -506,33 +791,24 @@ public class VisionOps {
 		ColorHsv.rgbToHsv_F32(input,hsv);
 
 		
-//		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)50,false);
-//		
-//		ImageUInt8 lowerHue = ThresholdImageOps.threshold(hsv.getBand(0),null,0.69f,true);
-//		ImageUInt8 upperHue = ThresholdImageOps.threshold(hsv.getBand(0),null,1.13f,false);
-		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)80,true);
+		ImageUInt8 lowerValue = ThresholdImageOps.threshold(hsv.getBand(2),null, 20,false); 
+		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null, 80,true); 
 
-		ImageUInt8 upperValue = ThresholdImageOps.threshold(hsv.getBand(2),null,(float)65,false);
+		BinaryImageOps.logicAnd(upperValue, lowerValue, binary);
 		
-		BinaryImageOps.logicAnd(lowerValue, upperValue, binary);
+		ImageUInt8 filtered = BinaryImageOps.dilate8(binary,null);
+//		filtered = BinaryImageOps.dilate8(filtered, null);
 
-		//
-		ImageUInt8 filtered = BinaryImageOps.erode8(binary,null);
-		filtered = BinaryImageOps.dilate8(filtered, null);
-
-		List<Contour> contoursFull = BinaryImageOps.contour(binary, 8, null);
-
+		List<Contour> contoursFull = BinaryImageOps.contour(filtered, 8, null);
 
 		List<Contour> contours = new ArrayList<Contour>();
 		
 		for(int i = 0; i < contoursFull.size(); i++){
-			//System.out.println("contour size " + contoursFull.get(i).external.size());
-			if(contoursFull.get(i).external.size() > 15 && contoursFull.get(i).external.size() < 30){
+			if(contoursFull.get(i).external.size() > 10 ){
 				contours.add(contoursFull.get(i));
 			}
 		}
 		if(contours.size() == 0){
-			//System.out.println("WARNING: " + contours.size() + " dots detected");
 			return null;
 		}
 		else if(contours.size() > 1){
@@ -545,7 +821,7 @@ public class VisionOps {
 				double distanceTo = 1.0/Math.pow(
 						Math.sqrt(Math.pow((windowSize/2 - curPoint.x),2.0) +
 								  Math.pow((windowSize/2 - curPoint.y),2.0)),
-						20.0);
+						2.0);
 				totalDistance += distanceTo;
 				iwm.x += curPoint.x*distanceTo;
 				iwm.y += curPoint.y*distanceTo;

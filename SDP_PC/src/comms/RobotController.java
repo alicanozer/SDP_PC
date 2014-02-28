@@ -4,28 +4,28 @@ public interface RobotController {
 
 	public void connect() throws Exception;
 	
-	public boolean isConnected();
+	public boolean isAttackConnected();
 	
-	public boolean isReady();
+	public boolean isDefenceConnected();
 	
-	public void disconnect();
+	public void disconnect(String robotType);
 	
-	public void stop();
+	public void stop(String robotType);
 	
-	public void kick();
+	public void kick(String robotType);
 	
-	public void move(int speedX, int speedY);
+	public void move(String robotType, int speedX, int speedY);
 	
-	public void rotateLEFT(int angle);
+	public void rotateLEFT(String robotType, int angle);
 	
-	public void rotateRIGHT(int angle);
+	public void rotateRIGHT(String robotType, int angle);
 	
-	public void forward();
+	public void forward(String robotType, double distance);
 	
-	public void backwards();
+	public void backwards(String robotType);
 		
-	public void setSpeed(int speed);
+	public void setSpeed(String robotType, int speed);
 	
-	public boolean isMoving();
+	public boolean isMoving(String robotType);
 	
 }

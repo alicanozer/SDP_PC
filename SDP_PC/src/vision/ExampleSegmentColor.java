@@ -1,104 +1,220 @@
 package vision;
 
-import georegression.metric.UtilAngle;
-
+import java.awt.Polygon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import boofcv.alg.color.ColorHsv;
-import boofcv.alg.filter.blur.BlurImageOps;
-import boofcv.core.image.ConvertBufferedImage;
 import boofcv.gui.image.ImagePanel;
 import boofcv.gui.image.ShowImages;
 import boofcv.io.image.UtilImageIO;
-import boofcv.struct.image.ImageFloat32;
-import boofcv.struct.image.MultiSpectral;
 
-/**
- * Example which demonstrates how color can be used to segment an image.  The color space is converted from RGB into
- * HSV.  HSV separates intensity from color and allows you to search for a specific color based on two values
- * independent of lighting conditions.  Other color spaces are supported, such as YUV.
- *
- * @author Peter Abeles
- */
 public class ExampleSegmentColor {
- 
+	static boolean flag = false;
+	static float[] colour = new float[3];
+	static int[] point = new int[2];
+	static BufferedImage img;
+	static ImagePanel gui;
+	
 	/**
 	 * Shows a color image and allows the user to select a pixel, convert it to HSV, print
 	 * the HSV values, and calls the function below to display similar pixels.
 	 */
-	public static void printClickedColor( final BufferedImage image, final float dist ) {
-		ImagePanel gui = new ImagePanel(image);
+	private static void getClickedColor() {
 		gui.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				float[] color = new float[3];
-				int rgb = image.getRGB(e.getX(),e.getY());
+				int rgb = img.getRGB(e.getX(),e.getY());
 				ColorHsv.rgbToHsv((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF , rgb&0xFF,color);
-				System.out.println("h = " + color[0]);
-				System.out.println("s = "+color[1]);
-				System.out.println("v = "+color[2]);
- 
-				showSelectedColor("Selected",image,(float)color[0],(float)color[1],dist);
+				ExampleSegmentColor.colour = color;
+				ExampleSegmentColor.flag = true;
+				return;
 			}
 		});
- 
+	}
+	
+	private static void getClickedCoords() {
+		gui.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int[] point = new int[2];
+				point[0] = e.getX();
+				point[1] = e.getY();
+				ExampleSegmentColor.point = point;
+				ExampleSegmentColor.flag = true;
+				return;
+			}
+		});
+	}
+	/**
+	 * create the image panel once only
+	 * @param img
+	 */
+	private static void createImagePanel(final BufferedImage img){
+		ExampleSegmentColor.img = img;
+		ExampleSegmentColor.gui = new ImagePanel(ExampleSegmentColor.img);
 		ShowImages.showWindow(gui,"Color Selector");
 	}
- 
+	
 	/**
-	 * Selectively displays only pixels which have a similar hue and saturation values to what is provided.
-	 * This is intended to be a simple example of color based segmentation.  Color based segmentation can be done
-	 * in RGB color, but is more problematic.  More robust techniques can use Gaussian
-	 * models.
+	 * TODO: implement a closer
 	 */
-	public static void showSelectedColor( String name , BufferedImage image , float hue , float saturation ,float distance) {
-		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(image,null,true,ImageFloat32.class);
-		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
- 
-		// Convert into HSV
-		ColorHsv.rgbToHsv_F32(input,hsv);
- 
-		// Pixels which are more than this different from the selected color are set to black
-		float maxDist2 = distance;
- 
-		// Extract hue and saturation bands which are independent of intensity
-		ImageFloat32 H = hsv.getBand(0);
-		ImageFloat32 S = hsv.getBand(1);
+	private static void closeImagePanel(){
 		
-//		BlurImageOps.gaussian(H, H, 1, -1, null);
-		BlurImageOps.gaussian(S, S, 2, -1, null);
-		
-		// Adjust the relative importance of Hue and Saturation
-		float adjustUnits = (float)(Math.PI/2.0);
- 
-		// step through each pixel and mark how close it is to the selected color
-		BufferedImage output = new BufferedImage(input.width,input.height,BufferedImage.TYPE_INT_RGB);
-		for( int y = 0; y < hsv.height; y++ ) {
-			for( int x = 0; x < hsv.width; x++ ) {
-				// remember Hue is an angle in radians, so simple subtraction doesn't work
-				float dh = UtilAngle.dist(H.unsafe_get(x,y),hue);
-				float ds = (S.unsafe_get(x,y)-saturation)*adjustUnits;
- 
-				// this distance measure is a bit naive, but good enough for this demonstration
-				float dist2 = dh*dh + ds*ds;
-				if( dist2 <= maxDist2  && dist2 >= maxDist2 - 0.05f) {
-					output.setRGB(x,y,image.getRGB(x,y));
-				}
-			}
-		}
- 
-		ShowImages.showWindow(output,"Showing "+name);
 	}
- 
-	public static void main( String args[] ) {
-		BufferedImage image = UtilImageIO.loadImage("test_images/00000008.jpg");
- 
-		// Let the user select a color
-		printClickedColor(image,0.01f);
+	private static void looper(){
+		while(flag == false){
+			try {
+		        Thread.sleep(100);
+		    } catch (InterruptedException e) {
+		        // We've been interrupted: no more messages.
+		        return;
+		    }
+		}
+		return;
+	}
+		
+
+	public static PitchColours selectColoursOfPitch(BufferedImage image) {
+		//BufferedImage image = UtilImageIO.loadImage("test_images/00000008.jpg");
+		// contains h,s,v
+		
+		float[] blue = new float[3];
+		float[] yellow= new float[3];
+		float[] black= new float[3];
+		float[] red= new float[3];
+		float[] greenPlate= new float[3];
+		float[] greenPitch= new float[3];
+		float[] white = new float[3];
+		
+		
+		float[][] blue3 = new float[3][3];
+		float[][] yellow3 = new float[3][3];
+		float[][] black3 = new float[3][3];
+		float[][] red3 = new float[3][3];
+		float[][] greenPlate3 = new float[3][3];
+		float[][] greenPitch3 = new float[3][3];
+		float[][] white3 = new float[3][3];
+		
+		// pitch stuff
+		int[] xs = new int[8];
+		int[] ys = new int[8];
+
+		createImagePanel(image);
+		System.out.println("Please click on the 8 corners of the inside of the pitch");
+		setPitchPolygon(xs, ys);
+		Polygon p = new Polygon(xs,ys,8);
+		PitchConstants.pitchPolygon = p;
+		
+		System.out.println("Please click 3 times on a blue object");
+		setThreeHSV(blue3);
+		setMeanHSV3(blue,blue3);
+		
+		System.out.println("Please click 3 times on a yellow object");
+		setThreeHSV(yellow3);
+		setMeanHSV3(yellow,yellow3);
+		
+		System.out.println("Please click 3 times on a black dot object");
+		setThreeHSV(black3);
+		setMeanHSV3(black,black3);
+		
+		System.out.println("Please click 3 times on the red ball");
+		setThreeHSV(red3);
+		setMeanHSV3(red,red3);
+		
+		System.out.println("Please click 3 times on a green plate object");
+		setThreeHSV(greenPlate3);
+		setMeanHSV3(greenPlate,greenPlate3);
+		
+		System.out.println("Please click 3 times on a green pitch object");
+		setThreeHSV(greenPitch3);
+		setMeanHSV3(greenPitch,greenPitch3);
+		
+		System.out.println("Please click 3 times on a white edge object");
+		setThreeHSV(white3);
+		setMeanHSV3(white,white3);
+		
+		System.out.println("You have selected all objects!");
+		
 		// Display pre-selected colors
-//		showSelectedColor("Yellow",image,1f,1f,0.1f);
-//		showSelectedColor("Green",image,1.5f,0.65f,0.1f);
+		
+		PitchColours colours = new PitchColours(blue, yellow, black, red, greenPlate, greenPitch, white);
+		return colours;
+	}
+	private static void setMinMaxHSVRange(float[][] minMaxArray, float[][] floatArray3){
+		/*
+		 * first row is max
+		 * second row is min
+		 * first elem is H, second S, third V
+		 */
+		for(int i = 0 ; i < 3; i ++){
+			minMaxArray[0][i] = max3(floatArray3[0][i],floatArray3[1][i],floatArray3[2][i]);
+			minMaxArray[1][i] = min3(floatArray3[0][i],floatArray3[1][i],floatArray3[2][i]);
+		}
+	}
+	
+	/**
+	 * takes a 3 array and returns the mean of the H, S, and V
+	 * @param meanFloatArray
+	 * @param floatArray3
+	 */
+	public static void setMeanHSV3(float[] meanFloatArray, float[][] floatArray3) {
+		// merge colors
+		float h = 0f; 
+		float s = 0f;
+		float v = 0f;
+		for(int i = 0; i < 3; i ++){
+			h += floatArray3[i][0];
+			s += floatArray3[i][1];
+			v += floatArray3[i][2];
+		}
+		meanFloatArray[0] = h/3f;
+		meanFloatArray[1] = s/3f;
+		meanFloatArray[2] = v/3f;
+	}
+	/**
+	 * get float array from 3 clicks
+	 * @param floatArray3
+	 */
+	private static void setThreeHSV(float[][] floatArray3) {
+		for(int i = 0; i < 3; i ++){
+			getClickedColor();
+			looper();
+			floatArray3[i] = colour;
+			flag = false;
+		}
+	}
+	
+	private static void setPitchPolygon(int[] xs, int ys[]) {
+		for(int i = 0; i < 8; i ++){
+			getClickedCoords();
+			looper();
+			xs[i] = point[0];
+			ys[i] = point[1];
+			flag = false;
+		}
+	}
+	private float minArray(float[] ar){
+		float min = Float.POSITIVE_INFINITY;
+		for(float a: ar){
+			if(a < min) min = a;
+		}
+		return min;
+	}
+	private float maxArray(float[] ar){
+		float max = Float.NEGATIVE_INFINITY;
+		for(float a: ar){
+			if(a > max) max = a;
+		}
+		return max;
+		
+	}
+	public static float max3(float a,float b, float c){
+		return Math.max(a, Math.max(b, c));
+	}
+	public static float min3(float a,float b, float c){
+		return Math.min(a, Math.min(b, c));
 	}
 }

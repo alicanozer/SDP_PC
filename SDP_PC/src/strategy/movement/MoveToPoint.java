@@ -1,75 +1,68 @@
 package strategy.movement;
 
-import World.Robot;
-import comms.RobotController;
-
-import vision.ObjectLocations;
 import World.RobotType;
+import georegression.struct.point.Point2D_I32;
+import comms.BluetoothRobot;
 
 public class MoveToPoint {
 
 	private static final int distanceFromPointToStop = 20;
 
-	public void moveToPoint(ObjectLocations objs, RobotController robot,
-			int moveToX, int moveToY) throws InterruptedException {
+	public static void moveToPoint(BluetoothRobot robot, Point2D_I32 marker, Point2D_I32 dot, double pointX, double pointY) throws InterruptedException{
 
-		objs.setYellowUs(true);
-		Robot us = new Robot(RobotType.Us);
-		
-		// Plan:
-		// 0. Get bearings
-		// 1. Turn to face ball
-		// 2. Move forwards
-		double distance = DistanceToBall.Distance(us.x, us.y, moveToX, moveToY);
+		double distance = DistanceToBall.Distance(marker.x, marker.y, pointX, pointY);
 		System.out.println(String.format("Distance to point is %f", distance));
-		double angle = TurnToBall.AngleTurner(us, moveToX, moveToY);
+		Point2D_I32 pointXY = new Point2D_I32((int)pointX,(int)pointY);
+
+		double angle = TurnToObject.getAngleToObject(dot, marker, pointXY);
 		System.out.println(String
 				.format("Angle of point to robot is %f", angle));
 
 		if (Math.abs(angle) > 20) {
 			// Turn to angle required
 			System.out.println("Stop and turn");
-			robot.stop();
-			robot.rotateLEFT((int) angle);
+			robot.stop("attack");
+			robot.rotateLEFT("attack", (int)angle);
 		}
 
 		while (distance > distanceFromPointToStop) {
 
-			angle = TurnToBall.AngleTurner(us, moveToX, moveToY);
+			angle = TurnToObject.getAngleToObject(dot, marker, pointXY);
 
-			if ((Math.abs(angle) > 15) && (Math.abs(angle) < 50)) {
 				// Stop everything and turn
 				System.out.println("The final angle is " + angle);
-				robot.stop();
-				robot.rotateLEFT((int) (angle / 2));
-			} else if (Math.abs(angle) > 50) {
-				robot.stop();
-				robot.rotateLEFT((int) angle);
-			}
+				if (robot.type==RobotType.AttackUs) {
+					robot.stop("attack"); 
+					robot.rotateLEFT("attack", (int) (angle / 2));
+				}
+				else {
+					robot.stop("defence");
+					robot.rotateLEFT("defence", (int) (angle/2));
+				}
 
-			if ((distance - distanceFromPointToStop) > 100)
-				robot.move(0, 100);
-			else
-				robot.move(0, 50);
-
-			distance = DistanceToBall.Distance(us.x, us.y, moveToX, moveToY);
+			distance = DistanceToBall.Distance(marker.x, marker.y, pointX, pointY);
 			System.out.println("Distance to ball: " + distance);
 			Thread.sleep(100);
 		}
 
 		// Being close to the ball we can perform one last minor turn
-		angle = TurnToBall.AngleTurner(us, moveToX, moveToY);
+		angle = TurnToObject.getAngleToObject(dot, marker, pointXY);
 		if (Math.abs(angle) > 15) {
 			// Stop everything and turn
 			System.out.println("Making final correction");
-			robot.stop();
-			robot.rotateLEFT((int) angle);
-		} else {
-			robot.stop();
+			if (robot.type==RobotType.AttackUs) {
+				robot.stop("attack"); 
+				robot.rotateLEFT("attack", (int) (angle / 2));
+			}
+			else {
+				robot.stop("defence");
+				robot.rotateLEFT("defence", (int) (angle/2));
+			}
 		}
 		if (distance > distanceFromPointToStop) {
-			moveToPoint(objs, robot, moveToX, moveToY);
+			moveToPoint(robot, marker, dot, pointX, pointY);
 		}
+
 	}
-	
+
 }

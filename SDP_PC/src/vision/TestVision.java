@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -28,6 +29,7 @@ import boofcv.alg.feature.detect.edge.CannyEdge;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
 import boofcv.alg.filter.binary.ThresholdImageOps;
+import boofcv.alg.filter.blur.BlurImageOps;
 import boofcv.core.image.ConvertBufferedImage;
 import boofcv.factory.feature.detect.edge.FactoryEdgeDetectors;
 import boofcv.gui.binary.VisualizeBinaryData;
@@ -54,7 +56,9 @@ public class TestVision {
 
 		BufferedImage img4 = ImageIO.read(new File("test_images/pitch2_1.png"));
 
+
 		BufferedImage img5 = ImageIO.read(new File("test_images/000000014.jpg"));
+
 
 		img5 = img5.getSubimage(55, 90, 540, 320);
 		//System.out.println(PitchConstants.newPitch.getRegion12X());
@@ -67,6 +71,8 @@ public class TestVision {
 		img5 = VisionOps.newDisplay(VisionOps.newHSVSegment("ball",img5),img5.getWidth(), img5.getHeight());
 
 		ShowImages.showWindow(img5,"img5")*/;
+
+
 
 		ImageUInt8 gray = ConvertBufferedImage.convertFrom(img5,(ImageUInt8)null);
 		ImageUInt8 edgeImage = new ImageUInt8(gray.width,gray.height);
@@ -100,7 +106,9 @@ public class TestVision {
 					g.drawLine(p.x-5, p.y-5, p.x+5, p.y+5);
 					g.drawLine(p.x+5, p.y-5, p.x-5, p.y+5);}
 			}
+
 		}
+
 
 		g.drawLine(PitchConstants.newPitch.getRegion12X(),0,PitchConstants.newPitch.getRegion12X(),500);
 		g.drawLine(PitchConstants.newPitch.getRegion23X(),0,PitchConstants.newPitch.getRegion23X(),500);
@@ -123,7 +131,9 @@ public class TestVision {
 			g.drawLine(p.x-5, p.y-5, p.x+5, p.y+5);
 			g.drawLine(p.x+5, p.y-5, p.x-5, p.y+5);
 		}
+
 		
+
 		g.setColor(Color.GREEN);
 		g.drawLine(60, 150, 70, 150);
 		g.drawLine(200, 150, 210, 150);
@@ -132,6 +142,7 @@ public class TestVision {
 		
 		/*double[] testList = {5.3,1.0,2,0};
 		System.out.println(KMeans.min(testList ));*/
+
 
 		//ShowImages.showWindow(visualEdgeContour,"K means cluster centers");
 		
@@ -166,6 +177,7 @@ public class TestVision {
 		frame.setContentPane(panel);;
 		frame.pack();frame.setVisible(true);
 		
+
 	}
 	
 	

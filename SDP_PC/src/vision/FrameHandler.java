@@ -11,9 +11,12 @@ import java.awt.Polygon;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -40,6 +43,7 @@ import boofcv.struct.image.ImageSInt16;
 import boofcv.struct.image.ImageSInt32;
 import boofcv.struct.image.ImageUInt8;
 import boofcv.struct.image.MultiSpectral;
+import Calculations.GoalInfo;
 import au.edu.jcu.v4l4j.FrameGrabber;
 import au.edu.jcu.v4l4j.CaptureCallback;
 import au.edu.jcu.v4l4j.V4L4JConstants;
@@ -62,11 +66,15 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private FrameGrabber    frameGrabber;
 	private JLabel          label;
 	private JFrame          frame;
-
+	private long frameCounter = 0;
 	private boolean debug;
 	private PitchConstants consts;
+
 	static JPanel panel = new JPanel();
 	static JSlider slider = new JSlider(JSlider.VERTICAL,0,1000,25);
+	private PitchColours colors;
+	private ArrayList<Point2D_I32> whitePoints;
+	private int frameLoop = 1;
 
 
 
@@ -167,18 +175,68 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	 * gets new frames and applies the vision on them
 	 */
 	@Override
-	public void nextFrame(VideoFrame frame) {
+	public void nextFrame(VideoFrame frame){
+		if (frameLoop == 101) frameLoop = 1;
 		BufferedImage img = frame.getBufferedImage();
+//		BufferedImage img = null;
+//		try {
+//			img = ImageIO.read(new File("static_vision_images/image" + frameLoop+".jpg"));
+//		} catch (IOException e2) {
+//			// TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		}//frame.getBufferedImage();
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
+		if(frameCounter < 3){
+			frame.recycle();
+			frameCounter++;
+			return;
+		}
+		else if (frameCounter == 3){
+			frameCounter++;
+			colors = ExampleSegmentColor.selectColoursOfPitch(img);
+			try {
+				BufferedImage pitchImg = img;
+				List<Color> colorList = new ArrayList<Color>();
+				//set white
+				float[] whiteRGB = new float[3];
+				ColorHsv.hsvToRgb(colors.getWhiteValue()[0], colors.getWhiteValue()[1], colors.getWhiteValue()[2], whiteRGB);
+				Color white = new Color((int) whiteRGB[0], (int) whiteRGB[1], (int)whiteRGB[2]);
+				colorList.add(white);
+				//add pitch
+				float[] pitchRGB = new float[3];
+				ColorHsv.hsvToRgb(colors.getGreenPitchValue()[0], colors.getGreenPitchValue()[1], colors.getGreenPitchValue()[2], pitchRGB);
+				Color pitch = new Color((int) pitchRGB[0], (int) pitchRGB[1], (int) pitchRGB[2]);
+				colorList.add(pitch);
+				whitePoints = KMeans.Cluster(pitchImg, 2, 1, colorList).get(0);
+				ShowImages.showWindow(pitchImg,"pitchImg");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			return;
+		}
 		long thisFrame = System.currentTimeMillis();
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
-		lastFrame = thisFrame;
-		//KMeans.ClusterHeaps(img, 6, 1, null,15);
-		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("blue",img),img.getWidth(), img.getHeight());
+		
+		VisionRunner.sendFrame(new Frame(img,thisFrame));
+		
+
+		
+		
+		float[] distanceThresholds = new float[3];
+		distanceThresholds[0] = 0.001f;
+		distanceThresholds[1] = 0.00015f;
+		distanceThresholds[2] = 0.006f;
+		
+		try {
+			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),distanceThresholds,3);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
+
 
 
 		slider.addChangeListener(new ChangeListener() {
@@ -198,11 +256,27 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		} catch (Exception e) {
 
 		}
+
+		g.draw(PitchConstants.pitchPolygon);
+
 		if(debug){
 			g.setColor(Color.BLACK);
 			g.drawLine(consts.getRegion12X(), 0, consts.getRegion12X(), img.getHeight());
 			g.drawLine(consts.getRegion23X(), 0, consts.getRegion23X(), img.getHeight());
 			g.drawLine(consts.getRegion34X(), 0, consts.getRegion34X(), img.getHeight());
+			
+			//Drawing Goal Markers
+			g.setColor(Color.WHITE);
+			
+			g.drawLine(GoalInfo.getLeftGoalCenterNew().getX()-10, GoalInfo.getLeftGoalCenterNew().getY(), GoalInfo.getLeftGoalCenterNew().getX()+10, GoalInfo.getLeftGoalCenterNew().getY());
+			g.drawLine(GoalInfo.getLeftGoalTopNew().getX()-10, GoalInfo.getLeftGoalTopNew().getY(), GoalInfo.getLeftGoalTopNew().getX()+10, GoalInfo.getLeftGoalTopNew().getY());
+			g.drawLine(GoalInfo.getLeftGoalBottomNew().getX()-10, GoalInfo.getLeftGoalBottomNew().getY(),GoalInfo.getLeftGoalBottomNew().getX()+10, GoalInfo.getLeftGoalBottomNew().getY());
+
+			g.drawLine(GoalInfo.getRightGoalCenterNew().getX()-10, GoalInfo.getRightGoalCenterNew().getY(), GoalInfo.getRightGoalCenterNew().getX()+10, GoalInfo.getRightGoalCenterNew().getY());
+			g.drawLine(GoalInfo.getRightGoalTopNew().getX()-10, GoalInfo.getRightGoalTopNew().getY(), GoalInfo.getRightGoalTopNew().getX()+10, GoalInfo.getRightGoalTopNew().getY());
+			g.drawLine(GoalInfo.getRightGoalBottomNew().getX()-10, GoalInfo.getRightGoalBottomNew().getY(), GoalInfo.getRightGoalBottomNew().getX()+10, GoalInfo.getRightGoalBottomNew().getY());
+			
+			
 			try {
 				ObjectLocations.drawCrosses(g);
 			} catch (Exception e) {
@@ -210,6 +284,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		}
 		g.dispose();
 		frame.recycle();
+		lastFrame = thisFrame;
+		frameLoop++;
 	}
 
 	public static void CreateSlider(){

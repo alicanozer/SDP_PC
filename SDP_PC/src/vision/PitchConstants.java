@@ -1,5 +1,7 @@
 package vision;
 
+import java.awt.Polygon;
+
 public class PitchConstants {
 	public PitchConstants(int upperLeftX, int upperLeftY, int croppedWidth,
 			int croppedHeight, int region12x, int region23x, int region34x, int hUpperBound, int hLowerBound) {
@@ -12,6 +14,10 @@ public class PitchConstants {
 		this.region34X = region34x;
 		this.hUpperBound = hUpperBound;
 		this.hLowerBound = hLowerBound;
+		this.middleLine = croppedWidth/2; //TODO: this or regin23X ?
+	}
+	public int getMiddleLine() {
+		return middleLine;
 	}
 	public int getUpperLeftX() {
 		return upperLeftX;
@@ -67,6 +73,7 @@ public class PitchConstants {
 	public void sethLowerBound(int hLowerBound) {
 		this.hLowerBound = hLowerBound;
 	}
+	public static Polygon pitchPolygon;
 	private int upperLeftX;
 	private int upperLeftY;
 	private int croppedWidth;
@@ -76,7 +83,10 @@ public class PitchConstants {
 	private int region34X;
 	private int hUpperBound;
 	private int hLowerBound;
+	private int middleLine;
 	
-	public static final PitchConstants newPitch = new PitchConstants(55,90,540,320,115,260,410,15,280);
+
+	public static final PitchConstants newPitch = new PitchConstants(60,98,520,280,115,260,410,15,280);
 	public static final PitchConstants oldPitch = new PitchConstants(0,0,0,0,130,280,430,0,0); //TODO : fill in
+
 }

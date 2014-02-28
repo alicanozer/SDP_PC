@@ -3,34 +3,31 @@ package Calculations;
 import georegression.struct.point.Point2D_I32;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+import vision.PitchConstants;
+
+import vision.ObjectLocations;
 
 public class GoalInfo {
 	
-	public final int width = 640;
-	public final int height = 480;
-	public final int goalWidth = 15;
-	public final int goalRadius = 60;
-	Point2D_I32 leftGoalCentre = getLeftGoalCenter();
-	Point2D_I32 leftGoalTop = getLeftGoalTop();
-	Point2D_I32 leftGoalBottom = getLeftGoalBottom();
-	Point2D_I32 rightGoalCentre = getRightGoalCenter();
-	Point2D_I32 rightGoalTop = getRightGoalTop();
-	Point2D_I32 rightGoalBottom = getRightGoalBottom();
+	public final static int width = 540;
+	public final static int height = 320;
+	public final static int goalWidth = 15;
+	public final static int goalRadius = 75;
+	Point2D_I32 leftGoalCentre = getLeftGoalCenterNew();
+	Point2D_I32 leftGoalTop = getLeftGoalTopNew();
+	Point2D_I32 leftGoalBottom = getLeftGoalBottomNew();
+	Point2D_I32 rightGoalCentre = getRightGoalCenterNew();
+	Point2D_I32 rightGoalTop = getRightGoalTopNew();
+	Point2D_I32 rightGoalBottom = getRightGoalBottomNew();
 	
-	public final BufferedImage img;
+	PitchConstants pitchconstants = PitchConstants.newPitch;
 
-	
-	public GoalInfo(BufferedImage img){
-		this.img = img;
-	}
-	
 	/**
 	 * Gets the position of the left goal
 	 *
 	 * @return a Point2D_I32 object for the left goal
 	 */
-	public Point2D_I32 getLeftGoalCenter() {
+	public static Point2D_I32 getLeftGoalCenterNew() {
 		int middleY = height / 2;
 		Point2D_I32 result = new Point2D_I32(goalWidth, middleY);
 		return result;
@@ -41,8 +38,8 @@ public class GoalInfo {
 	 *
 	 * @return a Point2D_I32 object for the top of the left goal
 	 */
-	public Point2D_I32 getLeftGoalTop() {
-		Point2D_I32 result = getLeftGoalCenter();
+	public static Point2D_I32 getLeftGoalTopNew() {
+		Point2D_I32 result = getLeftGoalCenterNew();
 		result.setY(result.getY() - goalRadius);
 		return result;
 }
@@ -52,8 +49,8 @@ public class GoalInfo {
 	 *
 	 * @return a Position object for the top of the left goal
 	 */
-	public Point2D_I32 getLeftGoalBottom() {
-		Point2D_I32 result = getLeftGoalCenter();
+	public static Point2D_I32 getLeftGoalBottomNew() {
+		Point2D_I32 result = getLeftGoalCenterNew();
 		result.setY(result.getY() + goalRadius);
 		return result;
 	}
@@ -63,7 +60,7 @@ public class GoalInfo {
 	 *
 	 * @return a Point2D_I32 object for the right goal
 	 */
-	public Point2D_I32 getRightGoalCenter() {
+	public static Point2D_I32 getRightGoalCenterNew() {
 		int middleY = height / 2;
 		Point2D_I32 result = new Point2D_I32(width - goalWidth, middleY);
 		return result;
@@ -74,8 +71,8 @@ public class GoalInfo {
 	 *
 	 * @return a Point2D_I32 object for the top of the left goal
 	 */
-	public Point2D_I32 getRightGoalTop() {
-		Point2D_I32 result = getRightGoalCenter();
+	public static Point2D_I32 getRightGoalTopNew() {
+		Point2D_I32 result = getRightGoalCenterNew();
 		result.setY(result.getY() - goalRadius);
 		return result;
 	}
@@ -85,30 +82,32 @@ public class GoalInfo {
 	 *
 	 * @return a Point2D_I32 object for the top of the left goal
 	 */
-	public Point2D_I32 getRightGoalBottom() {
-		Point2D_I32 result = getRightGoalCenter();
+	public static Point2D_I32 getRightGoalBottomNew() {
+		Point2D_I32 result = getRightGoalCenterNew();
 		result.setY(result.getY() + goalRadius);
 		return result;
-	}public Point2D_I32 getBotRightCorner() {
-		Point2D_I32 result = new Point2D_I32(604, 400);
-
-		return result;
 	}
-	public Point2D_I32 getTopLeftCorner() {
-		Point2D_I32 result = new Point2D_I32(35, 92);
-
-		return result;
-	}
-	public Point2D_I32 getTopRightCorner() {
-		Point2D_I32 result = new Point2D_I32(601, 84);
-
-		return result;
-	}
-	public Point2D_I32 getBotLeftCorner() {
-		Point2D_I32 result = new Point2D_I32(35, 392);
-
-		return result;
-	}
+	
+//	public Point2D_I32 getBotRightCorner() {
+//		Point2D_I32 result = new Point2D_I32(604, 400);
+//
+//		return result;
+//	}
+//	public Point2D_I32 getTopLeftCorner() {
+//		Point2D_I32 result = new Point2D_I32(35, 92);
+//
+//		return result;
+//	}
+//	public Point2D_I32 getTopRightCorner() {
+//		Point2D_I32 result = new Point2D_I32(601, 84);
+//
+//		return result;
+//	}
+//	public Point2D_I32 getBotLeftCorner() {
+//		Point2D_I32 result = new Point2D_I32(35, 392);
+//
+//		return result;
+//	}
 	
 	public void drawGoalLine(Graphics2D g) {
 

@@ -4,10 +4,12 @@ import georegression.struct.point.Point2D_I32;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import boofcv.struct.image.ImageFloat32;
 import boofcv.struct.image.MultiSpectral;
@@ -23,6 +25,11 @@ public class ObjectLocations {
 	private static Point2D_I32 blueATTACKmarker = null;
 	private static Point2D_I32 blueDEFENDmarker = null;
 
+	private static Point2D_I32 yellowATTACKdot = null;
+	private static Point2D_I32 yellowDEFENDdot = null;
+	private static Point2D_I32 blueATTACKdot = null;
+	private static Point2D_I32 blueDEFENDdot = null;	
+	
 
 	public static double getBallDirectionAngle() {
 		while(!lock);
@@ -79,21 +86,16 @@ public class ObjectLocations {
 	// we assume the leftmost region of the pitch is region 1
 	private static boolean yellowLeft; // flag whether the yellow team is defending the left goal
 	private static boolean yellowUs;   // flag whether we are the yellow team
-
-
-	//new pitch
-	//	private static int region12X = 130;
-	//	private static int region23X = 280;
-	//	private static int region34X = 430;
-	//old pitch
-	private static int region12X = 115;
-	private static int region23X = 260;
-	private static int region34X = 410;
-
-	// lock, dunno if needed
+	
+	private static PitchConstants consts;
+	
+	public static PitchConstants getConsts() {
+		return consts;
+	}
+	public static void setConsts(PitchConstants consts) {
+		ObjectLocations.consts = consts;
+	}
 	private static boolean lock = true;
-
-
 
 	public static void setYellowDefendingLeft(boolean flag){
 		while(!lock);
@@ -104,6 +106,10 @@ public class ObjectLocations {
 		lock = true;
 		//leaving critical section
 	}
+	public static boolean getYellowDefendingLeft() {
+		return yellowLeft;
+	}
+	
 	public static void setYellowUs(boolean flag){
 		while(!lock);
 
@@ -114,20 +120,40 @@ public class ObjectLocations {
 		//leaving critical section
 
 	}
+	public static boolean getYellowUs() {
+		return yellowUs;
+	}
 	/**
 	 * main method, only call this one on the new grabbed frame! do not attempt to set objects yourselves...
 	 * @param img
+	 * @param colors 
+	 * @param whitePoints 
 	 */
-	public static void updateObjectLocations(BufferedImage img){
-		Point2D_I32 ballLocal = VisionOps.findBall(img);
-		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkers(img);
-		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkers(img);
+	public static void updateObjectLocations(
+			BufferedImage img, 
+			float[][] colors,
+			float[] distanceThresholds,
+			int radius){
+		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = VisionOps.getMultipleObjects(img, colors, distanceThresholds,false,radius);
+		Point2D_I32 ballLocal = VisionOps.findBallFromMapping(objectsToLocations);
+		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
+		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
 
+		
 		ArrayList<Point2D_I32> dotsLocal = new ArrayList<Point2D_I32>();
 
 		if(yellowMarkers != null){
 			for(Point2D_I32 p: yellowMarkers){
-				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,44);
+				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
+//				Point2D_I32 newCentre = VisionOps.getDotPosition(
+//						img, 
+//						p, 
+//						30, 
+//						2, 
+//						1, 
+//						colors.getBlackValue(), 
+//						colors.getYellowValue(), 
+//						colors.getGreenPlateValue());   //.getMeanDotNearMarker(img,p,40,colors.getBlackValue());
 				if(newCentre != null)
 					dotsLocal.add(newCentre); // window 44 works well
 			}
@@ -135,7 +161,16 @@ public class ObjectLocations {
 
 		if(blueMarkers != null){
 			for(Point2D_I32 p: blueMarkers){
-				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,44);
+				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
+//				Point2D_I32 newCentre = VisionOps.getDotPosition(
+//						img, 
+//						p, 
+//						30, 
+//						2, 
+//						1, 
+//						colors.getBlackValue(), 
+//						colors.getBlueValue(), 
+//						colors.getGreenPlateValue()); 
 				if(newCentre != null)
 					dotsLocal.add(newCentre); // window 44 works well
 			}
@@ -153,45 +188,49 @@ public class ObjectLocations {
 			//set yellow
 			if(yellowMarkers != null){
 				for(Point2D_I32 p: yellowMarkers){
-					if(p.x < region12X) {
-						try {
-							//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
-							yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
-						} catch (Exception e) {
+					if(p != null){
+						if(p.x < consts.getRegion12X()) {
+							try {
+								//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
+								yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
+							} catch (Exception e) {
 
+							}
+							setYellowDEFENDmarker(p);
 						}
-						setYellowDEFENDmarker(p);
-					}
 
-					if(region23X < p.x && p.x < region34X) {
-						try {
-							//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 3 )
-							yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
-						} catch (Exception e) {
+						if(consts.getRegion23X() < p.x && p.x < consts.getRegion34X()) {
+							try {
+								//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 3 )
+								yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
+							} catch (Exception e) {
 
+							}
+							setYellowATTACKmarker(p);
 						}
-						setYellowATTACKmarker(p);
 					}
 				}
 			}
 			//set blue
 			if(blueMarkers != null){
 				for(Point2D_I32 p: blueMarkers){
-					if(region12X < p.x && p.x < region23X) {
-						try {
-							blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
-						} catch (Exception e) {
+					if(p!= null){
+						if(consts.getRegion12X() < p.x && p.x < consts.getRegion23X()) {
+							try {
+								blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
+							} catch (Exception e) {
 
+							}
+							setBlueATTACKmarker(p);
 						}
-						setBlueATTACKmarker(p);
-					}
-					if(p.x > region34X) {
-						try {
-							blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
-						} catch (Exception e) {
+						if(p.x > consts.getRegion34X()) {
+							try {
+								blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
+							} catch (Exception e) {
 
+							}
+							setBlueDEFENDmarker(p);
 						}
-						setBlueDEFENDmarker(p);
 					}
 				}
 			}
@@ -200,44 +239,48 @@ public class ObjectLocations {
 			//set yellow
 			if(yellowMarkers != null){
 				for(Point2D_I32 p: yellowMarkers){
-					if(region12X < p.x && p.x < region23X) {
-						try {
-							//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 7 )
-							yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
-						} catch (Exception e) {
+					if(p != null){
+						if(consts.getRegion12X() < p.x && p.x < consts.getRegion23X()) {
+							try {
+								//if(PointUtils.euclideanDistance(yellowATTACKmarker, p) > 7 )
+								yellowATTACKmarkerDirectionAngle = VisionOps.getDirection(yellowATTACKmarker, p);
+							} catch (Exception e) {
 
+							}
+							setYellowATTACKmarker(p);
 						}
-						setYellowATTACKmarker(p);
-					}
-					if(p.x > region34X) {
-						try {
-							//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
-							yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
-						} catch (Exception e) {
+						if(p.x > consts.getRegion34X()) {
+							try {
+								//if(PointUtils.euclideanDistance(yellowDEFENDmarker, p) > 3)
+								yellowDEFENDmarkerDicrectionAngle = VisionOps.getDirection(yellowDEFENDmarker, p);
+							} catch (Exception e) {
 
+							}
+							setYellowDEFENDmarker(p);
 						}
-						setYellowDEFENDmarker(p);
 					}
 				}
 			}
 			//set blue
 			if(blueMarkers != null){
 				for(Point2D_I32 p: blueMarkers){
-					if(p.x < region12X) {
-						try {
-							blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
-						} catch (Exception e) {
+					if(p != null){
+						if(p.x < consts.getRegion12X()) {
+							try {
+								blueDEFENDmarkerDirectionAngle = VisionOps.getDirection(blueDEFENDmarker, p);
+							} catch (Exception e) {
 
+							}
+							setBlueDEFENDmarker(p);
 						}
-						setBlueDEFENDmarker(p);
-					}
-					if(region23X < p.x && p.x < region34X) {
-						try {
-							blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
-						} catch (Exception e) {
+						if(consts.getRegion23X() < p.x && p.x < consts.getRegion34X()) {
+							try {
+								blueATTACKmarkerDirectionAngle = VisionOps.getDirection(blueATTACKmarker, p);
+							} catch (Exception e) {
 
+							}
+							setBlueATTACKmarker(p);
 						}
-						setBlueATTACKmarker(p);
 					}
 				}
 			}
@@ -250,36 +293,43 @@ public class ObjectLocations {
 		if(yellowLeft){
 			for(Point2D_I32 dot : dots){
 				if(dot != null){
-					if (dot.x < region12X)
+					if (dot.x < consts.getRegion12X())
 						try {
 							double newAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance); 
 							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
-						} catch (Exception e) {
+
+							setYellowDEFENDdot(dot);
+							} catch (Exception e) {
+							// TODO Auto-generated catch block
+//							e.printStackTrace();
 
 						}
-					else if(region12X < dot.x && dot.x < region23X)
+					else if(consts.getRegion12X() < dot.x && dot.x < consts.getRegion23X())
 						try {
 							double newAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance);
 							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
+							setBlueATTACKdot(dot);
 						} catch (Exception e) {
 
 						}
-					else if (region23X < dot.x && dot.x < region34X){
+					else if (consts.getRegion23X() < dot.x && dot.x < consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance); 
 							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
+							setYellowATTACKdot(dot);
 						} catch (Exception e) {
 
 						}
 					}
-					else if(dot.x > region34X){
+					else if(dot.x > consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance); // 10 degrees is 0.17 radians
 							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
+							setYellowDEFENDdot(dot);
 						} catch (Exception e) {
 
 						}
@@ -290,7 +340,7 @@ public class ObjectLocations {
 		else{ // blue if left
 			for(Point2D_I32 dot : dots){
 				if(dot != null){
-					if (dot.x < region12X)
+					if (dot.x < consts.getRegion12X())
 						try {
 							double newAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance); 
@@ -298,7 +348,7 @@ public class ObjectLocations {
 						} catch (Exception e) {
 
 						}
-					else if(region12X < dot.x && dot.x < region23X)
+					else if(consts.getRegion12X() < dot.x && dot.x < consts.getRegion23X())
 						try {
 							double newAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance);
@@ -306,7 +356,7 @@ public class ObjectLocations {
 						} catch (Exception e) {
 
 						}
-					else if (region23X < dot.x && dot.x < region34X){
+					else if (consts.getRegion23X() < dot.x && dot.x < consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance); 
@@ -315,7 +365,7 @@ public class ObjectLocations {
 
 						}
 					}
-					else if(dot.x > region34X){
+					else if(dot.x > consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance); 
@@ -333,6 +383,30 @@ public class ObjectLocations {
 
 	}
 
+	public static Point2D_I32 getYellowATTACKdot() {
+		return yellowATTACKdot;
+	}
+	public static void setYellowATTACKdot(Point2D_I32 yellowATTACKdot) {
+		ObjectLocations.yellowATTACKdot = yellowATTACKdot;
+	}
+	public static Point2D_I32 getYellowDEFENDdot() {
+		return yellowDEFENDdot;
+	}
+	public static void setYellowDEFENDdot(Point2D_I32 yellowDEFENDdot) {
+		ObjectLocations.yellowDEFENDdot = yellowDEFENDdot;
+	}
+	public static Point2D_I32 getBlueATTACKdot() {
+		return blueATTACKdot;
+	}
+	public static void setBlueATTACKdot(Point2D_I32 blueATTACKdot) {
+		ObjectLocations.blueATTACKdot = blueATTACKdot;
+	}
+	public static Point2D_I32 getBlueDEFENDdot() {
+		return blueDEFENDdot;
+	}
+	public static void setBlueDEFENDdot(Point2D_I32 blueDEFENDdot) {
+		ObjectLocations.blueDEFENDdot = blueDEFENDdot;
+	}
 	private static void setBall(Point2D_I32 pos) {
 		while(!lock);
 		//entering critical section
@@ -463,13 +537,14 @@ public class ObjectLocations {
 	 */
 	public static  void drawCrosses(Graphics2D g){
 		Color c = g.getColor();
-		g.setColor(Color.WHITE);
+		g.setColor(Color.RED);
 		if (ObjectLocations.ball != null) {
 			// drawing X over ball			//		
 			g.drawLine(ObjectLocations.ball.x - 10, ObjectLocations.ball.y, ObjectLocations.ball.x + 10, ObjectLocations.ball.y);
 			g.drawLine(ObjectLocations.ball.x, ObjectLocations.ball.y - 10, ObjectLocations.ball.x, ObjectLocations.ball.y + 10);
 		}
 		// WRONG position of yellowDEFENDmarker
+		g.setColor(Color.YELLOW);
 		if(yellowDEFENDmarker != null){
 			g.drawLine(yellowDEFENDmarker.x - 10, yellowDEFENDmarker.y, yellowDEFENDmarker.x + 10, yellowDEFENDmarker.y );
 			g.drawLine(yellowDEFENDmarker.x, yellowDEFENDmarker.y - 10, yellowDEFENDmarker.x, yellowDEFENDmarker.y + 10);
@@ -481,19 +556,20 @@ public class ObjectLocations {
 			g.drawLine(yellowATTACKmarker.x, yellowATTACKmarker.y - 10, yellowATTACKmarker.x, yellowATTACKmarker.y + 10);
 			//g.drawOval(yellowATTACKmarker.x - 22, yellowATTACKmarker.y - 22, 44, 44);
 		}
+		g.setColor(Color.BLUE);
 		if(blueDEFENDmarker != null){
 			g.drawLine(blueDEFENDmarker.x - 10, blueDEFENDmarker.y, blueDEFENDmarker.x + 10, blueDEFENDmarker.y );
 			g.drawLine(blueDEFENDmarker.x, blueDEFENDmarker.y - 10, blueDEFENDmarker.x, blueDEFENDmarker.y + 10);
 			//g.drawOval(blueDEFENDmarker.x - 22, blueDEFENDmarker.y - 22, 44, 44);
 		}
-
+		g.setColor(Color.BLUE);
 		if(blueATTACKmarker != null){
 			g.drawLine(blueATTACKmarker.x - 10, blueATTACKmarker.y, blueATTACKmarker.x + 10, blueATTACKmarker.y );
 			g.drawLine(blueATTACKmarker.x, blueATTACKmarker.y - 10, blueATTACKmarker.x, blueATTACKmarker.y + 10);
 			//g.drawOval(blueATTACKmarker.x - 22, blueATTACKmarker.y - 22, 44, 44);
 		}
 
-		g.setColor(Color.RED);
+		g.setColor(Color.BLACK);
 		if(dots != null){
 			for(Point2D_I32 p: dots){
 				if(p != null){
@@ -504,21 +580,48 @@ public class ObjectLocations {
 		}
 
 		g.setColor(Color.MAGENTA);
-		g.draw(new Line2D.Double(ball.x, ball.y, (ball.x + Math.sin(ballDirectionAngle)*100), (ball.y + Math.cos(ballDirectionAngle)*100)));
 
-		g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerDirectionAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerDirectionAngle)*100)));
-		g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerDicrectionAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerDicrectionAngle)*100)));
+		try {
+			g.draw(new Line2D.Double(ball.x, ball.y, (ball.x + Math.sin(ballDirectionAngle)*100), (ball.y + Math.cos(ballDirectionAngle)*100)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 
-		g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerDirectionAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerDirectionAngle)*100)));
-		g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerDirectionAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerDirectionAngle)*100)));
+		}
+		
+		try {
+			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerDirectionAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerDirectionAngle)*100)));
+			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerDicrectionAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerDicrectionAngle)*100)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 
+		}
+		
+		try {
+			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerDirectionAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerDirectionAngle)*100)));
+			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerDirectionAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerDirectionAngle)*100)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+
+		}
+		
 		g.setColor(Color.YELLOW);
-		g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerOrientationAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerOrientationAngle)*100)));
-		g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerOrientationAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerOrientationAngle)*100)));
+		try {
+			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerOrientationAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerOrientationAngle)*100)));
+			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerOrientationAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerOrientationAngle)*100)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 
-		g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerOrientationAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerOrientationAngle)*100)));
-		g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerOrientationAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerOrientationAngle)*100)));
+		}
+		
+		try {
+			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerOrientationAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerOrientationAngle)*100)));
+			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerOrientationAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerOrientationAngle)*100)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 
+		}
+		
+		
 
 		g.setColor(c);
 	}

@@ -6,7 +6,7 @@ import vision.VisionRunner;
 public class Main {
 	
 	public static void main(String[] args) {
-		VisionRunner.start(true,PitchConstants.newPitch);
+	    VisionRunner.startDebugVision(PitchConstants.newPitch,10,true);
 	}
-
+	
 }
