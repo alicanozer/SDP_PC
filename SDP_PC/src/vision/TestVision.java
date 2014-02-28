@@ -140,7 +140,7 @@ public class TestVision {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				if (slider.getValueIsAdjusting()){
-					System.out.println((float)slider.getValue()/1000);
+					System.out.println((float)slider.getValue()/10000);
 				}
 			}
 		});
@@ -153,11 +153,8 @@ public class TestVision {
 		slider.setMinorTickSpacing(1);
 		slider.setMajorTickSpacing(25);
 		slider.setPaintTicks(true);
-		java.util.Hashtable<Integer,JLabel> labelTable = new java.util.Hashtable<Integer,JLabel>();
-		labelTable.put(new Integer(1000), new JLabel("1.0"));  
-	    labelTable.put(new Integer(750), new JLabel("0.75"));  
-	    labelTable.put(new Integer(500), new JLabel("0.50"));  
-	    labelTable.put(new Integer(250), new JLabel("0.25"));  
+		java.util.Hashtable<Integer,JLabel> labelTable = new java.util.Hashtable<Integer,JLabel>(); 
+	    labelTable.put(new Integer(1000), new JLabel("0.1"));
 	    labelTable.put(new Integer(0), new JLabel("0.0")); 
 		slider.setLabelTable(labelTable);
 		slider.setPaintLabels(true);
