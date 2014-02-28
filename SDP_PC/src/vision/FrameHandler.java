@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Polygon;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -71,7 +73,11 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private PitchConstants consts;
 
 	static JPanel panel = new JPanel();
+	static JPanel panel2 = new JPanel();
+	static JPanel panel3 = new JPanel();
 	static JSlider slider = new JSlider(JSlider.VERTICAL,0,1000,25);
+	static JSlider slider2 = new JSlider(JSlider.VERTICAL,0,1000,25);
+	static JSlider slider3 = new JSlider(JSlider.VERTICAL,0,1000,25);
 	private PitchColours colors;
 	private ArrayList<Point2D_I32> whitePoints;
 	private int frameLoop = 1;
@@ -245,14 +251,36 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 				if (slider.getValueIsAdjusting()){
 					float sliderValue = (float)slider.getValue()/10000; //get slider value and use it from here
 					
-					System.out.println(sliderValue);
+					System.out.println("slider "+sliderValue);
+				}
+			}
+		});
+		
+		slider2.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if (slider2.getValueIsAdjusting()){
+					float sliderValue = (float)slider2.getValue()/10000; //get slider value and use it from here
+					
+					System.out.println("slider2 "+sliderValue);
+				}
+			}
+		});
+		
+		slider3.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if (slider3.getValueIsAdjusting()){
+					float sliderValue = (float)slider3.getValue()/10000; //get slider value and use it from here
+					
+					System.out.println("slider3 "+sliderValue);
 				}
 			}
 		});
 
 
 		try {
-			ObjectLocations.updateObjectLocations(img);
+			//ObjectLocations.updateObjectLocations(img,distanceThresholds);
 		} catch (Exception e) {
 
 		}
@@ -300,11 +328,35 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		slider.setPaintLabels(true);
 		panel.add(slider);
 		
-		JFrame frame = new JFrame("Slider");
+		
+		
+		panel2.setLayout(new BorderLayout());
+		slider2.setMinorTickSpacing(1);
+		slider2.setMajorTickSpacing(25);
+		slider2.setPaintTicks(true);
+		slider2.setLabelTable(labelTable);
+		slider2.setPaintLabels(true);
+		panel2.add(slider2);
+		
+		
+		panel3.setLayout(new BorderLayout());
+		slider3.setMinorTickSpacing(1);
+		slider3.setMajorTickSpacing(25);
+		slider3.setPaintTicks(true);
+		slider3.setLabelTable(labelTable);
+		slider3.setPaintLabels(true);
+		panel3.add(slider3);
+
+		JFrame frame = new JFrame("Red|slider Yellow|slider2 Blue|slider3");
+		frame.setLayout(new GridLayout(1,3));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		panel.setPreferredSize(new Dimension(200,650));
-		frame.setContentPane(panel);;
-		frame.pack();frame.setVisible(true);
+		
+		frame.setBounds(0, 0, 400, 650);
+		frame.add(panel);
+		frame.add(panel2);
+		frame.add(panel3);
+		//frame.pack();
+		frame.setVisible(true);
 		
 	}
 }
