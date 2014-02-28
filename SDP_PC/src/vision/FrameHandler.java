@@ -240,7 +240,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			public void stateChanged(ChangeEvent e) {
 				if (slider.getValueIsAdjusting()){
 					float sliderValue = (float)slider.getValue()/1000; //get slider value and use it from here
-					System.out.println((float)slider.getValue()/1000);
+					System.out.println(sliderValue);
 				}
 			}
 		});
