@@ -147,10 +147,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		videoDevice = new VideoDevice(device);
 		frameGrabber = videoDevice.getJPEGFrameGrabber(width, height, channel, std, 80);
 		frameGrabber.setCaptureCallback(this);
-
 		width = consts.getCroppedWidth();
 		height = consts.getCroppedHeight();
-
 		System.out.println("Starting capture at "+width+"x"+height);
 	}
 
@@ -263,8 +261,9 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		Graphics2D g = (Graphics2D) label.getGraphics();
-		g.drawImage(img, 0, 0, width, height, null);
+		g.drawImage(img, 0, 0, width,height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
 
