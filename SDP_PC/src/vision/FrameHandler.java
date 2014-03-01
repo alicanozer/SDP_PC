@@ -82,6 +82,9 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private ArrayList<Point2D_I32> whitePoints;
 	private int frameLoop = 1;
 
+	float red;
+	float yellow;
+	float blue;
 
 
 	public FrameHandler(boolean debug, PitchConstants consts){
@@ -183,14 +186,14 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	@Override
 	public void nextFrame(VideoFrame frame){
 		if (frameLoop == 101) frameLoop = 1;
-		BufferedImage img = frame.getBufferedImage();
-//		BufferedImage img = null;
-//		try {
-//			img = ImageIO.read(new File("static_vision_images/image" + frameLoop+".jpg"));
-//		} catch (IOException e2) {
-//			// TODO Auto-generated catch block
-//			e2.printStackTrace();
-//		}//frame.getBufferedImage();
+		//BufferedImage img = frame.getBufferedImage();
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File("static_vision_images/image" + frameLoop+".jpg"));
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}//frame.getBufferedImage();
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		if(frameCounter < 3){
 			frame.recycle();
@@ -229,9 +232,9 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 		
 		float[] distanceThresholds = new float[3];
-		distanceThresholds[0] = 0.001f;
-		distanceThresholds[1] = 0.00015f;
-		distanceThresholds[2] = 0.006f;
+		distanceThresholds[0] = red;
+		distanceThresholds[1] = yellow;
+		distanceThresholds[2] = blue;
 		
 		try {
 			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),distanceThresholds,3);
@@ -250,7 +253,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			public void stateChanged(ChangeEvent e) {
 				if (slider.getValueIsAdjusting()){
 					float sliderValue = (float)slider.getValue()/10000; //get slider value and use it from here
-					
+					red = sliderValue;
 					System.out.println("slider "+sliderValue);
 				}
 			}
@@ -261,7 +264,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			public void stateChanged(ChangeEvent e) {
 				if (slider2.getValueIsAdjusting()){
 					float sliderValue = (float)slider2.getValue()/10000; //get slider value and use it from here
-					
+					yellow = sliderValue;
 					System.out.println("slider2 "+sliderValue);
 				}
 			}
@@ -272,7 +275,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			public void stateChanged(ChangeEvent e) {
 				if (slider3.getValueIsAdjusting()){
 					float sliderValue = (float)slider3.getValue()/10000; //get slider value and use it from here
-					
+					blue = sliderValue;
 					System.out.println("slider3 "+sliderValue);
 				}
 			}
