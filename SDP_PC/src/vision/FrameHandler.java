@@ -186,14 +186,14 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	@Override
 	public void nextFrame(VideoFrame frame){
 		if (frameLoop == 101) frameLoop = 1;
-		//BufferedImage img = frame.getBufferedImage();
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(new File("static_vision_images/image" + frameLoop+".jpg"));
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}//frame.getBufferedImage();
+		BufferedImage img = frame.getBufferedImage();
+//		BufferedImage img = null;
+//		try {
+//			img = ImageIO.read(new File("static_vision_images/image" + frameLoop+".jpg"));
+//		} catch (IOException e2) {
+//			// TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		}//frame.getBufferedImage();
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		if(frameCounter < 3){
 			frame.recycle();
