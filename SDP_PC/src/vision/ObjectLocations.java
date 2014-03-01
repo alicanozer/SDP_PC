@@ -136,6 +136,7 @@ public class ObjectLocations {
 			int radius){
 		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = VisionOps.getMultipleObjects(img, colors, distanceThresholds,false,radius);
 		Point2D_I32 ballLocal = VisionOps.findBallFromMapping(objectsToLocations);
+		if(ballLocal != null) System.out.println(ballLocal.toString());
 		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
 		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
 
