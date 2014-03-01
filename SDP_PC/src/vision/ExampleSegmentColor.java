@@ -25,12 +25,14 @@ public class ExampleSegmentColor {
 		gui.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				float[] color = new float[3];
-				int rgb = img.getRGB(e.getX(),e.getY());
-				ColorHsv.rgbToHsv((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF , rgb&0xFF,color);
-				ExampleSegmentColor.colour = color;
-				ExampleSegmentColor.flag = true;
-				return;
+				synchronized(ExampleSegmentColor.colour){
+					float[] color = new float[3];
+					int rgb = img.getRGB(e.getX(),e.getY());
+					ColorHsv.rgbToHsv((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF , rgb&0xFF,color);
+					ExampleSegmentColor.colour = color;
+					ExampleSegmentColor.flag = true;
+					return;
+				}
 			}
 		});
 	}
