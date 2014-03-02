@@ -138,6 +138,7 @@ public class VisionOps {
 	}
 
 	/**
+	 * NOT USED
 	 * draws contours of objects on the input image
 	 */
 	public static BufferedImage contourOps(String type, MultiSpectral<ImageFloat32> inputImg) {
@@ -153,6 +154,7 @@ public class VisionOps {
 		return visualContour;
 	}
 	/**
+	 * NOT USED
 	 * returns the regions of the pitch as a list of polygons
 	 */
 	public static ArrayList<Polygon> getRegions(MultiSpectral<ImageFloat32> inputImg) {
@@ -195,6 +197,7 @@ public class VisionOps {
 		else return null;
 	}
 	/**
+	 * NOT USED
 	 * Method that does segmentation of objects purely in HSV space.
 	 * @param type
 	 * @param img
@@ -348,6 +351,7 @@ public class VisionOps {
 		return contoursFiltered;
 	}
 	
+	//NOT USED
 	public static BufferedImage newDisplay(List<Contour> contours, int width, int height) {
 		BufferedImage visualContour = VisualizeBinaryData.renderContours(
 				contours,
@@ -362,6 +366,7 @@ public class VisionOps {
 	
 	
 	/**
+	 * NOT USED
 	 * Gets the list of contours from applying binary thresholding to an input image
 	 * TODO: make it accept MultiSpectralImage instead of converting to/from BufferedImage
 	 */
@@ -370,7 +375,7 @@ public class VisionOps {
 		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
 
 		// Convert into HSV
-		ColorHsv.rgbToHsv_F32(input,hsv);
+		ColorHsv.rgbToHsv_F32(input,hsv);	  
 		
 		
 		ImageUInt8 binary = new ImageUInt8(input.width,input.height);;
@@ -407,7 +412,7 @@ public class VisionOps {
 		return contours;
 	}
 	
-	
+	//NOT USED
 	public static List<Contour> extractContour(BufferedImage img){
 		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(img,null,true,ImageFloat32.class);
 		MultiSpectral<ImageFloat32> hsv = new MultiSpectral<ImageFloat32>(ImageFloat32.class,input.width,input.height,3);
@@ -498,6 +503,10 @@ public class VisionOps {
 //	}
 //	
 	
+	
+	
+	
+	//YESSSSSSSSS!!!!!!!!!!!
 	public static HashMap<Integer,ArrayList<Point2D_I32>> getMultipleObjects(
 			BufferedImage image, 
 			float[][] colors,

@@ -33,7 +33,7 @@ public class MoveToPoint {
 				System.out.println("The final angle is " + angle);
 				if (robot.type==RobotType.AttackUs) {
 					robot.stop("attack"); 
-					robot.rotateLEFT("attack", (int) (angle / 2));
+					robot.rotateLEFT("attack", (int) (angle/2));
 				}
 				else {
 					robot.stop("defence");
@@ -59,6 +59,7 @@ public class MoveToPoint {
 				robot.rotateLEFT("defence", (int) (angle/2));
 			}
 		}
+		
 		if (distance > distanceFromPointToStop) {
 			moveToPoint(robot, marker, dot, pointX, pointY);
 		}
