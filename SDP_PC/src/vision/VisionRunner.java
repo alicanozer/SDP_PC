@@ -48,8 +48,25 @@ public class VisionRunner {
 		
 	}
 	
-	public static void startStaticVideoVision(int histLen){
+	public static void startStaticVideoVision(final PitchConstants consts, int histLen,boolean yellowDefendLeft){
+		VisionRunner.histLen = histLen;
+		frameQueue = new LinkedBlockingDeque<Frame>(histLen);
 		
+		ObjectLocations.setYellowDefendingLeft(yellowDefendLeft);
+		ObjectLocations.setYellowUs(true);
+		ObjectLocations.setConsts(consts);
+		try {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					new FrameHandlerStatic(true,consts);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("i failed miserably and now I must die to repent for my sins... ");
+		}
+		System.err.println("Vision started successfully!");
 	}
 	
 	/**
