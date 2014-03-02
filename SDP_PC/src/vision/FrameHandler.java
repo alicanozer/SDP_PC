@@ -72,43 +72,56 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private boolean debug;
 	private PitchConstants consts;
 
-	static JPanel panel = new JPanel();
+	static JPanel panel1 = new JPanel();
 	static JPanel panel2 = new JPanel();
 	static JPanel panel3 = new JPanel();
-	static JSlider slider = new JSlider(JSlider.VERTICAL,0,1000,25);
+	static JSlider slider1 = new JSlider(JSlider.VERTICAL,0,1000,25);
 	static JSlider slider2 = new JSlider(JSlider.VERTICAL,0,1000,25);
 	static JSlider slider3 = new JSlider(JSlider.VERTICAL,0,1000,25);
 	private PitchColours colors;
 	private ArrayList<Point2D_I32> whitePoints;
 	private int frameLoop = 1;
-
-	float red = 0.0f;
+	private Object lock = new Object();
+	private Object lock2 = new Object();
+	
 	public synchronized float getRed() {
-		return red;
+		synchronized(lock){
+			return red;
+		}
 	}
 
 	public synchronized void setRed(float red) {
-		this.red = red;
+		synchronized(lock){
+			this.red = red;
+		}
 	}
 
 	public synchronized float getYellow() {
-		return yellow;
+		synchronized(lock){
+			return yellow;
+		}
 	}
 
 	public synchronized void setYellow(float yellow) {
-		this.yellow = yellow;
+		synchronized(lock){
+			this.yellow = yellow;
+		}
 	}
 
 	public synchronized float getBlue() {
-		return blue;
+		synchronized(lock){
+			return blue;
+		}
 	}
 
 	public synchronized void setBlue(float blue) {
-		this.blue = blue;
+		synchronized(lock){
+			this.blue = blue;
+		}
 	}
-
-	float yellow = 0.0f;
-	float blue = 0.0f;
+	float red = 0.1f;
+	float yellow = 0.001f;
+	float blue = 0.001f;
 
 
 	public FrameHandler(boolean debug, PitchConstants consts){
@@ -253,9 +266,13 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 		
 		float[] distanceThresholds = new float[3];
-		distanceThresholds[0] = red;
-		distanceThresholds[1] = yellow;
-		distanceThresholds[2] = blue;
+		distanceThresholds[0] = getRed();
+		distanceThresholds[1] = getYellow();
+		distanceThresholds[2] = getBlue();
+		
+//		System.out.println("red: " + colors.getRedValue()[0] + " " + colors.getRedValue()[1] + " " + colors.getRedValue()[2]);
+//		System.out.println("yellow: " + colors.getYellowValue()[0] + " " + colors.getYellowValue()[1] + " " + colors.getYellowValue()[2]);
+//		System.out.println("blue: " + colors.getBlueValue()[0] + " " + colors.getBlueValue()[1] + " " + colors.getBlueValue()[2]);
 		
 		try {
 			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),distanceThresholds,3);
@@ -270,13 +287,15 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 
 
 
-		slider.addChangeListener(new ChangeListener() {
+		slider1.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				if (slider.getValueIsAdjusting()){
-					float sliderValue = (float)slider.getValue()/10000; //get slider value and use it from here
-					setRed(sliderValue);
-					System.out.println("slider "+sliderValue);
+				if (slider1.getValueIsAdjusting()){
+					synchronized(lock2){
+						float sliderValue = (float)slider1.getValue()/10000; //get slider value and use it from here
+						setRed(sliderValue);
+						System.out.println("slider "+sliderValue);
+					}
 				}
 			}
 		});
@@ -285,9 +304,11 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				if (slider2.getValueIsAdjusting()){
-					float sliderValue = (float)slider2.getValue()/10000; //get slider value and use it from here
-					setYellow(sliderValue);
-					System.out.println("slider2 "+sliderValue);
+					synchronized(lock2){
+						float sliderValue = (float)slider2.getValue()/10000; //get slider value and use it from here
+						setYellow(sliderValue);
+						System.out.println("slider2 "+sliderValue);
+					}
 				}
 			}
 		});
@@ -295,10 +316,12 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		slider3.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				if (slider3.getValueIsAdjusting()){
-					float sliderValue = (float)slider3.getValue()/10000; //get slider value and use it from here
-					setBlue(sliderValue);
-					System.out.println("slider3 "+sliderValue);
+				synchronized(lock2){
+					if (slider3.getValueIsAdjusting()){
+						float sliderValue = (float)slider3.getValue()/10000; //get slider value and use it from here
+						setBlue(sliderValue);
+						System.out.println("slider3 "+sliderValue);
+					}
 				}
 			}
 		});
@@ -343,16 +366,17 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	}
 
 	public static void CreateSlider(){
-		panel.setLayout(new BorderLayout());
-		slider.setMinorTickSpacing(1);
-		slider.setMajorTickSpacing(25);
-		slider.setPaintTicks(true);
 		java.util.Hashtable<Integer,JLabel> labelTable = new java.util.Hashtable<Integer,JLabel>(); 
 	    labelTable.put(new Integer(1000), new JLabel("0.1"));
 	    labelTable.put(new Integer(0), new JLabel("0.0")); 
-		slider.setLabelTable(labelTable);
-		slider.setPaintLabels(true);
-		panel.add(slider);
+	    
+		panel1.setLayout(new BorderLayout());
+		slider1.setMinorTickSpacing(1);
+		slider1.setMajorTickSpacing(25);
+		slider1.setPaintTicks(true);
+		slider1.setLabelTable(labelTable);
+		slider1.setPaintLabels(true);
+		panel1.add(slider1);
 		
 		
 		
@@ -378,7 +402,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		frame.setBounds(0, 0, 400, 650);
-		frame.add(panel);
+		frame.add(panel1);
 		frame.add(panel2);
 		frame.add(panel3);
 		//frame.pack();
