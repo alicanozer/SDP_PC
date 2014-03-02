@@ -22,9 +22,9 @@ public class Test3 {
 	
 	VisionRunner.startDebugVision(PitchConstants.newPitch, 10, true);
 	
+	System.out.println("asd");
 	while (true) {
 		if (ObjectLocations.getBall() != null && ObjectLocations.getYellowATTACKmarker() != null && ObjectLocations.getYellowATTACKdot() != null) {
-						
 			try {
 				//Turn to Ball
 				MoveToPointXY.moveToPointXY(bRobot, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
