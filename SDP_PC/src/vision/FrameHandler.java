@@ -221,14 +221,14 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	@Override
 	public void nextFrame(VideoFrame frame){
 		if (frameLoop == 101) frameLoop = 1;
-//		BufferedImage img = frame.getBufferedImage();
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(new File("static_vision_images_2/image" + frameLoop+".jpg"));
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}//frame.getBufferedImage();
+		BufferedImage img = frame.getBufferedImage();
+//		BufferedImage img = null;
+//		try {
+//			img = ImageIO.read(new File("static_vision_images_2/image" + frameLoop+".jpg"));
+//		} catch (IOException e2) {
+//			// TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		}//frame.getBufferedImage();
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		if(frameCounter < 3){
 			frame.recycle();
@@ -267,12 +267,12 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 		float[] distanceThresholds = new float[3];
 		distanceThresholds[0] = getRed();
-		distanceThresholds[1] = 0.0f;getYellow();
-		distanceThresholds[2] = 0.0f;getBlue();
+		distanceThresholds[1] = getYellow();
+		distanceThresholds[2] = getBlue();
 		
-		System.out.println("red: " + colors.getRedValue().toString());
-		System.out.println("yellow: " + colors.getYellowValue().toString());
-		System.out.println("blue: " + colors.getBlueValue().toString());
+//		System.out.println("red: " + colors.getRedValue()[0] + " " + colors.getRedValue()[1] + " " + colors.getRedValue()[2]);
+//		System.out.println("yellow: " + colors.getYellowValue()[0] + " " + colors.getYellowValue()[1] + " " + colors.getYellowValue()[2]);
+//		System.out.println("blue: " + colors.getBlueValue()[0] + " " + colors.getBlueValue()[1] + " " + colors.getBlueValue()[2]);
 		
 		try {
 			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),distanceThresholds,3);

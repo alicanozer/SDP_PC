@@ -548,7 +548,7 @@ public class VisionOps {
 					// remember Hue is an angle in radians, so simple subtraction doesn't work
 					float dh = UtilAngle.dist(H.unsafe_get(x,y), hues[k]);
 					float ds = (S.unsafe_get(x,y) - sats[k])*adjustUnits;
-					
+						
 					float dist = dh*dh + ds*ds;
 					if(dist <= distanceThresholds[k] && PitchConstants.pitchPolygon.contains(x, y)) {
 						// simply add all the points wherever they are
@@ -559,10 +559,12 @@ public class VisionOps {
 				// we've processed all colors for the given pixel and see
 				// if it belongs to any object. if it doesn't and debug 
 				// is on, we color it black
+				
 				if(debug && isBlack) {
 					image.setRGB(x, y, 0);
 				}
 				isBlack = true;
+				
 			}
 		}
 		return objectsToLocations;
