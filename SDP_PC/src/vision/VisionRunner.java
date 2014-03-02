@@ -7,6 +7,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import javax.swing.SwingUtilities;
 
 public class VisionRunner {
+	
 	/**
 	 * blocking array that holds the N most recent frames.
 	 */
@@ -15,6 +16,7 @@ public class VisionRunner {
 	public static int histLen;
 
 	private VisionRunner(){};
+	
 	/**
 	 * Starts of the vision in a separate thread
 	 * @param debug boolean flag, true if we want to display debugging info
@@ -41,12 +43,15 @@ public class VisionRunner {
 		}
 		System.err.println("Vision started successfully!");
 	}
+
 	public static void startNormalVision(int histLen){
 		
 	}
+	
 	public static void startStaticVideoVision(int histLen){
 		
 	}
+	
 	/**
 	 * Send a frame to VisionRunner. The frame is sent and set asynchronously
 	 * @param frame - the frame sent
@@ -66,4 +71,5 @@ public class VisionRunner {
 		}
 		return true;
 	}
+	
 }
