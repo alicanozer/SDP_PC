@@ -17,7 +17,6 @@ public abstract class StrategyInterface implements Runnable {
 	 */
 	protected boolean shouldidie;
 
-	ObjectLocations obj;
 	BluetoothRobot attackRobot;
 	BluetoothRobot defenceRobot;
 
@@ -30,21 +29,7 @@ public abstract class StrategyInterface implements Runnable {
 	//TO DO: kill() doesn't work. Have no way of currently breaking loops in mover.
 	public void kill() {
 		shouldidie = true;
-		// Terminate any active movements
-		// NOTE: does NOT tell the robot to stop, it only breaks any loops in
-		// the mover
-		try {
-			attackRobot.wait();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try { // Sleep for a bit, because we want movement to die.
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 }
 

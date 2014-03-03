@@ -12,21 +12,17 @@ public class BallPossession {
 		boolean possession = false;
 		
 		int possessionThreshold = 50;
+		Point2D_I32 temp = ObjectLocations.getBall();
+		double distanceBall = DistanceCalculator.Distance(temp, ObjectLocations.getBall());
 		
-		double angle = 0.0;
-		
-		try {
-			angle = TurnToObject.Ball(type);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		double speed = (distanceBall/0.01);
 		
 		//if the robot is near the ball and facing the ball it has possession
-		if ((DistanceCalculator.Distance(robotMarker, ObjectLocations.getBall()) < possessionThreshold)
-				&& angle < 180) {
-				possession = true;
-			}
+		if (DistanceCalculator.Distance(robotMarker, ObjectLocations.getBall()) < possessionThreshold) { 
+			possession = true;
+		} else if (speed < 10 && DistanceCalculator.Distance(robotMarker, ObjectLocations.getBall()) < 70) {
+			possession = true;;
+		}
 		return possession;
 	}
 

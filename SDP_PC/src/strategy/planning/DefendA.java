@@ -1,0 +1,18 @@
+package strategy.planning;
+
+import comms.BluetoothRobot;
+
+public class DefendA extends StrategyInterface {
+
+	public DefendA(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
+		super(attackRobot, defenceRobot);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		System.out.println("Running Defence Attacker Strategy when their defender has the ball...");
+	}
+
+}
