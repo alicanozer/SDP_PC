@@ -28,4 +28,6 @@ public interface RobotController {
 	
 	public boolean isMoving(String robotType);
 	
+	public void grab(String robotType);
+	
 }

@@ -169,6 +169,20 @@ public class BluetoothRobot extends Robot implements RobotController {
 		
 		return false;
 	}
+
+	@Override
+	public void grab(String robotType) {
+		int[] commands = {bluetooth.GRAB, 0, 0, 0};
+		
+		try {
+			bluetooth.sendCommand(commands, robotType);
+			System.out.println("Robot Stopped");
+		}catch (IOException e) {
+			System.out.println("Command could not be sent");
+			e.printStackTrace();
+		}
+	
+	}
 	
 	
 }
