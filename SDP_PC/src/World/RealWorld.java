@@ -1,4 +1,4 @@
-package world;
+package World;
 
 import world.object.MobileRealObject;
 import world.object.StationaryRealObject;

@@ -1,4 +1,4 @@
-package World;
+package world;
 
 public class Robot extends Entity {
 	

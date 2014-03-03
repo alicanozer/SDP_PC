@@ -1,7 +1,7 @@
 /**
  * 
  */
-package world;
+package World;
 
 import geometry.Vector;
 
