@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -68,6 +69,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private FrameGrabber    frameGrabber;
 	private JLabel          label;
 	private JFrame          frame;
+	private JButton         recalibrate;
 	private long frameCounter = 0;
 	private boolean debug;
 	private PitchConstants consts;
@@ -172,11 +174,15 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private void initGUI(){
 		frame = new JFrame();
 		label = new JLabel();
+		recalibrate = new JButton("Recalibrate");
+		recalibrate.setBounds(0, 380, 120, 40);
+		frame.getContentPane().add(recalibrate);
 		frame.getContentPane().add(label);
+
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.addWindowListener(this);
 		frame.setVisible(true);
-		frame.setSize(width, height);
+		frame.setSize(640, 480);
 		CreateSlider();
 	}
 
@@ -262,8 +268,6 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
 		VisionRunner.sendFrame(new Frame(img,thisFrame));
 		
-
-		
 		
 		float[] distanceThresholds = new float[3];
 		distanceThresholds[0] = getRed();
@@ -292,7 +296,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			public void stateChanged(ChangeEvent e) {
 				if (slider1.getValueIsAdjusting()){
 					synchronized(lock2){
-						float sliderValue = (float)slider1.getValue()/10000; //get slider value and use it from here
+						float sliderValue = (float)slider1.getValue()/100000; //get slider value and use it from here
 						setRed(sliderValue);
 						System.out.println("slider "+sliderValue);
 					}
@@ -305,7 +309,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			public void stateChanged(ChangeEvent e) {
 				if (slider2.getValueIsAdjusting()){
 					synchronized(lock2){
-						float sliderValue = (float)slider2.getValue()/10000; //get slider value and use it from here
+						float sliderValue = (float)slider2.getValue()/100000; //get slider value and use it from here
 						setYellow(sliderValue);
 						System.out.println("slider2 "+sliderValue);
 					}
@@ -318,7 +322,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			public void stateChanged(ChangeEvent e) {
 				synchronized(lock2){
 					if (slider3.getValueIsAdjusting()){
-						float sliderValue = (float)slider3.getValue()/10000; //get slider value and use it from here
+						float sliderValue = (float)slider3.getValue()/100000; //get slider value and use it from here
 						setBlue(sliderValue);
 						System.out.println("slider3 "+sliderValue);
 					}
@@ -333,7 +337,11 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 
 		}
 
-		g.draw(PitchConstants.pitchPolygon);
+		g.draw(PitchConstants.region1);
+		g.draw(PitchConstants.region2);
+		g.draw(PitchConstants.region3);
+		g.draw(PitchConstants.region4);
+		
 
 		if(debug){
 			g.setColor(Color.BLACK);
@@ -367,7 +375,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 
 	public static void CreateSlider(){
 		java.util.Hashtable<Integer,JLabel> labelTable = new java.util.Hashtable<Integer,JLabel>(); 
-	    labelTable.put(new Integer(1000), new JLabel("0.1"));
+	    labelTable.put(new Integer(1000), new JLabel("0.01"));
 	    labelTable.put(new Integer(0), new JLabel("0.0")); 
 	    
 		panel1.setLayout(new BorderLayout());

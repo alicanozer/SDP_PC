@@ -74,6 +74,10 @@ public class PitchConstants {
 		this.hLowerBound = hLowerBound;
 	}
 	public static Polygon pitchPolygon;
+	public static Polygon region1;
+	public static Polygon region2;
+	public static Polygon region3;
+	public static Polygon region4;
 	private int upperLeftX;
 	private int upperLeftY;
 	private int croppedWidth;
