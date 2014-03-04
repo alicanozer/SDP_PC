@@ -31,6 +31,7 @@ public class AttackA extends StrategyInterface {
 				//Wait
 				//Turn the other way
 				//Shoot
+				
 				MoveToPointXY.moveToPointXY(attackMover, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
 				attackMover.grab("attack");
 				double angleShoot = TurnToObject.shootAngle();
