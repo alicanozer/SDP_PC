@@ -168,4 +168,44 @@ public class PointUtils {
 		
 		return new Point2D_I32(xs[size/2],ys[size/2]);
 	}
+	
+	public static Polygon findPolygonFromCorners(ArrayList<Point2D_I32> l){
+		int minX = Integer.MAX_VALUE;
+		int minY = Integer.MAX_VALUE;
+		
+		int maxX = Integer.MIN_VALUE;
+		int maxY = Integer.MIN_VALUE;
+		
+		for(Point2D_I32 p : l){
+			if(p.x < minX) minX = p.x;
+			if(p.x > maxX) maxX = p.x;
+			
+			if(p.y < minY) minY = p.y;
+			if(p.y > maxY) maxY = p.y;
+		}
+		
+		ArrayList<int[]> corners = new ArrayList<int[]>();
+		
+		int[] xs = new int[4];
+		xs[0] = minX;
+		xs[1] = maxX;
+		xs[2] = maxX;
+		xs[3] = minX;
+		
+		int[] ys = new int[4];
+		ys[0] = minY;
+		ys[1] = minY;
+		ys[2] = maxY;
+		ys[3] = maxY;
+		
+		corners.add(0, xs);
+		corners.add(1, ys);
+		
+		return new Polygon(xs,ys,4);
+	}
 }
+
+
+
+
+
