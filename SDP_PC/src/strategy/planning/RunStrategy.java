@@ -118,8 +118,6 @@ public class RunStrategy extends JFrame {
 		this.attackMover.start();
 		this.defenseMover.start();
 		
-		System.out.println("Is alive? " + attackMover.isAlive());
-			
 		this.setTitle("Strategy GUI");
 	
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -249,8 +247,6 @@ public class RunStrategy extends JFrame {
 		kickButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				attackMover.kick("attack");
-				System.out.println("Is running?" + attackMover.isRunning());
-
 				}
 		});
 		
