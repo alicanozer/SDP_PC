@@ -7,33 +7,82 @@ import java.awt.geom.Point2D;
 import georegression.struct.point.Point2D_I32;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
+import vision.PitchConstants;
 import World.RobotType;
 
 public class BallPossession {
 	
 	public static boolean hasPossession(RobotType type, Point2D_I32 robotMarker) {
 		
+		Polygon polygon = null;
+		
+		if (ObjectLocations.getYellowDefendingLeft()) {
+			if (ObjectLocations.getYellowUs()) {
+					if (type == RobotType.AttackUs) {
+						polygon = PitchConstants.getRegion3();
+					} else if (type == RobotType.AttackThem) {
+						polygon = PitchConstants.getRegion2();
+					} else if (type == RobotType.DefendUs) {
+						polygon = PitchConstants.getRegion1();
+					} else if (type == RobotType.DefendThem) {
+						polygon = PitchConstants.getRegion4();
+					}			
+			} else {
+				if (type == RobotType.AttackUs) {
+					polygon = PitchConstants.getRegion2();
+				} else if (type == RobotType.AttackThem) {
+					polygon = PitchConstants.getRegion3();
+				} else if (type == RobotType.DefendUs) {
+					polygon = PitchConstants.getRegion4();
+				} else if (type == RobotType.DefendThem) {
+					polygon = PitchConstants.getRegion1();
+				}
+			}
+		} else {
+			if (ObjectLocations.getYellowUs()) {
+				if (type == RobotType.AttackUs) {
+					polygon = PitchConstants.getRegion2();
+				} else if (type == RobotType.AttackThem) {
+					polygon = PitchConstants.getRegion3();
+				} else if (type == RobotType.DefendUs) {
+					polygon = PitchConstants.getRegion4();
+				} else if (type == RobotType.DefendThem) {
+					polygon = PitchConstants.getRegion1();
+				}			
+			} else {
+				if (type == RobotType.AttackUs) {
+					polygon = PitchConstants.getRegion3();
+				} else if (type == RobotType.AttackThem) {
+					polygon = PitchConstants.getRegion2();
+				} else if (type == RobotType.DefendUs) {
+					polygon = PitchConstants.getRegion1();
+				} else if (type == RobotType.DefendThem) {
+					polygon = PitchConstants.getRegion4();
+				}
+			}
+		}
+
 		boolean possession = false;
 		
-		int possessionThreshold = 50;
 		Point2D_I32 temp = ObjectLocations.getBall();
-		// TODO - add sleep
+		
 		try {
-			Thread.sleep(100);
+			Thread.sleep(1500);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		double distanceBall = DistanceCalculator.Distance(temp, ObjectLocations.getBall());
 		
+		double distanceBall = DistanceCalculator.Distance(temp, ObjectLocations.getBall());
 		double speed = (distanceBall/0.01);
+		boolean BallRegion = BallRegion(ObjectLocations.getBall(), polygon);
 		
 		//if the robot is near the ball and facing the ball it has possession
-		if (DistanceCalculator.Distance(robotMarker, ObjectLocations.getBall()) < possessionThreshold) { 
-			possession = true;
-		} else if (speed < 10 && DistanceCalculator.Distance(robotMarker, ObjectLocations.getBall()) < 70) {
-			possession = true;;
+		if (BallRegion) {
+//			if (speed < 10) { 
+				possession = true;
+//			} 
 		}
+		
 		return possession;
 	}
 
@@ -45,6 +94,69 @@ public class BallPossession {
 		Point ball = new Point(x,y);
 		
 		if (polygon.contains(ball)) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+
+	public static boolean LegalMove(Point2D_I32 point, RobotType type) {
+
+		Polygon polygon = null;
+		
+		if (ObjectLocations.getYellowDefendingLeft()) {
+			if (ObjectLocations.getYellowUs()) {
+					if (type == RobotType.AttackUs) {
+						polygon = PitchConstants.getRegion3();
+					} else if (type == RobotType.AttackThem) {
+						polygon = PitchConstants.getRegion2();
+					} else if (type == RobotType.DefendUs) {
+						polygon = PitchConstants.getRegion1();
+					} else if (type == RobotType.DefendThem) {
+						polygon = PitchConstants.getRegion4();
+					}			
+			} else {
+				if (type == RobotType.AttackUs) {
+					polygon = PitchConstants.getRegion2();
+				} else if (type == RobotType.AttackThem) {
+					polygon = PitchConstants.getRegion3();
+				} else if (type == RobotType.DefendUs) {
+					polygon = PitchConstants.getRegion4();
+				} else if (type == RobotType.DefendThem) {
+					polygon = PitchConstants.getRegion1();
+				}
+			}
+		} else {
+			if (ObjectLocations.getYellowUs()) {
+				if (type == RobotType.AttackUs) {
+					polygon = PitchConstants.getRegion2();
+				} else if (type == RobotType.AttackThem) {
+					polygon = PitchConstants.getRegion3();
+				} else if (type == RobotType.DefendUs) {
+					polygon = PitchConstants.getRegion4();
+				} else if (type == RobotType.DefendThem) {
+					polygon = PitchConstants.getRegion1();
+				}			
+			} else {
+				if (type == RobotType.AttackUs) {
+					polygon = PitchConstants.getRegion3();
+				} else if (type == RobotType.AttackThem) {
+					polygon = PitchConstants.getRegion2();
+				} else if (type == RobotType.DefendUs) {
+					polygon = PitchConstants.getRegion1();
+				} else if (type == RobotType.DefendThem) {
+					polygon = PitchConstants.getRegion4();
+				}
+			}
+		}
+		
+		int x = point.x;
+		int y = point.y;
+		
+		Point legal = new Point(x,y);
+		
+		if (polygon.contains(legal)) {
 			return true;
 		}
 		

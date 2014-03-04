@@ -14,6 +14,8 @@ public class AttackD extends StrategyInterface {
 	public void run() {
 		// TODO Auto-generated method stub
 		System.out.println("Running Attack Defender Strategy...");
+		//Turn 90 degree to horizontal
+		//Stop at centre of goal
 	}
 
 }

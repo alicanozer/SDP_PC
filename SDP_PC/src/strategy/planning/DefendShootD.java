@@ -13,6 +13,9 @@ public class DefendShootD extends StrategyInterface{
 	public void run() {
 		// TODO Auto-generated method stub
 		System.out.println("Starting DefendShootD (Defending against a shoot with our defender)...");
+		// Align 90 degreee with horizontal
+		// calculate intersection of vector of attacker with defender
+		// move to point of intersection if it within the goal range
 	}
 
 }

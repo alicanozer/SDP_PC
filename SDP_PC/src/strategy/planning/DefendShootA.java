@@ -13,6 +13,7 @@ public class DefendShootA extends StrategyInterface{
 	public void run() {
 		// TODO Auto-generated method stub
 		System.out.println("Starting DefendShootA (Defending against a shoot with our attacker)...");
+		//Move to open space to recieve pass once the defender gains possession of the ball
 	}
 
 }
