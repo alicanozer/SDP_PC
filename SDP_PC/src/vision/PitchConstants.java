@@ -90,6 +90,22 @@ public class PitchConstants {
 	private int middleLine;
 	
 
+	public static Polygon getRegion1() {
+		return region1;
+	}
+	
+	public static Polygon getRegion2() {
+		return region2;
+	}
+	
+	public static Polygon getRegion3() {
+		return region3;
+	}
+	
+	public static Polygon getRegion4() {
+		return region4;
+	}
+	
 	public static final PitchConstants newPitch = new PitchConstants(60,98,520,307,115,260,410,15,280);
 	public static final PitchConstants oldPitch = new PitchConstants(60,78,505,277,105,255,405,15,280); //TODO : fill in
 
