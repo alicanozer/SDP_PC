@@ -5,6 +5,7 @@ package strategy.planning;
 
 import movement.RobotMover;
 import vision.ObjectLocations;
+import vision.PitchConstants;
 import Calculations.BallPossession;
 import World.RobotType;
 import comms.BluetoothRobot;
@@ -29,7 +30,6 @@ public class Friendly extends StrategyInterface{
 
 	@Override
 	public void run() {
-		while(true){
 			
 			// TODO Auto-generated method stub
 			StrategyInterface activeAStrat;
@@ -73,7 +73,7 @@ public class Friendly extends StrategyInterface{
 						//When no-one has the ball, INTERCEPT!!
 //						newStateDRobot = state.InterceptBall;
 //						newStateARobot = state.InterceptBall;
-						System.out.println("InterceptBall");
+//						System.out.println("InterceptBall");
 					}
 				} else {
 					if (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getYellowDEFENDmarker())) {
@@ -162,5 +162,5 @@ public class Friendly extends StrategyInterface{
 				}
 			}	
 		}
-	}
+	
 }
