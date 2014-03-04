@@ -136,9 +136,10 @@ public class ObjectLocations {
 			int radius){
 		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = VisionOps.getMultipleObjects(img, colors, distanceThresholds,false,radius);
 		Point2D_I32 ballLocal = VisionOps.findBallFromMapping(objectsToLocations);
-		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
-		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
 		platePolygons = VisionOps.findGreenPlates(objectsToLocations,PitchConstants.region1,PitchConstants.region2, PitchConstants.region3, PitchConstants.region4);
+		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkersFromMapping(objectsToLocations, consts.getMiddleLine(),platePolygons);
+		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkersFromMapping(objectsToLocations, consts.getMiddleLine(),platePolygons);
+		
 		
 		
 		ArrayList<Point2D_I32> dotsLocal = new ArrayList<Point2D_I32>();
@@ -309,12 +310,8 @@ public class ObjectLocations {
 							double newAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance); 
 							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
-
 							setYellowDEFENDdot(dot);
 							} catch (Exception e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
-
 						}
 					else if(consts.getRegion12X() < dot.x && dot.x < consts.getRegion23X())
 						try {
@@ -323,7 +320,6 @@ public class ObjectLocations {
 							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 							setBlueATTACKdot(dot);
 						} catch (Exception e) {
-
 						}
 					else if (consts.getRegion23X() < dot.x && dot.x < consts.getRegion34X()){
 						try {
@@ -332,7 +328,6 @@ public class ObjectLocations {
 							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 							setYellowATTACKdot(dot);
 						} catch (Exception e) {
-
 						}
 					}
 					else if(dot.x > consts.getRegion34X()){
@@ -340,9 +335,8 @@ public class ObjectLocations {
 							double newAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance); // 10 degrees is 0.17 radians
 							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
-							setYellowDEFENDdot(dot);
+							setBlueDEFENDdot(dot);
 						} catch (Exception e) {
-
 						}
 					}
 				}
@@ -356,6 +350,7 @@ public class ObjectLocations {
 							double newAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance); 
 							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
+							setBlueDEFENDdot(dot);
 						} catch (Exception e) {
 
 						}
@@ -364,6 +359,7 @@ public class ObjectLocations {
 							double newAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance);
 							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
+							setYellowATTACKdot(dot);
 						} catch (Exception e) {
 
 						}
@@ -372,6 +368,7 @@ public class ObjectLocations {
 							double newAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance); 
 							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
+							setBlueATTACKdot(dot);
 						} catch (Exception e) {
 
 						}
@@ -381,6 +378,7 @@ public class ObjectLocations {
 							double newAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance); 
 							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
+							setYellowDEFENDdot(dot);
 						} catch (Exception e) {
 
 						}
@@ -551,41 +549,41 @@ public class ObjectLocations {
 		g.setColor(Color.RED);
 		if (ObjectLocations.ball != null) {
 			// drawing X over ball			//	
-			g.drawLine(ObjectLocations.ball.x - 10, ObjectLocations.ball.y, ObjectLocations.ball.x + 10, ObjectLocations.ball.y);
-			g.drawLine(ObjectLocations.ball.x, ObjectLocations.ball.y - 10, ObjectLocations.ball.x, ObjectLocations.ball.y + 10);
+			g.drawLine(ObjectLocations.ball.x - 5, ObjectLocations.ball.y, ObjectLocations.ball.x + 5, ObjectLocations.ball.y);
+			g.drawLine(ObjectLocations.ball.x, ObjectLocations.ball.y - 5, ObjectLocations.ball.x, ObjectLocations.ball.y + 5);
 		}
 		// WRONG position of yellowDEFENDmarker
 		g.setColor(Color.YELLOW);
 		if(yellowDEFENDmarker != null){
-			g.drawLine(yellowDEFENDmarker.x - 10, yellowDEFENDmarker.y, yellowDEFENDmarker.x + 10, yellowDEFENDmarker.y );
-			g.drawLine(yellowDEFENDmarker.x, yellowDEFENDmarker.y - 10, yellowDEFENDmarker.x, yellowDEFENDmarker.y + 10);
-			//g.drawOval(yellowDEFENDmarker.x - 22, yellowDEFENDmarker.y - 22, 44, 44);
+			g.drawLine(yellowDEFENDmarker.x - 5, yellowDEFENDmarker.y, yellowDEFENDmarker.x + 5, yellowDEFENDmarker.y );
+			g.drawLine(yellowDEFENDmarker.x, yellowDEFENDmarker.y - 5, yellowDEFENDmarker.x, yellowDEFENDmarker.y + 5);
+			g.drawOval(yellowDEFENDmarker.x - 22, yellowDEFENDmarker.y - 22, 44, 44);
 		}
 
 		if(yellowATTACKmarker != null){
-			g.drawLine(yellowATTACKmarker.x - 10, yellowATTACKmarker.y, yellowATTACKmarker.x + 10, yellowATTACKmarker.y );
-			g.drawLine(yellowATTACKmarker.x, yellowATTACKmarker.y - 10, yellowATTACKmarker.x, yellowATTACKmarker.y + 10);
-			//g.drawOval(yellowATTACKmarker.x - 22, yellowATTACKmarker.y - 22, 44, 44);
+			g.drawLine(yellowATTACKmarker.x - 5, yellowATTACKmarker.y, yellowATTACKmarker.x + 5, yellowATTACKmarker.y );
+			g.drawLine(yellowATTACKmarker.x, yellowATTACKmarker.y - 5, yellowATTACKmarker.x, yellowATTACKmarker.y + 5);
+			g.drawOval(yellowATTACKmarker.x - 22, yellowATTACKmarker.y - 22, 44, 44);
 		}
 		g.setColor(Color.BLUE);
 		if(blueDEFENDmarker != null){
-			g.drawLine(blueDEFENDmarker.x - 10, blueDEFENDmarker.y, blueDEFENDmarker.x + 10, blueDEFENDmarker.y );
-			g.drawLine(blueDEFENDmarker.x, blueDEFENDmarker.y - 10, blueDEFENDmarker.x, blueDEFENDmarker.y + 10);
-			//g.drawOval(blueDEFENDmarker.x - 22, blueDEFENDmarker.y - 22, 44, 44);
+			g.drawLine(blueDEFENDmarker.x - 5, blueDEFENDmarker.y, blueDEFENDmarker.x + 5, blueDEFENDmarker.y );
+			g.drawLine(blueDEFENDmarker.x, blueDEFENDmarker.y - 5, blueDEFENDmarker.x, blueDEFENDmarker.y + 5);
+			g.drawOval(blueDEFENDmarker.x - 22, blueDEFENDmarker.y - 22, 44, 44);
 		}
 		g.setColor(Color.BLUE);
 		if(blueATTACKmarker != null){
-			g.drawLine(blueATTACKmarker.x - 10, blueATTACKmarker.y, blueATTACKmarker.x + 10, blueATTACKmarker.y );
-			g.drawLine(blueATTACKmarker.x, blueATTACKmarker.y - 10, blueATTACKmarker.x, blueATTACKmarker.y + 10);
-			//g.drawOval(blueATTACKmarker.x - 22, blueATTACKmarker.y - 22, 44, 44);
+			g.drawLine(blueATTACKmarker.x - 5, blueATTACKmarker.y, blueATTACKmarker.x + 5, blueATTACKmarker.y );
+			g.drawLine(blueATTACKmarker.x, blueATTACKmarker.y - 5, blueATTACKmarker.x, blueATTACKmarker.y + 5);
+			g.drawOval(blueATTACKmarker.x - 22, blueATTACKmarker.y - 22, 44, 44);
 		}
 
 		g.setColor(Color.BLACK);
 		if(dots != null){
 			for(Point2D_I32 p: dots){
 				if(p != null){
-					g.drawLine(p.x - 10, p.y, p.x + 10, p.y);
-					g.drawLine(p.x, p.y - 10, p.x, p.y + 10);
+					g.drawLine(p.x - 5, p.y, p.x + 5, p.y);
+					g.drawLine(p.x, p.y - 5, p.x, p.y + 5);
 				}
 			}
 		}
@@ -599,34 +597,37 @@ public class ObjectLocations {
 
 		}
 		
+//		try {
+//			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerDirectionAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerDirectionAngle)*100)));
+//			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerDicrectionAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerDicrectionAngle)*100)));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//
+//		}
+//		
+//		try {
+//			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerDirectionAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerDirectionAngle)*100)));
+//			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerDirectionAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerDirectionAngle)*100)));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//
+//		}
+		
+		g.setColor(Color.WHITE);
 		try {
-			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerDirectionAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerDirectionAngle)*100)));
-			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerDicrectionAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerDicrectionAngle)*100)));
+			g.draw(new Line2D.Double(yellowDEFENDmarker.x,yellowDEFENDmarker.y, yellowDEFENDdot.x, yellowDEFENDdot.y));
+			g.draw(new Line2D.Double(yellowATTACKmarker.x,yellowATTACKmarker.y, yellowATTACKdot.x, yellowATTACKdot.y));
+//			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerOrientationAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerOrientationAngle)*100)));
+//			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerOrientationAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerOrientationAngle)*100)));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 
 		}
 		
 		try {
-			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerDirectionAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerDirectionAngle)*100)));
-			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerDirectionAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerDirectionAngle)*100)));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-
-		}
-		
-		g.setColor(Color.YELLOW);
-		try {
-			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerOrientationAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerOrientationAngle)*100)));
-			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerOrientationAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerOrientationAngle)*100)));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-
-		}
-		
-		try {
-			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerOrientationAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerOrientationAngle)*100)));
-			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerOrientationAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerOrientationAngle)*100)));
+			g.draw(new Line2D.Double(blueDEFENDmarker.x,blueDEFENDmarker.y, blueDEFENDdot.x, blueDEFENDdot.y));
+			g.draw(new Line2D.Double(blueATTACKmarker.x,blueATTACKmarker.y, blueATTACKdot.x, blueATTACKdot.y));
+//			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerOrientationAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerOrientationAngle)*100)));
+//			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerOrientationAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerOrientationAngle)*100)));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 
