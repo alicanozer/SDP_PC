@@ -43,6 +43,7 @@ public class RunStrategy extends JFrame {
 	private final JButton quitButton = new JButton("Quit");
 	private final JPanel movePanel = new JPanel();
 	private final JButton kickButton = new JButton("Kick");
+	private final JButton grabButton = new JButton("Grab");
 	private final JButton forwardButton = new JButton("Forward");
 	private final JButton backwardButton = new JButton("Backward");
 	private final JButton leftButton = new JButton("Left");
@@ -61,7 +62,7 @@ public class RunStrategy extends JFrame {
 	public static void main(String[] args) throws Exception {
 
 		//Start vision
-		VisionRunner.startDebugVision(PitchConstants.newPitch, 10, true);
+		VisionRunner.startDebugVision(PitchConstants.newPitch, 10, false);
 		
 		//Create Bluetooth connections
 		Bluetooth myConnection = new Bluetooth("attack"); //should be "both"
@@ -94,7 +95,7 @@ public class RunStrategy extends JFrame {
 	private void startStrategy() {
 		assert (strategyThread == null || !strategyThread.isAlive()) : "Strategy is already running";
 		System.out.println("Starting Strategy...");
-		strategy = new Friendly(attackRobot, defenseRobot); //Put your strategy class here.
+		strategy = new Friendly(attackMover, defenseMover); //Put your strategy class here.
 		strategyThread = new Thread(strategy);
 		strategyThread.start();
 	}
@@ -137,6 +138,7 @@ public class RunStrategy extends JFrame {
 		movePanel.add(backwardButton);
 		movePanel.add(leftButton);
 		movePanel.add(rightButton);
+		movePanel.add(grabButton);
 				
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -177,8 +179,8 @@ public class RunStrategy extends JFrame {
 				}
 				System.out.println("Stopping the robot");
 				// Stop the robot.
-				attackMover.stopRobot();
-				defenseMover.stopRobot();
+				attackMover.stopRobot("attack");
+				defenseMover.stopRobot("defence");
 			}
 		});
 		
@@ -246,34 +248,45 @@ public class RunStrategy extends JFrame {
 		
 		kickButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+		
 				attackMover.kick("attack");
-				}
+				defenseMover.kick("defense");
+			
+			}
 		});
 		
 		forwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				attackMover.forward(5);
+				attackMover.forward("attack", 5);
+				defenseMover.forward("defense", 5);
 			}
 		});
 
 		backwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				attackMover.backward(5);
+				attackMover.forward("attack", -5);
 			}
 		});
 
 		leftButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				attackRobot.rotateLEFT("attack", -90);
+				//attackMover.rotate("attack", -90);
 				
-				attackMover.rotate(-90);
 			}
 		});
 
 		rightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				attackMover.rotate(90);
+				attackMover.rotate("attack", 90);
+			}
+		});
+		
+		grabButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				attackMover.grab("attack");
 			}
 		});
 

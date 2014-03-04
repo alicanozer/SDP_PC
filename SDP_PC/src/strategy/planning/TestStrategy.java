@@ -2,6 +2,7 @@ package strategy.planning;
 
 import georegression.struct.point.Point2D_I32;
 import lejos.nxt.Button;
+import movement.RobotMover;
 import vision.ObjectLocations;
 import comms.BluetoothRobot;
 import comms.BluetoothRobotOld;
@@ -15,8 +16,8 @@ public class TestStrategy extends StrategyInterface{
 	private Point2D_I32 ourAttackRobot;
 	private Point2D_I32 ball;
 
-	public TestStrategy(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
-		super(attackRobot, defenceRobot);
+	public TestStrategy(RobotMover attackMover, RobotMover defenceMover) {
+		super(attackMover, defenceMover);
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public class TestStrategy extends StrategyInterface{
 		ObjectLocations.setYellowDefendingLeft(true);
 		while (!shouldidie && !Strategy.alldie) {
 			
-			attackRobot.kick("attack");
+			attackMover.kick("attack");
 
 			if(ObjectLocations.getYellowATTACKmarker()!=null && ObjectLocations.getBall()!=null) {
 				//Check if speed is too much then dont have ball otherwise if ball is still we have the ball

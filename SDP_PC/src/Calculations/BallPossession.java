@@ -13,6 +13,13 @@ public class BallPossession {
 		
 		int possessionThreshold = 50;
 		Point2D_I32 temp = ObjectLocations.getBall();
+		// TODO - add sleep
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		double distanceBall = DistanceCalculator.Distance(temp, ObjectLocations.getBall());
 		
 		double speed = (distanceBall/0.01);

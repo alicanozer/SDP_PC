@@ -1,6 +1,7 @@
 package strategy.planning;
 
 import lejos.nxt.Button;
+import movement.RobotMover;
 import World.Robot;
 import World.RobotType;
 import Calculations.BallPossession;
@@ -19,16 +20,13 @@ public class Defend extends StrategyInterface {
 	private Robot ourAttackRobot = new Robot(RobotType.AttackUs);
 	private Robot ourDefenseRobot = new Robot(RobotType.DefendUs);
 	
-	BluetoothRobot defenseRobot;
-	BluetoothRobot attackRobot;
-
 	private Point2D_I32 ball;
 	private Point2D_I32 ourDefenseDot;
 	private Point2D_I32 ourAttackDot;
 	private Point2D_I32 theirAttackDot;
 
-	public Defend(BluetoothRobot attackRobot, BluetoothRobot defenseRobot) {
-		super(attackRobot, defenseRobot);
+	public Defend(RobotMover attackMover, RobotMover defenceMover) {
+		super(attackMover, defenceMover);
 		
 	}
 
@@ -55,7 +53,7 @@ public class Defend extends StrategyInterface {
 				} else {
 
 					System.out.println("Someone else has the ball.");
-					attackRobot.forward("AttackUs", 10);
+					attackMover.forward("AttackUs", 10);
 
 				}
 			}
