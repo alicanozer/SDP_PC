@@ -514,7 +514,7 @@ public class VisionOps {
 			boolean debug,
 			int radius)
 	{
-		if(!(colors.length == distanceThresholds.length) || colors.length != 3){
+		if(!(colors.length == distanceThresholds.length) || colors.length != 5){
 			return null;
 		}
 		MultiSpectral<ImageFloat32> input = ConvertBufferedImage.convertFromMulti(image,null,true,ImageFloat32.class);
@@ -526,6 +526,7 @@ public class VisionOps {
 		// Extract hue and saturation bands which are independent of intensity
 		ImageFloat32 H = hsv.getBand(0);
 		ImageFloat32 S = hsv.getBand(1);
+		ImageFloat32 V = hsv.getBand(2);
 		
 //		BlurImageOps.gaussian(H, H, -1,radius,null);
 //		BlurImageOps.gaussian(S, S, -1, radius,null);
@@ -534,20 +535,24 @@ public class VisionOps {
 		// initialising hue and sat arrays
 		float[] hues = new float[colors.length];
 		float[] sats = new float[colors.length];
+		float[] vals = new float[colors.length];
 		
 		// populating hue and sats array. note that colors has 1 color per row, and in each row
 		// element 0 is hue, element 1 is saturation
 		for(int i = 0; i < colors.length; i++){
 			hues[i] = colors[i][0];
 			sats[i] = colors[i][1];
+			vals[i] = colors[i][2];
 		}
 		// Adjust the relative importance of Hue and Saturation
 		float adjustUnits = (float)(Math.PI/2.0);
 
 		HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations = new HashMap<Integer,ArrayList<Point2D_I32>>();
-		objectsToLocations.put(0, new ArrayList<Point2D_I32>());
-		objectsToLocations.put(1, new ArrayList<Point2D_I32>());
-		objectsToLocations.put(2, new ArrayList<Point2D_I32>());
+		objectsToLocations.put(0, new ArrayList<Point2D_I32>()); //red
+		objectsToLocations.put(1, new ArrayList<Point2D_I32>()); //yellow
+		objectsToLocations.put(2, new ArrayList<Point2D_I32>()); //blue
+		objectsToLocations.put(3, new ArrayList<Point2D_I32>()); //green plate
+		objectsToLocations.put(4, new ArrayList<Point2D_I32>()); //black
 		
 		boolean isBlack = true; // for drawing all non-object pixels as black
 		for(int y = 0; y < hsv.height; y++ ) {
@@ -565,8 +570,10 @@ public class VisionOps {
 								|| PitchConstants.region3.contains(x, y) 
 								|| PitchConstants.region4.contains(x, y)))) {
 						// simply add all the points wherever they are
-						objectsToLocations.get(k).add(new Point2D_I32(x,y));
-						isBlack = false; // pixel is fron object, don't make it black
+						if(k != 4 || V.unsafe_get(x, y) < vals[4]){ // if color is black then the value needs to be bounded
+							objectsToLocations.get(k).add(new Point2D_I32(x,y));
+							isBlack = false; // pixel is fron object, don't make it black
+						}
 					}
 				}
 				// we've processed all colors for the given pixel and see
@@ -610,7 +617,43 @@ public class VisionOps {
 		markers.add(PointUtils.getListCentroid(rightPoints));
 		return markers;
 	}
-	
+	public static ArrayList<Polygon> findGreenPlates(
+			HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, 
+			Polygon r1, 
+			Polygon r2, 
+			Polygon r3, 
+			Polygon r4){
+		ArrayList<Point2D_I32> plate1 = new ArrayList<Point2D_I32>();
+		ArrayList<Point2D_I32> plate2 = new ArrayList<Point2D_I32>();
+		ArrayList<Point2D_I32> plate3 = new ArrayList<Point2D_I32>();
+		ArrayList<Point2D_I32> plate4 = new ArrayList<Point2D_I32>();
+		
+		ArrayList<Point2D_I32> points = objectsToLocations.get(3);
+		
+		for(Point2D_I32 p : points){
+			if(r1.contains(p.x, p.y)){
+				plate1.add(p);
+			}
+			else if (r2.contains(p.x,p.y)) {
+				plate2.add(p);
+			}
+			else if (r3.contains(p.x,p.y)) {
+				plate3.add(p);
+			}
+			else if (r4.contains(p.x,p.y)) {
+				plate4.add(p);
+			}
+		}
+		
+		ArrayList<Polygon> pols = new ArrayList<Polygon>();
+		
+		pols.add(0, PointUtils.findPolygonFromCorners(plate1));
+		pols.add(1, PointUtils.findPolygonFromCorners(plate2));
+		pols.add(2, PointUtils.findPolygonFromCorners(plate3));
+		pols.add(3, PointUtils.findPolygonFromCorners(plate4));
+		
+		return pols;
+	}
 	
 	/**
 	 * 
@@ -939,6 +982,22 @@ public class VisionOps {
 		Arrays.sort(blues);
 		
 		return new Color(reds[size/2],greens[size/2],blues[size/2]);
+	}
+
+
+
+
+	public static Point2D_I32 getDotFromPlate(Polygon polygon,
+			ArrayList<Point2D_I32> arrayList) {
+		ArrayList<Point2D_I32> dotPoints = new ArrayList<Point2D_I32>();
+		
+		for(Point2D_I32 point : arrayList){
+			if(PointUtils.isInside(point, polygon)){
+				dotPoints.add(point);
+			}
+		}
+		
+		return PointUtils.getListCentroid(dotPoints);
 	}
 }
 

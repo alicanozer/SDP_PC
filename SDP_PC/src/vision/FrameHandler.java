@@ -269,17 +269,19 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		VisionRunner.sendFrame(new Frame(img,thisFrame));
 		
 		
-		float[] distanceThresholds = new float[3];
+		float[] distanceThresholds = new float[5];
 		distanceThresholds[0] = getRed();
 		distanceThresholds[1] = getYellow();
 		distanceThresholds[2] = getBlue();
+		distanceThresholds[3] = 0.1f; // plate
+		distanceThresholds[4] = 0.1f; //dot
 		
 //		System.out.println("red: " + colors.getRedValue()[0] + " " + colors.getRedValue()[1] + " " + colors.getRedValue()[2]);
 //		System.out.println("yellow: " + colors.getYellowValue()[0] + " " + colors.getYellowValue()[1] + " " + colors.getYellowValue()[2]);
 //		System.out.println("blue: " + colors.getBlueValue()[0] + " " + colors.getBlueValue()[1] + " " + colors.getBlueValue()[2]);
 		
 		try {
-			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),distanceThresholds,3);
+			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBluePlateBlack(),distanceThresholds,3);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

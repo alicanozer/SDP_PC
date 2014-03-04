@@ -277,7 +277,7 @@ public class FrameHandlerStatic extends WindowAdapter implements CaptureCallback
 //		System.out.println("blue: " + colors.getBlueValue()[0] + " " + colors.getBlueValue()[1] + " " + colors.getBlueValue()[2]);
 		
 		try {
-			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),distanceThresholds,3);
+			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBluePlateBlack(),distanceThresholds,3);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

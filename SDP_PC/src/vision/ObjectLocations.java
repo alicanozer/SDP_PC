@@ -29,7 +29,7 @@ public class ObjectLocations {
 	private static Point2D_I32 yellowDEFENDdot = null;
 	private static Point2D_I32 blueATTACKdot = null;
 	private static Point2D_I32 blueDEFENDdot = null;	
-	
+	private static ArrayList<Polygon> platePolygons = null;
 
 	public static double getBallDirectionAngle() {
 		while(!lock);
@@ -138,43 +138,54 @@ public class ObjectLocations {
 		Point2D_I32 ballLocal = VisionOps.findBallFromMapping(objectsToLocations);
 		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
 		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkersFromMapping(objectsToLocations, consts.getMiddleLine());
-
+		platePolygons = VisionOps.findGreenPlates(objectsToLocations,PitchConstants.region1,PitchConstants.region2, PitchConstants.region3, PitchConstants.region4);
+		
 		
 		ArrayList<Point2D_I32> dotsLocal = new ArrayList<Point2D_I32>();
 
-		if(yellowMarkers != null){
-			for(Point2D_I32 p: yellowMarkers){
-				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
-//				Point2D_I32 newCentre = VisionOps.getDotPosition(
-//						img, 
-//						p, 
-//						30, 
-//						2, 
-//						1, 
-//						colors.getBlackValue(), 
-//						colors.getYellowValue(), 
-//						colors.getGreenPlateValue());   //.getMeanDotNearMarker(img,p,40,colors.getBlackValue());
-				if(newCentre != null)
-					dotsLocal.add(newCentre); // window 44 works well
+		
+		if(platePolygons != null){
+			for(Polygon p : platePolygons){
+				if(p != null){
+					Point2D_I32 newCentre = VisionOps.getDotFromPlate(p,objectsToLocations.get(4));
+					if(newCentre != null) dotsLocal.add(newCentre);
+				}
 			}
 		}
-
-		if(blueMarkers != null){
-			for(Point2D_I32 p: blueMarkers){
-				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
-//				Point2D_I32 newCentre = VisionOps.getDotPosition(
-//						img, 
-//						p, 
-//						30, 
-//						2, 
-//						1, 
-//						colors.getBlackValue(), 
-//						colors.getBlueValue(), 
-//						colors.getGreenPlateValue()); 
-				if(newCentre != null)
-					dotsLocal.add(newCentre); // window 44 works well
-			}
-		}
+		
+//		if(yellowMarkers != null){
+//			for(Point2D_I32 p: yellowMarkers){
+//				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
+////				Point2D_I32 newCentre = VisionOps.getDotPosition(
+////						img, 
+////						p, 
+////						30, 
+////						2, 
+////						1, 
+////						colors.getBlackValue(), 
+////						colors.getYellowValue(), 
+////						colors.getGreenPlateValue());   //.getMeanDotNearMarker(img,p,40,colors.getBlackValue());
+//				if(newCentre != null)
+//					dotsLocal.add(newCentre); // window 44 works well
+//			}
+//		}
+//
+//		if(blueMarkers != null){
+//			for(Point2D_I32 p: blueMarkers){
+//				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
+////				Point2D_I32 newCentre = VisionOps.getDotPosition(
+////						img, 
+////						p, 
+////						30, 
+////						2, 
+////						1, 
+////						colors.getBlackValue(), 
+////						colors.getBlueValue(), 
+////						colors.getGreenPlateValue()); 
+//				if(newCentre != null)
+//					dotsLocal.add(newCentre); // window 44 works well
+//			}
+//		}
 
 		//setting the ball and its angle
 		try {
@@ -621,7 +632,14 @@ public class ObjectLocations {
 
 		}
 		
-		
+		g.setColor(Color.GREEN);
+		try{
+			for(Polygon p: ObjectLocations.platePolygons){
+				g.draw(p);
+			}
+		} catch(Exception e){
+			
+		}
 
 		g.setColor(c);
 	}

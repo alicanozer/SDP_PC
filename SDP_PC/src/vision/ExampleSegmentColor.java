@@ -248,21 +248,7 @@ public class ExampleSegmentColor {
 		}
 	}
 	
-	private float minArray(float[] ar){
-		float min = Float.POSITIVE_INFINITY;
-		for(float a: ar){
-			if(a < min) min = a;
-		}
-		return min;
-	}
-	private float maxArray(float[] ar){
-		float max = Float.NEGATIVE_INFINITY;
-		for(float a: ar){
-			if(a > max) max = a;
-		}
-		return max;
-		
-	}
+
 	public static float max3(float a,float b, float c){
 		return Math.max(a, Math.max(b, c));
 	}
