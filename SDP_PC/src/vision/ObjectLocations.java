@@ -301,7 +301,7 @@ public class ObjectLocations {
 		//setting orientation angles
 
 		dots = dotsLocal;
-		double angleTolerance = 0.17; // 0.17 radians is 10 degrees
+		double angleTolerance = 6.0; // 0.17 radians is 10 degrees
 		double distanceTolerance = 70.0;
 		if(yellowLeft){
 			for(Point2D_I32 dot : dots){
