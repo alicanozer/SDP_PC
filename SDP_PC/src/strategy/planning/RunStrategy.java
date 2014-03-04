@@ -55,7 +55,7 @@ public class RunStrategy extends JFrame {
 	public static void main(String[] args) throws Exception {
 
 		//Start vision
-		VisionRunner.startDebugVision(PitchConstants.newPitch, 10, false);
+		VisionRunner.startDebugVision(PitchConstants.oldPitch, 10, true);
 		
 		//Create Bluetooth connections
 		Bluetooth myConnection = new Bluetooth("attack"); //should be "both"
@@ -63,7 +63,7 @@ public class RunStrategy extends JFrame {
 		BluetoothRobot attackRobot = new BluetoothRobot(RobotType.AttackUs, myConnection);
 
 		//Check if Bluetooth connection was successful
-		while (!defenseRobot.isAttackConnected()) { // include && !attackRobot.isAttackConnected() for both
+		while (!attackRobot.isAttackConnected()) { // include && !attackRobot.isAttackConnected() for both
 			// Reduce CPU cost
 			try {
 				Thread.sleep(10);
