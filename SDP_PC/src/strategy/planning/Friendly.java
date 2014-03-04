@@ -13,7 +13,7 @@ public class Friendly extends StrategyInterface{
 
 	enum state {
 		//TODO add different strategy CLASSES e.g. Defending, Attacking, MoveToBall?
-		DefendA, DefendD, PassA, PassD, InterceptBall, AttackA, AttackD, Defend1A, Defend1D,
+		PassA, PassD, InterceptBall, AttackA, AttackD, DefendPassA, DefendPassD, DefendShootA, DefendShootD
 	}
 
 	state currentStateARobot = state.InterceptBall;
@@ -52,8 +52,8 @@ public class Friendly extends StrategyInterface{
 					if (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getBlueDEFENDmarker())) {
 						//DEFENCE STRATEGY!
 						System.out.println("blue defender has possession");
-						newStateDRobot = state.DefendD;
-						newStateARobot = state.DefendA;
+						newStateDRobot = state.DefendPassD;
+						newStateARobot = state.DefendPassA;
 					} else if (BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getYellowDEFENDmarker())) {
 						//PASSING STRATEGY!
 						System.out.println("yellow defender has possession");
@@ -67,8 +67,8 @@ public class Friendly extends StrategyInterface{
 					} else if (BallPossession.hasPossession(RobotType.AttackThem, ObjectLocations.getBlueATTACKmarker())) {
 						//DEFENCE STRATEGY!
 						System.out.println("blue attacker has possession");
-						newStateDRobot = state.Defend1D;
-						newStateARobot = state.Defend1A;
+						newStateDRobot = state.DefendShootD;
+						newStateARobot = state.DefendShootA;
 					} else {
 						//When no-one has the ball, INTERCEPT!!
 //						newStateDRobot = state.InterceptBall;
@@ -78,8 +78,8 @@ public class Friendly extends StrategyInterface{
 				} else {
 					if (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getYellowDEFENDmarker())) {
 						//DEFENCE STRATEGY!
-						newStateDRobot = state.DefendD;
-						newStateARobot = state.DefendA;
+						newStateDRobot = state.DefendPassD;
+						newStateARobot = state.DefendPassA;
 					} else if (BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getBlueDEFENDmarker())) {
 						//PASSING STRATEGY!
 						newStateDRobot = state.PassD;
@@ -90,8 +90,8 @@ public class Friendly extends StrategyInterface{
 						newStateARobot = state.AttackA;
 					} else if (BallPossession.hasPossession(RobotType.AttackThem, ObjectLocations.getYellowATTACKmarker())) {
 						//DEFENCE STRATEGY!
-						newStateDRobot = state.Defend1D;
-						newStateARobot = state.Defend1A;
+						newStateDRobot = state.DefendShootD;
+						newStateARobot = state.DefendShootA;
 					} else {
 						//When no-one has the ball, INTERCEPT!!
 						newStateDRobot = state.InterceptBall;
@@ -116,8 +116,8 @@ public class Friendly extends StrategyInterface{
 						strategyAThread = new Thread(activeAStrat,
 								"Move to ball Thread");
 						System.out.println("Intercept Ball Started");
-					} else if (currentStateARobot == state.DefendA) {
-						activeAStrat = new DefendA(attackMover, defenceMover);
+					} else if (currentStateARobot == state.DefendPassA) {
+						activeAStrat = new DefendPassA(attackMover, defenceMover);
 						strategyAThread = new Thread(activeAStrat, "Defense Thread");
 						System.out.println("Defense thread started.");
 					} else if (currentStateARobot == state.AttackA) {
@@ -128,9 +128,9 @@ public class Friendly extends StrategyInterface{
 						activeAStrat = new PassA(attackMover, defenceMover);
 						strategyAThread = new Thread(activeAStrat,
 								"Passing A");
-					} else if (currentStateARobot == state.Defend1A) {
+					} else if (currentStateARobot == state.DefendShootA) {
 						System.out.println("Defending.");
-						activeAStrat = new Defend1A(attackMover, defenceMover);
+						activeAStrat = new DefendShootA(attackMover, defenceMover);
 						strategyAThread = new Thread(activeAStrat,
 								"Defending A");
 					}
@@ -139,8 +139,8 @@ public class Friendly extends StrategyInterface{
 						strategyDThread = new Thread(activeDStrat,
 								"Move to ball Thread");
 						System.out.println("Intercept Ball Started");
-					} else if (currentStateDRobot == state.DefendD) {
-						activeDStrat = new DefendD(attackMover, defenceMover);
+					} else if (currentStateDRobot == state.DefendPassD) {
+						activeDStrat = new DefendPassD(attackMover, defenceMover);
 						strategyDThread = new Thread(activeDStrat, "Defense Thread");
 						System.out.println("Defense thread started.");
 					} else if (currentStateDRobot == state.AttackD) {
@@ -151,9 +151,9 @@ public class Friendly extends StrategyInterface{
 						activeDStrat = new PassD(attackMover, defenceMover);
 						strategyDThread = new Thread(activeDStrat,
 								"Passing D");
-					} else if (currentStateDRobot == state.Defend1D) {
+					} else if (currentStateDRobot == state.DefendShootD) {
 						System.out.println("Defending.");
-						activeDStrat = new Defend1D(attackMover, defenceMover);
+						activeDStrat = new DefendShootD(attackMover, defenceMover);
 						strategyDThread = new Thread(activeDStrat,
 								"Defending D");
 					}
