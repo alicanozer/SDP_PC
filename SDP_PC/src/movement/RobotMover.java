@@ -12,12 +12,14 @@ import Calculations.DistanceCalculator;
 //import world.Robot;
 //import world.PixelWorld;
 
+import comms.BluetoothRobot;
 import comms.RobotController;
 
 public class RobotMover extends Thread{
 	//private world.PixelWorld worldState;
 	private RobotController robot;
 	//private Robot type;
+	private BluetoothRobot bRobot;
 	
 
 	/** A flag to permit busy-waiting */
@@ -40,10 +42,15 @@ public class RobotMover extends Thread{
 	
 	private double speedCoef = 1.0;
 	
+	public RobotMover(BluetoothRobot bRobot) {
+		super("RobotMover");
+		this.bRobot = bRobot;
+	}
+	
 	/** Settings info class to permit queueing of movements */
 	private class MoverConfig {
 		public double x = 0;
-		public double y = 0;
+		public String y = null;
 		public double angle = 0;
 		public boolean avoidBall = false;
 		public boolean avoidEnemy = false;
@@ -105,31 +112,31 @@ public class RobotMover extends Thread{
 	 * @throws Exception
 	 *             If an error occurred
 	 */
-	private void processMovement(MoverConfig movement, String robotType) throws Exception {
+	private void processMovement(MoverConfig movement) throws Exception {
 		switch (movement.mode) {
 		case FORWARD:
-			robot.forward(robotType, movement.x);
+			bRobot.forward(movement.y, movement.x);
 			break;
 		case BACKWARD:
-			robot.backwards(robotType, movement.x);
+			bRobot.backwards(movement.y, movement.x);
 			break;
 		case STOP:
-			robot.stop(robotType);
+			bRobot.stop(movement.y);
 			break;
 		case GRAB:
-			robot.grab(robotType);
+			bRobot.grab(movement.y);
 			break;
 		case KICK:
-			robot.kick(robotType);
+			bRobot.kick(movement.y);
 			break;
 		case DELAY:
 			SafeSleep.sleep(movement.milliseconds);
 			break;
 		case ROTATE:
-			robot.rotateLEFT(robotType, (int)movement.x);
+			robot.rotateLEFT(movement.y, (int)movement.x);
 			break;
 		case SET_SPEED:
-			robot.setSpeed(robotType, (int)movement.x);
+			robot.setSpeed(movement.y, (int)movement.x);
 			break;
 		default:
 			System.out.println("DERP! Unknown movement mode specified");
@@ -142,9 +149,11 @@ public class RobotMover extends Thread{
 	 * 
 	 * @see Thread#run()
 	 */
-	public void run(String robotType) {
+	public void run() {
+		System.out.println("Reached part2");
 		try {
 			while (!die) {
+				
 				// Wait for next movement operation
 				jobSem.acquire();
 				// Clear the movement interrupt flag for the new movement
@@ -159,7 +168,7 @@ public class RobotMover extends Thread{
 					assert (movement != null) : "moveQueue.poll() returned null when non-empty";
 					assert (movement.mode != null) : "invalid movement generated";
 
-					processMovement(movement, robotType);
+					processMovement(movement);
 				} else {
 					queueLock.unlock();
 				}
@@ -175,7 +184,7 @@ public class RobotMover extends Thread{
 			wakeUpWaitingThreads();
 		} finally {
 			// Stop the robot when the movement thread has been told to exit
-			robot.stop(robotType);
+			bRobot.stop("attack");
 			// Clear the robot's buffer to potentially allow restart of a
 			// RobotMover thread
 			//robot.clearBuff();
@@ -348,15 +357,18 @@ public class RobotMover extends Thread{
 	 * 
 	 * @see #waitForCompletion()
 	 */
-	public synchronized boolean kick() {
+	public synchronized boolean kick(String robotType) {
 		MoverConfig movement = new MoverConfig();
 		movement.mode = Mode.KICK;
+		movement.y = robotType;
+		System.out.println("Reached part1");
 
 		if (!pushMovement(movement))
 			return false;
 
 		// Let the mover know it has a new job
 		jobSem.release();
+		run();
 		return true;
 	}
 	
