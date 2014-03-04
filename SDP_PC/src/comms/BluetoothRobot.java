@@ -67,6 +67,19 @@ public class BluetoothRobot extends Robot implements RobotController {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void grab(String robotType) {
+		int[] commands = { bluetooth.GRAB, 0, 0, 0 };
+		
+		try {
+			bluetooth.sendCommand(commands, robotType);
+			System.out.println("Robot Stopped");
+		}catch (IOException e) {
+			System.out.println("Command could not be sent");
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void kick(String robotType) {
@@ -79,11 +92,6 @@ public class BluetoothRobot extends Robot implements RobotController {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void move(String robotType, int speedX, int speedY) {
-		
 	}
 
 	@Override
@@ -129,9 +137,9 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void backwards(String robotType) {
+	public void backwards(String robotType, double distance) {
 		
-	int[] commands = { bluetooth.BACKWARDS, 0,0,0 }; 
+	int[] commands = { bluetooth.BACKWARDS, (int) distance,0,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
@@ -169,6 +177,5 @@ public class BluetoothRobot extends Robot implements RobotController {
 		
 		return false;
 	}
-	
 	
 }

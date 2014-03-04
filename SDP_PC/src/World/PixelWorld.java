@@ -1,4 +1,4 @@
-package world;
+package World;
 
 import world.object.MobilePixelObject;
 import world.object.StationaryPixelObject;

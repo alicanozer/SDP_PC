@@ -14,38 +14,29 @@ public class TestStrategy extends StrategyInterface{
 
 	private Point2D_I32 ourAttackRobot;
 	private Point2D_I32 ball;
-	static BluetoothRobotOld bRobot;
 
 	public TestStrategy(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
 		super(attackRobot, defenceRobot);
-		ball = ObjectLocations.getBall();
-		ourAttackRobot = ObjectLocations.getYellowATTACKmarker();
 	}
 
 	@Override
 	public void run() {
+		System.out.println("Starting test strategy...");
+		ObjectLocations.setYellowDefendingLeft(true);
 		while (!shouldidie && !Strategy.alldie) {
+			
+			attackRobot.kick("attack");
 
-			while(true) {
-
-				if(ball!=null && ourAttackRobot!=null) {
-
-					double distance = DistanceCalculator.Distance(ourAttackRobot, ball);
-					System.out.println("distance: ");
-					System.out.println(distance);
-					System.out.println("ball: ");
-					System.out.println(ball.x + " " + ball.y);				
-					System.out.println(ObjectLocations.getBall());
-					System.out.println("robot: ");
-					System.out.println(ourAttackRobot.x + " " + ourAttackRobot.y);
-					System.out.println(ObjectLocations.getYellowATTACKmarker());
-					System.out.println("possession: ");
-					//System.out.println(BallPossession.hasPossession(RobotType.AttackUs));
-					Button.waitForAnyPress();
-				}
+			if(ObjectLocations.getYellowATTACKmarker()!=null && ObjectLocations.getBall()!=null) {
+				//Check if speed is too much then dont have ball otherwise if ball is still we have the ball
+				double distance = DistanceCalculator.Distance(ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
+				System.out.println("attackmarker: " + ObjectLocations.getYellowATTACKmarker());
+				System.out.println("distance: " +distance);
+				System.out.println("possession: ");
+				System.out.println(BallPossession.hasPossession(RobotType.AttackUs, ObjectLocations.getYellowATTACKmarker()));
 			}
+			Button.waitForAnyPress();
 
 		}
-		bRobot.stop();
 	}
 }
