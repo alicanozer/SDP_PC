@@ -1,5 +1,9 @@
 package Calculations;
 
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.geom.Point2D;
+
 import georegression.struct.point.Point2D_I32;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
@@ -33,4 +37,19 @@ public class BallPossession {
 		return possession;
 	}
 
+	public static boolean BallRegion(Point2D_I32 ball2D, Polygon polygon) {
+		
+		int x = ball2D.x;
+		int y = ball2D.y;
+		
+		Point ball = new Point(x,y);
+		
+		if (polygon.contains(ball)) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+	
 }
