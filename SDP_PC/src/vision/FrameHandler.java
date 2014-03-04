@@ -77,9 +77,14 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	static JPanel panel1 = new JPanel();
 	static JPanel panel2 = new JPanel();
 	static JPanel panel3 = new JPanel();
+	static JPanel panel4 = new JPanel();
+	static JPanel panel5 = new JPanel();
 	static JSlider slider1 = new JSlider(JSlider.VERTICAL,0,1000,25);
 	static JSlider slider2 = new JSlider(JSlider.VERTICAL,0,1000,25);
 	static JSlider slider3 = new JSlider(JSlider.VERTICAL,0,1000,25);
+	static JSlider slider4 = new JSlider(JSlider.VERTICAL,0,1000,25);
+	static JSlider slider5 = new JSlider(JSlider.VERTICAL,0,1000,25);
+	
 	private PitchColours colors;
 	private ArrayList<Point2D_I32> whitePoints;
 	private int frameLoop = 1;
@@ -115,16 +120,41 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			return blue;
 		}
 	}
+	
+	public synchronized float getPlate() {
+		synchronized(lock){
+			return plate;
+		}
+	}
 
+	public synchronized float getBlack() {
+		synchronized(lock){
+			return black;
+		}
+	}
+	
 	public synchronized void setBlue(float blue) {
 		synchronized(lock){
 			this.blue = blue;
 		}
 	}
-	float red = 0.1f;
+	
+	public synchronized void setPlate(float plate) {
+		synchronized(lock){
+			this.plate = plate;
+		}
+	}
+	
+	public synchronized void setBlack(float black) {
+		synchronized(lock){
+			this.black = black;
+		}
+	}
+	float red = 0.01f;
 	float yellow = 0.001f;
 	float blue = 0.001f;
-
+	float plate = 0.01f;
+	float black = 0.01f;
 
 	public FrameHandler(boolean debug, PitchConstants consts){
 		this.debug = debug;
@@ -273,8 +303,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		distanceThresholds[0] = getRed();
 		distanceThresholds[1] = getYellow();
 		distanceThresholds[2] = getBlue();
-		distanceThresholds[3] = 0.1f; // plate
-		distanceThresholds[4] = 0.1f; //dot
+		distanceThresholds[3] = getPlate(); // plate
+		distanceThresholds[4] = getBlack(); //dot
 		
 //		System.out.println("red: " + colors.getRedValue()[0] + " " + colors.getRedValue()[1] + " " + colors.getRedValue()[2]);
 //		System.out.println("yellow: " + colors.getYellowValue()[0] + " " + colors.getYellowValue()[1] + " " + colors.getYellowValue()[2]);
@@ -332,7 +362,31 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			}
 		});
 
+		slider4.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				synchronized(lock2){
+					if (slider4.getValueIsAdjusting()){
+						float sliderValue = (float)slider4.getValue()/10000; //get slider value and use it from here
+						setPlate(sliderValue);
+						System.out.println("slider4 "+sliderValue);
+					}
+				}
+			}
+		});
 
+		slider5.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				synchronized(lock2){
+					if (slider5.getValueIsAdjusting()){
+						float sliderValue = (float)slider5.getValue()/10000; //get slider value and use it from here
+						setBlack(sliderValue);
+						System.out.println("slider5 "+sliderValue);
+					}
+				}
+			}
+		});
 		try {
 			//ObjectLocations.updateObjectLocations(img,distanceThresholds);
 		} catch (Exception e) {
@@ -377,6 +431,10 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	    labelTable.put(new Integer(1000), new JLabel("0.01"));
 	    labelTable.put(new Integer(0), new JLabel("0.0")); 
 	    
+		java.util.Hashtable<Integer,JLabel> labelTable2 = new java.util.Hashtable<Integer,JLabel>(); 
+	    labelTable2.put(new Integer(1000), new JLabel("0.1"));
+	    labelTable2.put(new Integer(0), new JLabel("0.0")); 
+	    
 		panel1.setLayout(new BorderLayout());
 		slider1.setMinorTickSpacing(1);
 		slider1.setMajorTickSpacing(25);
@@ -403,15 +461,33 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		slider3.setLabelTable(labelTable);
 		slider3.setPaintLabels(true);
 		panel3.add(slider3);
+		
+		panel4.setLayout(new BorderLayout());
+		slider4.setMinorTickSpacing(1);
+		slider4.setMajorTickSpacing(25);
+		slider4.setPaintTicks(true);
+		slider4.setLabelTable(labelTable2);
+		slider4.setPaintLabels(true);
+		panel4.add(slider4);
 
-		JFrame frame = new JFrame("Red|slider Yellow|slider2 Blue|slider3");
+		panel5.setLayout(new BorderLayout());
+		slider5.setMinorTickSpacing(1);
+		slider5.setMajorTickSpacing(25);
+		slider5.setPaintTicks(true);
+		slider5.setLabelTable(labelTable2);
+		slider5.setPaintLabels(true);
+		panel5.add(slider5);
+		
+		JFrame frame = new JFrame("Red | Yellow | Blue | Plate | Dots");
 		frame.setLayout(new GridLayout(1,3));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		frame.setBounds(0, 0, 400, 650);
+		frame.setBounds(0, 0, 400, 1050);
 		frame.add(panel1);
 		frame.add(panel2);
 		frame.add(panel3);
+		frame.add(panel4);
+		frame.add(panel5);
 		//frame.pack();
 		frame.setVisible(true);
 		
