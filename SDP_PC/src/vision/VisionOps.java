@@ -594,23 +594,27 @@ public class VisionOps {
 		return PointUtils.getListCentroid(objectsToLocations.get(0));
 	}
 	
-	public static ArrayList<Point2D_I32> findYellowMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine){
-		return findMarkersFromMapping(objectsToLocations,middleLine,1);
+	public static ArrayList<Point2D_I32> findYellowMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine, ArrayList<Polygon> pols){
+		return findMarkersFromMapping(objectsToLocations,middleLine,1,pols);
 	}
 	
-	public static ArrayList<Point2D_I32> findBlueMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine){
-		return findMarkersFromMapping(objectsToLocations,middleLine,2);
+	public static ArrayList<Point2D_I32> findBlueMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine,ArrayList<Polygon> pols){
+		return findMarkersFromMapping(objectsToLocations,middleLine,2, pols);
 	}
 	
-	public static ArrayList<Point2D_I32> findMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine, int key){
+	public static ArrayList<Point2D_I32> findMarkersFromMapping(HashMap<Integer,ArrayList<Point2D_I32>> objectsToLocations, int middleLine, int key, ArrayList<Polygon> pols){
 		ArrayList<Point2D_I32> leftPoints = new ArrayList<Point2D_I32>();
 		ArrayList<Point2D_I32> rightPoints = new ArrayList<Point2D_I32>();
 		
 		ArrayList<Point2D_I32> points = objectsToLocations.get(key);
 		
 		for(Point2D_I32 p: points){
-			if(p.x < middleLine) leftPoints.add(p);
-			else rightPoints.add(p);
+			for(Polygon pol: pols){
+				if(PointUtils.isInside(p, pol)){
+					if(p.x < middleLine) leftPoints.add(p);
+					else rightPoints.add(p);
+				}
+			}
 		}
 		ArrayList<Point2D_I32> markers = new ArrayList<Point2D_I32>(2);
 		markers.add(PointUtils.getListCentroid(leftPoints));
@@ -997,7 +1001,7 @@ public class VisionOps {
 			}
 		}
 		
-		return PointUtils.getListCentroid(dotPoints);
+		return PointUtils.getPointMedian(dotPoints);
 	}
 }
 
