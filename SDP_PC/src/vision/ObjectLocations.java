@@ -302,40 +302,53 @@ public class ObjectLocations {
 
 		dots = dotsLocal;
 		double angleTolerance = 0.17; // 0.17 radians is 10 degrees
+		double distanceTolerance = 70.0;
 		if(yellowLeft){
 			for(Point2D_I32 dot : dots){
 				if(dot != null){
 					if (dot.x < consts.getRegion12X())
 						try {
 							double newAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
-							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance); 
+							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance)
 							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
-							setYellowDEFENDdot(dot);
+							//
+							//if(PointUtils.euclideanDistance(dot, yellowDEFENDdot) < distanceTolerance) 
+								setYellowDEFENDdot(dot);
+							//
 							} catch (Exception e) {
 						}
 					else if(consts.getRegion12X() < dot.x && dot.x < consts.getRegion23X())
 						try {
 							double newAngle = VisionOps.getDirection(blueATTACKmarker, dot);
-							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance);
+							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance)
 							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
-							setBlueATTACKdot(dot);
+							//
+							//if(PointUtils.euclideanDistance(dot, blueATTACKdot) < distanceTolerance) 
+								setBlueATTACKdot(dot);
+							//
 						} catch (Exception e) {
 						}
 					else if (consts.getRegion23X() < dot.x && dot.x < consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
-							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance); 
+							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance)
 							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
-							setYellowATTACKdot(dot);
+							//
+							//if(PointUtils.euclideanDistance(dot, yellowATTACKdot) < distanceTolerance) 
+								setYellowATTACKdot(dot);
+							//
 						} catch (Exception e) {
 						}
 					}
 					else if(dot.x > consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
-							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance); // 10 degrees is 0.17 radians
+							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance) // 10 degrees is 0.17 radians
 							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
-							setBlueDEFENDdot(dot);
+							//
+							//if(PointUtils.euclideanDistance(dot, blueDEFENDdot) < distanceTolerance) 
+								setBlueDEFENDdot(dot);
+							//
 						} catch (Exception e) {
 						}
 					}
@@ -348,27 +361,36 @@ public class ObjectLocations {
 					if (dot.x < consts.getRegion12X())
 						try {
 							double newAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
-							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance); 
+							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance)
 							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
-							setBlueDEFENDdot(dot);
+							//
+							//if(PointUtils.euclideanDistance(dot, blueDEFENDdot) < distanceTolerance) 
+								setBlueDEFENDdot(dot);
+							//
 						} catch (Exception e) {
 
 						}
 					else if(consts.getRegion12X() < dot.x && dot.x < consts.getRegion23X())
 						try {
 							double newAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
-							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance);
+							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance)
 							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
-							setYellowATTACKdot(dot);
+							//
+							//if(PointUtils.euclideanDistance(dot, yellowATTACKdot) < distanceTolerance) 
+								setYellowATTACKdot(dot);
+							//
 						} catch (Exception e) {
 
 						}
 					else if (consts.getRegion23X() < dot.x && dot.x < consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(blueATTACKmarker, dot);
-							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance); 
+							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance) 
 							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
-							setBlueATTACKdot(dot);
+							//
+							//if(PointUtils.euclideanDistance(dot, blueATTACKdot) < distanceTolerance) 
+								setBlueATTACKdot(dot);
+							//
 						} catch (Exception e) {
 
 						}
@@ -376,9 +398,12 @@ public class ObjectLocations {
 					else if(dot.x > consts.getRegion34X()){
 						try {
 							double newAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
-							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance); 
+							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance) 
 							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
-							setYellowDEFENDdot(dot);
+							//
+							//if(PointUtils.euclideanDistance(dot, yellowDEFENDdot) < distanceTolerance) 
+								setYellowDEFENDdot(dot);
+							//
 						} catch (Exception e) {
 
 						}
@@ -617,20 +642,18 @@ public class ObjectLocations {
 		try {
 			g.draw(new Line2D.Double(yellowDEFENDmarker.x,yellowDEFENDmarker.y, yellowDEFENDdot.x, yellowDEFENDdot.y));
 			g.draw(new Line2D.Double(yellowATTACKmarker.x,yellowATTACKmarker.y, yellowATTACKdot.x, yellowATTACKdot.y));
-//			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerOrientationAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerOrientationAngle)*100)));
-//			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerOrientationAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerOrientationAngle)*100)));
+			//System.out.println("asd1");
 		} catch (Exception e) {
-
+			//e.printStackTrace();
 		}
 		
 		try {
+
 			g.draw(new Line2D.Double(blueDEFENDmarker.x,blueDEFENDmarker.y, blueDEFENDdot.x, blueDEFENDdot.y));
 			g.draw(new Line2D.Double(blueATTACKmarker.x,blueATTACKmarker.y, blueATTACKdot.x, blueATTACKdot.y));
-//			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerOrientationAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerOrientationAngle)*100)));
-//			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerOrientationAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerOrientationAngle)*100)));
+			//System.out.println("asd2");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-
+			//e.printStackTrace();
 		}
 		
 		g.setColor(Color.GREEN);
