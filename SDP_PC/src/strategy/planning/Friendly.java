@@ -13,8 +13,8 @@ import comms.BluetoothRobot;
 public class Friendly extends StrategyInterface{
 
 	enum state {
-		//TODO add different strategy CLASSES e.g. Defending, Attacking, MoveToBall?
-		PassA, PassD, InterceptBall, AttackA, AttackD, DefendPassA, DefendPassD, DefendShootA, DefendShootD
+		//TODO add different strategy CLASSES e.g. Defending, Attacking, MoveToBall
+		InterceptBall, PassA, PassD, AttackA, AttackD, DefendPassA, DefendPassD, DefendShootA, DefendShootD
 	}
 
 	state currentStateARobot = state.InterceptBall;
@@ -71,9 +71,9 @@ public class Friendly extends StrategyInterface{
 						newStateARobot = state.DefendShootA;
 					} else {
 						//When no-one has the ball, INTERCEPT!!
-//						newStateDRobot = state.InterceptBall;
-//						newStateARobot = state.InterceptBall;
-//						System.out.println("InterceptBall");
+						//newStateDRobot = state.InterceptBall;
+						//newStateARobot = state.InterceptBall;
+						//System.out.println("InterceptBall");
 					}
 				} else {
 					if (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getYellowDEFENDmarker())) {
