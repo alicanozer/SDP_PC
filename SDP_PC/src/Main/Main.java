@@ -7,7 +7,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 	    
-		VisionRunner.startDebugVision(PitchConstants.newPitch,10,false);
+		VisionRunner.startDebugVision(PitchConstants.oldPitch,10,true);
 		
 	}
 	

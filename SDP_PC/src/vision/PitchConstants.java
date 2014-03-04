@@ -91,6 +91,6 @@ public class PitchConstants {
 	
 
 	public static final PitchConstants newPitch = new PitchConstants(60,98,520,307,115,260,410,15,280);
-	public static final PitchConstants oldPitch = new PitchConstants(60,88,520,307,115,260,410,15,280); //TODO : fill in
+	public static final PitchConstants oldPitch = new PitchConstants(60,78,505,277,105,255,405,15,280); //TODO : fill in
 
 }
