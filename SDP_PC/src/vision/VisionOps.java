@@ -611,9 +611,11 @@ public class VisionOps {
 		
 		for(Point2D_I32 p: points){
 			for(Polygon pol: pols){
-				if(PointUtils.isInside(p, pol)){
-					if(p.x < middleLine) leftPoints.add(p);
-					else rightPoints.add(p);
+				if(pol != null && p != null){
+					if(PointUtils.isInside(p, pol)){
+						if(p.x < middleLine) leftPoints.add(p);
+						else rightPoints.add(p);
+					}
 				}
 			}
 		}
