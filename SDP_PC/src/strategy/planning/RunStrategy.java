@@ -265,15 +265,13 @@ public class RunStrategy extends JFrame {
 
 		leftButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				attackRobot.rotateLEFT("attack", -90);
-				//attackMover.rotate("attack", -90);
-				
+				attackMover.rotate("attack", 90);
 			}
 		});
 
 		rightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				attackMover.rotate("attack", 90);
+				attackMover.rotate("attack", -90);
 			}
 		});
 		

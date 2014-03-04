@@ -22,7 +22,6 @@ public class InterceptBall extends StrategyInterface{
 
 	public InterceptBall(RobotMover attackMover, RobotMover defenceMover) {
 		super(attackMover,defenceMover);
-		System.out.println("Starting InterceptBall...");
 	}
 
 	@Override
