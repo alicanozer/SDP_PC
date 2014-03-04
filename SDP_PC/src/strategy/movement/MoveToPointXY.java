@@ -9,7 +9,7 @@ public class MoveToPointXY {
 
 	private static final int distanceFromPointToStop = 20;
 	
-	public static void moveToPointXY(RobotMover robot, Point2D_I32 dot, Point2D_I32 marker, Point2D_I32 point) {
+	public static void moveToPointXY(RobotMover robot, Point2D_I32 dot, Point2D_I32 marker, Point2D_I32 point) throws InterruptedException {
 		
 		double distance = DistanceCalculator.Distance(marker, point);
 									
@@ -27,7 +27,7 @@ public class MoveToPointXY {
 			
 			System.out.println("Distance to Point: " + distance);
 			robot.forward("attack", distance);
-		
+			Thread.sleep(100);
 		}
 		
 		robot.stopRobot("attack");

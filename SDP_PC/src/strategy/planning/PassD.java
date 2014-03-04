@@ -20,7 +20,12 @@ public class PassD extends StrategyInterface {
 		System.out.println("Running Pass Defender Strategy...");
 		
 		// Move to Ball
-		MoveToPointXY.moveToPointXY(defenceMover, ObjectLocations.getYellowDEFENDdot(), ObjectLocations.getYellowDEFENDmarker(), ObjectLocations.getBall());
+		try {
+			MoveToPointXY.moveToPointXY(defenceMover, ObjectLocations.getYellowDEFENDdot(), ObjectLocations.getYellowDEFENDmarker(), ObjectLocations.getBall());
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		// Grab Ball
 		defenceMover.grab("defence");
@@ -43,6 +48,7 @@ public class PassD extends StrategyInterface {
 		// Kick Ball
 		defenceMover.kick("defence");
 		
+		//TODO
 		// Move to Ball
 		// Grab Ball
 		// Turn to open angle
