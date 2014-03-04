@@ -651,10 +651,15 @@ public class VisionOps {
 		
 		ArrayList<Polygon> pols = new ArrayList<Polygon>();
 		
-		pols.add(0, PointUtils.findPolygonFromCorners(plate1));
-		pols.add(1, PointUtils.findPolygonFromCorners(plate2));
-		pols.add(2, PointUtils.findPolygonFromCorners(plate3));
-		pols.add(3, PointUtils.findPolygonFromCorners(plate4));
+		pols.add(0, FastConvexHull.getConvexHullOfPoints(plate1));
+		pols.add(1, FastConvexHull.getConvexHullOfPoints(plate2));
+		pols.add(2, FastConvexHull.getConvexHullOfPoints(plate3));
+		pols.add(3, FastConvexHull.getConvexHullOfPoints(plate4));
+		
+//		pols.add(0, PointUtils.findPolygonFromCorners(plate1));
+//		pols.add(1, PointUtils.findPolygonFromCorners(plate2));
+//		pols.add(2, PointUtils.findPolygonFromCorners(plate3));
+//		pols.add(3, PointUtils.findPolygonFromCorners(plate4));
 		
 		return pols;
 	}
