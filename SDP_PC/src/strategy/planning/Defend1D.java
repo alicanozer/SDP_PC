@@ -1,11 +1,12 @@
 package strategy.planning;
 
+import movement.RobotMover;
 import comms.BluetoothRobot;
 
 public class Defend1D extends StrategyInterface {
 
-	public Defend1D(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
-		super(attackRobot, defenceRobot);
+	public Defend1D(RobotMover attackMover, RobotMover defenceMover) {
+		super(attackMover, defenceMover);
 		// TODO Auto-generated constructor stub
 	}
 

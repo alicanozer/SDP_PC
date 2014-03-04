@@ -49,9 +49,10 @@ public class RobotMover extends Thread{
 	
 	/** Settings info class to permit queueing of movements */
 	private class MoverConfig {
-		public double x = 0;
-		public String y = null;
-		public double angle = 0;
+		public double distance = 0;
+		public String type = null;
+		public int angle = 0;
+		public int speed = 0;
 		public boolean avoidBall = false;
 		public boolean avoidEnemy = false;
 		public long milliseconds = 0;
@@ -115,28 +116,28 @@ public class RobotMover extends Thread{
 	private void processMovement(MoverConfig movement) throws Exception {
 		switch (movement.mode) {
 		case FORWARD:
-			bRobot.forward(movement.y, movement.x);
+			bRobot.forward(movement.type,movement.distance);
 			break;
 		case BACKWARD:
-			bRobot.backwards(movement.y, movement.x);
+			bRobot.backwards(movement.type,movement.distance);
 			break;
 		case STOP:
-			bRobot.stop(movement.y);
+			bRobot.stop(movement.type);
 			break;
 		case GRAB:
-			bRobot.grab(movement.y);
+			bRobot.grab(movement.type);
 			break;
 		case KICK:
-			bRobot.kick(movement.y);
+			bRobot.kick(movement.type);
 			break;
 		case DELAY:
 			SafeSleep.sleep(movement.milliseconds);
 			break;
 		case ROTATE:
-			robot.rotateLEFT(movement.y, (int)movement.x);
+			robot.rotateLEFT(movement.type, movement.angle);
 			break;
 		case SET_SPEED:
-			robot.setSpeed(movement.y, (int)movement.x);
+			robot.setSpeed(movement.type, movement.speed);
 			break;
 		default:
 			System.out.println("DERP! Unknown movement mode specified");
@@ -294,10 +295,11 @@ public class RobotMover extends Thread{
 	 * 
 	 * @see #waitForCompletion()
 	 */
-	public synchronized boolean forward(double distance) {
+	public synchronized boolean forward(String robotType, double distance) {
 		MoverConfig movement = new MoverConfig();
-		movement.x = distance;
+		movement.distance = distance;
 		movement.mode = Mode.FORWARD;
+		movement.type = robotType;
 
 		if (!pushMovement(movement))
 			return false;
@@ -316,10 +318,11 @@ public class RobotMover extends Thread{
 	 * 
 	 * @see #waitForCompletion()
 	 */
-	public synchronized boolean backward(double distance) {
+	public synchronized boolean backward(String robotType, double distance) {
 		MoverConfig movement = new MoverConfig();
-		movement.x = distance;
+		movement.distance = distance;
 		movement.mode = Mode.BACKWARD;
+		movement.type = robotType;
 
 		if (!pushMovement(movement))
 			return false;
@@ -338,9 +341,10 @@ public class RobotMover extends Thread{
 	 * 
 	 * @see #waitForCompletion()
 	 */
-	public synchronized boolean grab() {
+	public synchronized boolean grab(String robotType) {
 		MoverConfig movement = new MoverConfig();
 		movement.mode = Mode.GRAB;
+		movement.type = robotType;
 
 		if (!pushMovement(movement))
 			return false;
@@ -360,9 +364,8 @@ public class RobotMover extends Thread{
 	public synchronized boolean kick(String robotType) {
 		MoverConfig movement = new MoverConfig();
 		movement.mode = Mode.KICK;
-		movement.y = robotType;
-		System.out.println("Reached part1");
-
+		movement.type = robotType;
+		
 		if (!pushMovement(movement))
 			return false;
 
@@ -381,10 +384,11 @@ public class RobotMover extends Thread{
 	 * 
 	 * @see #waitForCompletion()
 	 */
-	public synchronized boolean rotate(double angle) {
+	public synchronized boolean rotate(String robotType, double angle) {
 		MoverConfig movement = new MoverConfig();
-		movement.x = angle;
+		movement.angle = (int) angle;
 		movement.mode = Mode.ROTATE;
+		movement.type = robotType;
 
 		if (!pushMovement(movement))
 			return false;
@@ -403,9 +407,10 @@ public class RobotMover extends Thread{
 	 * @see #interruptMove()
 	 * @see #resetQueue()
 	 */
-	public synchronized boolean stopRobot() {
+	public synchronized boolean stopRobot(String robotType) {
 		MoverConfig movement = new MoverConfig();
 		movement.mode = Mode.STOP;
+		movement.type = robotType;
 
 		if (!pushMovement(movement))
 			return false;
@@ -425,10 +430,11 @@ public class RobotMover extends Thread{
 	 * 
 	 * @return true if the delay was successfully queued, false otherwise
 	 */
-	public synchronized boolean delay(long milliseconds) {
+	public synchronized boolean delay(String robotType, long milliseconds) {
 		MoverConfig movement = new MoverConfig();
 		movement.milliseconds = milliseconds;
 		movement.mode = Mode.DELAY;
+		movement.type = robotType;
 
 		if (!pushMovement(movement))
 			return false;

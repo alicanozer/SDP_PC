@@ -1,6 +1,7 @@
 package strategy.planning;
 
 import lejos.nxt.Button;
+import movement.RobotMover;
 import Calculations.DistanceCalculator;
 import strategy.movement.MoveToPoint;
 import vision.ObjectLocations;
@@ -19,8 +20,8 @@ public class InterceptBall extends StrategyInterface{
 	private Point2D_I32 ball;
 	private Point2D_I32 dot;
 
-	public InterceptBall(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
-		super(attackRobot,defenceRobot);
+	public InterceptBall(RobotMover attackMover, RobotMover defenceMover) {
+		super(attackMover,defenceMover);
 		System.out.println("Starting InterceptBall...");
 	}
 
