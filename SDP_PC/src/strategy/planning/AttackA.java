@@ -19,12 +19,24 @@ public class AttackA extends StrategyInterface {
 	public void run() {
 		System.out.println("Running Attack Attacker Strategy...");
 		if (ObjectLocations.getYellowUs()) {
-			if (BallPossession.hasPossession(RobotType.AttackUs, ObjectLocations.getYellowATTACKmarker())) {
 				//Move to Point
 				//Grab Ball
 				//Turn to open goal
 				//Shoot Ball
 				
+				try {
+					MoveToPointXY.moveToPointXY(attackMover, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				attackMover.grab("attack");
+				double angleShoot = TurnToObject.shootAngle();
+				System.out.println("Angle to Shoot: " + angleShoot);
+				attackMover.rotate("attack", (int) angleShoot);
+				attackMover.kick("attack");
+
 				//TODO
 				//Grab Ball
 				//Turn to Open Goal
@@ -32,14 +44,6 @@ public class AttackA extends StrategyInterface {
 				//Turn the other way
 				//Shoot
 				
-				MoveToPointXY.moveToPointXY(attackMover, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
-				attackMover.grab("attack");
-				double angleShoot = TurnToObject.shootAngle();
-				System.out.println("Angle to Shoot: " + angleShoot);
-				attackMover.rotate("attack", (int) angleShoot);
-				attackMover.kick("attack");
-
-			}
 		}
 	}
 }
