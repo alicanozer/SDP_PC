@@ -367,7 +367,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			public void stateChanged(ChangeEvent e) {
 				synchronized(lock2){
 					if (slider4.getValueIsAdjusting()){
-						float sliderValue = (float)slider4.getValue()/1000; //get slider value and use it from here
+						float sliderValue = (float)slider4.getValue()/2000; //get slider value and use it from here
 						setPlate(sliderValue);
 						System.out.println("slider4 "+sliderValue);
 					}
@@ -435,6 +435,10 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	    labelTable2.put(new Integer(1000), new JLabel("1.0"));
 	    labelTable2.put(new Integer(0), new JLabel("0.0")); 
 	    
+		java.util.Hashtable<Integer,JLabel> labelTable3 = new java.util.Hashtable<Integer,JLabel>(); 
+	    labelTable3.put(new Integer(1000), new JLabel("0.5"));
+	    labelTable3.put(new Integer(0), new JLabel("0.0")); 
+	    
 		panel1.setLayout(new BorderLayout());
 		slider1.setMinorTickSpacing(1);
 		slider1.setMajorTickSpacing(25);
@@ -466,7 +470,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		slider4.setMinorTickSpacing(1);
 		slider4.setMajorTickSpacing(25);
 		slider4.setPaintTicks(true);
-		slider4.setLabelTable(labelTable2);
+		slider4.setLabelTable(labelTable3);
 		slider4.setPaintLabels(true);
 		panel4.add(slider4);
 
