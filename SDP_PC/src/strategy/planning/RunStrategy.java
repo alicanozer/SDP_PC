@@ -58,12 +58,12 @@ public class RunStrategy extends JFrame {
 		VisionRunner.startDebugVision(PitchConstants.oldPitch, 10, true);
 		
 		//Create Bluetooth connections
-		Bluetooth myConnection = new Bluetooth("attack"); //should be "both"
+		Bluetooth myConnection = new Bluetooth("both"); //should be "both"
 		BluetoothRobot defenseRobot = new BluetoothRobot(RobotType.DefendUs, myConnection);
 		BluetoothRobot attackRobot = new BluetoothRobot(RobotType.AttackUs, myConnection);
 
 		//Check if Bluetooth connection was successful
-		while (!attackRobot.isAttackConnected()) { // include && !attackRobot.isAttackConnected() for both
+		while (!defenseRobot.isDefenceConnected()&& !attackRobot.isAttackConnected()) { // include && !attackRobot.isAttackConnected() for both
 			// Reduce CPU cost
 			try {
 				Thread.sleep(10);
@@ -243,7 +243,7 @@ public class RunStrategy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 		
 				attackMover.kick("attack");
-				defenseMover.kick("defense");
+				defenseMover.kick("defence");
 			
 			}
 		});
@@ -252,31 +252,34 @@ public class RunStrategy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				attackMover.forward("attack", 5);
-				defenseMover.forward("defense", 5);
+				defenseMover.forward("defence", 5);
 			}
 		});
 
 		backwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				defenseMover.forward("defence", -5);
 				attackMover.forward("attack", -5);
 			}
 		});
 
 		leftButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				defenseMover.rotate("defence", 90);
 				attackMover.rotate("attack", 90);
 			}
 		});
 
 		rightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				defenseMover.rotate("defence", -90);
 				attackMover.rotate("attack", -90);
 			}
 		});
 		
 		grabButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				defenseMover.grab("defence");
 				attackMover.grab("attack");
 			}
 		});

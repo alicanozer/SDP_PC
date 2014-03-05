@@ -21,7 +21,7 @@ public class PassD extends StrategyInterface {
 		
 		// Move to Ball
 		try {
-			MoveToPointXY.moveToPointXY(defenceMover, ObjectLocations.getYellowDEFENDdot(), ObjectLocations.getYellowDEFENDmarker(), ObjectLocations.getBall());
+			MoveToPointXY.moveToPointXY("defence", defenceMover, ObjectLocations.getYellowDEFENDdot(), ObjectLocations.getYellowDEFENDmarker(), ObjectLocations.getBall());
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

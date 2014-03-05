@@ -186,6 +186,7 @@ public class RobotMover extends Thread{
 		} finally {
 			// Stop the robot when the movement thread has been told to exit
 			bRobot.stop("attack");
+			bRobot.stop("defence");
 			// Clear the robot's buffer to potentially allow restart of a
 			// RobotMover thread
 			//robot.clearBuff();
