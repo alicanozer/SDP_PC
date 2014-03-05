@@ -22,6 +22,8 @@ public interface RobotController {
 	
 	public void forward(String robotType, double distance);
 	
+	public void forwardsC(String robotType);
+	
 	public void backwards(String robotType, double distance);
 		
 	public void setSpeed(String robotType, int speed);

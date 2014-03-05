@@ -96,7 +96,7 @@ public class RunStrategy extends JFrame {
 		if (attackRobot.isAttackConnected())
 			attackRobot.disconnect("attack");
 		if (defenseRobot.isDefenceConnected())
-			defenseRobot.disconnect("defense");
+			defenseRobot.disconnect("defence");
 		System.exit(0);
 	}
 	/**

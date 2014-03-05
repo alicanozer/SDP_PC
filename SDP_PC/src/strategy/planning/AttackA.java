@@ -24,12 +24,7 @@ public class AttackA extends StrategyInterface {
 				//Turn to open goal
 				//Shoot Ball
 				
-				try {
-					MoveToPointXY.moveToPointXY("attack", attackMover, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				MoveToPointXY.moveToPointXY("attack", attackMover, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
 				
 				attackMover.grab("attack");
 				double angleShoot = TurnToObject.shootAngle();
@@ -44,6 +39,26 @@ public class AttackA extends StrategyInterface {
 				//Turn the other way
 				//Shoot
 				
+		} else {
+			//Move to Point
+			//Grab Ball
+			//Turn to open goal
+			//Shoot Ball
+			
+			MoveToPointXY.moveToPointXY("attack", attackMover, ObjectLocations.getBlueATTACKdot(), ObjectLocations.getBlueATTACKmarker(), ObjectLocations.getBall());
+			
+			attackMover.grab("attack");
+			double angleShoot = TurnToObject.shootAngle();
+			System.out.println("Angle to Shoot: " + angleShoot);
+			attackMover.rotate("attack", (int) angleShoot);
+			attackMover.kick("attack");
+
+			//TODO
+			//Grab Ball
+			//Turn to Open Goal
+			//Wait
+			//Turn the other way
+			//Shoot			
 		}
 	}
 }

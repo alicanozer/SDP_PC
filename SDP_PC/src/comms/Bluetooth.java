@@ -45,6 +45,8 @@ public class Bluetooth {
 	public final static int ROTATERIGHT = 8;
 	public final static int MOVING = 9;
 	public final static int QUIT = 10;
+	public final static int FORWARDSC = 11;
+	
 	
 	/**
 	 * Creates a new bluetooth object and opens the relevant bluetooth connection.

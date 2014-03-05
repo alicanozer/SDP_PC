@@ -54,12 +54,7 @@ public class DefendPassA extends StrategyInterface{
 		Point2D_I32 move = new Point2D_I32(marker.x, intersection.y);
 		
 		//Move to intersection point
-		try {
-			MoveToPointXY.moveToPointXY("defence", attackMover, dot, marker, move);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		MoveToPointXY.moveToPointXY("defence", attackMover, dot, marker, move);
 		
 	}
 
