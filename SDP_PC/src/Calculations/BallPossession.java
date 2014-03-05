@@ -64,17 +64,17 @@ public class BallPossession {
 
 		boolean possession = false;
 		
-		Point2D_I32 temp = ObjectLocations.getBall();
-		
+		Point2D_I32 ball = ObjectLocations.getBall();
+				
 		try {
 			Thread.sleep(1500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		double distanceBall = DistanceCalculator.Distance(temp, ObjectLocations.getBall());
-		double speed = (distanceBall/0.01);
-		boolean BallRegion = BallRegion(ObjectLocations.getBall(), polygon);
+		while(ball == null) {
+			ball = ObjectLocations.getBall();
+		}
+		boolean BallRegion = BallRegion(ball, polygon);
 		
 		//if the robot is near the ball and facing the ball it has possession
 		if (BallRegion) {

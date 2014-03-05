@@ -73,7 +73,7 @@ public class Friendly extends StrategyInterface{
 						//When no-one has the ball, INTERCEPT!!
 						//newStateDRobot = state.InterceptBall;
 						//newStateARobot = state.InterceptBall;
-						//System.out.println("InterceptBall");
+						System.out.println("InterceptBall");
 					}
 				} else {
 					if (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getYellowDEFENDmarker())) {
