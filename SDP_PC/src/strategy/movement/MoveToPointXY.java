@@ -1,5 +1,6 @@
 package strategy.movement;
 
+import World.RobotType;
 import movement.RobotMover;
 import Calculations.DistanceCalculator;
 import comms.BluetoothRobot;
@@ -9,7 +10,7 @@ public class MoveToPointXY {
 
 	private static final int distanceFromPointToStop = 20;
 	
-	public static void moveToPointXY(RobotMover robot, Point2D_I32 dot, Point2D_I32 marker, Point2D_I32 point) throws InterruptedException {
+	public static void moveToPointXY(String type, RobotMover robot, Point2D_I32 dot, Point2D_I32 marker, Point2D_I32 point) throws InterruptedException {
 		
 		double distance = DistanceCalculator.Distance(marker, point);
 									
@@ -21,18 +22,18 @@ public class MoveToPointXY {
 			//Rotate robot only if ball is at an angle greater than 15
 			if (Math.abs(angleToPoint) > 15) {
 				System.out.println("Angle to Point: " + angleToPoint);
-				robot.stopRobot("attack");
-				robot.rotate("attack", (int) angleToPoint);
+				robot.stopRobot(type);
+				robot.rotate(type, (int) angleToPoint);
 			}
 			
 			System.out.println("Distance to Point: " + distance);
-			robot.forward("attack", distance);
+			robot.forward(type, distance);
 			Thread.sleep(100);
 		}
 		
-		robot.stopRobot("attack");
+		robot.stopRobot(type);
 		
-	}
+		}
 	
 }
 
