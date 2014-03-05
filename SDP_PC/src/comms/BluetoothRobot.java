@@ -124,7 +124,8 @@ public class BluetoothRobot extends Robot implements RobotController {
 
 	@Override
 	public void forward(String robotType, double distance) {
-	int[] commands = { bluetooth.FORWARDS, (int) distance,0,0 }; 
+	int half = (int) (distance/2);	
+	int[] commands = { bluetooth.FORWARDS, half, half,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
@@ -176,6 +177,21 @@ public class BluetoothRobot extends Robot implements RobotController {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public void forwardsC(String robotType) {
+		// TODO Auto-generated method stub
+	int[] commands = { bluetooth.FORWARDSC, 0,0,0 }; 
+		
+		try {
+			bluetooth.sendCommand(commands, robotType);
+			System.out.println("Robot Stopped");
+		}catch (IOException e) {
+			System.out.println("Command could not be sent");
+			e.printStackTrace();
+		}	
+
 	}
 	
 }

@@ -23,12 +23,8 @@ public class Attack extends StrategyInterface {
 			if (ObjectLocations.getYellowUs()) {
 				if (BallPossession.hasPossession(RobotType.AttackUs, ObjectLocations.getYellowATTACKmarker())) {
 									
-					try {
-						MoveToPointXY.moveToPointXY("attack", attackMover, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					MoveToPointXY.moveToPointXY("attack", attackMover, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
+					
 					//Grab Ball
 					double angleShoot = TurnToObject.shootAngle();
 					System.out.println("Angle to Shoot: " + angleShoot);

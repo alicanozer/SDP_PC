@@ -38,11 +38,7 @@ public class DefendPassD extends StrategyInterface{
 		
 		Point2D_I32 point = new Point2D_I32(marker.x, GoalInfo.getLeftGoalCenterNew().y);
 		
-		try {
-			MoveToPointXY.moveToPointXY("defence", defenceMover, dot, marker, point);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		MoveToPointXY.moveToPointXY("defence", defenceMover, dot, marker, point);
 		
 	}
 

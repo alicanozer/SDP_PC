@@ -69,7 +69,7 @@ public class RobotMover extends Thread{
 	}
 	
 	private enum Mode {
-		FORWARD, BACKWARD, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED
+		FORWARD, BACKWARD, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC
 	};
 	
 	/**
@@ -134,11 +134,13 @@ public class RobotMover extends Thread{
 			SafeSleep.sleep(movement.milliseconds);
 			break;
 		case ROTATE:
-			robot.rotateLEFT(movement.type, movement.angle);
+			bRobot.rotateLEFT(movement.type, movement.angle);
 			break;
 		case SET_SPEED:
-			robot.setSpeed(movement.type, movement.speed);
+			bRobot.setSpeed(movement.type, movement.speed);
 			break;
+		case FORWARDSC:
+			bRobot.forwardsC(movement.type);
 		default:
 			System.out.println("DERP! Unknown movement mode specified");
 			assert (false);
@@ -309,6 +311,19 @@ public class RobotMover extends Thread{
 		jobSem.release();
 		return true;
 	}
+	
+	public synchronized boolean forwardsC(String robotType) {
+		MoverConfig movement = new MoverConfig();
+		movement.mode = Mode.FORWARDSC;
+		movement.type = robotType;
+
+		if (!pushMovement(movement))
+			return false;
+
+		// Let the mover know it has a new job
+		jobSem.release();
+		return true;
+	}	
 	
 	/**
 	 * Queues a backward by a distance.
