@@ -284,7 +284,6 @@ public class RunStrategy extends JFrame {
 			}
 		});
 
-
 	}
 	
 }
