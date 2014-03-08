@@ -510,6 +510,19 @@ public class ObjectLocations {
 		return blueATTACKmarker;
 	}
 
+	public static Point2D_I32 getUSAttack(){
+		while(!lock);
+		if(yellowUs) return getYellowATTACKmarker();
+		else return getBlueATTACKmarker();
+	}
+	
+	public static Point2D_I32 getUSDefend(){
+		while(!lock);
+		if(yellowUs) return getYellowDEFENDmarker();
+		else return getBlueDEFENDmarker();
+	}
+	
+	
 	/**
 	 * draws lines indicating direction of movement over an object
 	 * @param g

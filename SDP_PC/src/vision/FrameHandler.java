@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Polygon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -289,6 +291,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 				colorList.add(pitch);
 				whitePoints = KMeans.Cluster(pitchImg, 2, 1, colorList).get(0);
 				ShowImages.showWindow(pitchImg,"pitchImg");
+
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -387,6 +390,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 				}
 			}
 		});
+		
+		
 		try {
 			//ObjectLocations.updateObjectLocations(img,distanceThresholds);
 		} catch (Exception e) {
