@@ -333,7 +333,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 					synchronized(lock2){
 						float sliderValue = (float)slider1.getValue()/100000; //get slider value and use it from here
 						setRed(sliderValue);
-						System.out.println("slider "+sliderValue);
+						//System.out.println("slider "+sliderValue);
 					}
 				}
 			}
@@ -346,7 +346,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 					synchronized(lock2){
 						float sliderValue = (float)slider2.getValue()/100000; //get slider value and use it from here
 						setYellow(sliderValue);
-						System.out.println("slider2 "+sliderValue);
+						//System.out.println("slider2 "+sliderValue);
 					}
 				}
 			}
@@ -359,7 +359,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 					if (slider3.getValueIsAdjusting()){
 						float sliderValue = (float)slider3.getValue()/100000; //get slider value and use it from here
 						setBlue(sliderValue);
-						System.out.println("slider3 "+sliderValue);
+						//System.out.println("slider3 "+sliderValue);
 					}
 				}
 			}
@@ -372,7 +372,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 					if (slider4.getValueIsAdjusting()){
 						float sliderValue = (float)slider4.getValue()/2000; //get slider value and use it from here
 						setPlate(sliderValue);
-						System.out.println("slider4 "+sliderValue);
+						//System.out.println("slider4 "+sliderValue);
 					}
 				}
 			}
@@ -385,7 +385,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 					if (slider5.getValueIsAdjusting()){
 						float sliderValue = (float)slider5.getValue()/1000; //get slider value and use it from here
 						setBlack(sliderValue);
-						System.out.println("slider5 "+sliderValue);
+						//System.out.println("slider5 "+sliderValue);
 					}
 				}
 			}

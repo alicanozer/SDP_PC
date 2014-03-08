@@ -226,12 +226,21 @@ public class TurnToObject {
 		double angleBetweenDotObject = Math.acos(dotProduct/totalMagnitude);
 		
 		//Check if ball is right or left of the marker
-		if ((object.y - dot.y) < (object.x - dot.x)) {
+		
+		
+
+		
+		
+		if (!isLeft(dot,marker,object)) {
+			return Math.toDegrees(angleBetweenDotObject);
+		} else {
 			return -Math.toDegrees(angleBetweenDotObject);
 		}
 				
-		return Math.toDegrees(angleBetweenDotObject);
-		
+	}
+	
+	private static boolean isLeft(Point2D_I32 a, Point2D_I32 b, Point2D_I32 c){
+	     return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
 	}
 	
 }
