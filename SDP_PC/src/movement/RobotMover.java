@@ -117,30 +117,39 @@ public class RobotMover extends Thread{
 		switch (movement.mode) {
 		case FORWARD:
 			bRobot.forward(movement.type,movement.distance);
+			bRobot.waitForRobotReady(movement.type);
 			break;
 		case BACKWARD:
 			bRobot.backwards(movement.type,movement.distance);
+			bRobot.waitForRobotReady(movement.type);
 			break;
 		case STOP:
 			bRobot.stop(movement.type);
+			bRobot.waitForRobotReady(movement.type);
 			break;
 		case GRAB:
 			bRobot.grab(movement.type);
+			bRobot.waitForRobotReady(movement.type);
 			break;
 		case KICK:
 			bRobot.kick(movement.type);
+			bRobot.waitForRobotReady(movement.type);
 			break;
 		case DELAY:
 			SafeSleep.sleep(movement.milliseconds);
+			bRobot.waitForRobotReady(movement.type);
 			break;
 		case ROTATE:
 			bRobot.rotateLEFT(movement.type, movement.angle);
+			bRobot.waitForRobotReady(movement.type);
 			break;
 		case SET_SPEED:
 			bRobot.setSpeed(movement.type, movement.speed);
+			bRobot.waitForRobotReady(movement.type);
 			break;
 		case FORWARDSC:
 			bRobot.forwardsC(movement.type);
+			bRobot.waitForRobotReady(movement.type);
 		default:
 			System.out.println("DERP! Unknown movement mode specified");
 			assert (false);

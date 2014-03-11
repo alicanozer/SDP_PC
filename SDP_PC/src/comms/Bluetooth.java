@@ -156,6 +156,44 @@ public class Bluetooth {
 			}
 		}
 	}
+	
+	/**
+	 * Waits for a message from the robot that signals it is in a ready state after completing command.
+	 * 
+	 * @param robotType - the type of robot to connect to: attack or defence.
+	 * @throws IOException -  when connection is lost to the robot
+	 */
+	public void waitForReadyCommand(String robotType) throws IOException {
+		final int[] READY_STATE = { 12, 0, 0, 0 };
+		//Check that robot is ready
+		while (true) {
+			int[] received = receiveData(robotType);
+			boolean equals = true;
+			//Check that each integer sent from robot equals expected value
+			for (int i = 0; i < 4; i++) {
+				if (received[i] != READY_STATE[i]) {
+					equals = false;
+					break;
+				}
+			}
+			//If not ready try again in 10 ms
+			if (equals) {
+				break;
+			} else {
+				try {
+					Thread.sleep(10);  // Prevent 100% cpu usage
+				} catch (InterruptedException e) {
+					throw new IOException("Failed to connect: "+ e.toString());
+				}
+			}
+		}
+		//Set current robot as in ready state
+		if (robotType.equals("attack")) {
+			setAttackReady();
+		} else {
+			setDefenceReady();
+		}
+	}
 
 	/**
 	 * Receive a byte message from the robot.
@@ -191,6 +229,7 @@ public class Bluetooth {
 			if (isAttackConnected()) {
 				dos1.write(command);
 				dos1.flush();
+				//TODO set ready state to false
 			} else {
 				throw new IOException("Cannot send command to attack robot as there is no open connection.");
 			}
@@ -198,6 +237,7 @@ public class Bluetooth {
 			if (isDefenceConnected()) {
 				dos2.write(command);
 				dos2.flush();
+				//TODO set ready state to false
 			} else {
 				throw new IOException("Cannot send command to defence robot as there is no open connection.");
 			}
