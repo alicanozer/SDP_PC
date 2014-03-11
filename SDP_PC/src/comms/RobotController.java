@@ -30,4 +30,6 @@ public interface RobotController {
 	
 	public boolean isMoving(String robotType);
 	
+	public void waitForRobotReady(String robotType);
+	
 }
