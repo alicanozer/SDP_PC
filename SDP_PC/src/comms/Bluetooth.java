@@ -22,6 +22,8 @@ public class Bluetooth {
 	private NXTComm nxtComm2;
 	private NXTInfo nxtInfo1;
 	private NXTInfo nxtInfo2;
+	private boolean attackConnected = false;
+	private boolean defenceConnected = false;
 	private boolean attackReady = false;
 	private boolean defenceReady = false;
 	private InputStream dis1;
@@ -107,7 +109,7 @@ public class Bluetooth {
 			dis1 = nxtComm1.getInputStream();
 			dos1 = nxtComm1.getOutputStream();
 			checkReady("attack");
-			attackReady = true;
+			attackConnected = true;
 			System.out.println("Connected to attack robot");
 		} else {
 			//Open connection
@@ -118,7 +120,7 @@ public class Bluetooth {
 			dis2 = nxtComm2.getInputStream();
 			dos2 = nxtComm2.getOutputStream();
 			checkReady("defence");
-			defenceReady = true;
+			defenceConnected = true;
 			System.out.println("Connected to defence robot");
 		}
 	}
@@ -208,13 +210,42 @@ public class Bluetooth {
 	 * @return - true if PC has established a connection to attack robot
 	 */
 	public boolean isAttackConnected() {
-		return attackReady;
+		return attackConnected;
 	}
 	
 	/**
 	 * @return - true if PC has established a connection to defence robot
 	 */
 	public boolean isDefenceConnected() {
+		return defenceConnected;
+	}
+	
+	/**
+	 * @return - true if attack robot is ready to receive commands
+	 */
+	public boolean isAttackReady() {
+		return attackReady;
+	}
+	
+	/**
+	 * @return - true if defence robot is ready to receive commands
+	 */
+	public boolean defenceReady() {
 		return defenceReady;
 	}
+	
+	/**
+	 * used to set ready state of attack robot to true when not automatically done by robot
+	 */
+	public void setAttackReady() {
+		attackReady = true;
+	}
+	
+	/**
+	 * used to set ready state of defence robot to true when not automatically done by robot
+	 */
+	public void setDefenceReady() {
+		defenceReady = true;
+	}
+	
 }
