@@ -1,4 +1,4 @@
-package testing.aid;
+package testing.support;
 
 import world.PositionProvider;
 import world.support.TimedVector;
