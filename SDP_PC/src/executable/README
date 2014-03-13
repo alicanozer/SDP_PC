@@ -1,8 +1,0 @@
-This package contains the actual programs that we might run. I suggest that these do roughly the following
-
-Create a world model.
-(Possibly handle vision calibration)  
-Start the vision system, passing the model for it to be updated.
-Set up bluetooth connections.
-Start a strategy, passing the world and the bluetooth connections to it.
-(Possibly wait for the strategy to finish and then start it again) 
