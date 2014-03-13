@@ -12,6 +12,7 @@ public class World implements PixelWorld, RealWorld, PixelWorldColorless {
 	public static final int NUM_MOBILE_OBJECTS = 5;
 	public static final int NUM_STATIONARY_OBJECTS = 6;
 	
+	//Default conversion ratio. Measured on pitch 1.
 	public static final double REAL_UNITS_PER_PIXEL = 0.455769231;
 	protected double realUnitsPerPixel;
 	

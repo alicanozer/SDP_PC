@@ -3,6 +3,7 @@
  */
 package world.support;
 
+import world.World;
 import geometry.Vector;
 
 /**
@@ -45,6 +46,16 @@ public class Corrections {
 	 */
 	public static Vector correctUnit(Vector robotPosition, double cmPerPixel) {
 		return robotPosition.scalarMultiplication(cmPerPixel);
+	}
+	
+	/**
+	 * Converts pixel positions to cm positions using the default value for pitch 1.
+	 * 
+	 * @param robotPosition The position to be converted
+	 * @return The converted position.
+	 */
+	public static Vector correctUnit(Vector robotPosition) {
+		return robotPosition.scalarMultiplication(World.REAL_UNITS_PER_PIXEL);
 	}
 	
 	/**
