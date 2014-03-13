@@ -8,7 +8,7 @@ import georegression.struct.point.Point2D_I32;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import vision.PitchConstants;
-import World.RobotType;
+import world.RobotType;
 
 public class BallPossession {
 	

@@ -4,10 +4,10 @@ import geometry.Vector;
 import georegression.struct.point.Point2D_I32;
 import Calculations.DistanceCalculator;
 import Calculations.Intersection;
-import World.RobotType;
 import strategy.movement.Facing;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
+import world.RobotType;
 import movement.RobotMover;
 
 public class PassA extends StrategyInterface {

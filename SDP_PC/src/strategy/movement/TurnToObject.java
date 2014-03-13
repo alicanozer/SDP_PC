@@ -3,8 +3,8 @@ package strategy.movement;
 import geometry.Vector;
 import georegression.struct.point.Point2D_I32;
 import vision.ObjectLocations;
+import world.RobotType;
 import Calculations.GoalInfo;
-import World.RobotType;
 
 /**
  * This class contains functions that return the angle of the robot to an object

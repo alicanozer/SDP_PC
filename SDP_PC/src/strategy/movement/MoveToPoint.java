@@ -1,6 +1,6 @@
 package strategy.movement;
 
-import World.RobotType;
+import world.RobotType;
 import georegression.struct.point.Point2D_I32;
 import comms.BluetoothRobot;
 
