@@ -5,7 +5,7 @@ import geometry.Vector;
 
 import org.junit.Test;
 
-import testing.aid.DummyPositionProvider;
+import testing.support.DummyPositionProvider;
 import world.PositionProvider;
 import world.World;
 import world.object.MobileObject;
