@@ -5,13 +5,14 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import world.World;
+import world.object.Zones;
 
 public class TestWorld {
 	@Test
 	public void testCorrespondances() {
 		World world;
 		
-		world = new World(World.TeamColor.BLUE, World.TeamSide.LEFT, 0, null, null, 0);
+		world = new World(World.TeamColor.BLUE, World.TeamSide.LEFT, 0, null, null, 0, Zones.Pitch.ONE);
 		//Make sure all methods that should return the same object returns the same object
 		assertEquals(world.getBlueAttacker(), world.getBlueAttacker());
 		assertEquals(world.getBlueAttacker(), world.getHeroAttacker());
@@ -22,7 +23,7 @@ public class TestWorld {
 		assertNotEquals(world.getBlueAttacker(), world.getRobot3());
 		assertNotEquals (world.getBlueAttacker(), world.getBall());
 		
-		world = new World(World.TeamColor.BLUE, World.TeamSide.RIGHT, 0, null, null, 0);
+		world = new World(World.TeamColor.BLUE, World.TeamSide.RIGHT, 0, null, null, 0, Zones.Pitch.ONE);
 		//Make sure all methods that should return the same object returns the same object
 		assertEquals (world.getBlueAttacker(), world.getBlueAttacker());
 		assertEquals (world.getBlueAttacker(), world.getHeroAttacker());
@@ -33,7 +34,7 @@ public class TestWorld {
 		assertNotEquals (world.getBlueAttacker(), world.getRobot3());
 		assertNotEquals (world.getBlueAttacker(), world.getBall());
 		
-		world = new World(World.TeamColor.YELLOW, World.TeamSide.RIGHT, 0, null, null, 0);
+		world = new World(World.TeamColor.YELLOW, World.TeamSide.RIGHT, 0, null, null, 0, Zones.Pitch.ONE);
 		//Make sure all methods that should return the same object returns the same object
 		assertEquals (world.getBlueAttacker(), world.getBlueAttacker());
 		assertEquals (world.getBlueAttacker(), world.getVillainAttacker());
@@ -44,7 +45,7 @@ public class TestWorld {
 		assertNotEquals (world.getBlueAttacker(), world.getRobot3());
 		assertNotEquals (world.getBlueAttacker(), world.getBall());
 		
-		world = new World(World.TeamColor.YELLOW, World.TeamSide.LEFT, 0, null, null, 0);
+		world = new World(World.TeamColor.YELLOW, World.TeamSide.LEFT, 0, null, null, 0, Zones.Pitch.ONE);
 		//Make sure all methods that should return the same object returns the same object
 		assertEquals (world.getBlueAttacker(), world.getBlueAttacker());
 		assertEquals (world.getBlueAttacker(), world.getVillainAttacker());
