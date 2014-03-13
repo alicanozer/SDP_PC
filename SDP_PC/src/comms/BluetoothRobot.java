@@ -3,15 +3,18 @@ package comms;
 import java.io.IOException;
 
 import lejos.pc.comm.NXTConnector;
+import World.Robot;
+import World.RobotType;
 
-public class BluetoothRobot implements RobotController {
+public class BluetoothRobot extends Robot implements RobotController {
 
 	private Bluetooth bluetooth;
 	public static final String TEAM_TRINITY = "0016530970C6";
 	public static final String HERCULES = "0016530D4ED8";
 	NXTConnector connector = new NXTConnector();
 	
-	public BluetoothRobot(Bluetooth bluetooth) {
+	public BluetoothRobot(RobotType type, Bluetooth bluetooth) {
+		super(type);
 		this.bluetooth = bluetooth;
 	}
 	
