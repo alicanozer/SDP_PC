@@ -1,61 +1,38 @@
 package vision;
 
-import georegression.metric.UtilAngle;
 import georegression.struct.point.Point2D_I32;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ddogleg.struct.FastQueue;
-import org.ddogleg.struct.FastQueueList;
-
-import boofcv.alg.color.ColorHsv;
-import boofcv.alg.feature.detect.edge.CannyEdge;
-import boofcv.alg.filter.binary.BinaryImageOps;
-import boofcv.alg.filter.binary.Contour;
-import boofcv.alg.filter.binary.ThresholdImageOps;
-import boofcv.alg.filter.blur.BlurImageOps;
-import boofcv.core.image.ConvertBufferedImage;
-import boofcv.factory.feature.detect.edge.FactoryEdgeDetectors;
-import boofcv.gui.binary.VisualizeBinaryData;
-import boofcv.gui.image.ShowImages;
-import boofcv.struct.image.ImageFloat32;
-import boofcv.struct.image.ImageSInt16;
-import boofcv.struct.image.ImageSInt32;
-import boofcv.struct.image.ImageUInt8;
-import boofcv.struct.image.MultiSpectral;
 import Calculations.GoalInfo;
-import au.edu.jcu.v4l4j.FrameGrabber;
 import au.edu.jcu.v4l4j.CaptureCallback;
+import au.edu.jcu.v4l4j.FrameGrabber;
 import au.edu.jcu.v4l4j.V4L4JConstants;
 import au.edu.jcu.v4l4j.VideoDevice;
 import au.edu.jcu.v4l4j.VideoFrame;
 import au.edu.jcu.v4l4j.exceptions.StateException;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
+import boofcv.alg.color.ColorHsv;
+import boofcv.gui.image.ShowImages;
 
 /**
  * This class demonstrates how to perform a simple push-mode capture.
@@ -63,7 +40,7 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
  * @author bilyan, jason
  *
  */
-public class FrameHandler extends WindowAdapter implements CaptureCallback{
+public class FrameHandler extends WindowAdapter implements CaptureCallback, WindowListener,ActionListener{
 	private static int      width = 640, height = 480, std = V4L4JConstants.STANDARD_WEBCAM, channel = 0;
 	private static String   device = "/dev/video0";
 	private long lastFrame = System.currentTimeMillis(); 
@@ -72,9 +49,13 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	private JLabel          label;
 	private JFrame          frame;
 	private JButton         recalibrate;
+	private JButton			yellowUs;
+	private JButton			yellowDefendLeft;
 	private long frameCounter = 0;
 	private boolean debug;
 	private PitchConstants consts;
+	
+
 
 	static JPanel panel1 = new JPanel();
 	static JPanel panel2 = new JPanel();
@@ -207,8 +188,16 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		frame = new JFrame();
 		label = new JLabel();
 		recalibrate = new JButton("Recalibrate");
-		recalibrate.setBounds(0, 380, 120, 40);
+		yellowUs = new JButton("Toggle Team");
+		yellowDefendLeft = new JButton("Toggle Yellow Defend");
+		yellowUs.addActionListener(this);
+		yellowDefendLeft.addActionListener(this);
+		recalibrate.setBounds(0, 380, 200, 40);
+		yellowUs.setBounds(240, 380, 200, 40);
+		yellowDefendLeft.setBounds(480, 380, 200, 40);
 		frame.getContentPane().add(recalibrate);
+		frame.getContentPane().add(yellowUs);
+		frame.getContentPane().add(yellowDefendLeft);
 		frame.getContentPane().add(label);
 
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -216,7 +205,31 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		frame.setVisible(true);
 		frame.setSize(640, 480);
 		CreateSlider();
+		
 	}
+	
+	@Override
+	public void actionPerformed(ActionEvent ae){
+		String action = ae.getActionCommand();
+		if (action.equals("Toggle Team")){
+			ObjectLocations.setYellowUs(!(ObjectLocations.getYellowUs()));
+			if (ObjectLocations.getYellowUs() == true)
+				System.out.println("We are now team yellow");
+			else
+				System.out.println("We are now team blue");
+		} else if (action.equals("Toggle Yellow Defend")){
+			ObjectLocations.setYellowDefendingLeft(!(ObjectLocations.getYellowDefendingLeft()));
+			if (ObjectLocations.getYellowDefendingLeft() == true)
+				System.out.println("Yellow is defending left");
+			else
+				System.out.println("Yellow is defending right");
+		} else if (action.equals("Recalibrate")) {
+			System.out.println("Not implemented yet");
+		} else {
+			System.out.println("FAULT, SHOULDN'T GET HERE");
+		}
+	}
+	
 
 	/**
 	 * this method stops the capture and releases the frame grabber and video device
