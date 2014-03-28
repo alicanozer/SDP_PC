@@ -296,7 +296,9 @@ public class RobotMover extends Thread{
 	 * Waits for the movement queue to complete before returning
 	 */
 	public void waitForCompletion() throws InterruptedException {
+		System.out.println("Getting Semaphore");
 		waitSem.acquire();
+		System.out.println("Got Semaphore");
 	}
 	
 	

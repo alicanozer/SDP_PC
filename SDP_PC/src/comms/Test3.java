@@ -1,5 +1,6 @@
 package comms;
 
+import Calculations.DistanceCalculator;
 import lejos.nxt.Button;
 import movement.RobotMover;
 import strategy.movement.TurnToObject;
@@ -15,6 +16,7 @@ public class Test3 {
 	
 	public static void main(String[] args) throws Exception {
  		
+<<<<<<< HEAD
 	connection = new Bluetooth("attack");
 	bRobot = new BluetoothRobot(RobotType.AttackUs, connection);
 	bRobot.connect();
@@ -29,16 +31,21 @@ public class Test3 {
 			if (ObjectLocations.getYellowATTACKmarker() != null && ObjectLocations.getYellowATTACKdot() != null && ObjectLocations.getBall() != null) {
 				System.out.println("Calculating Angle to Ball");
 				//Turn to Ball
-				double angle = TurnToObject.Ball(RobotType.AttackUs);
-				bRobot.rotateLEFT("attack", (int) angle);
-				System.out.println("Angle to Ball:" + angle);
+//				double angle = TurnToObject.Ball(RobotType.AttackUs);
+//				bRobot.rotateLEFT("attack", (int) angle);
+//				System.out.println("Angle to Ball:" + angle);
 				//break;
 				//Button.waitForAnyPress();
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+						
+		System.out.println("Why does this happen?");
+		System.out.println("Point2D: (" + ObjectLocations.getYellowATTACKmarker().x + ", " + ObjectLocations.getYellowATTACKmarker().y + ")");
+				
+		double distance = DistanceCalculator.Distance(ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
+		System.out.println("Distance to Ball:" + distance);
+		Thread.sleep(200);
+				
 		}
+		
 	}
 	
 	}*/
