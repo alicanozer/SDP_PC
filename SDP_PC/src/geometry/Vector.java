@@ -4,6 +4,18 @@ import java.lang.Math;
 
 public class Vector {
 	
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = false;
+		if (obj instanceof Vector) {
+			Vector other = (Vector) obj;
+			if (this.x == other.x && this.y == other.y) {
+				result = true;
+			}
+		}
+		return result;
+	};
+	
 	private double x;
 	private double y;
 
@@ -160,7 +172,50 @@ public class Vector {
 		return intersectY(this, direction, y);
 	}
 
+	/**
+	 * Does scalar multiplication of a vector and a scalar. The resulting vector will have its x and y components
+	 * each multiplied by s.
+	 * http://en.wikipedia.org/wiki/Scalar_multiplication
+	 * @param v - The vector of the multiplication
+	 * @param s - The scalar 
+	 * @return Returns a Vector that is the result of the multiplication,
+	 */
+	public static Vector scalarMultiplication(Vector v, double s) {
+		return new Vector(v.x*s, v.y*s);
+	}
+	
+	/**
+	 * Does scalar multiplication with a scalar. The resulting vector will have its x and y components
+	 * each multiplied by s.
+	 * http://en.wikipedia.org/wiki/Scalar_multiplication
+	 * 
+	 * @param s - The scalar
+	 *  
+	 * @return Returns a Vector that is the result of the multiplication,
+	 */
+	public Vector scalarMultiplication(double s) {
+		return new Vector(x*s, y*s);
+	}
+	
+	/**
+	 * Get the magnitude of this vector.
+	 * 
+	 * @return Returns the magnitude of the vector.
+	 */
+	public double getMagnitude() {
+		return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2));
+	}
 
+	/**
+	 * Rotates the vector by a given number of degrees and returns the result
+	 * 
+	 * @param angle The number of degrees to rotate by.
+	 * 
+	 * return Returns the result of rotating the vector.
+	 */
+	public Vector getRotated(double angle) {
+		return new Vector(angle()+angle);
+	}
 }
 
 

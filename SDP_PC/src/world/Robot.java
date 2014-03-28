@@ -1,5 +1,6 @@
 package world;
 
+
 public class Robot extends Entity {
 	
 	public double x;

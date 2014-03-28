@@ -4,12 +4,11 @@ import georegression.struct.point.Point2D_I32;
 import lejos.nxt.Button;
 import movement.RobotMover;
 import vision.ObjectLocations;
+import world.RobotType;
 import comms.BluetoothRobot;
 import comms.BluetoothRobotOld;
-
 import Calculations.BallPossession;
 import Calculations.DistanceCalculator;
-import World.RobotType;
 
 public class TestStrategy extends StrategyInterface{
 

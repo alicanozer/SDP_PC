@@ -6,7 +6,7 @@ import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import vision.PitchConstants;
 import vision.VisionRunner;
-import World.RobotType;
+import world.RobotType;
 
 public class Test3 {
 

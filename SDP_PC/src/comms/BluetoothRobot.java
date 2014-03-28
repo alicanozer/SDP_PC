@@ -2,9 +2,9 @@ package comms;
 
 import java.io.IOException;
 
+import world.Robot;
+import world.RobotType;
 import lejos.pc.comm.NXTConnector;
-import World.Robot;
-import World.RobotType;
 
 public class BluetoothRobot extends Robot implements RobotController {
 

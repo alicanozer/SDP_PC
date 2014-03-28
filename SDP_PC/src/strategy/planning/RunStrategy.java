@@ -4,20 +4,22 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+
 import movement.RobotMover;
 import comms.Bluetooth;
 import comms.BluetoothRobot;
 import comms.BluetoothRobotOld;
 import Calculations.GoalInfo;
-import World.RobotType;
 import vision.PitchConstants;
 import vision.VisionRunner;
+import world.RobotType;
 
 /**
  * The main runner for matches. Starts the vision, creates Bluetooth connections and starts the strategy GUI.
