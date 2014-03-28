@@ -92,8 +92,9 @@ public class RobotMover extends Thread{
 			++pushAttempts;
 		queueLock.unlock();
 		// If we gave up, return false to indicate it
-		if (pushAttempts >= 10)
+		if (pushAttempts >= 10){
 			return false;
+		}
 		return true;
 	}
 
@@ -116,7 +117,8 @@ public class RobotMover extends Thread{
 	private void processMovement(MoverConfig movement) throws Exception {
 		switch (movement.mode) {
 		case FORWARD:
-			bRobot.forward(movement.type,movement.distance);
+			System.out.println(movement.type);
+			bRobot.forward(movement.type, movement.distance);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case BACKWARD:
@@ -162,7 +164,6 @@ public class RobotMover extends Thread{
 	 * @see Thread#run()
 	 */
 	public void run() {
-		System.out.println("Reached part2");
 		try {
 			while (!die) {
 				
@@ -299,6 +300,22 @@ public class RobotMover extends Thread{
 		waitSem.acquire();
 		System.out.println("Got Semaphore");
 	}
+	
+	
+	public synchronized boolean setSpeed(String robotType, int speed) {
+		MoverConfig movement = new MoverConfig();
+		movement.speed = speed;
+		movement.mode = Mode.SET_SPEED;
+		movement.type = robotType;
+
+		if (!pushMovement(movement))
+			return false;
+
+		// Let the mover know it has a new job
+		jobSem.release();
+		return true;
+	}
+	
 
 	/**
 	 * Queues a forward by a distance.

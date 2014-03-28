@@ -197,8 +197,8 @@ public class BluetoothRobot extends Robot implements RobotController {
 	@Override
 	public void waitForRobotReady(String robotType) {
 		try {
-			bluetooth.waitForReadyCommand(robotType);
 			System.out.println("Waiting for command completion");
+			bluetooth.waitForReadyCommand(robotType);
 		} catch (IOException e) {
 			System.out.println("Failed while waiting for ready state");
 			e.printStackTrace();
