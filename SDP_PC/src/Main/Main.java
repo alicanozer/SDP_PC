@@ -8,9 +8,7 @@ public class Main {
 	public static void main(String[] args) {
 		VisionRunner.startDebugVision(PitchConstants.oldPitch,10,true);
 
-		while(true){
-			System.out.println("asdsad");
-		}
+		System.out.println("Entering strategy");
 	}
 	
 }
