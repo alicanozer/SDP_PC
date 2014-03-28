@@ -188,6 +188,7 @@ public class Bluetooth {
 			}
 		}
 		//Set current robot as in ready state
+		System.out.println("Command done according to robot");
 		if (robotType.equals("attack")) {
 			setAttackReady();
 		} else {

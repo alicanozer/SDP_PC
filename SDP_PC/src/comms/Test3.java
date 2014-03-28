@@ -1,6 +1,7 @@
 package comms;
 
 import lejos.nxt.Button;
+import movement.RobotMover;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import vision.PitchConstants;
@@ -17,11 +18,12 @@ public class Test3 {
 	connection = new Bluetooth("attack");
 	bRobot = new BluetoothRobot(RobotType.AttackUs, connection);
 	bRobot.connect();
+	RobotMover robot = new RobotMover(bRobot);
 	
-	VisionRunner.startDebugVision(PitchConstants.newPitch, 10, false);
+/*	VisionRunner.startDebugVision(PitchConstants.newPitch, 10, false);*/
 	
 	System.out.println("Entering While Loop");
-	while (true) {
+	/*while (true) {
 		int x = 42;
 		try {
 			if (ObjectLocations.getYellowATTACKmarker() != null && ObjectLocations.getYellowATTACKdot() != null && ObjectLocations.getBall() != null) {
@@ -39,8 +41,15 @@ public class Test3 {
 		}
 	}
 	
-	}
+	}*/
 	
+	robot.setSpeed("attack", 10);
+	robot.forward("attack", 20);
+	robot.run();
+	bRobot.disconnect("attack");
+	
+	
+	}	
 }
 
 
