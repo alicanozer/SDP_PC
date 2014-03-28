@@ -16,7 +16,7 @@ public class TestGoal {
 		BufferedImage img1 = ImageIO.read(new File("test_images/00000007.jpg"));
 		
 		final GoalInfo goalInfo = new GoalInfo(img1);
-
+		
 		Graphics2D g = (Graphics2D) img1.getGraphics();
 		
 		goalInfo.drawGoalLine(g);

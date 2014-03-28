@@ -4,19 +4,21 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-
+import lejos.pc.comm.NXTCommException;
 import movement.RobotMover;
 import comms.Bluetooth;
 import comms.BluetoothRobot;
 import comms.BluetoothRobotOld;
+import Calculations.DistanceCalculator;
 import Calculations.GoalInfo;
+import vision.ObjectLocations;
 import vision.PitchConstants;
 import vision.VisionRunner;
 import world.RobotType;
@@ -53,7 +55,7 @@ public class RunStrategy extends JFrame {
     //Strategy stuff
 	private Thread strategyThread;
 	private StrategyInterface strategy;
-
+	
 	public static void main(String[] args) throws Exception {
 
 		//Start vision
@@ -86,13 +88,39 @@ public class RunStrategy extends JFrame {
 	}	
 	/**
 	 * Starts the strategy thread. Checks if a strategy is already running first.
+	 * @throws InterruptedException 
+	 * @throws NXTCommException 
+	 * @throws IOException 
 	 */
-	private void startStrategy() {
+	private void startStrategy() throws InterruptedException, IOException, NXTCommException {
 		assert (strategyThread == null || !strategyThread.isAlive()) : "Strategy is already running";
 		System.out.println("Starting Strategy...");
-		strategy = new Friendly(attackMover, defenseMover); //Put your strategy class here.
-		strategyThread = new Thread(strategy);
-		strategyThread.start();
+//		strategy = new Friendly(attackMover, defenseMover); //Put your strategy class here.
+//		strategyThread = new Thread(strategy);
+//		strategyThread.start();		
+		while (true) {
+
+			if (ObjectLocations.getYellowATTACKmarker() != null && ObjectLocations.getBall() != null) {
+//					System.out.println("Calculating Angle to Ball");
+					//Turn to Ball
+//					double angle = TurnToObject.Ball(RobotType.AttackUs);
+//					bRobot.rotateLEFT("attack", (int) angle);
+//					System.out.println("Angle to Ball:" + angle);
+					//break;
+												
+			double distance = DistanceCalculator.Distance(ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
+			System.out.println("Distance to Ball:" + distance);
+			attackMover.setSpeedCoef(20);
+			attackMover.forward("attack", distance);
+			defenseMover.forward("defence", distance);
+			attackMover.waitForCompletion();
+			defenseMover.waitForCompletion();
+			
+			}
+			
+		}
+
+		
 	}
 	private void cleanQuit() {
 		if (attackRobot.isAttackConnected())
@@ -141,7 +169,12 @@ public class RunStrategy extends JFrame {
 				// strategies
 				Strategy.reset();
 
-				startStrategy();
+				try {
+					startStrategy();
+				} catch (InterruptedException | IOException | NXTCommException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		
