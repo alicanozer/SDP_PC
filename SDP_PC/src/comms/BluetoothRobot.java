@@ -39,7 +39,6 @@ public class BluetoothRobot extends Robot implements RobotController {
 	@Override
 	public void disconnect(String robotType) {
 		int[] commands = { bluetooth.QUIT, 0, 0, 0 };
-		
 		try {
 			bluetooth.sendCommand(commands, robotType);
 			Thread.sleep(100);
@@ -165,18 +164,17 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 	
 	@Override
-	public boolean isMoving(String robotType) {
+	public void isMoving(String robotType) {
 		int[] commands = { bluetooth.MOVING, 0,0,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
+			
 			System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
 		}
-		
-		return false;
 	}
 
 	@Override

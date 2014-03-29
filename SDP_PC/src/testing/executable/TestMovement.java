@@ -37,6 +37,7 @@ public class TestMovement {
 		
 		attackMover = new RobotMover(attackRobot);
 //		defenseMover = new RobotMover(defenseRobot);
+		
 		attackMover.setSpeedCoef(10);
 		attackMover.forward("attack", 30);
 		System.out.println("Robots forwards!");
@@ -46,7 +47,8 @@ public class TestMovement {
 		System.out.println(attackMover.numQueuedJobs());
 		attackMover.run();
 		attackMover.waitForCompletion();
-    	
+    	attackRobot.disconnect("attack");
+		
     }
 	
 }
