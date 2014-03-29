@@ -117,39 +117,47 @@ public class RobotMover extends Thread{
 	private void processMovement(MoverConfig movement) throws Exception {
 		switch (movement.mode) {
 		case FORWARD:
-			System.out.println(movement.type);
+			System.out.println(movement.type + " - Forward " + movement.distance);
 			bRobot.forward(movement.type, movement.distance);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case BACKWARD:
+			System.out.println(movement.type + " - Backward " + movement.distance);
 			bRobot.backwards(movement.type,movement.distance);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case STOP:
+			System.out.println(movement.type + " - Stop");
 			bRobot.stop(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case GRAB:
+			System.out.println(movement.type + " - Grab");
 			bRobot.grab(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case KICK:
+			System.out.println(movement.type + " - Kick");
 			bRobot.kick(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case DELAY:
+			System.out.println(movement.type + " - Delay " + movement.milliseconds);
 			SafeSleep.sleep(movement.milliseconds);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case ROTATE:
+			System.out.println(movement.type + " - Rotate " + movement.angle);
 			bRobot.rotateLEFT(movement.type, movement.angle);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case SET_SPEED:
+			System.out.println(movement.type + " - Set Speed " + movement.speed);
 			bRobot.setSpeed(movement.type, movement.speed);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case FORWARDSC:
+			System.out.println(movement.type + " - ForwardC");
 			bRobot.forwardsC(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 		default:
