@@ -18,6 +18,8 @@ import comms.BluetoothRobot;
 import comms.BluetoothRobotOld;
 import Calculations.DistanceCalculator;
 import Calculations.GoalInfo;
+import strategy.movement.MoveToPoint;
+import strategy.movement.MoveToPointXY;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import vision.PitchConstants;
@@ -100,25 +102,9 @@ public class RunStrategy extends JFrame {
 //		strategyThread = new Thread(strategy);
 //		strategyThread.start();		
 
-			if (ObjectLocations.getYellowATTACKmarker() != null && ObjectLocations.getBall() != null) {
-//			System.out.println("Calculating Angle to Ball");
-			//Turn to Ball
-			double angle = TurnToObject.Ball(RobotType.AttackUs);
-			attackMover.rotate("attack", (int) angle+5);
-			System.out.println("Angle to Ball:" + angle);										
-			double distance = DistanceCalculator.Distance(ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
-			double fdistance = distance - 22.0;
-			System.out.println("Distance to Ball:" + fdistance);
-			attackMover.setSpeedCoef(20);
-			attackMover.forward("attack", fdistance);
-//			defenseMover.forward("defence", distance);
-			attackMover.run();
-			attackMover.waitForCompletion();
-			System.out.println("All movements completed");
-//			defenseMover.waitForCompletion();
-			
-			}
-
+		MoveToPointXY.moveToPointXY("attack", attackMover, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
+		
+		
 	}
 	
 	private void cleanQuit() {
