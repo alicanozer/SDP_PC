@@ -351,7 +351,7 @@ public class RobotMover extends Thread{
 		MoverConfig movement = new MoverConfig();
 		movement.mode = Mode.FORWARDSC;
 		movement.type = robotType;
-
+		
 		if (!pushMovement(movement))
 			return false;
 
