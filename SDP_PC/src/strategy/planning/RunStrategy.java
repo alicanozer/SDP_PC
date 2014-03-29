@@ -101,8 +101,22 @@ public class RunStrategy extends JFrame {
 //		strategy = new Friendly(attackMover, defenseMover); //Put your strategy class here.
 //		strategyThread = new Thread(strategy);
 //		strategyThread.start();		
-
-		MoveToPointXY.moveToPointXY("attack", attackMover, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
+		
+		//grab the ball
+		MoveToPointXY.moveOurAttackToBall("attack", attackMover);
+		System.out.println("Grabbing the Ball");
+		attackMover.grab("attack");
+		
+		attackMover.kick("attack");
+		
+//		//turn to shoot
+//		double angle = TurnToObject.shootAngle();
+//		System.out.println("Angle to Shoot:" + angle);	
+//		attackMover.rotate("attack", (int) angle+5);	
+//		
+//		//kick the ball
+//		System.out.println("Kicking the Ball");
+//		attackMover.kick("attack");
 		
 	}
 	

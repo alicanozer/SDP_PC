@@ -422,7 +422,6 @@ public class RobotMover extends Thread{
 
 		// Let the mover know it has a new job
 		jobSem.release();
-		run();
 		return true;
 	}
 	

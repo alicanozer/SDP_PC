@@ -95,8 +95,19 @@ public class BluetoothRobot extends Robot implements RobotController {
 
 	@Override
 	public void rotateLEFT(String robotType, int turn) {
-		int angle = turn/3;
-		int[] commands = { bluetooth.ROTATELEFT, angle, angle, angle}; 
+
+		int angleMax;
+		int angle;
+		
+		if (turn >= 127) {
+			angleMax = 127;
+			angle = turn - 127;
+		} else {
+			angleMax = turn;
+			angle = 0;
+		}
+		
+		int[] commands = { bluetooth.ROTATELEFT, angleMax, angle, 0}; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
