@@ -74,11 +74,20 @@ public static void moveOurAttackToBall(String type, RobotMover robotMover) throw
 		robotMover.waitForCompletion();
 		System.out.println("Angle to Point:" + angle);										
 		System.out.println("Distance to Point:" + distance);
-		robotMover.setSpeed(type, 12);
-		robotMover.forward(type, distance - 1);
-		robotMover.waitForCompletion();
+		robotMover.forward(type, distance/2);
+		if (type.equals("attack")) {
+			angle = TurnToObject.Ball(RobotType.AttackUs);
+		} else {
+			angle =  TurnToObject.Ball(RobotType.DefendUs);
+		}
+		System.out.println("Angle to Point:" + angle);										
+		if (angle > 15) {
+			robotMover.rotate(type, (int) angle);			
+		}
+		distance = DistanceCalculator.Distance(ObjectLocations.getUSAttack(), ObjectLocations.getBall());
+		System.out.println("Distance to Point:" + distance);
+		robotMover.forward(type, distance - 15);
 		
-						
 	}
 	
 }
