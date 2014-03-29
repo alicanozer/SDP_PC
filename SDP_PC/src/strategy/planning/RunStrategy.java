@@ -104,7 +104,6 @@ public class RunStrategy extends JFrame {
 
 		MoveToPointXY.moveToPointXY("attack", attackMover, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ObjectLocations.getBall());
 		
-		
 	}
 	
 	private void cleanQuit() {
