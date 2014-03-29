@@ -4,10 +4,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 import utility.SafeSleep;
-import vision.ObjectLocations;
-import world.Robot;
-
-import Calculations.DistanceCalculator;
 
 //import world.Robot;
 //import world.PixelWorld;
@@ -69,7 +65,7 @@ public class RobotMover extends Thread{
 	}
 	
 	private enum Mode {
-		FORWARD, BACKWARD, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC
+		FORWARD, BACKWARD, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC, MOVING
 	};
 	
 	/**
@@ -151,6 +147,9 @@ public class RobotMover extends Thread{
 			break;
 		case FORWARDSC:
 			bRobot.forwardsC(movement.type);
+			bRobot.waitForRobotReady(movement.type);
+		case MOVING:
+			bRobot.isMoving(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 		default:
 			System.out.println("DERP! Unknown movement mode specified");

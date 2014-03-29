@@ -28,7 +28,7 @@ public interface RobotController {
 		
 	public void setSpeed(String robotType, int speed);
 	
-	public boolean isMoving(String robotType);
+	public void isMoving(String robotType);
 	
 	public void waitForRobotReady(String robotType);
 	
