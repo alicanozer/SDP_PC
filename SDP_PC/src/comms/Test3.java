@@ -17,8 +17,13 @@ public class Test3 {
 	public static void main(String[] args) throws Exception {
  		
 <<<<<<< HEAD
+<<<<<<< HEAD
 	connection = new Bluetooth("attack");
 	bRobot = new BluetoothRobot(RobotType.AttackUs, connection);
+=======
+	connection = new Bluetooth("defence");
+	bRobot = new BluetoothRobot(RobotType.DefendUs, connection);
+>>>>>>> qweqwe
 	bRobot.connect();
 	RobotMover robot = new RobotMover(bRobot);
 	
