@@ -39,7 +39,6 @@ public class BluetoothRobot extends Robot implements RobotController {
 	@Override
 	public void disconnect(String robotType) {
 		int[] commands = { bluetooth.QUIT, 0, 0, 0 };
-		
 		try {
 			bluetooth.sendCommand(commands, robotType);
 			Thread.sleep(100);
@@ -96,8 +95,19 @@ public class BluetoothRobot extends Robot implements RobotController {
 
 	@Override
 	public void rotateLEFT(String robotType, int turn) {
-		int angle = turn/3;
-		int[] commands = { bluetooth.ROTATELEFT, angle, angle, angle}; 
+
+		int angleMax;
+		int angle;
+		
+		if (turn >= 127) {
+			angleMax = 127;
+			angle = turn - 127;
+		} else {
+			angleMax = turn;
+			angle = 0;
+		}
+		
+		int[] commands = { bluetooth.ROTATELEFT, angleMax, angle, 0}; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
@@ -165,18 +175,17 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 	
 	@Override
-	public boolean isMoving(String robotType) {
+	public void isMoving(String robotType) {
 		int[] commands = { bluetooth.MOVING, 0,0,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
+			
 			System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
 		}
-		
-		return false;
 	}
 
 	@Override
@@ -197,8 +206,8 @@ public class BluetoothRobot extends Robot implements RobotController {
 	@Override
 	public void waitForRobotReady(String robotType) {
 		try {
-			bluetooth.waitForReadyCommand(robotType);
 			System.out.println("Waiting for command completion");
+			bluetooth.waitForReadyCommand(robotType);
 		} catch (IOException e) {
 			System.out.println("Failed while waiting for ready state");
 			e.printStackTrace();

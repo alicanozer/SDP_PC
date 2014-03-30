@@ -4,19 +4,24 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-
+import lejos.pc.comm.NXTCommException;
 import movement.RobotMover;
 import comms.Bluetooth;
 import comms.BluetoothRobot;
 import comms.BluetoothRobotOld;
+import Calculations.DistanceCalculator;
 import Calculations.GoalInfo;
+import strategy.movement.MoveToPoint;
+import strategy.movement.MoveToPointXY;
+import strategy.movement.TurnToObject;
+import vision.ObjectLocations;
 import vision.PitchConstants;
 import vision.VisionRunner;
 import world.RobotType;
@@ -43,6 +48,8 @@ public class RunStrategy extends JFrame {
 	private final JButton backwardButton = new JButton("Backward");
 	private final JButton leftButton = new JButton("Left");
 	private final JButton rightButton = new JButton("Right");
+	private final JButton connectBluetooth = new JButton("Connect");
+	private final JButton disconnectBluetooth = new JButton("Disconnect");
 	
 	//Bluetooth stuff
     private final BluetoothRobot attackRobot;
@@ -53,7 +60,7 @@ public class RunStrategy extends JFrame {
     //Strategy stuff
 	private Thread strategyThread;
 	private StrategyInterface strategy;
-
+	
 	public static void main(String[] args) throws Exception {
 
 		//Start vision
@@ -86,14 +93,33 @@ public class RunStrategy extends JFrame {
 	}	
 	/**
 	 * Starts the strategy thread. Checks if a strategy is already running first.
+	 * @throws Exception 
 	 */
-	private void startStrategy() {
+	private void startStrategy() throws Exception {
 		assert (strategyThread == null || !strategyThread.isAlive()) : "Strategy is already running";
 		System.out.println("Starting Strategy...");
-		strategy = new Friendly(attackMover, defenseMover); //Put your strategy class here.
-		strategyThread = new Thread(strategy);
-		strategyThread.start();
+//		strategy = new Friendly(attackMover, defenseMover); //Put your strategy class here.
+//		strategyThread = new Thread(strategy);
+//		strategyThread.start();		
+		
+		//grab the ball
+		MoveToPointXY.moveOurAttackToBall("attack", attackMover);
+		System.out.println("Grabbing the Ball");
+		attackMover.grab("attack");
+		
+		attackMover.kick("attack");
+		
+//		//turn to shoot
+//		double angle = TurnToObject.shootAngle();
+//		System.out.println("Angle to Shoot:" + angle);	
+//		attackMover.rotate("attack", (int) angle+5);	
+//		
+//		//kick the ball
+//		System.out.println("Kicking the Ball");
+//		attackMover.kick("attack");
+		
 	}
+	
 	private void cleanQuit() {
 		if (attackRobot.isAttackConnected())
 			attackRobot.disconnect("attack");
@@ -134,6 +160,8 @@ public class RunStrategy extends JFrame {
 		movePanel.add(leftButton);
 		movePanel.add(rightButton);
 		movePanel.add(grabButton);
+		movePanel.add(connectBluetooth);
+		movePanel.add(disconnectBluetooth);
 				
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -141,7 +169,12 @@ public class RunStrategy extends JFrame {
 				// strategies
 				Strategy.reset();
 
-				startStrategy();
+				try {
+					startStrategy();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		
@@ -283,6 +316,36 @@ public class RunStrategy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				defenseMover.grab("defence");
 				attackMover.grab("attack");
+			}
+		});
+		
+		connectBluetooth.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//Create Bluetooth connections
+				Bluetooth myConnection = null;
+				try {
+					myConnection = new Bluetooth("both");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (NXTCommException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} //should be "both"
+				BluetoothRobot defenseRobot = new BluetoothRobot(RobotType.DefendUs, myConnection);
+				BluetoothRobot attackRobot = new BluetoothRobot(RobotType.AttackUs, myConnection);
+			}
+		});
+		
+		disconnectBluetooth.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				attackRobot.disconnect("attack");
+				defenseRobot.disconnect("attack");				
 			}
 		});
 

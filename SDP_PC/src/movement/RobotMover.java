@@ -4,10 +4,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 import utility.SafeSleep;
-import vision.ObjectLocations;
-import world.Robot;
-
-import Calculations.DistanceCalculator;
 
 //import world.Robot;
 //import world.PixelWorld;
@@ -69,7 +65,7 @@ public class RobotMover extends Thread{
 	}
 	
 	private enum Mode {
-		FORWARD, BACKWARD, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC
+		FORWARD, BACKWARD, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC, MOVING
 	};
 	
 	/**
@@ -92,8 +88,9 @@ public class RobotMover extends Thread{
 			++pushAttempts;
 		queueLock.unlock();
 		// If we gave up, return false to indicate it
-		if (pushAttempts >= 10)
+		if (pushAttempts >= 10){
 			return false;
+		}
 		return true;
 	}
 
@@ -116,39 +113,51 @@ public class RobotMover extends Thread{
 	private void processMovement(MoverConfig movement) throws Exception {
 		switch (movement.mode) {
 		case FORWARD:
-			bRobot.forward(movement.type,movement.distance);
+			System.out.println(movement.type + " - Forward " + movement.distance);
+			bRobot.forward(movement.type, movement.distance);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case BACKWARD:
+			System.out.println(movement.type + " - Backward " + movement.distance);
 			bRobot.backwards(movement.type,movement.distance);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case STOP:
+			System.out.println(movement.type + " - Stop");
 			bRobot.stop(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case GRAB:
+			System.out.println(movement.type + " - Grab");
 			bRobot.grab(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case KICK:
+			System.out.println(movement.type + " - Kick");
 			bRobot.kick(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case DELAY:
+			System.out.println(movement.type + " - Delay " + movement.milliseconds);
 			SafeSleep.sleep(movement.milliseconds);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case ROTATE:
+			System.out.println(movement.type + " - Rotate " + movement.angle);
 			bRobot.rotateLEFT(movement.type, movement.angle);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case SET_SPEED:
+			System.out.println(movement.type + " - Set Speed " + movement.speed);
 			bRobot.setSpeed(movement.type, movement.speed);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case FORWARDSC:
+			System.out.println(movement.type + " - ForwardC");
 			bRobot.forwardsC(movement.type);
+			bRobot.waitForRobotReady(movement.type);
+		case MOVING:
+			bRobot.isMoving(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 		default:
 			System.out.println("DERP! Unknown movement mode specified");
@@ -162,7 +171,6 @@ public class RobotMover extends Thread{
 	 * @see Thread#run()
 	 */
 	public void run() {
-		System.out.println("Reached part2");
 		try {
 			while (!die) {
 				
@@ -295,8 +303,26 @@ public class RobotMover extends Thread{
 	 * Waits for the movement queue to complete before returning
 	 */
 	public void waitForCompletion() throws InterruptedException {
+		System.out.println("Getting Semaphore");
 		waitSem.acquire();
+		System.out.println("Got Semaphore");
 	}
+	
+	
+	public synchronized boolean setSpeed(String robotType, int speed) {
+		MoverConfig movement = new MoverConfig();
+		movement.speed = speed;
+		movement.mode = Mode.SET_SPEED;
+		movement.type = robotType;
+
+		if (!pushMovement(movement))
+			return false;
+
+		// Let the mover know it has a new job
+		jobSem.release();
+		return true;
+	}
+	
 
 	/**
 	 * Queues a forward by a distance.
@@ -325,7 +351,7 @@ public class RobotMover extends Thread{
 		MoverConfig movement = new MoverConfig();
 		movement.mode = Mode.FORWARDSC;
 		movement.type = robotType;
-
+		
 		if (!pushMovement(movement))
 			return false;
 
@@ -396,7 +422,6 @@ public class RobotMover extends Thread{
 
 		// Let the mover know it has a new job
 		jobSem.release();
-		run();
 		return true;
 	}
 	
