@@ -41,10 +41,10 @@ public abstract class StrategyInterface implements Runnable {
 		}
 		attackMover.interruptMove();
 		defenceMover.interruptMove();
-		try { // Sleep for a bit, because we want movement to die.
+		try { 
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}		
