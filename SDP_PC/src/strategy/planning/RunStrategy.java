@@ -229,8 +229,18 @@ public class RunStrategy extends JFrame {
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Halt and clear active movements
-				attackMover.interruptMove();
-				defenceMover.interruptMove();
+				try {
+					attackMover.interruptMove();
+				} catch (InterruptedException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				try {
+					defenceMover.interruptMove();
+				} catch (InterruptedException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 				try {
 					attackMover.resetQueue();
 					defenceMover.resetQueue();
