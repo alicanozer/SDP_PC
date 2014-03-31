@@ -323,7 +323,7 @@ public class RunStrategy extends JFrame {
 		
 		kickButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-		
+				
 				attackMover.kick("attack");
 				defenceMover.kick("defence");
 			
