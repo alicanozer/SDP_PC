@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Polygon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -124,6 +126,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	float red = 0.1f;
 	float yellow = 0.001f;
 	float blue = 0.001f;
+	private boolean recalibrate_now;
 
 
 	public FrameHandler(boolean debug, PitchConstants consts){
@@ -235,13 +238,14 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 //			// TODO Auto-generated catch block
 //			e2.printStackTrace();
 //		}//frame.getBufferedImage();
+		//System.out.println(frameCounter);
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		if(frameCounter < 3){
 			frame.recycle();
 			frameCounter++;
 			return;
 		}
-		else if (frameCounter == 3){
+		else if (frameCounter == 3 || recalibrate_now){
 			frameCounter++;
 			colors = ExampleSegmentColor.selectColoursOfPitch(img);
 			try {
@@ -262,6 +266,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+			recalibrate_now = false;
 			return;
 		}
 		long thisFrame = System.currentTimeMillis();
@@ -277,6 +282,13 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 //		System.out.println("red: " + colors.getRedValue()[0] + " " + colors.getRedValue()[1] + " " + colors.getRedValue()[2]);
 //		System.out.println("yellow: " + colors.getYellowValue()[0] + " " + colors.getYellowValue()[1] + " " + colors.getYellowValue()[2]);
 //		System.out.println("blue: " + colors.getBlueValue()[0] + " " + colors.getBlueValue()[1] + " " + colors.getBlueValue()[2]);
+
+		
+		recalibrate.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				recalibrate_now = true;
+			}
+		});
 		
 		try {
 			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBlue(),distanceThresholds,3);
@@ -288,8 +300,6 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		g.drawImage(img, 0, 0, width,height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
-
-
 
 		slider1.addChangeListener(new ChangeListener() {
 			@Override
