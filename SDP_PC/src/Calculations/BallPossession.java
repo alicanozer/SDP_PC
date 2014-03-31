@@ -77,7 +77,7 @@ public class BallPossession {
 		boolean BallRegion = BallRegion(ball, polygon);
 		
 		//if the robot is near the ball and facing the ball it has possession
-		if (BallRegion) {
+		if (BallRegion && ObjectLocations.getBallSpeed() < 60) {
 //			if (speed < 10) { 
 				possession = true;
 //			} 

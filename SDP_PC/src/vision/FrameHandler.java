@@ -315,6 +315,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 		}
 		long thisFrame = System.currentTimeMillis();
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
+		ObjectLocations.frameRate = (1000 / (thisFrame - lastFrame));
 		VisionRunner.sendFrame(new Frame(img,thisFrame));
 		
 		

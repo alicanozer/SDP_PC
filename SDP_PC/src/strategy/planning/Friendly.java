@@ -49,6 +49,7 @@ public class Friendly extends StrategyInterface{
 				//if ball in their attack zone then DEFEND
 				//else normal defence?
 				if (ObjectLocations.getYellowUs()) {
+
 					if (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getBlueDEFENDmarker())) {
 						//DEFENCE STRATEGY!
 						System.out.println("blue defender has possession");
@@ -69,13 +70,14 @@ public class Friendly extends StrategyInterface{
 						System.out.println("blue attacker has possession");
 						newStateDRobot = state.DefendShootD;
 						newStateARobot = state.DefendShootA;
-					} else {
-						//When no-one has the ball, INTERCEPT!!
-						//newStateDRobot = state.InterceptBall;
-						//newStateARobot = state.InterceptBall;
-						System.out.println("InterceptBall");
+					}
+					else{// if no one has possesion
+						System.out.println("intercepting ball which has speed" + ObjectLocations.getBallSpeed());
+						newStateDRobot = state.InterceptBall;
+						newStateARobot = state.InterceptBall;
 					}
 				} else {
+
 					if (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getYellowDEFENDmarker())) {
 						//DEFENCE STRATEGY!
 						newStateDRobot = state.DefendPassD;
@@ -92,8 +94,9 @@ public class Friendly extends StrategyInterface{
 						//DEFENCE STRATEGY!
 						newStateDRobot = state.DefendShootD;
 						newStateARobot = state.DefendShootA;
-					} else {
-						//When no-one has the ball, INTERCEPT!!
+					}
+					else{// if no one has possesion
+						System.out.println("intercepting ball which has speed" + ObjectLocations.getBallSpeed());
 						newStateDRobot = state.InterceptBall;
 						newStateARobot = state.InterceptBall;
 					}

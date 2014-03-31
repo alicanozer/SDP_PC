@@ -2,8 +2,11 @@ package strategy.planning;
 
 import lejos.nxt.Button;
 import movement.RobotMover;
+import Calculations.BallPossession;
 import Calculations.DistanceCalculator;
 import strategy.movement.MoveToPoint;
+import strategy.movement.MoveToPointXY;
+import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import world.Robot;
 import world.RobotType;
@@ -26,6 +29,23 @@ public class InterceptBall extends StrategyInterface{
 
 	@Override
 	public void run() {
+			// TURN
+			Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
+			double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
+			System.out.println("Angle to parrallel with goal: " + angle);
+			if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+				defenceMover.rotate("defence", angle);
+			}
+			
+			// move
+			try {
+				MoveToPointXY.moveRobotToBlock("defence", defenceMover);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			MoveToPointXY.moveAwayDefence("defence", defenceMover);
 		
 //		//set ball
 //		if (ObjectLocations.getBall()!=null){

@@ -21,27 +21,6 @@ public class AttackD extends StrategyInterface {
 		// TODO Auto-generated method stub
 		System.out.println("Running Attack Defender Strategy...");
 		
-		Point2D_I32 dot;
-		Point2D_I32 marker;
-		
-		//Align 90 degree to horizontal
-		double angleNinety = TurnToObject.alignHorizontal(RobotType.DefendUs);
-		defenceMover.rotate("defence", angleNinety);
-				
-		//Stay in the centre of the goal
-		if (ObjectLocations.getYellowUs()) {
-			marker = ObjectLocations.getYellowATTACKmarker();
-			dot = ObjectLocations.getYellowATTACKdot();
-		} else {
-			marker = ObjectLocations.getBlueATTACKmarker();
-			dot = ObjectLocations.getBlueATTACKdot();
-		}
-				
-		Point2D_I32 point = new Point2D_I32(marker.x, GoalInfo.getLeftGoalCenterNew().y);
-				
-
-		MoveToPointXY.moveToPointXY("defence", defenceMover, dot, marker, point);
-	
 	}
 
 }

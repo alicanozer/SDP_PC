@@ -30,7 +30,11 @@ public class ObjectLocations {
 	private static Point2D_I32 blueATTACKdot = null;
 	private static Point2D_I32 blueDEFENDdot = null;	
 	private static ArrayList<Polygon> platePolygons = null;
-
+	public static double frameRate;
+	private static double ballSpeed = 0;
+	public static double getBallSpeed(){
+		return ballSpeed;
+	}
 	public static double getBallDirectionAngle() {
 		while(!lock);
 		return ballDirectionAngle;
@@ -194,6 +198,17 @@ public class ObjectLocations {
 		} catch (Exception e) {
 
 		}
+		// before we set the ball
+		try {
+			double dist = PointUtils.euclideanDistance(ballLocal, ObjectLocations.getBall());
+			double v = dist*frameRate;
+			//set ball speed
+			ballSpeed = v;
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			//e1.printStackTrace();
+		}
+		// set the ball
 		setBall(ballLocal);
 
 		if(yellowLeft){
