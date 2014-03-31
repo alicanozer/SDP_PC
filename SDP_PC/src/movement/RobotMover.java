@@ -12,7 +12,7 @@ public class RobotMover extends Thread{
 	private RobotController robot;
 	//private Robot type;
 	private BluetoothRobot bRobot;
-	
+
 
 	/** A flag to tell the RobotMover thread to die */
 	private static boolean die = false;
@@ -25,12 +25,12 @@ public class RobotMover extends Thread{
 	private Semaphore jobSem = new Semaphore(0, true);
 	/** A semaphore used to signal the RobotMover has completed its job queue */
 	private Semaphore waitSem = new Semaphore(0, true);
-	
+
 	public RobotMover(BluetoothRobot bRobot) {
 		super("RobotMover");
 		this.bRobot = bRobot;
 	}
-	
+
 	private class MoverConfig {
 		public double distance = 0;
 		public String type = null;
@@ -40,17 +40,17 @@ public class RobotMover extends Thread{
 		public Mode mode;
 
 	}
-	
+
 	private enum Mode {
 		FORWARD, BACKWARDSC, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC, MOVING
 	};
-	
+
 	/**
 	 * Repeatedly tries to push the movement onto the move queue, giving up
 	 * after 10 attempts
-	 * 
+	 *
 	 * @param movement
-	 *            The movement to push onto the queue
+	 * The movement to push onto the queue
 	 * @return true if the movement was successfully pushed, false otherwise
 	 */
 	private boolean pushMovement(MoverConfig movement) {
@@ -77,14 +77,14 @@ public class RobotMover extends Thread{
 	private void wakeUpWaitingThreads() {
 		waitSem.release();
 	}
-	
+
 	/**
 	 * Processes a single movement
-	 * 
+	 *
 	 * @param movement
-	 *            The movement to process
+	 * The movement to process
 	 * @throws Exception
-	 *             If an error occurred
+	 * If an error occurred
 	 */
 	private void processMovement(MoverConfig movement) throws Exception {
 		switch (movement.mode) {
@@ -137,14 +137,14 @@ public class RobotMover extends Thread{
 
 	/**
 	 * Main method for the movement thread
-	 * 
+	 *
 	 * @see Thread#run()
 	 */
 	public void run() {
 		try {
 			System.out.println(die);
-			while (!die && !moveQueue.isEmpty()) {
-				
+			while (!die) {
+
 
 				// Wait for next movement operation
 				jobSem.acquire();
@@ -173,7 +173,7 @@ public class RobotMover extends Thread{
 			wakeUpWaitingThreads();
 		} finally {
 			System.out.println("Strategy block complete. Stopping robots.");
-			bRobot.stop("attack");
+			//bRobot.stop("attack");
 			bRobot.stop("defence");
 
 		}
@@ -182,7 +182,7 @@ public class RobotMover extends Thread{
 	/**
 	 * Tells the move thread to stop executing and immediately returns. <br/>
 	 * Call join() after this if you want to wait for the mover thread to die.
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	public void kill() throws InterruptedException {
 		System.out.println("Kill called");
@@ -197,9 +197,9 @@ public class RobotMover extends Thread{
 	 * Resets the queue of movements to allow for an immediate change in planned
 	 * movements <br/>
 	 * NOTE: This does not interrupt an active movement
-	 * 
+	 *
 	 * @throws InterruptedException
-	 *             if the RobotMover thread was interrupted
+	 * if the RobotMover thread was interrupted
 	 */
 	public void resetQueue() throws InterruptedException {
 		// Block changes in the queue until the queue is finished
@@ -220,7 +220,7 @@ public class RobotMover extends Thread{
 	/**
 	 * Checks if the mover has queued jobs, not including the one currently
 	 * running
-	 * 
+	 *
 	 * @return true if there are queued jobs, false otherwise
 	 */
 	public boolean hasQueuedJobs() {
@@ -239,7 +239,7 @@ public class RobotMover extends Thread{
 	/**
 	 * Determines how many jobs have been queued, not including the one
 	 * currently running
-	 * 
+	 *
 	 * @return The number of jobs currently queued
 	 */
 	public int numQueuedJobs() {
@@ -256,8 +256,8 @@ public class RobotMover extends Thread{
 			return 0;
 		}
 	}
-	
-	
+
+
 	public synchronized boolean setSpeed(String robotType, int speed) {
 		MoverConfig movement = new MoverConfig();
 		movement.speed = speed;
@@ -271,15 +271,15 @@ public class RobotMover extends Thread{
 		jobSem.release();
 		return true;
 	}
-	
+
 
 	/**
 	 * Queues a forward by a distance.
-	 * 
+	 *
 	 * @param distance
-	 *            Move forward by this value (robot will execute this in cm)
+	 * Move forward by this value (robot will execute this in cm)
 	 * @return true if the forward was successfully queued, false otherwise
-	 * 
+	 *
 	 * @see #waitForCompletion()
 	 */
 	public synchronized boolean forward(String robotType, double distance) {
@@ -295,12 +295,12 @@ public class RobotMover extends Thread{
 		jobSem.release();
 		return true;
 	}
-	
+
 	public synchronized boolean forwardsC(String robotType) {
 		MoverConfig movement = new MoverConfig();
 		movement.mode = Mode.FORWARDSC;
 		movement.type = robotType;
-		
+
 		if (!pushMovement(movement))
 			return false;
 
@@ -308,13 +308,13 @@ public class RobotMover extends Thread{
 		jobSem.release();
 		return true;
 	}	
-	
-	
+
+
 	public synchronized boolean backwardsC(String robotType) {
 		MoverConfig movement = new MoverConfig();
 		movement.mode = Mode.BACKWARDSC;
 		movement.type = robotType;
-		
+
 		if (!pushMovement(movement))
 			return false;
 
@@ -322,14 +322,14 @@ public class RobotMover extends Thread{
 		jobSem.release();
 		return true;
 	}	
-	
+
 	/**
 	 * Queues a grab motion.
-	 * 
+	 *
 	 * @param robotType
-	 *            Which robot's queue the command should be added to.
+	 * Which robot's queue the command should be added to.
 	 * @return true if the rotate was successfully queued, false otherwise
-	 * 
+	 *
 	 * @see #waitForCompletion()
 	 */
 	public synchronized boolean grab(String robotType) {
@@ -347,16 +347,16 @@ public class RobotMover extends Thread{
 
 	/**
 	 * Queues a command to make the robot kick
-	 * 
+	 *
 	 * @return true if the kick was successfully queued, false otherwise
-	 * 
+	 *
 	 * @see #waitForCompletion()
 	 */
 	public synchronized boolean kick(String robotType) {
 		MoverConfig movement = new MoverConfig();
 		movement.mode = Mode.KICK;
 		movement.type = robotType;
-		
+
 		if (!pushMovement(movement))
 			return false;
 
@@ -364,14 +364,14 @@ public class RobotMover extends Thread{
 		jobSem.release();
 		return true;
 	}
-	
+
 	/**
 	 * Queues a rotation by an angle.
-	 * 
+	 *
 	 * @param angleRad
-	 *            clockwise angle to rotate by (in Radians)
+	 * clockwise angle to rotate by (in Radians)
 	 * @return true if the rotate was successfully queued, false otherwise
-	 * 
+	 *
 	 * @see #waitForCompletion()
 	 */
 	public synchronized boolean rotate(String robotType, double angle) {
@@ -390,9 +390,9 @@ public class RobotMover extends Thread{
 
 	/**
 	 * Queues a command to stop the robot
-	 * 
+	 *
 	 * @return true if the stop was successfully queued, false otherwise
-	 * 
+	 *
 	 * @see #waitForCompletion()
 	 * @see #interruptMove()
 	 * @see #resetQueue()

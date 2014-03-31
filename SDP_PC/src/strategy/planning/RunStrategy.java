@@ -103,9 +103,10 @@ public class RunStrategy extends JFrame {
 	private void startStrategy() throws Exception {
 		assert (strategyThread == null || !strategyThread.isAlive()) : "Strategy is already running";
 		System.out.println("Starting Strategy...");
-//		strategy = new Friendly(attackMover, defenceMover); //Put your strategy class here.
+//		strategy = new Friendly(attackMover, defenseMover); //Put your strategy class here.
 //		strategyThread = new Thread(strategy);
-//		strategyThread.start();				
+//		strategyThread.start();		
+		
 
 // ********** TESTING ATTACK STRATEGY
 		
@@ -134,38 +135,27 @@ public class RunStrategy extends JFrame {
 //		if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
 //			defenceMover.rotate("defence", angle);
 //		}
-		//WORKS- DEFENCE STATEGy
-//		while(ObjectLocations.getBall() == null || ObjectLocations.getUSDefend() == null || ObjectLocations.getUSDefendDot() == null)
-//		{
-//			
-//		}
-//		
-//		while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend()) && ObjectLocations.getBall() != null && ObjectLocations.getUSDefend() != null && ObjectLocations.getUSDefendDot() != null){
-//			// TURN
-//			Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
-//			double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
-//			System.out.println("Angle to parrallel with goal: " + angle);
-//			if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
-//				defenceMover.rotate("defence", angle);
-//			}
-//			
-//			// move
-//			MoveToPointXY.moveRobotToBlock("defence", defenceMover);
-//			
-//			MoveToPointXY.moveAwayDefence("defence", defenceMover);
-//		}
-//		
-//		
-		// STATEGY WORKS -^^^
-		// BELOW DOESNT WORJK vvv
+		//WORKS-
+		while(ObjectLocations.getBall() == null || ObjectLocations.getUSDefend() == null || ObjectLocations.getUSDefendDot() == null)
+		{
+			
+		}
 		
-		
-		
-		//Test Defence Strategy 2
-//		Point2D_I32 intersect = IntersectionLines.intersectLines(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), ObjectLocations.getTHEMAttackDot(), ObjectLocations.getTHEMAttack());
-//		System.out.println("Point( " + intersect.x + ", " + intersect.y + ")");
-//		MoveToPointXY.moveRobotToPoint("defence", defenceMover, intersect);
-		
+		while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend()) && ObjectLocations.getBall() != null && ObjectLocations.getUSDefend() != null && ObjectLocations.getUSDefendDot() != null){
+			// TURN
+			Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
+			double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
+			System.out.println("Angle to parrallel with goal: " + angle);
+			if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+				defenceMover.rotate("defence", angle);
+			}
+			
+			// move
+			MoveToPointXY.moveRobotToBlock("defence", defenceMover);
+			
+			MoveToPointXY.moveAwayDefence("defence", defenceMover);
+		}
+		// I LOVE THIS
 	}
 	
 	private void cleanQuit() {
@@ -228,15 +218,8 @@ public class RunStrategy extends JFrame {
 		
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Halt and clear active movements
 				try {
-					attackMover.interruptMove();
-				} catch (InterruptedException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
-				try {
-					defenceMover.interruptMove();
+					attackMover.kill();
 				} catch (InterruptedException e2) {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
