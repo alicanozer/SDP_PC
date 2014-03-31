@@ -1,5 +1,7 @@
 package strategy.planning;
 
+import georegression.struct.point.Point2D_I32;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -16,8 +18,10 @@ import movement.RobotMover;
 import comms.Bluetooth;
 import comms.BluetoothRobot;
 import comms.BluetoothRobotOld;
+import Calculations.BallPossession;
 import Calculations.DistanceCalculator;
 import Calculations.GoalInfo;
+import Calculations.IntersectionLines;
 import strategy.movement.MoveToPoint;
 import strategy.movement.MoveToPointXY;
 import strategy.movement.TurnToObject;
@@ -55,7 +59,7 @@ public class RunStrategy extends JFrame {
     private final BluetoothRobot attackRobot;
     private final BluetoothRobot defenseRobot;
     private RobotMover attackMover;
-    private RobotMover defenseMover;
+    private RobotMover defenceMover;
 
     //Strategy stuff
 	private Thread strategyThread;
@@ -72,7 +76,7 @@ public class RunStrategy extends JFrame {
 		BluetoothRobot attackRobot = new BluetoothRobot(RobotType.AttackUs, myConnection);
 
 		//Check if Bluetooth connection was successful
-		while (!defenseRobot.isDefenceConnected()&& !attackRobot.isAttackConnected()) { // include && !attackRobot.isAttackConnected() for both
+		while (!defenseRobot.isDefenceConnected() && !attackRobot.isAttackConnected()) { // include && !attackRobot.isAttackConnected() for both
 			// Reduce CPU cost
 			try {
 				Thread.sleep(10);
@@ -102,12 +106,15 @@ public class RunStrategy extends JFrame {
 //		strategyThread = new Thread(strategy);
 //		strategyThread.start();		
 		
-		//grab the ball
-		MoveToPointXY.moveOurAttackToBall("attack", attackMover);
-		System.out.println("Grabbing the Ball");
-		attackMover.grab("attack");
+
+// ********** TESTING ATTACK STRATEGY
 		
-		attackMover.kick("attack");
+		//grab the ball
+//		MoveToPointXY.moveRobotToBall("defence", defenceMover);
+//		System.out.println("Grabbing the Ball");
+//		attackMover.grab("attack");
+//		
+//		attackMover.kick("attack");
 		
 //		//turn to shoot
 //		double angle = TurnToObject.shootAngle();
@@ -117,6 +124,26 @@ public class RunStrategy extends JFrame {
 //		//kick the ball
 //		System.out.println("Kicking the Ball");
 //		attackMover.kick("attack");
+
+// *********** TESTING DEFENCE STRATEGY		
+
+		Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getTHEMAttack().y);
+		double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
+		System.out.println("Angle to parrallel with goal: " + angle);
+		defenceMover.rotate("defence", angle);
+//		
+//		//Test Defence Strategy 1		
+//		while (!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())) {
+//			
+//			MoveToPointXY.moveRobotToBlock("defence", defenceMover);
+//			defenceMover.interruptMove();
+//
+//		}
+		
+		//Test Defence Strategy 2
+//		Point2D_I32 intersect = IntersectionLines.intersectLines(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), ObjectLocations.getTHEMAttackDot(), ObjectLocations.getTHEMAttack());
+//		System.out.println("Point( " + intersect.x + ", " + intersect.y + ")");
+//		MoveToPointXY.moveRobotToPoint("defence", defenceMover, intersect);
 		
 	}
 	
@@ -136,9 +163,9 @@ public class RunStrategy extends JFrame {
 		this.attackRobot = attackRobot;
 		this.defenseRobot = defenseRobot;
 		this.attackMover = new RobotMover(attackRobot);
-		this.defenseMover = new RobotMover(defenseRobot);
+		this.defenceMover = new RobotMover(defenseRobot);
 		this.attackMover.start();
-		this.defenseMover.start();
+		this.defenceMover.start();
 		
 		this.setTitle("Strategy GUI");
 	
@@ -182,10 +209,10 @@ public class RunStrategy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Halt and clear active movements
 				attackMover.interruptMove();
-				defenseMover.interruptMove();
+				defenceMover.interruptMove();
 				try {
 					attackMover.resetQueue();
-					defenseMover.resetQueue();
+					defenceMover.resetQueue();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -208,7 +235,7 @@ public class RunStrategy extends JFrame {
 				System.out.println("Stopping the robot");
 				// Stop the robot.
 				attackMover.stopRobot("attack");
-				defenseMover.stopRobot("defence");
+				defenceMover.stopRobot("defence");
 			}
 		});
 		
@@ -217,16 +244,16 @@ public class RunStrategy extends JFrame {
 				System.out.println("Disconnecting...");
 				Strategy.alldie = true;
 				// Kill the mover and wait for it to stop completely
-				if (attackMover.isAlive() && defenseMover.isAlive()) {
+				if (attackMover.isAlive() && defenceMover.isAlive()) {
 					try {
 						attackMover.kill();
-						defenseMover.kill();
+						defenceMover.kill();
 						attackMover.join(3000);
-						defenseMover.join(3000);
+						defenceMover.join(3000);
 						// If the mover still hasn't stopped within 3
 						// seconds,
 						// assume it's stuck and kill the program
-						if (attackMover.isAlive()||defenseMover.isAlive()) {
+						if (attackMover.isAlive()||defenceMover.isAlive()) {
 							System.out.println("Could not kill mover! Shutting down GUI...");
 							cleanQuit();
 						}
@@ -243,9 +270,9 @@ public class RunStrategy extends JFrame {
 					attackRobot.connect();
 					defenseRobot.connect();
 					attackMover = new RobotMover(attackRobot);
-					defenseMover = new RobotMover(defenseRobot);
+					defenceMover = new RobotMover(defenseRobot);
 					attackMover.start();
-					defenseMover.start();
+					defenceMover.start();
 					System.out.println("Reconnected successfully!");
 				} catch (Exception e1) {
 					System.out.println("Failed to reconnect! Shutting down GUI...");
@@ -261,11 +288,11 @@ public class RunStrategy extends JFrame {
 				// Kill the mover and wait for it to stop completely
 				try {
 					attackMover.kill();
-					defenseMover.kill();
+					defenceMover.kill();
 					// If the mover still hasn't stopped within 3 seconds,
 					// assume it's stuck and kill the program the hard way
 					attackMover.join(3000);
-					defenseMover.join(3000);
+					defenceMover.join(3000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -278,7 +305,7 @@ public class RunStrategy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 		
 				attackMover.kick("attack");
-				defenseMover.kick("defence");
+				defenceMover.kick("defence");
 			
 			}
 		});
@@ -287,34 +314,34 @@ public class RunStrategy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				attackMover.forward("attack", 5);
-				defenseMover.forward("defence", 5);
+				defenceMover.forward("defence", 5);
 			}
 		});
 
 		backwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				defenseMover.forward("defence", -5);
+				defenceMover.forward("defence", -5);
 				attackMover.forward("attack", -5);
 			}
 		});
 
 		leftButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				defenseMover.rotate("defence", 90);
+				defenceMover.rotate("defence", 90);
 				attackMover.rotate("attack", 90);
 			}
 		});
 
 		rightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				defenseMover.rotate("defence", -90);
+				defenceMover.rotate("defence", -90);
 				attackMover.rotate("attack", -90);
 			}
 		});
 		
 		grabButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				defenseMover.grab("defence");
+				defenceMover.grab("defence");
 				attackMover.grab("attack");
 			}
 		});

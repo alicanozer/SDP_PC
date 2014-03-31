@@ -516,12 +516,48 @@ public class ObjectLocations {
 		else return getBlueATTACKmarker();
 	}
 	
+	public static Point2D_I32 getUSAttackDot() {
+		while(!lock);
+		if(yellowUs) return getYellowATTACKdot();
+		else return getBlueATTACKdot();
+	}
+	
 	public static Point2D_I32 getUSDefend(){
 		while(!lock);
 		if(yellowUs) return getYellowDEFENDmarker();
 		else return getBlueDEFENDmarker();
 	}
 	
+	public static Point2D_I32 getUSDefendDot() {
+		while(!lock);
+		if(yellowUs) return getYellowDEFENDdot();
+		else return getBlueDEFENDdot();
+	}
+	
+	public static Point2D_I32 getTHEMAttack() {
+		while(!lock);
+		if(yellowUs) return getBlueATTACKmarker();
+		else return getYellowATTACKmarker();
+	}
+	
+	public static Point2D_I32 getTHEMAttackDot() {
+		while(!lock);
+		if(yellowUs) return getBlueATTACKdot();
+		else return getYellowATTACKdot();
+	}
+
+	
+	public static Point2D_I32 getTHEMDefend() {
+		while (!lock);
+		if (yellowUs) return getBlueDEFENDmarker();
+		else return getYellowDEFENDmarker();
+	}
+	
+	public static Point2D_I32 getTHEMDefendDot() {
+		while(!lock);
+		if(yellowUs) return getBlueDEFENDdot();
+		else return getYellowDEFENDdot();
+	}
 	
 	/**
 	 * draws lines indicating direction of movement over an object
