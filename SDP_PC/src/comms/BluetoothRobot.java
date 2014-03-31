@@ -148,9 +148,9 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void backwards(String robotType, double distance) {
+	public void backwardsC(String robotType) {
 		
-	int[] commands = { bluetooth.BACKWARDS, (int) distance,0,0 }; 
+	int[] commands = { bluetooth.BACKWARDSC, 0,0,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
@@ -213,5 +213,5 @@ public class BluetoothRobot extends Robot implements RobotController {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

@@ -24,12 +24,12 @@ public interface RobotController {
 	
 	public void forwardsC(String robotType);
 	
-	public void backwards(String robotType, double distance);
-		
 	public void setSpeed(String robotType, int speed);
 	
 	public void isMoving(String robotType);
 	
 	public void waitForRobotReady(String robotType);
+	
+	public void backwardsC(String robotType);
 	
 }
