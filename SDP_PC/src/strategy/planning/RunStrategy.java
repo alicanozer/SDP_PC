@@ -144,18 +144,28 @@ public class RunStrategy extends JFrame {
 		}
 		
 		while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend()) && ObjectLocations.getBall() != null && ObjectLocations.getUSDefend() != null && ObjectLocations.getUSDefendDot() != null){
-			// TURN
-			Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
-			double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
-			System.out.println("Angle to parrallel with goal: " + angle);
-			if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
-				defenceMover.rotate("defence", angle);
+			try {
+				// TURN
+				Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
+				double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
+				System.out.println("Angle to parrallel with goal: " + angle);
+				if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+					defenceMover.rotate("defence", angle);
+				}
+				
+				// move
+				System.out.println("distance: " + Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y));
+				if(Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y) > 10){
+					MoveToPointXY.moveAwayDefence("defence", defenceMover);
+					MoveToPointXY.moveRobotToBlock("defence", defenceMover);
+					
+					
+				}
+			} catch (Exception e) {
+
+				e.printStackTrace();
 			}
-			
-			// move
-			MoveToPointXY.moveRobotToBlock("defence", defenceMover);
-			
-			MoveToPointXY.moveAwayDefence("defence", defenceMover);
+
 		}
 		// I LOVE THIS
 	}
