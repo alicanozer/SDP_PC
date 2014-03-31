@@ -91,13 +91,14 @@ public class Test3 {
 		Button.waitForAnyPress();
 		
 		attackMover.forwardsC("defence");
-		Thread.sleep(3000);
+		Thread.sleep(2000);
 		attackMover.backwardsC("defence");
-		Thread.sleep(3000);
+		Thread.sleep(2000);
 		System.out.println("4");
 		
-		
+		attackMover.stopRobot("defence");
 		Button.waitForAnyPress();
+		
 		bRobot.disconnect("defence");
 		//	System.out.println("Entering While Loop");
 		//	while (true) {

@@ -156,9 +156,11 @@ public class RobotMover extends Thread{
 			System.out.println(movement.type + " - ForwardC");
 			bRobot.forwardsC(movement.type);
 			bRobot.waitForRobotReady(movement.type);
+			break;
 		case MOVING:
 			bRobot.isMoving(movement.type);
 			bRobot.waitForRobotReady(movement.type);
+			break;
 		default:
 			System.out.println("DERP! Unknown movement mode specified");
 			assert (false);
