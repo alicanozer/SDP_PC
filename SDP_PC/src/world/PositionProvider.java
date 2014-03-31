@@ -3,6 +3,8 @@
  */
 package world;
 
+import world.support.TimedVector;
+
 /**
  * @author apljungquist
  * 

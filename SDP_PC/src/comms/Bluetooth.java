@@ -22,6 +22,8 @@ public class Bluetooth {
 	private NXTComm nxtComm2;
 	private NXTInfo nxtInfo1;
 	private NXTInfo nxtInfo2;
+	private boolean attackConnected = false;
+	private boolean defenceConnected = false;
 	private boolean attackReady = false;
 	private boolean defenceReady = false;
 	private InputStream dis1;
@@ -35,7 +37,7 @@ public class Bluetooth {
 	// Commands
 	public final static int NOTHING = 0;
 	public final static int FORWARDS = 1;
-	public final static int BACKWARDS = 2;
+	public final static int BACKWARDSC = 2;
 	public final static int STOP = 3;
 	public final static int GRAB = 4;
 	public final static int KICK = 5;
@@ -45,6 +47,9 @@ public class Bluetooth {
 	public final static int ROTATERIGHT = 8;
 	public final static int MOVING = 9;
 	public final static int QUIT = 10;
+	public final static int FORWARDSC = 11;
+
+	
 	
 	/**
 	 * Creates a new bluetooth object and opens the relevant bluetooth connection.
@@ -105,7 +110,7 @@ public class Bluetooth {
 			dis1 = nxtComm1.getInputStream();
 			dos1 = nxtComm1.getOutputStream();
 			checkReady("attack");
-			attackReady = true;
+			attackConnected = true;
 			System.out.println("Connected to attack robot");
 		} else {
 			//Open connection
@@ -116,7 +121,7 @@ public class Bluetooth {
 			dis2 = nxtComm2.getInputStream();
 			dos2 = nxtComm2.getOutputStream();
 			checkReady("defence");
-			defenceReady = true;
+			defenceConnected = true;
 			System.out.println("Connected to defence robot");
 		}
 	}
@@ -150,6 +155,45 @@ public class Bluetooth {
 					throw new IOException("Failed to connect: "+ e.toString());
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Waits for a message from the robot that signals it is in a ready state after completing command.
+	 * 
+	 * @param robotType - the type of robot to connect to: attack or defence.
+	 * @throws IOException -  when connection is lost to the robot
+	 */
+	public void waitForReadyCommand(String robotType) throws IOException {
+		final int[] READY_STATE = { 12, 0, 0, 0 };
+		//Check that robot is ready
+		while (true) {
+			int[] received = receiveData(robotType);
+			boolean equals = true;
+			//Check that each integer sent from robot equals expected value
+			for (int i = 0; i < 4; i++) {
+				if (received[i] != READY_STATE[i]) {
+					equals = false;
+					break;
+				}
+			}
+			//If not ready try again in 10 ms
+			if (equals) {
+				break;
+			} else {
+				try {
+					Thread.sleep(10);  // Prevent 100% cpu usage
+				} catch (InterruptedException e) {
+					throw new IOException("Failed to connect: "+ e.toString());
+				}
+			}
+		}
+		//Set current robot as in ready state
+		System.out.println("Command done according to robot");
+		if (robotType.equals("attack")) {
+			setAttackReady();
+		} else {
+			setDefenceReady();
 		}
 	}
 
@@ -187,6 +231,7 @@ public class Bluetooth {
 			if (isAttackConnected()) {
 				dos1.write(command);
 				dos1.flush();
+				//TODO set ready state to false
 			} else {
 				throw new IOException("Cannot send command to attack robot as there is no open connection.");
 			}
@@ -194,6 +239,7 @@ public class Bluetooth {
 			if (isDefenceConnected()) {
 				dos2.write(command);
 				dos2.flush();
+				//TODO set ready state to false
 			} else {
 				throw new IOException("Cannot send command to defence robot as there is no open connection.");
 			}
@@ -206,13 +252,42 @@ public class Bluetooth {
 	 * @return - true if PC has established a connection to attack robot
 	 */
 	public boolean isAttackConnected() {
-		return attackReady;
+		return attackConnected;
 	}
 	
 	/**
 	 * @return - true if PC has established a connection to defence robot
 	 */
 	public boolean isDefenceConnected() {
+		return defenceConnected;
+	}
+	
+	/**
+	 * @return - true if attack robot is ready to receive commands
+	 */
+	public boolean isAttackReady() {
+		return attackReady;
+	}
+	
+	/**
+	 * @return - true if defence robot is ready to receive commands
+	 */
+	public boolean defenceReady() {
 		return defenceReady;
 	}
+	
+	/**
+	 * used to set ready state of attack robot to true when not automatically done by robot
+	 */
+	public void setAttackReady() {
+		attackReady = true;
+	}
+	
+	/**
+	 * used to set ready state of defence robot to true when not automatically done by robot
+	 */
+	public void setDefenceReady() {
+		defenceReady = true;
+	}
+	
 }

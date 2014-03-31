@@ -1,7 +1,8 @@
 package strategy.movement;
 
 import vision.ObjectLocations;
-import World.*;
+import world.Robot;
+import world.RobotType;
 
 public class DistanceToBall {
 

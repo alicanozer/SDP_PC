@@ -6,9 +6,11 @@ import vision.VisionRunner;
 public class Main {
 	
 	public static void main(String[] args) {
-	    
+
 		VisionRunner.startDebugVision(PitchConstants.oldPitch,10,true);
-		
+
+		System.out.println("Entering strategy");
+
 	}
 	
 }

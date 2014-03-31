@@ -4,6 +4,9 @@ import georegression.struct.point.Point2D_I32;
 
 public class DistanceCalculator {
 
+	public final static double RATIO_SECONDPITCH = 0.455769231;
+	public final static double RATIO_FIRSTPITCH = 0.479;
+	
     public static double Distance(Point2D_I32 point, Point2D_I32 point1) {
 
     	int x1 = point.x;
@@ -15,7 +18,7 @@ public class DistanceCalculator {
         double xDistance = Math.abs(x1 - x2);
         double yDistance = Math.abs(y1 - y2);
 
-        double distance = Math.sqrt(Math.pow(yDistance, 2) + (Math.pow(xDistance, 2)));
+        double distance = RATIO_FIRSTPITCH * Math.sqrt(Math.pow(yDistance, 2) + (Math.pow(xDistance, 2)));
 
         return distance;
 
@@ -26,7 +29,7 @@ public class DistanceCalculator {
         double xDistance = Math.abs(x1 - x2);
         double yDistance = Math.abs(y1 - y2);
 
-        double distance = Math.sqrt(Math.pow(yDistance, 2) + (Math.pow(xDistance, 2)));
+        double distance = RATIO_FIRSTPITCH * Math.sqrt(Math.pow(yDistance, 2) + (Math.pow(xDistance, 2)));
 
         return distance;
 

@@ -1,6 +1,6 @@
 package strategy.movement;
 
-import World.RobotType;
+import world.RobotType;
 import georegression.struct.point.Point2D_I32;
 import comms.BluetoothRobot;
 
@@ -12,7 +12,7 @@ public class MoveToPoint {
 
 		double distance = DistanceToBall.Distance(marker.x, marker.y, pointX, pointY);
 		System.out.println(String.format("Distance to point is %f", distance));
-		Point2D_I32 pointXY = new Point2D_I32((int)pointX,(int)pointY);
+		Point2D_I32 pointXY = new Point2D_I32((int)pointX,(int) pointY);
 
 		double angle = TurnToObject.getAngleToObject(dot, marker, pointXY);
 		System.out.println(String

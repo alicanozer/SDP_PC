@@ -1,8 +1,10 @@
 package comms;
 
-import World.RobotType;
 import lejos.pc.comm.NXTCommException;
+
 import java.io.IOException;
+
+import world.RobotType;
 
 public class NXTtest {
 	

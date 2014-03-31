@@ -1,11 +1,14 @@
 package strategy.planning;
 
 import lejos.nxt.Button;
-import World.Robot;
-import World.RobotType;
+import movement.RobotMover;
 import Calculations.BallPossession;
 import Calculations.DistanceCalculator;
+import Calculations.Intersection;
+import strategy.movement.MoveToPoint;
 import vision.ObjectLocations;
+import world.Robot;
+import world.RobotType;
 import geometry.Vector;
 import georegression.struct.point.Point2D_I32;
 import comms.BluetoothRobot;
@@ -15,50 +18,47 @@ public class Defend extends StrategyInterface {
 
 	private Robot theirAttackRobot = new Robot(RobotType.AttackThem);
 	private Robot ourAttackRobot = new Robot(RobotType.AttackUs);
-	private Robot ourDefendRobot = new Robot(RobotType.DefendUs);
-	
-	//	private Point2D_I32 ourDefenseRobot;
-	//	private Point2D_I32 theirAttackRobot;
-	//	private Point2D_I32 ourAttackRobot;
+	private Robot ourDefenseRobot = new Robot(RobotType.DefendUs);
 	
 	private Point2D_I32 ball;
+	private Point2D_I32 ourDefenseDot;
+	private Point2D_I32 ourAttackDot;
+	private Point2D_I32 theirAttackDot;
 
-	public Defend(BluetoothRobot attackRobot, BluetoothRobot defenceRobot) {
-		super(attackRobot, defenceRobot);
-		ball = ObjectLocations.getBall();
-	
-		//		ourDefendRobot.setPosition(new Vector(ObjectLocations.getYellowDEFENDmarker().x,ObjectLocations.getYellowDEFENDmarker().y));
-		ourAttackRobot.setPosition(new Vector(ObjectLocations.getYellowATTACKmarker().x,ObjectLocations.getYellowATTACKmarker().y));
-		//		theirAttackRobot.setPosition(new Vector(ObjectLocations.getBlueDEFENDmarker().x,ObjectLocations.getBlueDEFENDmarker().y));
-	
+	public Defend(RobotMover attackMover, RobotMover defenceMover) {
+		super(attackMover, defenceMover);
+		
 	}
 
 	@Override
 	public void run() {
 
 		while (!shouldidie && !Strategy.alldie) {
-			
-			if (ObjectLocations.getYellowUs()) {
-				if (BallPossession.hasPossession(RobotType.AttackUs, ObjectLocations.getYellowATTACKmarker())) {
-					while(true) {
-						System.out.println("Our Attacker has the ball! Starting to mark them...");
-						ball = ObjectLocations.getBall();
-						ourAttackRobot.setPosition(new Vector(ObjectLocations.getYellowATTACKmarker().x,ObjectLocations.getYellowATTACKmarker().y));
-	
-						//double ycoord = theirAttackRobot.getPosition().getY();
-						//double distance = DistanceCalculator.Distance(ourDefendRobot.x, ourDefendRobot.y, ourDefendRobot.x, ycoord);
-						//bRobot.forward(distance);
-						
-						Button.waitForAnyPress();
-						
-					}
-				} else {
+			if(ObjectLocations.getYellowDEFENDmarker()!=null && ObjectLocations.getBlueATTACKmarker()!=null && ObjectLocations.getYellowDEFENDdot()!=null && ObjectLocations.getBlueATTACKdot()!=null) {
+				if (!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getYellowDEFENDmarker())) {
+
+					System.out.println("Their Attacker has the ball! Starting to mark them...");
 					
+					Vector intersectionPoint = Intersection.IntersectionRobots(ObjectLocations.getYellowDEFENDmarker(), ObjectLocations.getYellowDEFENDdot(), ObjectLocations.getBlueATTACKmarker(), ObjectLocations.getBlueATTACKdot());
+					double ycoord = intersectionPoint.getY();
+					System.out.println("Point of intersection: " + ycoord);
+	
+//					try {
+//						MoveToPoint.moveToPointXY(defenseRobot, ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowDEFENDmarker(), (double) ourDefenseRobot.x, ycoord);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+
+				} else {
+
 					System.out.println("Someone else has the ball.");
-					attackRobot.forward("AttackUs", 10);
-				
+					attackMover.forward("AttackUs", 10);
+
 				}
 			}
+			Button.waitForAnyPress();
+
 		}
 
 	}

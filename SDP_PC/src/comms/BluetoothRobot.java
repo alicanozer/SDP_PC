@@ -2,9 +2,9 @@ package comms;
 
 import java.io.IOException;
 
+import world.Robot;
+import world.RobotType;
 import lejos.pc.comm.NXTConnector;
-import World.Robot;
-import World.RobotType;
 
 public class BluetoothRobot extends Robot implements RobotController {
 
@@ -39,7 +39,6 @@ public class BluetoothRobot extends Robot implements RobotController {
 	@Override
 	public void disconnect(String robotType) {
 		int[] commands = { bluetooth.QUIT, 0, 0, 0 };
-		
 		try {
 			bluetooth.sendCommand(commands, robotType);
 			Thread.sleep(100);
@@ -67,6 +66,19 @@ public class BluetoothRobot extends Robot implements RobotController {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void grab(String robotType) {
+		int[] commands = { bluetooth.GRAB, 0, 0, 0 };
+		
+		try {
+			bluetooth.sendCommand(commands, robotType);
+			System.out.println("Robot Stopped");
+		}catch (IOException e) {
+			System.out.println("Command could not be sent");
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void kick(String robotType) {
@@ -82,14 +94,20 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void move(String robotType, int speedX, int speedY) {
-		
-	}
-
-	@Override
 	public void rotateLEFT(String robotType, int turn) {
-		int angle = turn/3;
-		int[] commands = { bluetooth.ROTATELEFT, angle, angle, angle}; 
+
+		int angleMax;
+		int angle;
+		
+		if (turn >= 127) {
+			angleMax = 127;
+			angle = turn - 127;
+		} else {
+			angleMax = turn;
+			angle = 0;
+		}
+		
+		int[] commands = { bluetooth.ROTATELEFT, angleMax, angle, 0}; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
@@ -116,7 +134,8 @@ public class BluetoothRobot extends Robot implements RobotController {
 
 	@Override
 	public void forward(String robotType, double distance) {
-	int[] commands = { bluetooth.FORWARDS, (int) distance,0,0 }; 
+	int half = (int) (distance/2);	
+	int[] commands = { bluetooth.FORWARDS, half, half,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
@@ -129,9 +148,9 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 
 	@Override
-	public void backwards(String robotType) {
+	public void backwardsC(String robotType) {
 		
-	int[] commands = { bluetooth.BACKWARDS, 0,0,0 }; 
+	int[] commands = { bluetooth.BACKWARDSC, 0,0,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
@@ -156,8 +175,23 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 	
 	@Override
-	public boolean isMoving(String robotType) {
+	public void isMoving(String robotType) {
 		int[] commands = { bluetooth.MOVING, 0,0,0 }; 
+		
+		try {
+			bluetooth.sendCommand(commands, robotType);
+			
+			System.out.println("Robot Stopped");
+		}catch (IOException e) {
+			System.out.println("Command could not be sent");
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void forwardsC(String robotType) {
+		// TODO Auto-generated method stub
+	int[] commands = { bluetooth.FORWARDSC, 0,0,0 }; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
@@ -165,10 +199,19 @@ public class BluetoothRobot extends Robot implements RobotController {
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
-		}
-		
-		return false;
+		}	
+
 	}
 	
-	
+	@Override
+	public void waitForRobotReady(String robotType) {
+		try {
+			System.out.println("Waiting for command completion");
+			bluetooth.waitForReadyCommand(robotType);
+		} catch (IOException e) {
+			System.out.println("Failed while waiting for ready state");
+			e.printStackTrace();
+		}
+	}
+
 }
