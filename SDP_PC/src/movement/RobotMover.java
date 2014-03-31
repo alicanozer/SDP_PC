@@ -58,14 +58,8 @@ public class RobotMover extends Thread{
 
 	}
 	
-	public void setSpeedCoef(double coef) {
-		coefLock.lock();
-		speedCoef = coef;
-		coefLock.unlock();
-	}
-	
 	private enum Mode {
-		FORWARD, BACKWARD, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC, MOVING
+		FORWARD, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC, MOVING, BACKWARDSC
 	};
 	
 	/**
@@ -117,11 +111,6 @@ public class RobotMover extends Thread{
 			bRobot.forward(movement.type, movement.distance);
 			bRobot.waitForRobotReady(movement.type);
 			break;
-		case BACKWARD:
-			System.out.println(movement.type + " - Backward " + movement.distance);
-			bRobot.backwards(movement.type,movement.distance);
-			bRobot.waitForRobotReady(movement.type);
-			break;
 		case STOP:
 			System.out.println(movement.type + " - Stop");
 			bRobot.stop(movement.type);
@@ -155,6 +144,10 @@ public class RobotMover extends Thread{
 		case FORWARDSC:
 			System.out.println(movement.type + " - ForwardC");
 			bRobot.forwardsC(movement.type);
+			bRobot.waitForRobotReady(movement.type);
+		case BACKWARDSC:
+			System.out.println(movement.type + " - BackwardsC");
+			bRobot.backwardsC(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 		case MOVING:
 			bRobot.isMoving(movement.type);
@@ -366,28 +359,19 @@ public class RobotMover extends Thread{
 		return true;
 	}	
 	
-	/**
-	 * Queues a backward by a distance.
-	 * 
-	 * @param distance
-	 *            Move backward by this value (robot will execute this in cm)
-	 * @return true if the forward was successfully queued, false otherwise
-	 * 
-	 * @see #waitForCompletion()
-	 */
-	public synchronized boolean backward(String robotType, double distance) {
+	
+	public synchronized boolean backwardsC(String robotType) {
 		MoverConfig movement = new MoverConfig();
-		movement.distance = distance;
-		movement.mode = Mode.BACKWARD;
+		movement.mode = Mode.BACKWARDSC;
 		movement.type = robotType;
-
+		
 		if (!pushMovement(movement))
 			return false;
 
 		// Let the mover know it has a new job
 		jobSem.release();
 		return true;
-	}
+	}	
 	
 	/**
 	 * Queues a grab motion.

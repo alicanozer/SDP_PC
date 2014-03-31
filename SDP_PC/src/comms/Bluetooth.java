@@ -37,7 +37,7 @@ public class Bluetooth {
 	// Commands
 	public final static int NOTHING = 0;
 	public final static int FORWARDS = 1;
-	public final static int BACKWARDS = 2;
+	public final static int BACKWARDSC = 2;
 	public final static int STOP = 3;
 	public final static int GRAB = 4;
 	public final static int KICK = 5;
@@ -48,6 +48,7 @@ public class Bluetooth {
 	public final static int MOVING = 9;
 	public final static int QUIT = 10;
 	public final static int FORWARDSC = 11;
+
 	
 	
 	/**
