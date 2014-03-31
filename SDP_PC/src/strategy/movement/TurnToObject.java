@@ -177,21 +177,25 @@ public class TurnToObject {
 		if (ObjectLocations.getYellowUs()) {
 			if (type == RobotType.AttackUs){
 				//Attacking Yellow Robot
-				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getYellowATTACKdot().x, ObjectLocations.getYellowATTACKdot().y + 5);
+				System.out.println("We Are Yellow ATTACKER!");
+				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getYellowATTACKdot().x, ObjectLocations.getYellowATTACKdot().y+5);
 				return getAngleToObject(ObjectLocations.getYellowATTACKdot(), ObjectLocations.getYellowATTACKmarker(), ninty);
 			} else {
 				//Defending Yellow Robot
-				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getYellowDEFENDdot().x, ObjectLocations.getYellowDEFENDdot().y + 5);
+				System.out.println("We Are Yellow DEFENDER!");
+				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getYellowDEFENDdot().x, ObjectLocations.getYellowDEFENDdot().y+5);
 				return getAngleToObject(ObjectLocations.getYellowDEFENDdot(), ObjectLocations.getYellowDEFENDmarker(), ninty);
 			} 
 		} else {
 			if (type == RobotType.AttackUs){
 				//Attacking Blue Robot
-				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getBlueATTACKdot().x, ObjectLocations.getBlueATTACKdot().y + 5);
+				System.out.println("We Are Blue ATTACKER!");
+				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getBlueATTACKdot().x, ObjectLocations.getBlueATTACKdot().y+5);
 				return getAngleToObject(ObjectLocations.getBlueATTACKdot(), ObjectLocations.getBlueATTACKmarker(), ninty);				
 			}else {
 				//Defending Blue Robot
-				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getBlueDEFENDdot().x, ObjectLocations.getBlueDEFENDdot().y + 5);
+				System.out.println("We Are Blue DEFENDER!");
+				Point2D_I32 ninty = new Point2D_I32(ObjectLocations.getBlueDEFENDdot().x, ObjectLocations.getBlueDEFENDdot().y+5);
 				return getAngleToObject(ObjectLocations.getBlueDEFENDdot(), ObjectLocations.getBlueDEFENDmarker(), ninty);
 
 			}
@@ -206,8 +210,8 @@ public class TurnToObject {
 	public static double getAngleToObject(Point2D_I32 dot, Point2D_I32 marker, Point2D_I32 object) {
 		
 		// Vector from dot to the object		
-		int xDiff = object.x - dot.x;
-		int yDiff = object.y - dot.y;
+		int xDiff = object.x - marker.x;
+		int yDiff = object.y - marker.y;
 
 		Vector dotToObject = new Vector(xDiff, yDiff);
 		
@@ -226,10 +230,6 @@ public class TurnToObject {
 		double angleBetweenDotObject = Math.acos(dotProduct/totalMagnitude);
 		
 		//Check if ball is right or left of the marker
-		
-		
-
-		
 		
 		if (!isLeft(dot,marker,object)) {
 			return Math.toDegrees(angleBetweenDotObject);
