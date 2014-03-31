@@ -110,27 +110,46 @@ public class ExampleSegmentColor {
 		createImagePanel(image);
 		
 		if (PitchConstants.setPitch == 1){
-			int[] xs1 = {50,101,95,53,22,24};
-			int[] ys1 = {28,27,285,286,223,85};
-			Polygon p1 = new Polygon(xs1,ys1,6);
+			int[] xs1 = {1,115,115,1};
+			int[] ys1 = {280,280,1,1};
+			Polygon p1 = new Polygon(xs1,ys1,4);
 			PitchConstants.region1 = p1;
 			
-			int[] xs2 = {143,250,245,141};
-			int[] ys2 = {20,19,285,286};
+			int[] xs2 = {115,260,260,115};
+			int[] ys2 = {280,280,1,1};
 			Polygon p2 = new Polygon(xs2,ys2,4);
 			PitchConstants.region2 = p2;
 			
-			int[] xs3 = {291,393,395,292};
-			int[] ys3 = {20,19,283,283};
+			int[] xs3 = {260,410,410,260};
+			int[] ys3 = {280,280,1,1};
 			Polygon p3 = new Polygon(xs3,ys3,4);
 			PitchConstants.region3 = p3;
 			
-			int[] xs4 = {434,483,509,512,488,438};
-			int[] ys4 = {22,24,79,223,282,283};
-			Polygon p4 = new Polygon(xs4,ys4,6);
+			int[] xs4 = {410,515,515,410};
+			int[] ys4 = {280,280,1,1};
+			Polygon p4 = new Polygon(xs4,ys4,4);
 			PitchConstants.region4 = p4;
+	
 		} else if (PitchConstants.setPitch == 2){
+			int[] xs1 = {1,115,115,1};
+			int[] ys1 = {307,307,1,1};
+			Polygon p1 = new Polygon(xs1,ys1,4);
+			PitchConstants.region1 = p1;
 			
+			int[] xs2 = {115,260,260,115};
+			int[] ys2 = {307,307,1,1};
+			Polygon p2 = new Polygon(xs2,ys2,4);
+			PitchConstants.region2 = p2;
+			
+			int[] xs3 = {260,410,410,260};
+			int[] ys3 = {307,307,1,1};
+			Polygon p3 = new Polygon(xs3,ys3,4);
+			PitchConstants.region3 = p3;
+			
+			int[] xs4 = {410,515,515,410};
+			int[] ys4 = {307,307,1,1};
+			Polygon p4 = new Polygon(xs4,ys4,4);
+			PitchConstants.region4 = p4;
 		}
 		
 		
