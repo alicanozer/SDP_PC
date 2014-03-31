@@ -76,20 +76,28 @@ public class Test3 {
 		attackMover.start();
 		System.out.println("0");
 		attackMover.setSpeed("defence", 15);
-		
-		attackMover.forward("defence", 20);
-		attackMover.rotate("defence", 90);
-		
-		attackMover.forward("defence", 20);
-		attackMover.rotate("defence", 90);
-		
-		attackMover.forward("defence", 20);
-		attackMover.rotate("defence", 90);
-		
-		attackMover.forward("defence", 20);
-		attackMover.rotate("defence", 90);
+//		
+//		attackMover.forward("defence", 20);
+//		attackMover.rotate("defence", 90);
+//		
+//		attackMover.forward("defence", 20);
+//		attackMover.rotate("defence", 90);
+//		
+//		attackMover.forward("defence", 20);
+//		attackMover.rotate("defence", 90);
+//		
+//		attackMover.forward("defence", 20);
+//		attackMover.rotate("defence", 90);
 		Button.waitForAnyPress();
+		
+		attackMover.forwardsC("defence");
+		Thread.sleep(3000);
+		attackMover.backwardsC("defence");
+		Thread.sleep(3000);
 		System.out.println("4");
+		
+		
+		Button.waitForAnyPress();
 		bRobot.disconnect("defence");
 		//	System.out.println("Entering While Loop");
 		//	while (true) {

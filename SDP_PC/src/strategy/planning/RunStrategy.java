@@ -224,13 +224,6 @@ public class RunStrategy extends JFrame {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-				try {
-					attackMover.resetQueue();
-					defenceMover.resetQueue();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				// Stop strategy if it's running
 				if (strategyThread != null && strategyThread.isAlive()) {
 					System.out.println("Killing strategy thread");
