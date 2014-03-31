@@ -3,10 +3,6 @@ package movement;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
-import utility.SafeSleep;
-
-//import world.Robot;
-//import world.PixelWorld;
 
 import comms.BluetoothRobot;
 import comms.RobotController;
@@ -18,12 +14,8 @@ public class RobotMover extends Thread{
 	private BluetoothRobot bRobot;
 	
 
-	/** A flag to permit busy-waiting */
-	private boolean running = false;
-	/** A flag to interrupt any active movements */
-	private boolean interruptMove = false;
 	/** A flag to tell the RobotMover thread to die */
-	private boolean die = false;
+	private static boolean die = false;
 
 	/** A thread-safe queue for movement commands */
 	private ConcurrentLinkedQueue<MoverConfig> moveQueue = new ConcurrentLinkedQueue<MoverConfig>();
@@ -34,32 +26,23 @@ public class RobotMover extends Thread{
 	/** A semaphore used to signal the RobotMover has completed its job queue */
 	private Semaphore waitSem = new Semaphore(0, true);
 	
-	private ReentrantLock coefLock = new ReentrantLock(true);
-	
-	private double speedCoef = 1.0;
-	
 	public RobotMover(BluetoothRobot bRobot) {
 		super("RobotMover");
 		this.bRobot = bRobot;
 	}
 	
-	/** Settings info class to permit queueing of movements */
 	private class MoverConfig {
 		public double distance = 0;
 		public String type = null;
 		public int angle = 0;
 		public int speed = 0;
-		public boolean avoidBall = false;
-		public boolean avoidEnemy = false;
-		public long milliseconds = 0;
-		private int dribblemode = 0;
 		//private MovingPoint movPoint = null;
 		public Mode mode;
 
 	}
 	
 	private enum Mode {
-		FORWARD, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC, MOVING, BACKWARDSC
+		FORWARD, BACKWARDSC, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC, MOVING
 	};
 	
 	/**
@@ -93,9 +76,8 @@ public class RobotMover extends Thread{
 	 */
 	private void wakeUpWaitingThreads() {
 		waitSem.release();
-		running = false;
 	}
-
+	
 	/**
 	 * Processes a single movement
 	 * 
@@ -124,11 +106,6 @@ public class RobotMover extends Thread{
 		case KICK:
 			System.out.println(movement.type + " - Kick");
 			bRobot.kick(movement.type);
-			bRobot.waitForRobotReady(movement.type);
-			break;
-		case DELAY:
-			System.out.println(movement.type + " - Delay " + movement.milliseconds);
-			SafeSleep.sleep(movement.milliseconds);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case ROTATE:
@@ -165,15 +142,14 @@ public class RobotMover extends Thread{
 	 */
 	public void run() {
 		try {
-			while (!die) {
+			System.out.println(die);
+			while (!die && !moveQueue.isEmpty()) {
 				
+
 				// Wait for next movement operation
 				jobSem.acquire();
-				// Clear the movement interrupt flag for the new movement
-				interruptMove = false;
-				// Set the running flag to true for busy-waiting
-				running = true;
 
+				// System.out.println("Number of commands in queue: " + this.numQueuedJobs()); // This will return number in queue not including the one being executed
 				queueLock.lockInterruptibly();
 				if (!moveQueue.isEmpty() && !die) {
 					MoverConfig movement = moveQueue.poll();
@@ -196,12 +172,10 @@ public class RobotMover extends Thread{
 			// Try to prevent deadlocks when the mover breaks
 			wakeUpWaitingThreads();
 		} finally {
-			// Stop the robot when the movement thread has been told to exit
+			System.out.println("Strategy block complete. Stopping robots.");
 			bRobot.stop("attack");
 			bRobot.stop("defence");
-			// Clear the robot's buffer to potentially allow restart of a
-			// RobotMover thread
-			//robot.clearBuff();
+
 		}
 	}
 
@@ -211,19 +185,12 @@ public class RobotMover extends Thread{
 	 * @throws InterruptedException 
 	 */
 	public void kill() throws InterruptedException {
+		System.out.println("Kill called");
 		die = true;
-		interruptMove();
+		resetQueue();
 		// Wake up the RobotMover thread if it's waiting for a new job
 		jobSem.release();
-	}
-	
-	public void interruptMove() throws InterruptedException {
-		interruptMove = true;
-		//Send interrupt to robot
-		bRobot.stop("attack");
-		bRobot.stop("defence");
-		//Reset queue
-		resetQueue();
+		die = false;
 	}
 
 	/**
@@ -247,15 +214,7 @@ public class RobotMover extends Thread{
 
 		moveQueue.clear();
 		queueLock.unlock();
-	}
-	
-	/**
-	 * Checks if the mover is running a job
-	 * 
-	 * @return true if the mover is doing something, false otherwise
-	 */
-	public boolean isRunning() {
-		return running;
+
 	}
 
 	/**
@@ -296,15 +255,6 @@ public class RobotMover extends Thread{
 			// If the thread has been interrupted, there can't be jobs queued.
 			return 0;
 		}
-	}
-
-	/**
-	 * Waits for the movement queue to complete before returning
-	 */
-	public void waitForCompletion() throws InterruptedException {
-		System.out.println("Getting Semaphore");
-		waitSem.acquire();
-		System.out.println("Got Semaphore");
 	}
 	
 	
@@ -450,30 +400,6 @@ public class RobotMover extends Thread{
 	public synchronized boolean stopRobot(String robotType) {
 		MoverConfig movement = new MoverConfig();
 		movement.mode = Mode.STOP;
-		movement.type = robotType;
-
-		if (!pushMovement(movement))
-			return false;
-
-		// Let the mover know it has a new job
-		jobSem.release();
-		return true;
-	}
-	
-	
-	/**
-	 * Queues a delay job, where the RobotMover will wait for the specified time <br/>
-	 * WARNING: Once a delay job has started, it cannot be interrupted
-	 * 
-	 * @param milliseconds
-	 *            The time in milliseconds to sleep for
-	 * 
-	 * @return true if the delay was successfully queued, false otherwise
-	 */
-	public synchronized boolean delay(String robotType, long milliseconds) {
-		MoverConfig movement = new MoverConfig();
-		movement.milliseconds = milliseconds;
-		movement.mode = Mode.DELAY;
 		movement.type = robotType;
 
 		if (!pushMovement(movement))
