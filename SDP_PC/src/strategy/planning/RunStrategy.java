@@ -129,16 +129,18 @@ public class RunStrategy extends JFrame {
 // *********** TESTING DEFENCE STRATEGY		
 		
 
-//		Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
-//		double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
-//		System.out.println("Angle to parrallel with goal: " + angle);
-//		if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
-//			defenceMover.rotate("defence", angle);
-//		}
-		//WORKS-
-		while(ObjectLocations.getBall() == null || ObjectLocations.getUSDefend() == null || ObjectLocations.getUSDefendDot() == null)
-		{
+
+		Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
+		double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
+		System.out.println("Angle to parrallel with goal: " + angle);
+		defenceMover.rotate("defence", angle);
+		
+//		//Test Defence Strategy 1		
+		while (!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())) {
 			
+			MoveToPointXY.moveRobotToBlock("defence", defenceMover);
+
+
 		}
 		
 		while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend()) && ObjectLocations.getBall() != null && ObjectLocations.getUSDefend() != null && ObjectLocations.getUSDefendDot() != null){
@@ -165,6 +167,7 @@ public class RunStrategy extends JFrame {
 			defenseRobot.disconnect("defence");
 		System.exit(0);
 	}
+
 	/**
 	 * Creating GUI
 	 * @param attackRobot
