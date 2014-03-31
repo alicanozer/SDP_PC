@@ -46,6 +46,7 @@ public class ExampleSegmentColor {
 				point[1] = e.getY();
 				ExampleSegmentColor.point = point;
 				ExampleSegmentColor.flag = true;
+				System.out.println(point[0]+","+point[1]);
 				return;
 			}
 		});

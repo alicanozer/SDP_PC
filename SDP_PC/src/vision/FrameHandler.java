@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -136,8 +137,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 	float red = 0.01f;
 	float yellow = 0.001f;
 	float blue = 0.001f;
-	float plate = 0.01f;
-	float black = 0.01f;
+	private boolean recalibrate_now;
+
 
 	public FrameHandler(boolean debug, PitchConstants consts){
 		this.debug = debug;
@@ -280,13 +281,14 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 //			// TODO Auto-generated catch block
 //			e2.printStackTrace();
 //		}//frame.getBufferedImage();
+		//System.out.println(frameCounter);
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		if(frameCounter < 3){
 			frame.recycle();
 			frameCounter++;
 			return;
 		}
-		else if (frameCounter == 3){
+		else if (frameCounter == 3 || recalibrate_now){
 			frameCounter++;
 			colors = ExampleSegmentColor.selectColoursOfPitch(img);
 			try {
@@ -308,6 +310,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+			recalibrate_now = false;
 			return;
 		}
 		long thisFrame = System.currentTimeMillis();
@@ -325,6 +328,13 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 //		System.out.println("red: " + colors.getRedValue()[0] + " " + colors.getRedValue()[1] + " " + colors.getRedValue()[2]);
 //		System.out.println("yellow: " + colors.getYellowValue()[0] + " " + colors.getYellowValue()[1] + " " + colors.getYellowValue()[2]);
 //		System.out.println("blue: " + colors.getBlueValue()[0] + " " + colors.getBlueValue()[1] + " " + colors.getBlueValue()[2]);
+
+		
+		recalibrate.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				recalibrate_now = true;
+			}
+		});
 		
 		try {
 			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBluePlateBlack(),distanceThresholds,3);
