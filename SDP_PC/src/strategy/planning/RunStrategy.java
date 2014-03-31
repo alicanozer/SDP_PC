@@ -27,6 +27,7 @@ import strategy.movement.MoveToPointXY;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import vision.PitchConstants;
+import vision.PointUtils;
 import vision.VisionRunner;
 import world.RobotType;
 
@@ -68,7 +69,7 @@ public class RunStrategy extends JFrame {
 	public static void main(String[] args) throws Exception {
 
 		//Start vision
-		VisionRunner.startDebugVision(PitchConstants.oldPitch, 10, true);
+		VisionRunner.startDebugVision(PitchConstants.newPitch, 10, true);
 		
 		//Create Bluetooth connections
 		Bluetooth myConnection = new Bluetooth("both"); //should be "both"
@@ -126,18 +127,38 @@ public class RunStrategy extends JFrame {
 //		attackMover.kick("attack");
 
 // *********** TESTING DEFENCE STRATEGY		
+		while(ObjectLocations.getBall() == null || ObjectLocations.getUSDefend() == null || ObjectLocations.getUSDefendDot() == null)
+		{
+			
+		}
 
-		Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getTHEMAttack().y);
-		double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
-		System.out.println("Angle to parrallel with goal: " + angle);
-		defenceMover.rotate("defence", angle);
+//		Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
+//		double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
+//		System.out.println("Angle to parrallel with goal: " + angle);
+//		if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+//			defenceMover.rotate("defence", angle);
+//		}
+		
+		
+		while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend()) && ObjectLocations.getBall() != null && ObjectLocations.getUSDefend() != null && ObjectLocations.getUSDefendDot() != null){
+			// TURN
+			Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
+			double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
+			System.out.println("Angle to parrallel with goal: " + angle);
+			if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+				defenceMover.rotate("defence", angle);
+			}
+			
+			// move
+			MoveToPointXY.moveRobotToBlock("defence", defenceMover);
+			
+			MoveToPointXY.moveAwayDefence("defence", defenceMover);
+		}
 //		
 //		//Test Defence Strategy 1		
-//		while (!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())) {
-//			
+//		while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend()) && ObjectLocations.getBall() != null && ObjectLocations.getUSDefend() != null && ObjectLocations.getUSDefendDot() != null){			defenceMover.kill();
+//			defenceMover.kill();	
 //			MoveToPointXY.moveRobotToBlock("defence", defenceMover);
-//			defenceMover.interruptMove();
-//
 //		}
 		
 		//Test Defence Strategy 2

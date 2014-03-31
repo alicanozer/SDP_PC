@@ -1,6 +1,7 @@
 package strategy.movement;
 
 import vision.ObjectLocations;
+import vision.PointUtils;
 import world.RobotType;
 import movement.RobotMover;
 import Calculations.DistanceCalculator;
@@ -89,12 +90,12 @@ public class MoveToPointXY {
 		double distance;
 
 		//Move to Block Ball
-		if (type.equals("attack")) {
-			distance = DistanceCalculator.DistanceQuadruple(ObjectLocations.getUSAttack().x, ObjectLocations.getUSAttack().y, ObjectLocations.getUSAttack().x, ObjectLocations.getBall().y);
-		} else {
-			distance = DistanceCalculator.DistanceQuadruple(ObjectLocations.getUSDefend().x, ObjectLocations.getUSDefend().y, ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
-		}
-
+//		if (type.equals("attack")) {
+//			distance = DistanceCalculator.DistanceQuadruple(ObjectLocations.getUSAttack().x, ObjectLocations.getUSAttack().y, ObjectLocations.getUSAttack().x, ObjectLocations.getBall().y);
+//		} else {
+//			distance = DistanceCalculator.DistanceQuadruple(ObjectLocations.getUSDefend().x, ObjectLocations.getUSDefend().y, ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
+//		}
+		distance = 15;
 		System.out.println("Distance to Block Point:" + distance);
 				
 		if (!(distance < 10)) {
@@ -131,7 +132,32 @@ public class MoveToPointXY {
 		}
 				
 	}
-
+	
+	public static void moveAwayDefence(String type, RobotMover robotMover){
+		// if we are yellow
+		if(ObjectLocations.getYellowUs()){
+			// if we are defending left
+			if(ObjectLocations.getYellowDefendingLeft()){
+				// check if the robot is very close to the line
+				
+				if(DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSDefend().y)) < 12){
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSDefend().y);
+					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
+					System.out.println("Angle to parrallel with goal: " + angle);
+					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+						robotMover.rotate("defence", angle);
+					}
+					if (ObjectLocations.getUSDefendDot().x < ObjectLocations.getUSDefend().x) {
+						//Move Backward
+						robotMover.forward(type, -15);
+					} else {
+						//Move Forward
+						robotMover.forward(type, 15);
+					}
+				}
+			}
+		}
+	}
 	private static boolean isLeft(Point2D_I32 a, Point2D_I32 b, Point2D_I32 c){
 		return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
 	}
