@@ -7,8 +7,8 @@ public class Main {
 	
 	public static void main(String[] args) {
 
-		VisionRunner.startDebugVision(PitchConstants.oldPitch,10,true);
-		PitchConstants.setPitch = 1; //1 for old, 2 for new
+		VisionRunner.startDebugVision(PitchConstants.newPitch,10,true);
+
 
 		System.out.println("Entering strategy");
 

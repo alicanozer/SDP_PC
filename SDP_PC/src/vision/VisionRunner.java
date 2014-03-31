@@ -29,6 +29,12 @@ public class VisionRunner {
 		
 		ObjectLocations.setYellowDefendingLeft(yellowDefendLeft);
 		ObjectLocations.setYellowUs(true);
+		if(consts.equals(PitchConstants.oldPitch)){
+			PitchConstants.setPitch = 1; //1 for old, 2 for new
+		}
+		else{
+			PitchConstants.setPitch = 2; //1 for old, 2 for new
+		}
 		ObjectLocations.setConsts(consts);
 		try {
 			SwingUtilities.invokeLater(new Runnable() {
