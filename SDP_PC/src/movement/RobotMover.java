@@ -215,16 +215,22 @@ public class RobotMover extends Thread{
 	/**
 	 * Tells the move thread to stop executing and immediately returns. <br/>
 	 * Call join() after this if you want to wait for the mover thread to die.
+	 * @throws InterruptedException 
 	 */
-	public void kill() {
+	public void kill() throws InterruptedException {
 		die = true;
 		interruptMove();
 		// Wake up the RobotMover thread if it's waiting for a new job
 		jobSem.release();
 	}
 	
-	public void interruptMove() {
+	public void interruptMove() throws InterruptedException {
 		interruptMove = true;
+		//Send interrupt to robot
+		bRobot.stop("attack");
+		bRobot.stop("defence");
+		//Reset queue
+		resetQueue();
 	}
 
 	/**
