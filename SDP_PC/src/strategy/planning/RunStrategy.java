@@ -22,7 +22,6 @@ import Calculations.BallPossession;
 import Calculations.DistanceCalculator;
 import Calculations.GoalInfo;
 import Calculations.IntersectionLines;
-import strategy.movement.MoveToPoint;
 import strategy.movement.MoveToPointXY;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;

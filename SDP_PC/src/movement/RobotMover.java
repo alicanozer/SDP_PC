@@ -226,6 +226,7 @@ public class RobotMover extends Thread{
 		jobSem.release();
 		interruptMove = true;
 		resetQueue();
+		die = false;
 	}
 
 	public void interruptMove() {

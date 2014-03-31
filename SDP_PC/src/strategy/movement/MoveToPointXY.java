@@ -89,12 +89,6 @@ public class MoveToPointXY {
 
 		double distance;
 
-		//Move to Block Ball
-//		if (type.equals("attack")) {
-//			distance = DistanceCalculator.DistanceQuadruple(ObjectLocations.getUSAttack().x, ObjectLocations.getUSAttack().y, ObjectLocations.getUSAttack().x, ObjectLocations.getBall().y);
-//		} else {
-//			distance = DistanceCalculator.DistanceQuadruple(ObjectLocations.getUSDefend().x, ObjectLocations.getUSDefend().y, ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
-//		}
 		distance = 15;
 		System.out.println("Distance to Block Point:" + distance);
 				
@@ -132,6 +126,43 @@ public class MoveToPointXY {
 		}
 				
 	}
+	
+	public static void moveRobotToBlockCont(String type, RobotMover robotMover) throws Exception {
+				
+
+		//Check if ball is left or right of robot
+		if (type.equals("attack")) {
+			if (ObjectLocations.getUSAttackDot().y > ObjectLocations.getUSAttack().y) {
+				if (ObjectLocations.getBall().y > ObjectLocations.getUSAttack().y) {
+					robotMover.forward(type, -distance);
+				} else {				
+					robotMover.forward(type, distance);
+				}
+			} else {
+				if (ObjectLocations.getBall().y > ObjectLocations.getUSAttack().y) {
+					robotMover.forward(type, distance);
+				} else {				
+					robotMover.forward(type, -distance);
+				}
+			}
+		} else {
+			if (ObjectLocations.getUSDefendDot().y > ObjectLocations.getUSDefend().y) {
+				if (ObjectLocations.getBall().y > ObjectLocations.getUSDefend().y) {
+					robotMover.forward(type, -distance);
+				} else {				
+					robotMover.forward(type, distance);
+				}
+			} else {
+				if (ObjectLocations.getBall().y > ObjectLocations.getUSDefend().y) {
+					robotMover.forward(type, distance);
+				} else {				
+					robotMover.forward(type, -distance);
+				}
+			}
+		}
+				
+	}
+	
 	
 	public static void moveAwayDefence(String type, RobotMover robotMover){
 		if(ObjectLocations.getYellowUs()){
