@@ -111,11 +111,15 @@ public class StartStrategy extends JFrame {
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Halt and clear active movements
-				attackMover.interruptMove();
-				defenceMover.interruptMove();
 				try {
-					attackMover.resetQueue();
-					defenceMover.resetQueue();
+					if (attackRobot.isAttackConnected() && defenceRobot.isAttackConnected()) {
+						attackMover.kill();
+						defenceMover.kill();
+					} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+						attackMover.kill();				
+					} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+						defenceMover.kill();
+					}
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -137,8 +141,15 @@ public class StartStrategy extends JFrame {
 				}
 				System.out.println("Stopping the robot");
 				// Stop the robot.
-				attackMover.stopRobot("attack");
-				defenceMover.stopRobot("defence");
+				
+				if (attackRobot.isAttackConnected() && defenceRobot.isAttackConnected()) {
+					attackMover.stopRobot("attack");
+					defenceMover.stopRobot("defence");
+				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+					attackMover.stopRobot("attack");
+				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					defenceMover.stopRobot("defence");
+				}
 			}
 		});
 
@@ -148,12 +159,24 @@ public class StartStrategy extends JFrame {
 				Strategy.alldie = true;
 				// Kill the mover and wait for it to stop completely
 				try {
-					attackMover.kill();
-					defenceMover.kill();
+					if (attackRobot.isAttackConnected() && defenceRobot.isAttackConnected()) {
+						attackMover.kill();
+						defenceMover.kill();
+					} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+						attackMover.kill();				
+					} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+						defenceMover.kill();
+					}
 					// If the mover still hasn't stopped within 3 seconds,
 					// assume it's stuck and kill the program the hard way
-					attackMover.join(3000);
-					defenceMover.join(3000);
+					if (attackRobot.isAttackConnected() && defenceRobot.isAttackConnected()) {
+						attackMover.join(3000);
+						defenceMover.join(3000);
+					} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+						attackMover.join(3000);
+					} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+						defenceMover.join(3000);
+					}
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -163,44 +186,80 @@ public class StartStrategy extends JFrame {
 		});
 
 		kickButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				attackMover.kick("attack");
-				defenceMover.kick("defence");
+			public void actionPerformed(ActionEvent e) {		
+				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					attackMover.kick("attack");
+					defenceMover.kick("defence");
+				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+					attackMover.kick("attack");					
+				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					defenceMover.kick("defence");
+				}
 			}
 		});
 
 		forwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				attackMover.forward("attack", 5);
-				defenceMover.forward("defence", 5);
+				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					attackMover.forward("attack", 5);
+					defenceMover.forward("defence", 5);
+				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+					attackMover.forward("attack", 5);
+				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					defenceMover.forward("defence", 5);
+				}
 			}
 		});
 
 		backwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				defenceMover.forward("defence", -5);
-				attackMover.forward("attack", -5);
+				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					attackMover.forward("attack", -5);
+					defenceMover.forward("defence", -5);
+				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+					attackMover.forward("attack", -5);
+				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					defenceMover.forward("defence", -5);
+				}
 			}
 		});
 
 		leftButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				defenceMover.rotate("defence", 90);
-				attackMover.rotate("attack", 90);
+				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					attackMover.rotate("attack", 90);
+					defenceMover.rotate("defence", 90);
+				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+					attackMover.rotate("attack", 90);
+				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					defenceMover.rotate("defence", 90);
+				}
 			}
 		});
 
 		rightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				defenceMover.rotate("defence", -90);
-				attackMover.rotate("attack", -90);
+				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					attackMover.rotate("attack", -90);
+					defenceMover.rotate("defence", -90);
+				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+					attackMover.rotate("attack", -90);
+				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					defenceMover.rotate("defence", -90);
+				}
 			}
 		});
 
 		grabButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				defenceMover.grab("defence");
-				attackMover.grab("attack");
+				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					attackMover.grab("attack");
+					defenceMover.grab("defence");
+				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+					attackMover.grab("attack");					
+				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					defenceMover.grab("defence");
+				}
 			}
 		});
 		
