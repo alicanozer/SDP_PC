@@ -78,6 +78,7 @@ public class PitchConstants {
 	public static Polygon region2;
 	public static Polygon region3;
 	public static Polygon region4;
+	public static int setPitch;
 	private int upperLeftX;
 	private int upperLeftY;
 	private int croppedWidth;

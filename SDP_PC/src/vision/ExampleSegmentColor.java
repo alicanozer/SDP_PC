@@ -108,11 +108,37 @@ public class ExampleSegmentColor {
 		int[] xsA = new int[4];
 		int[] ysA = new int[4];
 		createImagePanel(image);
+		
+		if (PitchConstants.setPitch == 1){
+			int[] xs1 = {50,101,95,53,22,24};
+			int[] ys1 = {28,27,285,286,223,85};
+			Polygon p1 = new Polygon(xs1,ys1,6);
+			PitchConstants.region1 = p1;
+			
+			int[] xs2 = {143,250,245,141};
+			int[] ys2 = {20,19,285,286};
+			Polygon p2 = new Polygon(xs2,ys2,4);
+			PitchConstants.region2 = p2;
+			
+			int[] xs3 = {291,393,395,292};
+			int[] ys3 = {20,19,283,283};
+			Polygon p3 = new Polygon(xs3,ys3,4);
+			PitchConstants.region3 = p3;
+			
+			int[] xs4 = {434,483,509,512,488,438};
+			int[] ys4 = {22,24,79,223,282,283};
+			Polygon p4 = new Polygon(xs4,ys4,6);
+			PitchConstants.region4 = p4;
+		} else if (PitchConstants.setPitch == 2){
+			
+		}
+		
+		
 //		System.out.println("Please click on the 8 corners of the inside of the pitch");
 //		setPitchPolygon(xs, ys);
 //		Polygon p = new Polygon(xs,ys,8);
 //		PitchConstants.pitchPolygon = p;
-		System.out.println("Please click on the 6 corners(inside i.e. on the green) of the leftmost defending region");
+		/*System.out.println("Please click on the 6 corners(inside i.e. on the green) of the leftmost defending region");
 		setDefendPolygon(xsD, ysD);
 		Polygon r1 = new Polygon(xsD,ysD,6);
 		PitchConstants.region1 = r1;
@@ -130,7 +156,7 @@ public class ExampleSegmentColor {
 		System.out.println("Please click on the 6 corners(inside i.e. on the green) of the rightmost defending region");
 		setDefendPolygon(xsD, ysD);
 		Polygon r4 = new Polygon(xsD,ysD,6);
-		PitchConstants.region4 = r4;
+		PitchConstants.region4 = r4;*/
 		
 		System.out.println("Please click 3 times on a blue object");
 		setThreeHSV(blue3);
