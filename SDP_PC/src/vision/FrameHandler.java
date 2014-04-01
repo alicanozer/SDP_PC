@@ -55,7 +55,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 	private long frameCounter = 0;
 	private boolean debug;
 	private PitchConstants consts;
-	
+
 
 
 	static JPanel panel1 = new JPanel();
@@ -68,13 +68,13 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 	static JSlider slider3 = new JSlider(JSlider.VERTICAL,0,1000,25);
 	static JSlider slider4 = new JSlider(JSlider.VERTICAL,0,1000,25);
 	static JSlider slider5 = new JSlider(JSlider.VERTICAL,0,1000,25);
-	
+
 	private PitchColours colors;
 	private ArrayList<Point2D_I32> whitePoints;
 	private int frameLoop = 1;
 	private Object lock = new Object();
 	private Object lock2 = new Object();
-	
+
 	public synchronized float getRed() {
 		synchronized(lock){
 			return red;
@@ -104,7 +104,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 			return blue;
 		}
 	}
-	
+
 	public synchronized float getPlate() {
 		synchronized(lock){
 			return plate;
@@ -116,19 +116,19 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 			return black;
 		}
 	}
-	
+
 	public synchronized void setBlue(float blue) {
 		synchronized(lock){
 			this.blue = blue;
 		}
 	}
-	
+
 	public synchronized void setPlate(float plate) {
 		synchronized(lock){
 			this.plate = plate;
 		}
 	}
-	
+
 	public synchronized void setBlack(float black) {
 		synchronized(lock){
 			this.black = black;
@@ -206,9 +206,9 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 		frame.setVisible(true);
 		frame.setSize(640, 480);
 		CreateSlider();
-		
+
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent ae){
 		String action = ae.getActionCommand();
@@ -230,7 +230,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 			System.out.println("FAULT, SHOULDN'T GET HERE");
 		}
 	}
-	
+
 
 	/**
 	 * this method stops the capture and releases the frame grabber and video device
@@ -296,8 +296,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 				ColorHsv.hsvToRgb(colors.getGreenPitchValue()[0], colors.getGreenPitchValue()[1], colors.getGreenPitchValue()[2], pitchRGB);
 				Color pitch = new Color((int) pitchRGB[0], (int) pitchRGB[1], (int) pitchRGB[2]);
 				colorList.add(pitch);
-//				whitePoints = KMeans.Cluster(pitchImg, 2, 1, colorList).get(0);
-//				ShowImages.showWindow(pitchImg,"pitchImg");
+				//				whitePoints = KMeans.Cluster(pitchImg, 2, 1, colorList).get(0);
+				//				ShowImages.showWindow(pitchImg,"pitchImg");
 
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -309,32 +309,32 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
 		ObjectLocations.frameRate = (1000 / (thisFrame - lastFrame));
 		VisionRunner.sendFrame(new Frame(img,thisFrame));
-		
-		
+
+
 		float[] distanceThresholds = new float[5];
 		distanceThresholds[0] = getRed();
 		distanceThresholds[1] = getYellow();
 		distanceThresholds[2] = getBlue();
 		distanceThresholds[3] = getPlate(); // plate
 		distanceThresholds[4] = getBlack(); //dot
-		
-//		System.out.println("red: " + colors.getRedValue()[0] + " " + colors.getRedValue()[1] + " " + colors.getRedValue()[2]);
-//		System.out.println("yellow: " + colors.getYellowValue()[0] + " " + colors.getYellowValue()[1] + " " + colors.getYellowValue()[2]);
-//		System.out.println("blue: " + colors.getBlueValue()[0] + " " + colors.getBlueValue()[1] + " " + colors.getBlueValue()[2]);
 
-		
+		//		System.out.println("red: " + colors.getRedValue()[0] + " " + colors.getRedValue()[1] + " " + colors.getRedValue()[2]);
+		//		System.out.println("yellow: " + colors.getYellowValue()[0] + " " + colors.getYellowValue()[1] + " " + colors.getYellowValue()[2]);
+		//		System.out.println("blue: " + colors.getBlueValue()[0] + " " + colors.getBlueValue()[1] + " " + colors.getBlueValue()[2]);
+
+
 		recalibrate.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				recalibrate_now = true;
 			}
 		});
-		
+
 		try {
 			ObjectLocations.updateObjectLocations(img,colors.getRedYellowBluePlateBlack(),distanceThresholds,3);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width,height, null);
 		g.setColor(Color.white);
@@ -354,7 +354,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 				}
 			}
 		});
-		
+
 		slider2.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -367,7 +367,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 				}
 			}
 		});
-		
+
 		slider3.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -406,8 +406,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 				}
 			}
 		});
-		
-		
+
+
 		try {
 			//ObjectLocations.updateObjectLocations(img,distanceThresholds);
 		} catch (Exception e) {
@@ -422,10 +422,10 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 			g.drawLine(consts.getRegion12X(), 0, consts.getRegion12X(), img.getHeight());
 			g.drawLine(consts.getRegion23X(), 0, consts.getRegion23X(), img.getHeight());
 			g.drawLine(consts.getRegion34X(), 0, consts.getRegion34X(), img.getHeight());
-			
+
 			//Drawing Goal Markers
 			g.setColor(Color.WHITE);
-			
+
 			g.drawLine(GoalInfo.getLeftGoalCenterNew().getX()-10, GoalInfo.getLeftGoalCenterNew().getY(), GoalInfo.getLeftGoalCenterNew().getX()+10, GoalInfo.getLeftGoalCenterNew().getY());
 			g.drawLine(GoalInfo.getLeftGoalTopNew().getX()-10, GoalInfo.getLeftGoalTopNew().getY(), GoalInfo.getLeftGoalTopNew().getX()+10, GoalInfo.getLeftGoalTopNew().getY());
 			g.drawLine(GoalInfo.getLeftGoalBottomNew().getX()-10, GoalInfo.getLeftGoalBottomNew().getY(),GoalInfo.getLeftGoalBottomNew().getX()+10, GoalInfo.getLeftGoalBottomNew().getY());
@@ -433,8 +433,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 			g.drawLine(GoalInfo.getRightGoalCenterNew().getX()-10, GoalInfo.getRightGoalCenterNew().getY(), GoalInfo.getRightGoalCenterNew().getX()+10, GoalInfo.getRightGoalCenterNew().getY());
 			g.drawLine(GoalInfo.getRightGoalTopNew().getX()-10, GoalInfo.getRightGoalTopNew().getY(), GoalInfo.getRightGoalTopNew().getX()+10, GoalInfo.getRightGoalTopNew().getY());
 			g.drawLine(GoalInfo.getRightGoalBottomNew().getX()-10, GoalInfo.getRightGoalBottomNew().getY(), GoalInfo.getRightGoalBottomNew().getX()+10, GoalInfo.getRightGoalBottomNew().getY());
-			
-			
+
+
 			try {
 				ObjectLocations.drawCrosses(g);
 			} catch (Exception e) {
@@ -449,17 +449,17 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 
 	public static void CreateSlider(){
 		java.util.Hashtable<Integer,JLabel> labelTable = new java.util.Hashtable<Integer,JLabel>(); 
-	    labelTable.put(new Integer(1000), new JLabel("0.01"));
-	    labelTable.put(new Integer(0), new JLabel("0.0")); 
-	    
+		labelTable.put(new Integer(1000), new JLabel("0.01"));
+		labelTable.put(new Integer(0), new JLabel("0.0")); 
+
 		java.util.Hashtable<Integer,JLabel> labelTable2 = new java.util.Hashtable<Integer,JLabel>(); 
-	    labelTable2.put(new Integer(1000), new JLabel("1.0"));
-	    labelTable2.put(new Integer(0), new JLabel("0.0")); 
-	    
+		labelTable2.put(new Integer(1000), new JLabel("1.0"));
+		labelTable2.put(new Integer(0), new JLabel("0.0")); 
+
 		java.util.Hashtable<Integer,JLabel> labelTable3 = new java.util.Hashtable<Integer,JLabel>(); 
-	    labelTable3.put(new Integer(1000), new JLabel("0.5"));
-	    labelTable3.put(new Integer(0), new JLabel("0.0")); 
-	    
+		labelTable3.put(new Integer(1000), new JLabel("0.5"));
+		labelTable3.put(new Integer(0), new JLabel("0.0")); 
+
 		panel1.setLayout(new BorderLayout());
 		slider1.setMinorTickSpacing(1);
 		slider1.setMajorTickSpacing(25);
@@ -467,9 +467,9 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 		slider1.setLabelTable(labelTable);
 		slider1.setPaintLabels(true);
 		panel1.add(slider1);
-		
-		
-		
+
+
+
 		panel2.setLayout(new BorderLayout());
 		slider2.setMinorTickSpacing(1);
 		slider2.setMajorTickSpacing(25);
@@ -477,8 +477,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 		slider2.setLabelTable(labelTable);
 		slider2.setPaintLabels(true);
 		panel2.add(slider2);
-		
-		
+
+
 		panel3.setLayout(new BorderLayout());
 		slider3.setMinorTickSpacing(1);
 		slider3.setMajorTickSpacing(25);
@@ -486,7 +486,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 		slider3.setLabelTable(labelTable);
 		slider3.setPaintLabels(true);
 		panel3.add(slider3);
-		
+
 		panel4.setLayout(new BorderLayout());
 		slider4.setMinorTickSpacing(1);
 		slider4.setMajorTickSpacing(25);
@@ -502,11 +502,11 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 		slider5.setLabelTable(labelTable2);
 		slider5.setPaintLabels(true);
 		panel5.add(slider5);
-		
+
 		JFrame frame = new JFrame("Red | Yellow | Blue | Plate | Dots");
 		frame.setLayout(new GridLayout(1,3));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		frame.setBounds(0, 0, 400, 1050);
 		frame.add(panel1);
 		frame.add(panel2);
@@ -515,6 +515,6 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 		frame.add(panel5);
 		//frame.pack();
 		frame.setVisible(true);
-		
+
 	}
 }

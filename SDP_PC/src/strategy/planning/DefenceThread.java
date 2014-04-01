@@ -56,21 +56,12 @@ public class DefenceThread implements Runnable {
 					//InterceptBall.intercept("attack",attackMover);
 				}
 			} catch (Exception e) {
-				PrintWriter out = null;
 				e.printStackTrace();
-				try {
-					out = new PrintWriter("filename.txt");
-					e.printStackTrace(out);
-					out.close();
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 			}
-
 		}
 
 	}
+
 }
 
 

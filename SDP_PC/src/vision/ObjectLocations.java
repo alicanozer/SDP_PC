@@ -45,7 +45,7 @@ public class ObjectLocations {
 	public static double getYellowATTACKmarkerDirectionAngle() {
 		synchronized(lock1){
 			return yellowATTACKmarkerDirectionAngle;
-			}
+		}
 	}
 	public static double getYellowDEFENDmarkerDicrectionAngle() {
 		synchronized(lock1){
@@ -207,10 +207,10 @@ public class ObjectLocations {
 		try {
 			double dist = 0.0;
 			if(ballLocal != null & ObjectLocations.getBall()!= null){
-				 dist= PointUtils.euclideanDistance(ballLocal, ObjectLocations.getBall());
-					double v = dist*frameRate;
-					//set ball speed
-					ballSpeed = v;
+				dist= PointUtils.euclideanDistance(ballLocal, ObjectLocations.getBall());
+				double v = dist*frameRate;
+				//set ball speed
+				ballSpeed = v;
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -572,8 +572,8 @@ public class ObjectLocations {
 
 	public static Point2D_I32 getTHEMDefend() {
 		synchronized(lock1){
-		if (yellowUs) return getBlueDEFENDmarker();
-		else return getYellowDEFENDmarker();}
+			if (yellowUs) return getBlueDEFENDmarker();
+			else return getYellowDEFENDmarker();}
 	}
 
 	public static Point2D_I32 getTHEMDefendDot() {
