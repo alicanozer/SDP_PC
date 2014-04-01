@@ -267,12 +267,13 @@ public class MoveToPointXY {
 				}
 			} else {
 				// Defending RIGHT
-				System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
-				System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
-				System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
-				System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
+				
 				
 				if(DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)) < 12){
+					System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
+					System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
+					System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
+					System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
 					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
 					System.out.println("Angle to parrallel with goal: " + angle);

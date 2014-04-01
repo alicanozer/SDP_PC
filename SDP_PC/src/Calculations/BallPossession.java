@@ -66,17 +66,18 @@ public class BallPossession {
 		
 		Point2D_I32 ball = ObjectLocations.getBall();
 				
-		try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(1500);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		while(ball == null) {
 			ball = ObjectLocations.getBall();
 		}
 		boolean BallRegion = BallRegion(ball, polygon);
 		
 		//if the robot is near the ball and facing the ball it has possession
+		System.out.println("ball speed" + ObjectLocations.getBallSpeed());
 		if (BallRegion && ObjectLocations.getBallSpeed() < 60) {
 //			if (speed < 10) { 
 				possession = true;
