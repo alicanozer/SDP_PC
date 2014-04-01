@@ -296,8 +296,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 				ColorHsv.hsvToRgb(colors.getGreenPitchValue()[0], colors.getGreenPitchValue()[1], colors.getGreenPitchValue()[2], pitchRGB);
 				Color pitch = new Color((int) pitchRGB[0], (int) pitchRGB[1], (int) pitchRGB[2]);
 				colorList.add(pitch);
-				whitePoints = KMeans.Cluster(pitchImg, 2, 1, colorList).get(0);
-				ShowImages.showWindow(pitchImg,"pitchImg");
+//				whitePoints = KMeans.Cluster(pitchImg, 2, 1, colorList).get(0);
+//				ShowImages.showWindow(pitchImg,"pitchImg");
 
 			} catch (Exception e1) {
 				e1.printStackTrace();

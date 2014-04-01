@@ -81,6 +81,9 @@ public class StartStrategy extends JFrame {
 		dthread.start();
 		System.out.println("I AM GETTING TO THIS POINT");
 
+		while(true){
+
+		}
 
 	}
 

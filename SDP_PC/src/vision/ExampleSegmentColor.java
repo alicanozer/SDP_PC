@@ -28,7 +28,7 @@ public class ExampleSegmentColor {
 				synchronized(ExampleSegmentColor.colour){
 					float[] color = new float[3];
 					int rgb = img.getRGB(e.getX(),e.getY());
-					System.out.println("x " + e.getX() + " y " + e.getY());
+//					System.out.println("x " + e.getX() + " y " + e.getY());
 					ColorHsv.rgbToHsv((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF , rgb&0xFF,color);
 					ExampleSegmentColor.colour = color;
 					ExampleSegmentColor.flag = true;
@@ -198,13 +198,13 @@ public class ExampleSegmentColor {
 		setThreeHSV(greenPlate3);
 		setMeanHSV3(greenPlate,greenPlate3);
 		
-		System.out.println("Please click 3 times on a green pitch object");
-		setThreeHSV(greenPitch3);
-		setMeanHSV3(greenPitch,greenPitch3);
-		
-		System.out.println("Please click 3 times on a white edge object");
-		setThreeHSV(white3);
-		setMeanHSV3(white,white3);
+//		System.out.println("Please click 3 times on a green pitch object");
+//		setThreeHSV(greenPitch3);
+//		setMeanHSV3(greenPitch,greenPitch3);
+//		
+//		System.out.println("Please click 3 times on a white edge object");
+//		setThreeHSV(white3);
+//		setMeanHSV3(white,white3);
 		
 		System.out.println("You have selected all objects!");
 		

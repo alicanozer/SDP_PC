@@ -3,6 +3,9 @@
  */
 package strategy.planning;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+
 import georegression.struct.point.Point2D_I32;
 import strategy.movement.MoveToPointXY;
 import strategy.movement.TurnToObject;
@@ -30,26 +33,41 @@ public class DefenceThread implements Runnable {
 	@Override
 	public void run() {
 		// big while loop that never ends
-		while(true){
+		int x = 4;
+		while (true) {
 			try {
-				if (BallPossession.hasPossession(RobotType.AttackUs, ObjectLocations.getUSAttack())) {
+				if (BallPossession.hasPossession(RobotType.AttackUs,
+						ObjectLocations.getUSAttack())) {
 					System.out.println("Attack Strategy");
-				} else if (BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())) {
+				} else if (BallPossession.hasPossession(RobotType.DefendUs,
+						ObjectLocations.getUSDefend())) {
 					System.out.println("Passing Strategy");
-				} else if (BallPossession.hasPossession(RobotType.AttackThem, ObjectLocations.getTHEMAttack())) {
+				} else if (BallPossession.hasPossession(
+						RobotType.AttackThem,
+						ObjectLocations.getTHEMAttack())) {
 					System.out.println("Block Shot Strategy");
-				} else if (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getTHEMDefend())) {
+				} else if (BallPossession.hasPossession(
+						RobotType.DefendThem,
+						ObjectLocations.getTHEMDefend())) {
 					System.out.println("Block Pass Strategy");
 				} else {
 					// Intercept Strategy
-					InterceptBall.intercept("defence",mover);
+					InterceptBall.intercept("defence", mover);
 					//InterceptBall.intercept("attack",attackMover);
 				}
 			} catch (Exception e) {
-				System.out.println("Something went wrong, restarting strategy");
+				PrintWriter out = null;
+				try {
+					out = new PrintWriter("filename.txt");
+					out.println("Error - thread stopped");
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 
 		}
+
 	}
 }
 
