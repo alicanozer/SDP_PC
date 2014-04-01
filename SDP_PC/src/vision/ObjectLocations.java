@@ -32,28 +32,32 @@ public class ObjectLocations {
 	private static ArrayList<Polygon> platePolygons = null;
 	public static double frameRate;
 	private static double ballSpeed = 0;
+
+	private static Object lock1 = new Object();
 	public static double getBallSpeed(){
 		return ballSpeed;
 	}
 	public static double getBallDirectionAngle() {
-		while(!lock);
-		return ballDirectionAngle;
+		synchronized(lock1){
+			return ballDirectionAngle;
+		}
 	}
 	public static double getYellowATTACKmarkerDirectionAngle() {
-		while(!lock);
-		return yellowATTACKmarkerDirectionAngle;
+		synchronized(lock1){
+			return yellowATTACKmarkerDirectionAngle;
+			}
 	}
 	public static double getYellowDEFENDmarkerDicrectionAngle() {
-		while(!lock);
-		return yellowDEFENDmarkerDicrectionAngle;
+		synchronized(lock1){
+			return yellowDEFENDmarkerDicrectionAngle;}
 	}
 	public static double getBlueATTACKmarkerDirectionAngle() {
-		while(!lock);
-		return blueATTACKmarkerDirectionAngle;
+		synchronized(lock1){
+			return blueATTACKmarkerDirectionAngle;}
 	}
 	public static double getBlueDEFENDmarkerDirectionAngle() {
-		while(!lock);
-		return blueDEFENDmarkerDirectionAngle;
+		synchronized(lock1){
+			return blueDEFENDmarkerDirectionAngle;}
 	}
 
 	private static double ballDirectionAngle;
@@ -63,22 +67,25 @@ public class ObjectLocations {
 	private static double blueDEFENDmarkerDirectionAngle;
 
 	public static double getYellowATTACKmarkerOrientationAngle() {
-		while(!lock);
-		return yellowATTACKmarkerOrientationAngle;
+		synchronized(lock1){
+			return yellowATTACKmarkerOrientationAngle;
+		}
 	}
 	public static double getYellowDEFENDmarkerOrientationAngle() {
-		while(!lock);
-		return yellowDEFENDmarkerOrientationAngle;
+		synchronized(lock1){
+			return yellowDEFENDmarkerOrientationAngle;
+		}
 	}
 	public static double getBlueATTACKmarkerOrientationAngle() {
-		while(!lock);
-		return blueATTACKmarkerOrientationAngle;
+		synchronized(lock1){
+			return blueATTACKmarkerOrientationAngle;
+		}
 	}
 	public static double getBlueDEFENDmarkerOrientationAngle() {
-		while(!lock);
-		return blueDEFENDmarkerOrientationAngle;
+		synchronized(lock1){
+			return blueDEFENDmarkerOrientationAngle;}
 	}
-	
+
 	private static double yellowATTACKmarkerOrientationAngle = 0.0;
 	private static double yellowDEFENDmarkerOrientationAngle = 0.0;
 	private static double blueATTACKmarkerOrientationAngle = 0.0;
@@ -88,9 +95,9 @@ public class ObjectLocations {
 	// we assume the leftmost region of the pitch is region 1
 	private static boolean yellowLeft; // flag whether the yellow team is defending the left goal
 	private static boolean yellowUs;   // flag whether we are the yellow team
-	
+
 	private static PitchConstants consts;
-	
+
 	public static PitchConstants getConsts() {
 		return consts;
 	}
@@ -100,25 +107,25 @@ public class ObjectLocations {
 	private static boolean lock = true;
 
 	public static void setYellowDefendingLeft(boolean flag){
-		while(!lock);
+		synchronized(lock1){
 
-		//entering critical section
-		lock = false;
-		yellowLeft = flag;
-		lock = true;
+			//entering critical section
+			lock = false;
+			yellowLeft = flag;
+			lock = true;}
 		//leaving critical section
 	}
 	public static boolean getYellowDefendingLeft() {
 		return yellowLeft;
 	}
-	
-	public static void setYellowUs(boolean flag){
-		while(!lock);
 
-		//entering critical section
-		lock = false;
-		yellowUs = flag;
-		lock = true;
+	public static void setYellowUs(boolean flag){
+		synchronized(lock1){
+
+			//entering critical section
+			lock = false;
+			yellowUs = flag;
+			lock = true;}
 		//leaving critical section
 
 	}
@@ -141,12 +148,12 @@ public class ObjectLocations {
 		platePolygons = VisionOps.findGreenPlates(objectsToLocations,PitchConstants.region1,PitchConstants.region2, PitchConstants.region3, PitchConstants.region4);
 		ArrayList<Point2D_I32> yellowMarkers = VisionOps.findYellowMarkersFromMapping(objectsToLocations, consts.getMiddleLine(),platePolygons);
 		ArrayList<Point2D_I32> blueMarkers = VisionOps.findBlueMarkersFromMapping(objectsToLocations, consts.getMiddleLine(),platePolygons);
-		
-		
-		
+
+
+
 		ArrayList<Point2D_I32> dotsLocal = new ArrayList<Point2D_I32>();
 
-		
+
 		if(platePolygons != null){
 			for(Polygon p : platePolygons){
 				if(p != null){
@@ -155,40 +162,40 @@ public class ObjectLocations {
 				}
 			}
 		}
-		
-//		if(yellowMarkers != null){
-//			for(Point2D_I32 p: yellowMarkers){
-//				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
-////				Point2D_I32 newCentre = VisionOps.getDotPosition(
-////						img, 
-////						p, 
-////						30, 
-////						2, 
-////						1, 
-////						colors.getBlackValue(), 
-////						colors.getYellowValue(), 
-////						colors.getGreenPlateValue());   //.getMeanDotNearMarker(img,p,40,colors.getBlackValue());
-//				if(newCentre != null)
-//					dotsLocal.add(newCentre); // window 44 works well
-//			}
-//		}
-//
-//		if(blueMarkers != null){
-//			for(Point2D_I32 p: blueMarkers){
-//				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
-////				Point2D_I32 newCentre = VisionOps.getDotPosition(
-////						img, 
-////						p, 
-////						30, 
-////						2, 
-////						1, 
-////						colors.getBlackValue(), 
-////						colors.getBlueValue(), 
-////						colors.getGreenPlateValue()); 
-//				if(newCentre != null)
-//					dotsLocal.add(newCentre); // window 44 works well
-//			}
-//		}
+
+		//		if(yellowMarkers != null){
+		//			for(Point2D_I32 p: yellowMarkers){
+		//				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
+		////				Point2D_I32 newCentre = VisionOps.getDotPosition(
+		////						img, 
+		////						p, 
+		////						30, 
+		////						2, 
+		////						1, 
+		////						colors.getBlackValue(), 
+		////						colors.getYellowValue(), 
+		////						colors.getGreenPlateValue());   //.getMeanDotNearMarker(img,p,40,colors.getBlackValue());
+		//				if(newCentre != null)
+		//					dotsLocal.add(newCentre); // window 44 works well
+		//			}
+		//		}
+		//
+		//		if(blueMarkers != null){
+		//			for(Point2D_I32 p: blueMarkers){
+		//				Point2D_I32 newCentre = VisionOps.getMeanDotNearMarker(img,p,30);
+		////				Point2D_I32 newCentre = VisionOps.getDotPosition(
+		////						img, 
+		////						p, 
+		////						30, 
+		////						2, 
+		////						1, 
+		////						colors.getBlackValue(), 
+		////						colors.getBlueValue(), 
+		////						colors.getGreenPlateValue()); 
+		//				if(newCentre != null)
+		//					dotsLocal.add(newCentre); // window 44 works well
+		//			}
+		//		}
 
 		//setting the ball and its angle
 		try {
@@ -198,13 +205,16 @@ public class ObjectLocations {
 		}
 		// before we set the ball
 		try {
-			double dist = PointUtils.euclideanDistance(ballLocal, ObjectLocations.getBall());
-			double v = dist*frameRate;
-			//set ball speed
-			ballSpeed = v;
+			double dist = 0.0;
+			if(ballLocal != null & ObjectLocations.getBall()!= null){
+				 dist= PointUtils.euclideanDistance(ballLocal, ObjectLocations.getBall());
+					double v = dist*frameRate;
+					//set ball speed
+					ballSpeed = v;
+			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
-			//e1.printStackTrace();
+			e1.printStackTrace();
 		}
 		// set the ball
 		setBall(ballLocal);
@@ -323,21 +333,21 @@ public class ObjectLocations {
 						try {
 							double newAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance)
-							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
+								yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 							//
 							//if(PointUtils.euclideanDistance(dot, yellowDEFENDdot) < distanceTolerance) 
-								setYellowDEFENDdot(dot);
+							setYellowDEFENDdot(dot);
 							//
-							} catch (Exception e) {
+						} catch (Exception e) {
 						}
 					else if(consts.getRegion12X() < dot.x && dot.x < consts.getRegion23X())
 						try {
 							double newAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance)
-							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
+								blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 							//
 							//if(PointUtils.euclideanDistance(dot, blueATTACKdot) < distanceTolerance) 
-								setBlueATTACKdot(dot);
+							setBlueATTACKdot(dot);
 							//
 						} catch (Exception e) {
 						}
@@ -345,10 +355,10 @@ public class ObjectLocations {
 						try {
 							double newAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance)
-							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
+								yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 							//
 							//if(PointUtils.euclideanDistance(dot, yellowATTACKdot) < distanceTolerance) 
-								setYellowATTACKdot(dot);
+							setYellowATTACKdot(dot);
 							//
 						} catch (Exception e) {
 						}
@@ -357,10 +367,10 @@ public class ObjectLocations {
 						try {
 							double newAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance) // 10 degrees is 0.17 radians
-							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
+								blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 							//
 							//if(PointUtils.euclideanDistance(dot, blueDEFENDdot) < distanceTolerance) 
-								setBlueDEFENDdot(dot);
+							setBlueDEFENDdot(dot);
 							//
 						} catch (Exception e) {
 						}
@@ -375,10 +385,10 @@ public class ObjectLocations {
 						try {
 							double newAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 							if(Math.abs(newAngle - blueDEFENDmarkerOrientationAngle) < angleTolerance)
-							blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
+								blueDEFENDmarkerOrientationAngle = VisionOps.getDirection(blueDEFENDmarker, dot);
 							//
 							//if(PointUtils.euclideanDistance(dot, blueDEFENDdot) < distanceTolerance) 
-								setBlueDEFENDdot(dot);
+							setBlueDEFENDdot(dot);
 							//
 						} catch (Exception e) {
 
@@ -387,10 +397,10 @@ public class ObjectLocations {
 						try {
 							double newAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 							if(Math.abs(newAngle - yellowATTACKmarkerOrientationAngle) < angleTolerance)
-							yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
+								yellowATTACKmarkerOrientationAngle = VisionOps.getDirection(yellowATTACKmarker, dot);
 							//
 							//if(PointUtils.euclideanDistance(dot, yellowATTACKdot) < distanceTolerance) 
-								setYellowATTACKdot(dot);
+							setYellowATTACKdot(dot);
 							//
 						} catch (Exception e) {
 
@@ -399,10 +409,10 @@ public class ObjectLocations {
 						try {
 							double newAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 							if(Math.abs(newAngle - blueATTACKmarkerOrientationAngle) < angleTolerance) 
-							blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
+								blueATTACKmarkerOrientationAngle = VisionOps.getDirection(blueATTACKmarker, dot);
 							//
 							//if(PointUtils.euclideanDistance(dot, blueATTACKdot) < distanceTolerance) 
-								setBlueATTACKdot(dot);
+							setBlueATTACKdot(dot);
 							//
 						} catch (Exception e) {
 
@@ -412,10 +422,10 @@ public class ObjectLocations {
 						try {
 							double newAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 							if(Math.abs(newAngle - yellowDEFENDmarkerOrientationAngle) < angleTolerance) 
-							yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
+								yellowDEFENDmarkerOrientationAngle = VisionOps.getDirection(yellowDEFENDmarker, dot);
 							//
 							//if(PointUtils.euclideanDistance(dot, yellowDEFENDdot) < distanceTolerance) 
-								setYellowDEFENDdot(dot);
+							setYellowDEFENDdot(dot);
 							//
 						} catch (Exception e) {
 
@@ -455,123 +465,123 @@ public class ObjectLocations {
 		ObjectLocations.blueDEFENDdot = blueDEFENDdot;
 	}
 	private static void setBall(Point2D_I32 pos) {
-		while(!lock);
-		//entering critical section
-		lock = false;
-		ball = pos;
-		lock = true;
+		synchronized(lock1){
+			//entering critical section
+			lock = false;
+			ball = pos;
+			lock = true;}
 		//leaving critical section
 	}
 
 	private static void setYellowDEFENDmarker(Point2D_I32 pos) {
-		while(!lock);
-		//entering critical section
-		lock = false;
-		yellowDEFENDmarker = pos;
-		lock = true;
+		synchronized(lock1){
+			//entering critical section
+			lock = false;
+			yellowDEFENDmarker = pos;
+			lock = true;}
 		//leaving critical section
 	}
 
 	private static void setYellowATTACKmarker(Point2D_I32 pos) {
-		while(!lock);
-		//entering critical section
-		lock = false;
-		yellowATTACKmarker = pos;
-		lock = true;
+		synchronized(lock1){
+			//entering critical section
+			lock = false;
+			yellowATTACKmarker = pos;
+			lock = true;}
 		//leaving critical section
 	}
 
 	private static void setBlueDEFENDmarker(Point2D_I32 pos) {
-		while(!lock);
-		//entering critical section
-		lock = false;
-		blueDEFENDmarker = pos;
-		lock = true;
+		synchronized(lock1){
+			//entering critical section
+			lock = false;
+			blueDEFENDmarker = pos;
+			lock = true;}
 		//leaving critical section
 	}
 
 	private static void setBlueATTACKmarker(Point2D_I32 pos) {
-		while(!lock);
-		//entering critical section
-		lock = false;
-		blueATTACKmarker = pos;
-		lock = true;
+		synchronized(lock1){
+			//entering critical section
+			lock = false;
+			blueATTACKmarker = pos;
+			lock = true;}
 		//leaving critical section
 	}
 
 	public static Point2D_I32 getBall(){
-		while(!lock);
-		return ball;
+		synchronized(lock1){
+			return ball;}
 	}
 
 	public static Point2D_I32 getYellowDEFENDmarker(){
-		while(!lock);
-		return yellowDEFENDmarker;
+		synchronized(lock1){
+			return yellowDEFENDmarker;}
 	}
 
 	public static Point2D_I32 getYellowATTACKmarker(){
-		while(!lock);
-		return yellowATTACKmarker;
+		synchronized(lock1){
+			return yellowATTACKmarker;}
 	}
 	public static Point2D_I32 getBlueDEFENDmarker(){
-		while(!lock);
-		return blueDEFENDmarker;
+		synchronized(lock1){
+			return blueDEFENDmarker;}
 	}
 
 	public static Point2D_I32 getBlueATTACKmarker(){
-		while(!lock);
-		return blueATTACKmarker;
+		synchronized(lock1){
+			return blueATTACKmarker;}
 	}
 
 	public static Point2D_I32 getUSAttack(){
-		while(!lock);
-		if(yellowUs) return getYellowATTACKmarker();
-		else return getBlueATTACKmarker();
-	}
-	
-	public static Point2D_I32 getUSAttackDot() {
-		while(!lock);
-		if(yellowUs) return getYellowATTACKdot();
-		else return getBlueATTACKdot();
-	}
-	
-	public static Point2D_I32 getUSDefend(){
-		while(!lock);
-		if(yellowUs) return getYellowDEFENDmarker();
-		else return getBlueDEFENDmarker();
-	}
-	
-	public static Point2D_I32 getUSDefendDot() {
-		while(!lock);
-		if(yellowUs) return getYellowDEFENDdot();
-		else return getBlueDEFENDdot();
-	}
-	
-	public static Point2D_I32 getTHEMAttack() {
-		while(!lock);
-		if(yellowUs) return getBlueATTACKmarker();
-		else return getYellowATTACKmarker();
-	}
-	
-	public static Point2D_I32 getTHEMAttackDot() {
-		while(!lock);
-		if(yellowUs) return getBlueATTACKdot();
-		else return getYellowATTACKdot();
+		synchronized(lock1){
+			if(yellowUs) return getYellowATTACKmarker();
+			else return getBlueATTACKmarker();}
 	}
 
-	
+	public static Point2D_I32 getUSAttackDot() {
+		synchronized(lock1){
+			if(yellowUs) return getYellowATTACKdot();
+			else return getBlueATTACKdot();}
+	}
+
+	public static Point2D_I32 getUSDefend(){
+		synchronized(lock1){
+			if(yellowUs) return getYellowDEFENDmarker();
+			else return getBlueDEFENDmarker();}
+	}
+
+	public static Point2D_I32 getUSDefendDot() {
+		synchronized(lock1){
+			if(yellowUs) return getYellowDEFENDdot();
+			else return getBlueDEFENDdot();}
+	}
+
+	public static Point2D_I32 getTHEMAttack() {
+		synchronized(lock1){
+			if(yellowUs) return getBlueATTACKmarker();
+			else return getYellowATTACKmarker();}
+	}
+
+	public static Point2D_I32 getTHEMAttackDot() {
+		synchronized(lock1){
+			if(yellowUs) return getBlueATTACKdot();
+			else return getYellowATTACKdot();}
+	}
+
+
 	public static Point2D_I32 getTHEMDefend() {
-		while (!lock);
+		synchronized(lock1){
 		if (yellowUs) return getBlueDEFENDmarker();
-		else return getYellowDEFENDmarker();
+		else return getYellowDEFENDmarker();}
 	}
-	
+
 	public static Point2D_I32 getTHEMDefendDot() {
-		while(!lock);
-		if(yellowUs) return getBlueDEFENDdot();
-		else return getYellowDEFENDdot();
+		synchronized(lock1){
+			if(yellowUs) return getBlueDEFENDdot();
+			else return getYellowDEFENDdot();}
 	}
-	
+
 	/**
 	 * draws lines indicating direction of movement over an object
 	 * @param g
@@ -683,23 +693,23 @@ public class ObjectLocations {
 			// TODO Auto-generated catch block
 
 		}
-		
-//		try {
-//			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerDirectionAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerDirectionAngle)*100)));
-//			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerDicrectionAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerDicrectionAngle)*100)));
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//
-//		}
-//		
-//		try {
-//			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerDirectionAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerDirectionAngle)*100)));
-//			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerDirectionAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerDirectionAngle)*100)));
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//
-//		}
-		
+
+		//		try {
+		//			g.draw(new Line2D.Double(yellowATTACKmarker.x, yellowATTACKmarker.y, (yellowATTACKmarker.x + Math.sin(yellowATTACKmarkerDirectionAngle)*100), (yellowATTACKmarker.y + Math.cos(yellowATTACKmarkerDirectionAngle)*100)));
+		//			g.draw(new Line2D.Double(yellowDEFENDmarker.x, yellowDEFENDmarker.y, (yellowDEFENDmarker.x + Math.sin(yellowDEFENDmarkerDicrectionAngle)*100), (yellowDEFENDmarker.y + Math.cos(yellowDEFENDmarkerDicrectionAngle)*100)));
+		//		} catch (Exception e) {
+		//			// TODO Auto-generated catch block
+		//
+		//		}
+		//		
+		//		try {
+		//			g.draw(new Line2D.Double(blueATTACKmarker.x, blueATTACKmarker.y, (blueATTACKmarker.x + Math.sin(blueATTACKmarkerDirectionAngle)*100), (blueATTACKmarker.y + Math.cos(blueATTACKmarkerDirectionAngle)*100)));
+		//			g.draw(new Line2D.Double(blueDEFENDmarker.x, blueDEFENDmarker.y, (blueDEFENDmarker.x + Math.sin(blueDEFENDmarkerDirectionAngle)*100), (blueDEFENDmarker.y + Math.cos(blueDEFENDmarkerDirectionAngle)*100)));
+		//		} catch (Exception e) {
+		//			// TODO Auto-generated catch block
+		//
+		//		}
+
 		g.setColor(Color.WHITE);
 		try {
 			g.draw(new Line2D.Double(yellowDEFENDmarker.x,yellowDEFENDmarker.y, yellowDEFENDdot.x, yellowDEFENDdot.y));
@@ -708,7 +718,7 @@ public class ObjectLocations {
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
-		
+
 		try {
 
 			g.draw(new Line2D.Double(blueDEFENDmarker.x,blueDEFENDmarker.y, blueDEFENDdot.x, blueDEFENDdot.y));
@@ -717,14 +727,14 @@ public class ObjectLocations {
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
-		
+
 		g.setColor(Color.GREEN);
 		try{
 			for(Polygon p: ObjectLocations.platePolygons){
 				g.draw(p);
 			}
 		} catch(Exception e){
-			
+
 		}
 
 		g.setColor(c);
