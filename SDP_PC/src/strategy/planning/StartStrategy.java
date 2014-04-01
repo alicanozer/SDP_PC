@@ -1,5 +1,7 @@
 package strategy.planning;
 
+import georegression.struct.point.Point2D_I32;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -9,6 +11,11 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import Calculations.BallPossession;
+import strategy.movement.MoveToPointXY;
+import strategy.movement.TurnToObject;
+import vision.ObjectLocations;
 import vision.PitchConstants;
 import vision.VisionRunner;
 import world.RobotType;
@@ -35,7 +42,7 @@ public class StartStrategy extends JFrame {
 	private final JButton disconnectBluetooth = new JButton("Disconnect");
 	private String[] connectOption = { "Both", "Attacker", "Defender" };
 	private final JComboBox<String> connectOptions = new JComboBox<>(connectOption);
-	
+	private static int flag = -1;
 	//Bluetooth stuff
     private BluetoothRobot attackRobot;
     private BluetoothRobot defenceRobot;
@@ -63,8 +70,35 @@ public class StartStrategy extends JFrame {
     	
 		assert (strategyThread == null || !strategyThread.isAlive()) : "Strategy is already running";
 		System.out.println("Starting Strategy...");
+		
+		while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend()) && ObjectLocations.getBall() != null && ObjectLocations.getUSDefend() != null && ObjectLocations.getUSDefendDot() != null){
+			try {
+				// TURN
+				Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
+				double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
+				System.out.println("Angle to parrallel with goal: " + angle);
+				if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+					System.out.println("correcting angle!!!!!!!!!!!!!!!");
+					defenceMover.stopRobot("defence");
+					defenceMover.rotate("defence", angle);
+				}
+				
+				// move
+				System.out.println("distance: " + Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y));
+				if(Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y) > 10){
+					MoveToPointXY.moveAwayDefence("defence", defenceMover);
+					//MoveToPointXY.moveRobotToBlock("defence", defenceMover);
+					MoveToPointXY.moveRobotToBlockCont("defence", defenceMover);
+					
+				}
+				else {
+					defenceMover.stopRobot("defence");
+				}
+			} catch (Exception e) {
 
-		//Add all strategies here!!
+				e.printStackTrace();
+			}		
+		}
 		
     }
     
@@ -112,12 +146,12 @@ public class StartStrategy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Halt and clear active movements
 				try {
-					if (attackRobot.isAttackConnected() && defenceRobot.isAttackConnected()) {
+					if (flag == 0) {
 						attackMover.kill();
 						defenceMover.kill();
-					} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+					} else if (flag == 1) {
 						attackMover.kill();				
-					} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					} else if (flag == 2) {
 						defenceMover.kill();
 					}
 				} catch (InterruptedException e1) {
@@ -142,12 +176,12 @@ public class StartStrategy extends JFrame {
 				System.out.println("Stopping the robot");
 				// Stop the robot.
 				
-				if (attackRobot.isAttackConnected() && defenceRobot.isAttackConnected()) {
+				if (flag == 0) {
 					attackMover.stopRobot("attack");
 					defenceMover.stopRobot("defence");
-				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+				} else if (flag == 1) {
 					attackMover.stopRobot("attack");
-				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				} else if (flag == 2) {
 					defenceMover.stopRobot("defence");
 				}
 			}
@@ -159,22 +193,22 @@ public class StartStrategy extends JFrame {
 				Strategy.alldie = true;
 				// Kill the mover and wait for it to stop completely
 				try {
-					if (attackRobot.isAttackConnected() && defenceRobot.isAttackConnected()) {
+					if (flag == 0) {
 						attackMover.kill();
 						defenceMover.kill();
-					} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+					} else if (flag == 1) {
 						attackMover.kill();				
-					} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					} else if (flag == 2) {
 						defenceMover.kill();
 					}
 					// If the mover still hasn't stopped within 3 seconds,
 					// assume it's stuck and kill the program the hard way
-					if (attackRobot.isAttackConnected() && defenceRobot.isAttackConnected()) {
+					if (flag == 0) {
 						attackMover.join(3000);
 						defenceMover.join(3000);
-					} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+					} else if (flag == 1) {
 						attackMover.join(3000);
-					} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+					} else if (flag == 2) {
 						defenceMover.join(3000);
 					}
 				} catch (InterruptedException e1) {
@@ -187,12 +221,12 @@ public class StartStrategy extends JFrame {
 
 		kickButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {		
-				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				if (flag == 0) {
 					attackMover.kick("attack");
 					defenceMover.kick("defence");
-				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+				} else if (flag == 1) {
 					attackMover.kick("attack");					
-				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				} else if (flag == 2) {
 					defenceMover.kick("defence");
 				}
 			}
@@ -200,12 +234,12 @@ public class StartStrategy extends JFrame {
 
 		forwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				if (flag == 0) {
 					attackMover.forward("attack", 5);
 					defenceMover.forward("defence", 5);
-				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+				} else if (flag == 1) {
 					attackMover.forward("attack", 5);
-				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				} else if (flag == 2) {
 					defenceMover.forward("defence", 5);
 				}
 			}
@@ -213,12 +247,12 @@ public class StartStrategy extends JFrame {
 
 		backwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				if (flag == 0) {
 					attackMover.forward("attack", -5);
 					defenceMover.forward("defence", -5);
-				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+				} else if (flag == 1) {
 					attackMover.forward("attack", -5);
-				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				} else if (flag == 2) {
 					defenceMover.forward("defence", -5);
 				}
 			}
@@ -226,12 +260,12 @@ public class StartStrategy extends JFrame {
 
 		leftButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				if (flag == 0) {
 					attackMover.rotate("attack", 90);
 					defenceMover.rotate("defence", 90);
-				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+				} else if (flag == 1) {
 					attackMover.rotate("attack", 90);
-				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				} else if (flag == 2) {
 					defenceMover.rotate("defence", 90);
 				}
 			}
@@ -239,12 +273,12 @@ public class StartStrategy extends JFrame {
 
 		rightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				if (flag == 0) {
 					attackMover.rotate("attack", -90);
 					defenceMover.rotate("defence", -90);
-				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+				} else if (flag == 1) {
 					attackMover.rotate("attack", -90);
-				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				} else if (flag == 2) {
 					defenceMover.rotate("defence", -90);
 				}
 			}
@@ -252,12 +286,12 @@ public class StartStrategy extends JFrame {
 
 		grabButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				if (flag == 0) {
 					attackMover.grab("attack");
 					defenceMover.grab("defence");
-				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+				} else if (flag == 1) {
 					attackMover.grab("attack");					
-				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				} else if (flag == 2) {
 					defenceMover.grab("defence");
 				}
 			}
@@ -284,14 +318,34 @@ public class StartStrategy extends JFrame {
 				if (connectOptions.getSelectedItem().equals("Both")) {
 					defenceRobot = new BluetoothRobot(RobotType.DefendUs, myConnection);
 					attackRobot = new BluetoothRobot(RobotType.AttackUs, myConnection);
+					attackMover = new RobotMover(attackRobot);
+					defenceMover = new RobotMover(defenceRobot);
+					attackMover.start();
+					defenceMover.start();
 					System.out.println("Both Robots Connected!!");
+					flag = 0;
 				} else if (connectOptions.getSelectedItem().equals("Attacker")) {
 					attackRobot = new BluetoothRobot(RobotType.AttackUs, myConnection);
-					System.out.println("Attacker Robot Connected!!");					
-				} else if (connectOptions.getSelectedItem().equals("Attacker")) {
+
+					attackMover = new RobotMover(attackRobot);
+					attackMover.start();
+					System.out.println("Attacker Robot Connected!!");			
+					flag =1;
+				} else if (connectOptions.getSelectedItem().equals("Defender")) {
+					try {
+						myConnection = new Bluetooth("defence");
+					} catch (IOException | NXTCommException e1) {
+						e1.printStackTrace();
+					}
+
 					defenceRobot = new BluetoothRobot(RobotType.DefendUs, myConnection);
-					System.out.println("Defender Robot Connected!!");										
+					defenceMover = new RobotMover(defenceRobot);
+					defenceMover.start();
+					System.out.println("Defender Robot Connected!!");		
+					flag = 2;
 				}
+				
+				
 				
 			}
 		});
@@ -306,10 +360,10 @@ public class StartStrategy extends JFrame {
 					attackRobot.disconnect("attack");
 					defenceRobot.disconnect("defence");
 					System.out.println("Both Robots Disconnected!!");
-				} else if (attackRobot.isAttackConnected() && !defenceRobot.isDefenceConnected()) {
+				} else if (flag == 1) {
 					attackRobot.disconnect("attack");
 					System.out.println("Attacker Robot Disconnected");
-				} else if (!attackRobot.isAttackConnected() && defenceRobot.isDefenceConnected()) {
+				} else if (flag == 2) {
 					defenceRobot.disconnect("defence");
 					System.out.println("Defender Robot Disconnected!!");					
 				}
@@ -319,10 +373,18 @@ public class StartStrategy extends JFrame {
     }
     
 	private void cleanQuit() {
-		if (attackRobot.isAttackConnected())
+		if (flag == 0) {
 			attackRobot.disconnect("attack");
-		if (defenceRobot.isDefenceConnected())
 			defenceRobot.disconnect("defence");
+			System.out.println("Both Robots Disconnected!!");
+		} else if (flag == 1) {
+			attackRobot.disconnect("attack");
+			System.out.println("Attacker Robot Disconnected");
+		} else if (flag == 2) {
+			defenceRobot.disconnect("defence");
+			System.out.println("Defender Robot Disconnected!!");					
+		}
+		
 		System.exit(0);
 	}
     

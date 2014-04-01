@@ -1,10 +1,17 @@
 package vision;
 
+import georegression.struct.point.Point2D_I32;
+
 import java.awt.Polygon;
 
 public class PitchConstants {
 	public PitchConstants(int upperLeftX, int upperLeftY, int croppedWidth,
-			int croppedHeight, int region12x, int region23x, int region34x, int hUpperBound, int hLowerBound) {
+			int croppedHeight, int region12x, int region23x, int region34x, int hUpperBound, int hLowerBound,
+			int rightGoalTopX, int rightGoalTopY, int rightGoalBottomX, int rightGoalBottomY,
+			int leftGoalTopX, int leftGoalTopY, int leftGoalBottomX, int leftGoalBottomY) {
+		
+
+		
 		this.upperLeftX = upperLeftX;
 		this.upperLeftY = upperLeftY;
 		this.croppedWidth = croppedWidth;
@@ -15,6 +22,11 @@ public class PitchConstants {
 		this.hUpperBound = hUpperBound;
 		this.hLowerBound = hLowerBound;
 		this.middleLine = croppedWidth/2; //TODO: this or regin23X ?
+		
+		this.rightGoalTop = new Point2D_I32(rightGoalTopX,rightGoalTopY);
+		this.rightGoalBottom = new Point2D_I32(rightGoalBottomX,rightGoalBottomY);
+		this.leftGoalTop = new Point2D_I32(leftGoalTopX,leftGoalTopY);
+		this.leftGoalBottom = new Point2D_I32(leftGoalBottomX,leftGoalBottomY);
 	}
 	public int getMiddleLine() {
 		return middleLine;
@@ -90,6 +102,22 @@ public class PitchConstants {
 	private int hLowerBound;
 	private int middleLine;
 	
+	public Point2D_I32 getRightGoalTop() {
+		return rightGoalTop;
+	}
+	public Point2D_I32 getRightGoalBottom() {
+		return rightGoalBottom;
+	}
+	public Point2D_I32 getLeftGoalTop() {
+		return leftGoalTop;
+	}
+	public Point2D_I32 getLeftGoalBottom() {
+		return leftGoalBottom;
+	}
+	private Point2D_I32 rightGoalTop;
+	private Point2D_I32 rightGoalBottom;
+	private Point2D_I32 leftGoalTop;
+	private Point2D_I32 leftGoalBottom;
 
 	public static Polygon getRegion1() {
 		return region1;
@@ -107,7 +135,7 @@ public class PitchConstants {
 		return region4;
 	}
 	
-	public static final PitchConstants newPitch = new PitchConstants(60,98,520,307,115,260,410,15,280);
-	public static final PitchConstants oldPitch = new PitchConstants(60,54,515,281,105,255,405,15,280); //TODO : fill in
+	public static final PitchConstants newPitch = new PitchConstants(60,98,520,307,115,260,410,15,280,510,73,510,209,4,72,7,212);
+	public static final PitchConstants oldPitch = new PitchConstants(60,54,515,281,105,255,405,15,280,0,0,0,0,0,0,0,0); //TODO : fill in
 
 }

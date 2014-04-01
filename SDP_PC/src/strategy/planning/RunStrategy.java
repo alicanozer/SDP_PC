@@ -156,8 +156,8 @@ public class RunStrategy extends JFrame {
 				System.out.println("distance: " + Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y));
 				if(Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y) > 10){
 					MoveToPointXY.moveAwayDefence("defence", defenceMover);
-					MoveToPointXY.moveRobotToBlock("defence", defenceMover);
-					
+					//MoveToPointXY.moveRobotToBlock("defence", defenceMover);
+					MoveToPointXY.moveRobotToBlockCont("defence", defenceMover);
 					
 				}
 			} catch (Exception e) {

@@ -5,6 +5,7 @@ import vision.PointUtils;
 import world.RobotType;
 import movement.RobotMover;
 import Calculations.DistanceCalculator;
+import Calculations.GoalInfo;
 import georegression.struct.point.Point2D_I32;
 
 public class MoveToPointXY {
@@ -128,39 +129,73 @@ public class MoveToPointXY {
 	}
 	
 	public static void moveRobotToBlockCont(String type, RobotMover robotMover) throws Exception {
-				
-
-		//Check if ball is left or right of robot
-		if (type.equals("attack")) {
-			if (ObjectLocations.getUSAttackDot().y > ObjectLocations.getUSAttack().y) {
-				if (ObjectLocations.getBall().y > ObjectLocations.getUSAttack().y) {
-					robotMover.forward(type, -distance);
-				} else {				
-					robotMover.forward(type, distance);
+			
+		boolean flag = false;
+		
+		if (ObjectLocations.getYellowUs()) {
+			//We are YELLOW
+			if (ObjectLocations.getYellowDefendingLeft()) {
+				//Defending LEFT
+				if (ObjectLocations.getBall().y > GoalInfo.getLeftGoalTopNew().y || ObjectLocations.getBall().y < GoalInfo.getLeftGoalBottomNew().y) {
+					//Add code
+					flag = true;
 				}
 			} else {
-				if (ObjectLocations.getBall().y > ObjectLocations.getUSAttack().y) {
-					robotMover.forward(type, distance);
-				} else {				
-					robotMover.forward(type, -distance);
+				//Defending RIGHT
+				if (ObjectLocations.getBall().y > GoalInfo.getRightGoalTopNew().y || ObjectLocations.getBall().y < GoalInfo.getRightGoalBottomNew().y) {
+					//Add code
+					flag = true;
 				}
 			}
 		} else {
-			if (ObjectLocations.getUSDefendDot().y > ObjectLocations.getUSDefend().y) {
-				if (ObjectLocations.getBall().y > ObjectLocations.getUSDefend().y) {
-					robotMover.forward(type, -distance);
-				} else {				
-					robotMover.forward(type, distance);
+			//We are BLUE
+			if (ObjectLocations.getYellowDefendingLeft()) {
+				//Defending LEFT
+				if (ObjectLocations.getBall().y > GoalInfo.getLeftGoalTopNew().y || ObjectLocations.getBall().y < GoalInfo.getLeftGoalBottomNew().y) {
+					//Add code
+					flag = true;
 				}
 			} else {
-				if (ObjectLocations.getBall().y > ObjectLocations.getUSDefend().y) {
-					robotMover.forward(type, distance);
-				} else {				
-					robotMover.forward(type, -distance);
+				//Defending RIGHT
+				if (ObjectLocations.getBall().y > GoalInfo.getRightGoalTopNew().y || ObjectLocations.getBall().y < GoalInfo.getRightGoalBottomNew().y) {
+					//Add code
+					flag = true;
 				}
 			}
 		}
-				
+		
+		if (flag) {
+			if (type.equals("attack")) {
+				if (ObjectLocations.getUSAttackDot().y > ObjectLocations.getUSAttack().y) {
+					if (ObjectLocations.getBall().y > ObjectLocations.getUSAttack().y) {
+						robotMover.backwardsC(type);
+					} else {				
+						robotMover.forwardsC(type);
+					}
+				} else {
+					if (ObjectLocations.getBall().y > ObjectLocations.getUSAttack().y) {
+						robotMover.forwardsC(type);
+					} else {				
+						robotMover.backwardsC(type);
+					}
+				}
+			} else {
+				if (ObjectLocations.getUSDefendDot().y > ObjectLocations.getUSDefend().y) {
+					if (ObjectLocations.getBall().y > ObjectLocations.getUSDefend().y) {
+						robotMover.backwardsC(type);
+					} else {				
+						robotMover.forwardsC(type);
+					}
+				} else {
+					if (ObjectLocations.getBall().y > ObjectLocations.getUSDefend().y) {
+						robotMover.forwardsC(type);
+					} else {				
+						robotMover.backwardsC(type);
+					}
+				}
+			}
+		}
+		
 	}
 	
 	

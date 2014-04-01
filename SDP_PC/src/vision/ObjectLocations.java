@@ -78,13 +78,11 @@ public class ObjectLocations {
 		while(!lock);
 		return blueDEFENDmarkerOrientationAngle;
 	}
-
+	
 	private static double yellowATTACKmarkerOrientationAngle = 0.0;
 	private static double yellowDEFENDmarkerOrientationAngle = 0.0;
 	private static double blueATTACKmarkerOrientationAngle = 0.0;
 	private static double blueDEFENDmarkerOrientationAngle = 0.0;
-
-
 
 	private static ArrayList<Point2D_I32> dots = null;
 	// we assume the leftmost region of the pitch is region 1
