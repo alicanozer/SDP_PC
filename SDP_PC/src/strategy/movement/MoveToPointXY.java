@@ -212,7 +212,7 @@ public class MoveToPointXY {
 			//We are yellow
 			if(ObjectLocations.getYellowDefendingLeft()){
 				//Defending LEFT
-				if(DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSDefend().y)) < 6){
+				if(DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSDefend().y)) < 12){
 					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSDefend().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
 					System.out.println("Angle to parrallel with goal: " + angle);
@@ -238,10 +238,10 @@ public class MoveToPointXY {
 					}
 					if (ObjectLocations.getUSDefendDot().x < ObjectLocations.getUSDefend().x) {
 						//Move Backward
-						robotMover.forward(type, -15);
+						robotMover.forward(type, 15);
 					} else {
 						//Move Forward
-						robotMover.forward(type, 15);
+						robotMover.forward(type, -15);
 					}
 				
 				}
@@ -257,7 +257,7 @@ public class MoveToPointXY {
 					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
 						robotMover.rotate("defence", angle);
 					}
-					if (ObjectLocations.getUSDefendDot().x > ObjectLocations.getUSDefend().x) {
+					if (ObjectLocations.getUSDefendDot().x < ObjectLocations.getUSDefend().x) {
 						//Move Backward
 						robotMover.forward(type, -15);
 					} else {
@@ -267,7 +267,11 @@ public class MoveToPointXY {
 				}
 			} else {
 				// Defending RIGHT
-				System.out.println("We are blue and defending right");
+				System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
+				System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
+				System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
+				System.out.println("We are blue and defending right " + DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)));
+				
 				if(DistanceCalculator.Distance(ObjectLocations.getUSDefend(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y)) < 12){
 					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSDefend().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
@@ -275,12 +279,12 @@ public class MoveToPointXY {
 					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
 						robotMover.rotate("defence", angle);
 					}
-					if (ObjectLocations.getUSDefendDot().x > ObjectLocations.getUSDefend().x) {
+					if (ObjectLocations.getUSDefendDot().x < ObjectLocations.getUSDefend().x) {
 						//Move Backward
-						robotMover.forward(type, -15);
+						robotMover.forward(type, 15);
 					} else {
 						//Move Forward
-						robotMover.forward(type, 15);
+						robotMover.forward(type, -15);
 					}
 				
 				}
