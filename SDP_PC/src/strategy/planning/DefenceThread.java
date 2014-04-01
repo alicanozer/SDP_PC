@@ -3,12 +3,6 @@
  */
 package strategy.planning;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-
-import georegression.struct.point.Point2D_I32;
-import strategy.movement.MoveToPointXY;
-import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import world.RobotType;
 import Calculations.BallPossession;
@@ -51,13 +45,7 @@ public class DefenceThread implements Runnable {
 						ObjectLocations.getUSDefend())) {
 					System.out.println("Passing Strategy");
 					PassingDefender.passingDefender(type, mover);
-<<<<<<< HEAD
 				} else if (BallPossession.hasPossession(RobotType.AttackThem, ObjectLocations.getTHEMAttack())) {
-=======
-				} else if (BallPossession.hasPossession(
-						RobotType.AttackThem,
-						ObjectLocations.getTHEMAttack())) {
->>>>>>> Defence Thread changes
 					System.out.println("Block Shot Strategy");
 				} else if (BallPossession.hasPossession(
 						RobotType.DefendThem,
