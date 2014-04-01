@@ -1,11 +1,9 @@
 package strategy.movement;
 
 import vision.ObjectLocations;
-import vision.PointUtils;
 import world.RobotType;
 import movement.RobotMover;
 import Calculations.DistanceCalculator;
-import Calculations.GoalInfo;
 import georegression.struct.point.Point2D_I32;
 
 public class MoveToPointXY {
