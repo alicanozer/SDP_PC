@@ -42,9 +42,8 @@ public class DefenceThread implements Runnable {
 				} else if (BallPossession.hasPossession(RobotType.DefendUs,
 						ObjectLocations.getUSDefend())) {
 					System.out.println("Passing Strategy");
-				} else if (BallPossession.hasPossession(
-						RobotType.AttackThem,
-						ObjectLocations.getTHEMAttack())) {
+					PassingDefender.passingDefender(type, mover);
+				} else if (BallPossession.hasPossession(RobotType.AttackThem, ObjectLocations.getTHEMAttack())) {
 					System.out.println("Block Shot Strategy");
 				} else if (BallPossession.hasPossession(
 						RobotType.DefendThem,

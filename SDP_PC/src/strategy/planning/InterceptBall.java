@@ -1,15 +1,12 @@
 package strategy.planning;
 
-import lejos.nxt.Button;
 import movement.RobotMover;
 import Calculations.BallPossession;
-import Calculations.DistanceCalculator;
 import strategy.movement.MoveToPointXY;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import world.RobotType;
 import georegression.struct.point.Point2D_I32;
-;
 
 public class InterceptBall{
 	public static void intercept(String type, RobotMover robotMover){

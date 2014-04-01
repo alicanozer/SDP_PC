@@ -1,7 +1,5 @@
 package strategy.planning;
 
-import georegression.struct.point.Point2D_I32;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -11,14 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import Calculations.BallPossession;
-
-
-import strategy.movement.MoveToPointXY;
-import strategy.movement.TurnToObject;
-
-import vision.ObjectLocations;
 import vision.PitchConstants;
 import vision.VisionRunner;
 import world.RobotType;
@@ -73,13 +63,12 @@ public class StartStrategy extends JFrame {
 
 	public void runStrategy() {
 		System.out.println("Starting Strategy...");
-
 		
 		//attackThread.run();
 		DefenceThread drun = new DefenceThread("defence",defenceMover);
 		Thread dthread = new Thread(drun);
 		dthread.start();
-		System.out.println("I AM GETTING TO THIS POINT");
+		System.out.println("Started Defender Thread");
 
 		while(true){
 
