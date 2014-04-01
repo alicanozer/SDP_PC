@@ -272,23 +272,15 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 	 */
 	@Override
 	public void nextFrame(VideoFrame frame){
-		if (frameLoop == 101) frameLoop = 1;
 		BufferedImage img = frame.getBufferedImage();
-//		BufferedImage img = null;
-//		try {
-//			img = ImageIO.read(new File("static_vision_images_2/image" + frameLoop+".jpg"));
-//		} catch (IOException e2) {
-//			// TODO Auto-generated catch block
-//			e2.printStackTrace();
-//		}//frame.getBufferedImage();
-		//System.out.println(frameCounter);
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
-		if(frameCounter < 3){
+		if(frameCounter < 5){
 			frame.recycle();
 			frameCounter++;
 			return;
 		}
-		else if (frameCounter == 3 || recalibrate_now){
+		else if (frameCounter == 5 || recalibrate_now){
+			System.out.println("frame count " + frameCounter);
 			frameCounter++;
 			colors = ExampleSegmentColor.selectColoursOfPitch(img);
 			try {

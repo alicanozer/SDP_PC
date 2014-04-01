@@ -28,6 +28,7 @@ public class ExampleSegmentColor {
 				synchronized(ExampleSegmentColor.colour){
 					float[] color = new float[3];
 					int rgb = img.getRGB(e.getX(),e.getY());
+					System.out.println("x " + e.getX() + " y " + e.getY());
 					ColorHsv.rgbToHsv((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF , rgb&0xFF,color);
 					ExampleSegmentColor.colour = color;
 					ExampleSegmentColor.flag = true;
