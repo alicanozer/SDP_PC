@@ -1,0 +1,4 @@
+java.lang.NullPointerException
+	at strategy.planning.InterceptBall.intercept(InterceptBall.java:28)
+	at strategy.planning.DefenceThread.run(DefenceThread.java:55)
+	at java.lang.Thread.run(Thread.java:744)
