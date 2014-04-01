@@ -9,25 +9,27 @@ import world.RobotType;
 import georegression.struct.point.Point2D_I32;
 
 public class InterceptBall{
+	
 	public static void intercept(String type, RobotMover robotMover){
+		
 		while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())){
 
 			if(
 					ObjectLocations.getBall() != null 
 					&& ObjectLocations.getUSDefend() != null 
 					&& ObjectLocations.getUSDefendDot() != null){
-				// TURN
+// TURN
 				Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
 				double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
-				System.out.println("Angle to parrallel with goal: " + angle);
+//				System.out.println("Angle to parrallel with goal: " + angle);
 				if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
-					System.out.println("correcting angle!!!!!!!!!!!!!!!");
+//					System.out.println("correcting angle!!!!!!!!!!!!!!!");
 					robotMover.stopRobot(type);
 					robotMover.rotate(type, angle);
 				}
 
-				// move
-				System.out.println("distance: " + Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y));
+// MOVE
+//				System.out.println("distance: " + Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y));
 				if(Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y) > 10){
 					if(type.equals("defence")){
 						MoveToPointXY.moveAwayDefence(type, robotMover);
@@ -38,7 +40,7 @@ public class InterceptBall{
 					}
 				}
 				else {
-					System.out.println("WE ARE CLOSE TO THE BALL, STOP!");
+//					System.out.println("WE ARE CLOSE TO THE BALL, STOP!");
 					robotMover.stopRobot(type);
 				}
 			}

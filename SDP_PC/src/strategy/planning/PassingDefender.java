@@ -23,7 +23,7 @@ public class PassingDefender {
 				//Move to the ball
 				double distance = DistanceCalculator.Distance(ObjectLocations.getUSDefend(), ObjectLocations.getBall());
 				System.out.println("Defender Distance to Ball: " + distance);				
-				robotMover.forward(type, distance);
+				robotMover.forward(type, distance-5);
 				
 				//Grab the ball
 				robotMover.grab(type);

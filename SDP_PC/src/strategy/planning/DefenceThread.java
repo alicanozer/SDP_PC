@@ -22,19 +22,27 @@ public class DefenceThread implements Runnable {
 
 	private String type;
 	private RobotMover mover;
-
-
+	private static boolean die = false;
+	private static Object lock = new Object();
 	public DefenceThread(String type,RobotMover mover) {
 		this.type = "defence";
 		this.mover = mover;
+		die = false;
 	}
-
-
+	public static void kill(){
+		synchronized(lock){
+			die = true;
+		}
+	}
+	public static boolean getDie(){
+		synchronized(lock){
+			return die;
+		}
+	}
 	@Override
 	public void run() {
 		// big while loop that never ends
-		int x = 4;
-		while (true) {
+		while (!getDie()) {
 			try {
 				if (BallPossession.hasPossession(RobotType.AttackUs,
 						ObjectLocations.getUSAttack())) {
@@ -43,7 +51,13 @@ public class DefenceThread implements Runnable {
 						ObjectLocations.getUSDefend())) {
 					System.out.println("Passing Strategy");
 					PassingDefender.passingDefender(type, mover);
+<<<<<<< HEAD
 				} else if (BallPossession.hasPossession(RobotType.AttackThem, ObjectLocations.getTHEMAttack())) {
+=======
+				} else if (BallPossession.hasPossession(
+						RobotType.AttackThem,
+						ObjectLocations.getTHEMAttack())) {
+>>>>>>> Defence Thread changes
 					System.out.println("Block Shot Strategy");
 				} else if (BallPossession.hasPossession(
 						RobotType.DefendThem,

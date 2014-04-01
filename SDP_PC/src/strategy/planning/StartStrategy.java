@@ -46,11 +46,11 @@ public class StartStrategy extends JFrame {
 	private static BluetoothRobot defenceRobot;
 	private RobotMover attackMover;
 	private RobotMover defenceMover;
-
+	private static Thread dthread = null;
 	public static void main(String[] args) {
 
 		//Start vision
-		VisionRunner.startDebugVision(PitchConstants.oldPitch, 10, true);
+		VisionRunner.startDebugVision(PitchConstants.newPitch, 10, true);
 
 		//Sets up the GUI
 		StartStrategy guiStrat = new StartStrategy();
@@ -62,17 +62,14 @@ public class StartStrategy extends JFrame {
 	}
 
 	public void runStrategy() {
+		
 		System.out.println("Starting Strategy...");
 		
 		//attackThread.run();
 		DefenceThread drun = new DefenceThread("defence",defenceMover);
-		Thread dthread = new Thread(drun);
+		dthread = new Thread(drun);
 		dthread.start();
 		System.out.println("Started Defender Thread");
-
-		while(true){
-
-		}
 
 	}
 
@@ -105,8 +102,6 @@ public class StartStrategy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Allow restart of strategies after previously killing all
 				// strategies
-				Strategy.reset();
-
 				try {
 					runStrategy();
 				} catch (Exception e1) {
@@ -117,47 +112,41 @@ public class StartStrategy extends JFrame {
 
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Halt and clear active movements
-				try {
-					if (flag == 0) {
-						attackMover.kill();
-						defenceMover.kill();
-					} else if (flag == 1) {
-						attackMover.kill();				
-					} else if (flag == 2) {
-						defenceMover.kill();
-					}
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-
-				System.out.println("Stopping the robot");
-				// Stop the robot.
-
 				if (flag == 0) {
 					attackMover.stopRobot("attack");
 					defenceMover.stopRobot("defence");
+					//Attacker Thread kill						
+					DefenceThread.kill();						
 				} else if (flag == 1) {
 					attackMover.stopRobot("attack");
+					//Attacker Thread kill
 				} else if (flag == 2) {
 					defenceMover.stopRobot("defence");
+					DefenceThread.kill();
 				}
+
+				System.out.println("Strategy Stopped");
+				
 			}
 		});
 
 		quitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Strategy.alldie = true;
+				
 				// Kill the mover and wait for it to stop completely
 				try {
 					if (flag == 0) {
 						attackMover.kill();
 						defenceMover.kill();
+						//Attacker Thread kill						
+						DefenceThread.kill();						
 					} else if (flag == 1) {
-						attackMover.kill();				
+						attackMover.kill();
+						//Attacker Thread kill						
 					} else if (flag == 2) {
 						defenceMover.kill();
+						DefenceThread.kill();
 					}
 					// If the mover still hasn't stopped within 3 seconds,
 					// assume it's stuck and kill the program the hard way
