@@ -31,7 +31,7 @@ public class Attacker {
 	private final static int QUIT = 10;
 	private final static int FORWARDSC = 11;
 	
-	private final static DifferentialPilot pilot = new DifferentialPilot(22.2, 16.2, Motor.B, Motor.A, false);
+	private final static DifferentialPilot pilot = new DifferentialPilot(7.1, 12.8, Motor.B, Motor.A, false);
 
 	public static void main(String [] args)  throws Exception {
 
@@ -194,21 +194,14 @@ public class Attacker {
 	}
 	
 	public static void grab() throws Exception {
-		Motor.C.setSpeed(40);
-		Motor.C.rotate(-90);
+		Motor.C.setSpeed(80);
+		Motor.C.rotate(-23);
 		done();
 	}
 	
 	public static void kick() throws Exception {
 		Motor.C.setSpeed(900);
-		Motor.C.rotate(120);
-		rest();
-		done();
-	}
-	
-	public static void rest() throws Exception {
-		Motor.C.setSpeed(40);
-		Motor.C.rotate(-10);
+		Motor.C.rotate(23);
 		done();
 	}
 	
