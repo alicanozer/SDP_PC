@@ -96,10 +96,43 @@ public class StartStrategy extends JFrame {
 				}
 			} catch (Exception e) {
 
-				e.printStackTrace();
-			}		
-		}
-		
+    		if(
+    				ObjectLocations.getBall() != null 
+    				&& ObjectLocations.getUSDefend() != null 
+    				&& ObjectLocations.getUSDefendDot() != null){
+    			// TURN
+    			Point2D_I32 point = new Point2D_I32(ObjectLocations.getUSDefend().x, ObjectLocations.getBall().y);
+    			double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSDefendDot(), ObjectLocations.getUSDefend(), point);
+    			System.out.println("Angle to parrallel with goal: " + angle);
+    			if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+    				System.out.println("correcting angle!!!!!!!!!!!!!!!");
+    				defenceMover.stopRobot("defence");
+    				defenceMover.rotate("defence", angle);
+    			}
+
+    			// move
+    			System.out.println("distance: " + Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y));
+    			if(Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y) > 10){
+    				MoveToPointXY.moveAwayDefence("defence", defenceMover);
+    				//MoveToPointXY.moveRobotToBlock("defence", defenceMover);
+    				try {
+						MoveToPointXY.moveRobotToBlockCont("defence", defenceMover);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+					}
+
+    			}
+    			else {
+    				System.out.println("WE ARE CLOSE TO THE BALL, STOP!");
+    				defenceMover.stopRobot("defence");
+    			}
+    		}
+//    		} catch (Exception e) {
+//    			defenceMover.stopRobot("defence");
+//    			//e.printStackTrace();
+//    		}	
+    	}
+    	defenceMover.stopRobot("defence");
     }
     
     public StartStrategy() {
