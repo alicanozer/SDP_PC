@@ -1,5 +1,6 @@
 package strategy.planning;
 
+import strategy.movement.MoveToPointXY;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import world.RobotType;
@@ -11,26 +12,26 @@ public class PassingDefender {
 
 	public static void passingDefender(String type, RobotMover robotMover) {
 		
+		try {
+			robotMover.resetQueue();
+			robotMover.stopRobot(type);
+			robotMover.interruptMove();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		while (BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())) {
 			
 			try {
-
-				//Turn to the ball
-				double angleBall = TurnToObject.Ball(RobotType.DefendUs);
-				System.out.println("Defender Angle to Ball: " + angleBall);
-				robotMover.rotate(type, angleBall);
 				
-				//Move to the ball
-				double distance = DistanceCalculator.Distance(ObjectLocations.getUSDefend(), ObjectLocations.getBall());
-				System.out.println("Defender Distance to Ball: " + distance);				
-				robotMover.forward(type, distance-5);
+				MoveToPointXY.moveRobotToBall(type, robotMover);
 				
 				//Grab the ball
 				robotMover.grab(type);
 				
 				//Find Angle to Opponent Attacker
 				double angleThemAttacker = TurnToObject.OppenentAttacker(RobotType.DefendUs);
-				System.out.println("Defender Angle to Attacker: " + angleBall);
 				
 				double angleTurn;
 				
@@ -41,7 +42,7 @@ public class PassingDefender {
 					} else {						
 						angleTurn = angleThemAttacker + 30;
 					}
-				} else if (Math.abs(angleThemAttacker) > 150) {
+				} else if (Math.abs(angleThemAttacker) > 160) {
 					if (angleThemAttacker < 0) {
 						angleTurn = -90;
 					} else {						
@@ -51,7 +52,7 @@ public class PassingDefender {
 					angleTurn = angleThemAttacker/2;
 				}
 				
-				System.out.println("Defender Angle to Pass: " + angleBall);
+				System.out.println("Defender Angle to Pass: " + angleTurn);
 				//Rotate robot to an angle such that it is not intercepted by the attacker
 				robotMover.rotate(type, angleTurn);
 				
@@ -62,9 +63,14 @@ public class PassingDefender {
 				e.printStackTrace();
 			}
 			
-			
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}		
-		
+
 	}
 	
 }

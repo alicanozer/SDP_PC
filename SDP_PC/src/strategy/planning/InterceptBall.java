@@ -10,7 +10,16 @@ import georegression.struct.point.Point2D_I32;
 
 public class InterceptBall{
 	
-	public static void intercept(String type, RobotMover robotMover){
+	public static void intercept(String type, RobotMover robotMover) throws InterruptedException{
+		
+		try {
+			robotMover.resetQueue();
+			robotMover.stopRobot(type);
+			robotMover.interruptMove();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())){
 
@@ -25,6 +34,7 @@ public class InterceptBall{
 				if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
 //					System.out.println("correcting angle!!!!!!!!!!!!!!!");
 					robotMover.stopRobot(type);
+					robotMover.resetQueue();
 					robotMover.rotate(type, angle);
 				}
 
@@ -43,6 +53,12 @@ public class InterceptBall{
 //					System.out.println("WE ARE CLOSE TO THE BALL, STOP!");
 					robotMover.stopRobot(type);
 				}
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		robotMover.stopRobot(type);

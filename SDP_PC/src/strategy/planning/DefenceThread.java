@@ -42,7 +42,7 @@ public class DefenceThread implements Runnable {
 	@Override
 	public void run() {
 		// big while loop that never ends
-		while (!getDie()) {
+		while (true) {
 			try {
 				if (BallPossession.hasPossession(RobotType.AttackUs,
 						ObjectLocations.getUSAttack())) {
@@ -66,7 +66,12 @@ public class DefenceThread implements Runnable {
 				} else {
 					// Intercept Strategy
 					InterceptBall.intercept("defence", mover);
+					System.out.println("Intercept");
+
 					//InterceptBall.intercept("attack",attackMover);
+				}
+				if(getDie()){
+					break;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
