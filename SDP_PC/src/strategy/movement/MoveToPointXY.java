@@ -9,7 +9,12 @@ import Calculations.GoalInfo;
 import georegression.struct.point.Point2D_I32;
 
 public class MoveToPointXY {
-
+	private static Point2D_I32 leftTopGoal = ObjectLocations.getConsts().getLeftGoalTop();
+	private static Point2D_I32 leftBottomGoal = ObjectLocations.getConsts().getLeftGoalTop();
+	private static Point2D_I32 rightTopGoal = ObjectLocations.getConsts().getLeftGoalTop();
+	private static Point2D_I32 rightBottomGoal = ObjectLocations.getConsts().getLeftGoalTop();	
+	
+	
 	private static final int distanceFromPointToStop = 5;
 
 	//	public static void moveToPointXY(String type, RobotMover robotMover, Point2D_I32 dot, Point2D_I32 marker, Point2D_I32 point) throws Exception {
@@ -136,13 +141,13 @@ public class MoveToPointXY {
 			//We are YELLOW
 			if (ObjectLocations.getYellowDefendingLeft()) {
 				//Defending LEFT
-				if (ObjectLocations.getBall().y > GoalInfo.getLeftGoalTopNew().y || ObjectLocations.getBall().y < GoalInfo.getLeftGoalBottomNew().y) {
+				if (ObjectLocations.getBall().y > leftTopGoal.y || ObjectLocations.getBall().y < leftBottomGoal.y) {
 					//Add code
 					flag = true;
 				}
 			} else {
 				//Defending RIGHT
-				if (ObjectLocations.getBall().y > GoalInfo.getRightGoalTopNew().y || ObjectLocations.getBall().y < GoalInfo.getRightGoalBottomNew().y) {
+				if (ObjectLocations.getBall().y > rightTopGoal.y || ObjectLocations.getBall().y < rightBottomGoal.y) {
 					//Add code
 					flag = true;
 				}
@@ -150,14 +155,13 @@ public class MoveToPointXY {
 		} else {
 			//We are BLUE
 			if (ObjectLocations.getYellowDefendingLeft()) {
-				//Defending LEFT
-				if (ObjectLocations.getBall().y > GoalInfo.getLeftGoalTopNew().y || ObjectLocations.getBall().y < GoalInfo.getLeftGoalBottomNew().y) {
-					//Add code
+				//Defending RIGHT
+				if (ObjectLocations.getBall().y > rightTopGoal.y || ObjectLocations.getBall().y < rightBottomGoal.y) {					//Add code
 					flag = true;
 				}
 			} else {
-				//Defending RIGHT
-				if (ObjectLocations.getBall().y > GoalInfo.getRightGoalTopNew().y || ObjectLocations.getBall().y < GoalInfo.getRightGoalBottomNew().y) {
+				//Defending LEFT
+				if (ObjectLocations.getBall().y > leftTopGoal.y || ObjectLocations.getBall().y < leftBottomGoal.y) {
 					//Add code
 					flag = true;
 				}
@@ -195,11 +199,15 @@ public class MoveToPointXY {
 				}
 			}
 		}
+		else{
+			robotMover.stopRobot(type);
+		}
 		
 	}
 	
 	
 	public static void moveAwayDefence(String type, RobotMover robotMover){
+		robotMover.stopRobot(type);
 		if(ObjectLocations.getYellowUs()){
 			//We are yellow
 			if(ObjectLocations.getYellowDefendingLeft()){
