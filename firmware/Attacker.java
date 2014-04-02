@@ -194,14 +194,14 @@ public class Attacker {
 	}
 	
 	public static void grab() throws Exception {
-		Motor.C.setSpeed(80);
-		Motor.C.rotate(-23);
+		Motor.C.setSpeed(300);
+		Motor.C.rotate(-35);
 		done();
 	}
 	
 	public static void kick() throws Exception {
 		Motor.C.setSpeed(900);
-		Motor.C.rotate(23);
+		Motor.C.rotate(35);
 		done();
 	}
 	

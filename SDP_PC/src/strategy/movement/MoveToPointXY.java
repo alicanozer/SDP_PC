@@ -360,12 +360,12 @@ public class MoveToPointXY {
 		if(ObjectLocations.getYellowUs()){
 			//We are yellow
 			if(ObjectLocations.getYellowDefendingLeft()){
-				//Defending LEFT
-				// close to line
+				//Attacking LEFT (as in shooting right)
+				// close to line23
 				
-				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion23X(),ObjectLocations.getUSAttack().y)) < 15){
-					System.out.println("we are yellow, defending left, and we are moving away from the line - attacker");
-					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSAttack().y);
+				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion23X(),ObjectLocations.getUSAttack().y)) < 10){
+					System.out.println("we are yellow, defending left, and we are moving away from the 23 line - attacker");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion23X(),ObjectLocations.getUSAttack().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
 					//					System.out.println("Angle to parrallel with goal: " + angle);
 					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
@@ -379,10 +379,10 @@ public class MoveToPointXY {
 						robotMover.forward(type, -15);
 					}
 				}
-				// close to goal?
-				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getLeftGoalTop().x,ObjectLocations.getUSAttack().y)) < 5){
-					System.out.println("we are yellow, defending left and we are moving away from the goal line");
-					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getLeftGoalTop().x,ObjectLocations.getUSAttack().y);
+				// close to line34
+				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(), ObjectLocations.getUSAttack().y)) < 10){
+					System.out.println("we are yellow, defending left, and we are moving away from the 34 line - attacker");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
 					//					System.out.println("Angle to parrallel with goal: " + angle);
 					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
@@ -397,11 +397,11 @@ public class MoveToPointXY {
 					}
 				}
 			} else {
-				// Defending Right
-				// close to line
-				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y)) < 15 ){
-					System.out.println("we are yellow, defending right and we are moving away from the line");
-					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y);
+				// Attacking RIGHT (as in shooting left)
+				// close to line12
+				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSAttack().y)) < 10){
+					System.out.println("we are yellow, defending right and we are moving away from the 12 line - attacker");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSAttack().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
 					//					System.out.println("Angle to parrallel with goal: " + angle);
 					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
@@ -416,10 +416,10 @@ public class MoveToPointXY {
 					}
 
 				}
-				// close goal
-				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRightGoalBottom().x,ObjectLocations.getUSAttack().y)) < 5){
+				// close line23
+				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion23X(),ObjectLocations.getUSAttack().y)) < 10){
 					System.out.println("we are yellow, defending right and we are moving away from the goal line");
-					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRightGoalBottom().x,ObjectLocations.getUSAttack().y);
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion23X(),ObjectLocations.getUSAttack().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
 					//					System.out.println("Angle to parrallel with goal: " + angle);
 					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
@@ -438,10 +438,10 @@ public class MoveToPointXY {
 		} else {
 			//We are blue
 			if(!ObjectLocations.getYellowDefendingLeft()){
-				//Defending LEFT
-				// close to line
-				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSAttack().y)) < 15){
-					System.out.println("We are blue and defending left and moving away frpom the line");
+				//Attacking LEFT (as in shooting right)
+				// close to line23
+				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion23X(),ObjectLocations.getUSAttack().y)) < 10){
+					System.out.println("We are blue and defending left, and moving away frpom the line23 - attacking");
 					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSAttack().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
 					//					System.out.println("Angle to parrallel with goal: " + angle);
@@ -456,12 +456,12 @@ public class MoveToPointXY {
 						robotMover.forward(type, -15);
 					}
 				}
-				// close to goal?
-				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getLeftGoalTop().x,ObjectLocations.getUSAttack().y)) < 5){
+				// close to line34
+				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y)) < 10){
 					System.out.println("We are blue and defending left and moving away frpom the goal line");
-					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getLeftGoalTop().x,ObjectLocations.getUSAttack().y);
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
-					//					System.out.println("Angle to parrallel with goal: " + angle);
+					//					System.out.println("Angle to parallel with goal: " + angle);
 					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
 						robotMover.rotate(type, angle);
 					}
@@ -474,13 +474,13 @@ public class MoveToPointXY {
 					}
 				}
 			} else {
-				// Defending Right
-				// close to line
-				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y)) < 15 ){
-					System.out.println("We are blue and defending left and moving away frpom the line");
-					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y);
+				// Attacking RIGHT (as in shooting left)
+				// close to line 12
+				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSAttack().y)) < 10){
+					System.out.println("We are blue and defending left and moving away frpom the line12");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSAttack().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
-					//					System.out.println("Angle to parrallel with goal: " + angle);
+					//					System.out.println("Angle to parallel with goal: " + angle);
 					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
 						robotMover.rotate(type, angle);
 					}
@@ -494,11 +494,11 @@ public class MoveToPointXY {
 
 				}
 				// close goal
-				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRightGoalBottom().x,ObjectLocations.getUSAttack().y)) < 5){
+				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion23X(),ObjectLocations.getUSAttack().y)) < 10){
 					System.out.println("We are blue and defending left and moving away frpom the goal line");
-					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRightGoalBottom().x,ObjectLocations.getUSAttack().y);
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion23X(),ObjectLocations.getUSAttack().y);
 					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
-					//					System.out.println("Angle to parrallel with goal: " + angle);
+					//					System.out.println("Angle to parallel with goal: " + angle);
 					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
 						robotMover.rotate(type, angle);
 					}

@@ -19,7 +19,7 @@ public class Attacker {
 	// Commands
 	private final static int NOTHING = 0;
 	private final static int FORWARDS = 1;
-	private final static int BACKWARDSC = 2;
+	private final static int BACKWARDS = 2;
 	private final static int STOP = 3;
 	private final static int GRAB = 4;
 	private final static int KICK = 5;
@@ -29,9 +29,8 @@ public class Attacker {
 	private final static int ROTATERIGHT = 8;
 	private final static int MOVING = 9;
 	private final static int QUIT = 10;
-	private final static int FORWARDSC = 11;
 	
-	private final static DifferentialPilot pilot = new DifferentialPilot(7.1, 12.8, Motor.B, Motor.A, false);
+	private final static DifferentialPilot pilot = new DifferentialPilot(22.2, 16.2, Motor.B, Motor.A, false);
 
 	public static void main(String [] args)  throws Exception {
 
@@ -74,10 +73,10 @@ public class Attacker {
 							LCD.drawString("Forwards!", 0, 0);
 							forwards(option1, option2);
 							break;
-						case BACKWARDSC:
+						case BACKWARDS:
 							LCD.clear();
 							LCD.drawString("BACKWARDS!", 0, 0);
-							backwardsC();
+							backwards();
 							break;				
 						case STOP:
 							LCD.clear();
@@ -119,11 +118,6 @@ public class Attacker {
 							LCD.drawString("MOVING?", 0, 0);
 							moving();
 							break;
-						case FORWARDSC:
-							LCD.clear();
-							LCD.drawString("FORWARDSC!", 0, 0);
-							forwardsC();
-							break;
 						case QUIT:
 							LCD.clear();
 							LCD.drawString("QUIT!", 0, 0);
@@ -156,36 +150,10 @@ public class Attacker {
 		pilot.travel(distance + distance2, false);
 		done();
 	}
-	
-	
-	public static void forwardsC() throws Exception {
-		
-		//Do done first to let PC know that the robot is ready for another command
-		// but keep in mind that the next command must be waited on the pc end
-		
-		done();
-		pilot.forward();
-	}
-	
-	public static void backwardsC() throws Exception {
-		
-		//Do done first to let PC know that the robot is ready for another command
-		// but keep in mind that the next command must be waited on the pc end
-		
-		done();
+
+	public static void backwards() throws Exception {
 		pilot.backward();
-	}
-	
-	public static byte[] toBytes(int i)
-	{
-	  byte[] result = new byte[4];
-
-	  result[0] = (byte) (i >> 24);
-	  result[1] = (byte) (i >> 16);
-	  result[2] = (byte) (i >> 8);
-	  result[3] = (byte) (i /*>> 0*/);
-
-	  return result;
+		done();
 	}
 	
 	public static void stop() throws Exception {
@@ -194,14 +162,21 @@ public class Attacker {
 	}
 	
 	public static void grab() throws Exception {
-		Motor.C.setSpeed(300);
-		Motor.C.rotate(-35);
+		Motor.C.setSpeed(40);
+		Motor.C.rotate(-90);
 		done();
 	}
 	
 	public static void kick() throws Exception {
 		Motor.C.setSpeed(900);
-		Motor.C.rotate(23);
+		Motor.C.rotate(120);
+		rest();
+		done();
+	}
+	
+	public static void rest() throws Exception {
+		Motor.C.setSpeed(40);
+		Motor.C.rotate(-10);
 		done();
 	}
 	
@@ -210,7 +185,6 @@ public class Attacker {
 		done();
 	}
 	
-
 	public static void setRotateSpeed(int speed) throws Exception {
 		pilot.setRotateSpeed(speed);
 		done();

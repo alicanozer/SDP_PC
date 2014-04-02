@@ -10,14 +10,17 @@ import movement.RobotMover;
 
 public class PassingDefender {
 
-	public static void passingDefender(String type, RobotMover robotMover) {
+	public static void passingDefender(String type, RobotMover robotMover) throws InterruptedException {
 		
+		robotMover.resetQueue(type);
+
 		while (BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())) {
 			
 			try {
 				
+				System.out.println("Number of commands in queue: " + robotMover.numQueuedJobs());
+				
 				MoveToPointXY.moveRobotToBall(type, robotMover);
-				System.out.println("this will be printed many times");
 				//Grab the ball
 				robotMover.grab(type);
 				
@@ -57,6 +60,7 @@ public class PassingDefender {
 			
 			try {
 				Thread.sleep(1000);
+				robotMover.resetQueue(type);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
