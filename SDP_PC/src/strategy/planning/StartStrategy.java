@@ -49,7 +49,6 @@ public class StartStrategy extends JFrame {
 	private static Thread dthread = null;
 	private static Thread athread = null;
 	
-	
 	public static void main(String[] args) {
 
 		//Start vision
@@ -69,12 +68,12 @@ public class StartStrategy extends JFrame {
 		
 		System.out.println("Starting Strategy...");
 		
-		AttackThread arun = new AttackThread("attack",attackMover);
+		//AttackThread arun = new AttackThread("attack",attackMover);
 		DefenceThread drun = new DefenceThread("defence",defenceMover);
 		dthread = new Thread(drun);
 		dthread.start();
-		athread = new Thread(arun);
-		athread.start();
+		//athread = new Thread(arun);
+		//athread.start();
 		System.out.println("Started Threads");
 
 	}

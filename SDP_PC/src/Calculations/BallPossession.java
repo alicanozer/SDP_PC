@@ -78,7 +78,7 @@ public class BallPossession {
 		
 		//if the robot is near the ball and facing the ball it has possession
 //		System.out.println("ball speed" + ObjectLocations.getBallSpeed());
-		if (BallRegion && ObjectLocations.getBallSpeed() < 60) {
+		if (BallRegion) {
 //			if (speed < 10) { 
 				possession = true;
 //			} 

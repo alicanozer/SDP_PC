@@ -21,14 +21,14 @@ public class ShootAttacker {
 				//Grab the ball
 				robotMover.grab(type);
 				
-				//Find Angle to Goal
+				//Find angle to goal
 				double goal = TurnToObject.shootAngle();
 				
 				//Rotate to shoot
 				robotMover.rotate(type, goal);
 				
 				//Kick the ball
-				System.out.println("trying to score!");
+				System.out.println("Trying to score!");
 				robotMover.kick(type);
 				
 			} catch (Exception e) {
@@ -38,7 +38,6 @@ public class ShootAttacker {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

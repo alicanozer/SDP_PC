@@ -73,33 +73,8 @@ public class MoveToPointXY {
 			distance = DistanceCalculator.Distance(ObjectLocations.getUSDefend(), ObjectLocations.getBall());			
 		}
 
-		//		System.out.println("Distance to Ball:" + distance);
-		robotMover.forwardsC(type);
-		
-		
-		if (type.equals("attack")) {
-			distance = DistanceCalculator.Distance(ObjectLocations.getUSAttack(), ObjectLocations.getBall());
-			while (distance > 20) {
-				//re calculate angle
-				angle = TurnToObject.Ball(RobotType.AttackUs);
-				
-				if (Math.abs(angle) > 20) {
-					robotMover.rotate(type, angle);
-				}
-				
-			}
-		} else {
-			distance = DistanceCalculator.Distance(ObjectLocations.getUSDefend(), ObjectLocations.getBall());
-			while (distance > 20) {
-				//re calculate angle
-				angle = TurnToObject.Ball(RobotType.DefendUs);
-				
-				if (Math.abs(angle) > 20) {
-					robotMover.rotate(type, angle);
-				}
-				
-			}		
-		}
+		//System.out.println("Distance to Ball:" + distance);
+		robotMover.forward(type, distance);
 		
 		System.out.println("TRIED TO GET THE BALL!!");
 

@@ -60,6 +60,7 @@ public class DefenceThread implements Runnable {
 						RobotType.AttackThem,
 						ObjectLocations.getTHEMAttack())) {
 					mover.resetQueue(type);
+					BlockShot.blockShot(type, mover);
 					System.out.println("Defender Block Shot Strategy");
 				} else if (BallPossession.hasPossession(
 						RobotType.DefendThem,
