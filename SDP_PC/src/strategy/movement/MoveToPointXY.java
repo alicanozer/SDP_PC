@@ -53,24 +53,15 @@ public class MoveToPointXY {
 
 	public static void moveRobotToBall(String type, RobotMover robotMover) throws Exception {
 
-
-		double angleOne;
-		double angleTwo;
 		double angle;
 		double distance;
 
 		// Turn to ball
 		if (type.equals("attack")) {
 			angle = TurnToObject.Ball(RobotType.AttackUs);			
-			//			angleOne = TurnToObject.Ball(RobotType.AttackUs);
-			//			angleTwo = TurnToObject.Ball(RobotType.AttackUs);
 		} else {
 			angle = TurnToObject.Ball(RobotType.DefendUs);			
-			//			angleOne = TurnToObject.Ball(RobotType.DefendUs);
-			//			angleTwo = TurnToObject.Ball(RobotType.DefendUs);			
 		}
-
-		//		angle = (angleOne + angleTwo) / 2;
 
 		robotMover.rotate(type, (int) angle);
 		System.out.println("Angle to Ball:" + angle);										
@@ -83,10 +74,34 @@ public class MoveToPointXY {
 		}
 
 		//		System.out.println("Distance to Ball:" + distance);
-		robotMover.forward(type, distance - 21);
+		robotMover.forwardsC(type);
+		
+		
+		if (type.equals("attack")) {
+			distance = DistanceCalculator.Distance(ObjectLocations.getUSAttack(), ObjectLocations.getBall());
+			while (distance > 20) {
+				//re calculate angle
+				angle = TurnToObject.Ball(RobotType.AttackUs);
+				
+				if (Math.abs(angle) > 20) {
+					robotMover.rotate(type, angle);
+				}
+				
+			}
+		} else {
+			distance = DistanceCalculator.Distance(ObjectLocations.getUSDefend(), ObjectLocations.getBall());
+			while (distance > 20) {
+				//re calculate angle
+				angle = TurnToObject.Ball(RobotType.DefendUs);
+				
+				if (Math.abs(angle) > 20) {
+					robotMover.rotate(type, angle);
+				}
+				
+			}		
+		}
+		
 		System.out.println("TRIED TO GET THE BALL!!");
-
-		//		robotMover.waitForCompletion();
 
 	}
 
@@ -365,6 +380,166 @@ public class MoveToPointXY {
 		}
 	}
 
+	public static void moveAwayAttack(String type, RobotMover robotMover){
+		robotMover.stopRobot(type);
+		if(ObjectLocations.getYellowUs()){
+			//We are yellow
+			if(ObjectLocations.getYellowDefendingLeft()){
+				//Defending LEFT
+				// close to line
+				
+				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion23X(),ObjectLocations.getUSAttack().y)) < 15){
+					System.out.println("we are yellow, defending left, and we are moving away from the line - attacker");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSAttack().y);
+					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
+					//					System.out.println("Angle to parrallel with goal: " + angle);
+					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+						robotMover.rotate(type, angle);
+					}
+					if (ObjectLocations.getUSAttackDot().x < ObjectLocations.getUSAttack().x) {
+						//Move Backward
+						robotMover.forward(type, 15);
+					} else {
+						//Move Forward
+						robotMover.forward(type, -15);
+					}
+				}
+				// close to goal?
+				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getLeftGoalTop().x,ObjectLocations.getUSAttack().y)) < 5){
+					System.out.println("we are yellow, defending left and we are moving away from the goal line");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getLeftGoalTop().x,ObjectLocations.getUSAttack().y);
+					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
+					//					System.out.println("Angle to parrallel with goal: " + angle);
+					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+						robotMover.rotate(type, angle);
+					}
+					if (ObjectLocations.getUSAttackDot().x < ObjectLocations.getUSAttack().x) {
+						//Move Backward
+						robotMover.forward(type, -15);
+					} else {
+						//Move Forward
+						robotMover.forward(type, 15);
+					}
+				}
+			} else {
+				// Defending Right
+				// close to line
+				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y)) < 15 ){
+					System.out.println("we are yellow, defending right and we are moving away from the line");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y);
+					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
+					//					System.out.println("Angle to parrallel with goal: " + angle);
+					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+						robotMover.rotate(type, angle);
+					}
+					if (ObjectLocations.getUSAttackDot().x < ObjectLocations.getUSAttack().x) {
+						//Move Backward
+						robotMover.forward(type, -15);
+					} else {
+						//Move Forward
+						robotMover.forward(type, 15);
+					}
+
+				}
+				// close goal
+				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRightGoalBottom().x,ObjectLocations.getUSAttack().y)) < 5){
+					System.out.println("we are yellow, defending right and we are moving away from the goal line");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRightGoalBottom().x,ObjectLocations.getUSAttack().y);
+					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
+					//					System.out.println("Angle to parrallel with goal: " + angle);
+					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+						robotMover.rotate(type, angle);
+					}
+					if (ObjectLocations.getUSAttackDot().x < ObjectLocations.getUSAttack().x) {
+						//Move Backward
+						robotMover.forward(type, 15);
+					} else {
+						//Move Forward
+						robotMover.forward(type, -15);
+					}
+
+				}
+			} 
+		} else {
+			//We are blue
+			if(!ObjectLocations.getYellowDefendingLeft()){
+				//Defending LEFT
+				// close to line
+				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSAttack().y)) < 15){
+					System.out.println("We are blue and defending left and moving away frpom the line");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion12X(),ObjectLocations.getUSAttack().y);
+					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
+					//					System.out.println("Angle to parrallel with goal: " + angle);
+					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+						robotMover.rotate(type, angle);
+					}
+					if (ObjectLocations.getUSAttackDot().x < ObjectLocations.getUSAttack().x) {
+						//Move Backward
+						robotMover.forward(type, 15);
+					} else {
+						//Move Forward
+						robotMover.forward(type, -15);
+					}
+				}
+				// close to goal?
+				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getLeftGoalTop().x,ObjectLocations.getUSAttack().y)) < 5){
+					System.out.println("We are blue and defending left and moving away frpom the goal line");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getLeftGoalTop().x,ObjectLocations.getUSAttack().y);
+					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
+					//					System.out.println("Angle to parrallel with goal: " + angle);
+					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+						robotMover.rotate(type, angle);
+					}
+					if (ObjectLocations.getUSAttackDot().x < ObjectLocations.getUSAttack().x) {
+						//Move Backward
+						robotMover.forward(type, -15);
+					} else {
+						//Move Forward
+						robotMover.forward(type, 15);
+					}
+				}
+			} else {
+				// Defending Right
+				// close to line
+				if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y)) < 15 ){
+					System.out.println("We are blue and defending left and moving away frpom the line");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRegion34X(),ObjectLocations.getUSAttack().y);
+					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
+					//					System.out.println("Angle to parrallel with goal: " + angle);
+					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+						robotMover.rotate(type, angle);
+					}
+					if (ObjectLocations.getUSAttackDot().x < ObjectLocations.getUSAttack().x) {
+						//Move Backward
+						robotMover.forward(type, -15);
+					} else {
+						//Move Forward
+						robotMover.forward(type, 15);
+					}
+
+				}
+				// close goal
+				else if(DistanceCalculator.Distance(ObjectLocations.getUSAttack(),new Point2D_I32(ObjectLocations.getConsts().getRightGoalBottom().x,ObjectLocations.getUSAttack().y)) < 5){
+					System.out.println("We are blue and defending left and moving away frpom the goal line");
+					Point2D_I32 point = new Point2D_I32(ObjectLocations.getConsts().getRightGoalBottom().x,ObjectLocations.getUSAttack().y);
+					double angle = TurnToObject.getAngleToObject(ObjectLocations.getUSAttackDot(), ObjectLocations.getUSAttack(), point);
+					//					System.out.println("Angle to parrallel with goal: " + angle);
+					if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
+						robotMover.rotate(type, angle);
+					}
+					if (ObjectLocations.getUSAttackDot().x < ObjectLocations.getUSAttack().x) {
+						//Move Backward
+						robotMover.forward(type, 15);
+					} else {
+						//Move Forward
+						robotMover.forward(type, -15);
+					}
+
+				}
+			}
+		}
+	}
+	
 	private static boolean isLeft(Point2D_I32 a, Point2D_I32 b, Point2D_I32 c){
 		return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
 	}

@@ -231,7 +231,6 @@ public class Bluetooth {
 			if (isAttackConnected()) {
 				dos1.write(command);
 				dos1.flush();
-				//TODO set ready state to false
 			} else {
 				throw new IOException("Cannot send command to attack robot as there is no open connection.");
 			}
@@ -239,7 +238,6 @@ public class Bluetooth {
 			if (isDefenceConnected()) {
 				dos2.write(command);
 				dos2.flush();
-				//TODO set ready state to false
 			} else {
 				throw new IOException("Cannot send command to defence robot as there is no open connection.");
 			}

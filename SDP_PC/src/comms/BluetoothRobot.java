@@ -131,6 +131,9 @@ public class BluetoothRobot extends Robot implements RobotController {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
 		}
+		
+		
+		
 	}
 
 	@Override
@@ -205,10 +208,11 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 	
 	@Override
-	public void waitForRobotReady(String robotType) {
+	public void waitForRobotReady(String robotType) throws InterruptedException {
 		try {
 			//System.out.println("Waiting for command completion");
 			bluetooth.waitForReadyCommand(robotType);
+			Thread.sleep(100);
 		} catch (IOException e) {
 			System.out.println("Failed while waiting for ready state");
 			e.printStackTrace();

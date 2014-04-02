@@ -17,17 +17,17 @@ public class ShootAttacker {
 			try {
 				
 				MoveToPointXY.moveRobotToBall(type, robotMover);
-				System.out.println("this will be printed many times");
+
 				//Grab the ball
 				robotMover.grab(type);
 				
-				//Find Angle to Opponent Attacker
-				double goal = TurnToObject.shootAngle(); // .OppenentAttacker(RobotType.AttackUs);
+				//Find Angle to Goal
+				double goal = TurnToObject.shootAngle();
 				
-				//Rotate robot to an angle such that it is not intercepted by the attacker
+				//Rotate to shoot
 				robotMover.rotate(type, goal);
 				
-				//Pass the ball
+				//Kick the ball
 				System.out.println("trying to score!");
 				robotMover.kick(type);
 				
@@ -36,11 +36,12 @@ public class ShootAttacker {
 			}
 			
 			try {
-				Thread.sleep(500);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 		}		
 
 	}

@@ -57,7 +57,6 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 	private PitchConstants consts;
 
 
-
 	static JPanel panel1 = new JPanel();
 	static JPanel panel2 = new JPanel();
 	static JPanel panel3 = new JPanel();
@@ -309,8 +308,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
 		ObjectLocations.frameRate = (1000 / (thisFrame - lastFrame));
 		VisionRunner.sendFrame(new Frame(img,thisFrame));
-
-
+		
 		float[] distanceThresholds = new float[5];
 		distanceThresholds[0] = getRed();
 		distanceThresholds[1] = getYellow();

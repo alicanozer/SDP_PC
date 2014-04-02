@@ -47,13 +47,13 @@ public class StartStrategy extends JFrame {
 	private RobotMover attackMover;
 	private RobotMover defenceMover;
 	private static Thread dthread = null;
-	
+	private static Thread athread = null;
 	
 	
 	public static void main(String[] args) {
 
 		//Start vision
-		VisionRunner.startDebugVision(PitchConstants.oldPitch, 10, true);
+		VisionRunner.startDebugVision(PitchConstants.newPitch, 10, true);
 
 		//Sets up the GUI
 		StartStrategy guiStrat = new StartStrategy();
@@ -62,6 +62,7 @@ public class StartStrategy extends JFrame {
 		System.out.println("GOT");
 		guiStrat.setVisible(true);
 		guiStrat.setMinimumSize(guiStrat.getSize());
+		
 	}
 
 	public void runStrategy() {
@@ -72,7 +73,7 @@ public class StartStrategy extends JFrame {
 		DefenceThread drun = new DefenceThread("defence",defenceMover);
 		dthread = new Thread(drun);
 		dthread.start();
-		Thread athread = new Thread(arun);
+		athread = new Thread(arun);
 		athread.start();
 		System.out.println("Started Threads");
 
@@ -120,11 +121,11 @@ public class StartStrategy extends JFrame {
 				if (flag == 0) {
 					attackMover.stopRobot("attack");
 					defenceMover.stopRobot("defence");
-					//Attacker Thread kill						
+					AttackThread.kill();
 					DefenceThread.kill();						
 				} else if (flag == 1) {
 					attackMover.stopRobot("attack");
-					//Attacker Thread kill
+					AttackThread.kill();
 				} else if (flag == 2) {
 					defenceMover.stopRobot("defence");
 					DefenceThread.kill();
@@ -144,11 +145,13 @@ public class StartStrategy extends JFrame {
 					if (flag == 0) {
 						attackMover.kill();
 						defenceMover.kill();
-						//Attacker Thread kill						
+						//Attacker Thread kill
+						AttackThread.kill();
 						DefenceThread.kill();						
 					} else if (flag == 1) {
 						attackMover.kill();
-						//Attacker Thread kill						
+						//Attacker Thread kill
+						AttackThread.kill();
 					} else if (flag == 2) {
 						defenceMover.kill();
 						DefenceThread.kill();

@@ -37,6 +37,15 @@ public class DefenceThread implements Runnable {
 	public void run() {
 		// big while loop that never ends
 		while (true) {
+			if(Math.random() < 0.05){
+				try {
+					System.out.println("Emergency movement kill defender");
+					mover.resetQueue(type);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			try {
 				if (BallPossession.hasPossession(RobotType.AttackUs,
 						ObjectLocations.getUSAttack())) {
@@ -68,6 +77,11 @@ public class DefenceThread implements Runnable {
 					break;
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}

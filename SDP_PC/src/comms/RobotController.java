@@ -28,7 +28,7 @@ public interface RobotController {
 	
 	public void isMoving(String robotType);
 	
-	public void waitForRobotReady(String robotType);
+	public void waitForRobotReady(String robotType) throws InterruptedException;
 	
 	public void backwardsC(String robotType);
 	
