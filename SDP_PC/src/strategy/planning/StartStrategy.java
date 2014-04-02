@@ -47,10 +47,13 @@ public class StartStrategy extends JFrame {
 	private RobotMover attackMover;
 	private RobotMover defenceMover;
 	private static Thread dthread = null;
+	
+	
+	
 	public static void main(String[] args) {
 
 		//Start vision
-		VisionRunner.startDebugVision(PitchConstants.newPitch, 10, true);
+		VisionRunner.startDebugVision(PitchConstants.oldPitch, 10, true);
 
 		//Sets up the GUI
 		StartStrategy guiStrat = new StartStrategy();
@@ -65,11 +68,13 @@ public class StartStrategy extends JFrame {
 		
 		System.out.println("Starting Strategy...");
 		
-		//attackThread.run();
+		AttackThread arun = new AttackThread("attack",attackMover);
 		DefenceThread drun = new DefenceThread("defence",defenceMover);
 		dthread = new Thread(drun);
 		dthread.start();
-		System.out.println("Started Defender Thread");
+		Thread athread = new Thread(arun);
+		athread.start();
+		System.out.println("Started Threads");
 
 	}
 

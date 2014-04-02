@@ -12,14 +12,14 @@ import movement.RobotMover;
  * @author s1101380
  *
  */
-public class DefenceThread implements Runnable {
+public class AttackThread implements Runnable {
 
 	private String type;
 	private RobotMover mover;
 	private static boolean die = false;
 	private static Object lock = new Object();
-	public DefenceThread(String type,RobotMover mover) {
-		this.type = "defence";
+	public AttackThread(String type,RobotMover mover) {
+		this.type = "attack";
 		this.mover = mover;
 		die = false;
 	}
@@ -40,29 +40,28 @@ public class DefenceThread implements Runnable {
 			try {
 				if (BallPossession.hasPossession(RobotType.AttackUs,
 						ObjectLocations.getUSAttack())) {
-					System.out.println("Defender Attack Strategy");
+					System.out.println("Attacker Attack Strategy");
 					mover.resetQueue(type);
+					ShootAttacker.shootAttacker(type, mover);
 				} else if (BallPossession.hasPossession(RobotType.DefendUs,
 						ObjectLocations.getUSDefend())) {
-					System.out.println("Defender Passing Strategy");
+					System.out.println("Attacker Passing Strategy");
 					mover.resetQueue(type);
-					PassingDefender.passingDefender(type, mover);
+					//PassingDefender.passingAttacker(type, mover);
 				} else if (BallPossession.hasPossession(
 						RobotType.AttackThem,
 						ObjectLocations.getTHEMAttack())) {
 					mover.resetQueue(type);
-					System.out.println("Defender Block Shot Strategy");
+					System.out.println("Attacker Block Shot Strategy");
 				} else if (BallPossession.hasPossession(
 						RobotType.DefendThem,
 						ObjectLocations.getTHEMDefend())) {
 					mover.resetQueue(type);
-					System.out.println("Defender Block Pass Strategy");
+					System.out.println("Attacker Block Pass Strategy");
 				} else {
-					// Intercept Strategy
-					System.out.println("Defender Intercept");
+					System.out.println("Attacker Intercept");
 					mover.resetQueue(type);
 					InterceptBall.intercept(type, mover);
-					//InterceptBall.intercept("attack",attackMover);
 				}
 				if(getDie()){
 					break;
