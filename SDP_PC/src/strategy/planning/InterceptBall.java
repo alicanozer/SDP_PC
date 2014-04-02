@@ -12,14 +12,7 @@ public class InterceptBall{
 	
 	public static void intercept(String type, RobotMover robotMover) throws InterruptedException{
 		
-		try {
-			robotMover.resetQueue();
-			robotMover.stopRobot(type);
-			robotMover.interruptMove();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+
 		
 		while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())){
 
@@ -34,7 +27,6 @@ public class InterceptBall{
 				if(Math.abs(angle) < 160 && Math.abs(angle) > 20){
 //					System.out.println("correcting angle!!!!!!!!!!!!!!!");
 					robotMover.stopRobot(type);
-					robotMover.resetQueue();
 					robotMover.rotate(type, angle);
 				}
 

@@ -12,21 +12,12 @@ public class PassingDefender {
 
 	public static void passingDefender(String type, RobotMover robotMover) {
 		
-		try {
-			robotMover.resetQueue();
-			robotMover.stopRobot(type);
-			robotMover.interruptMove();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
 		while (BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())) {
 			
 			try {
 				
 				MoveToPointXY.moveRobotToBall(type, robotMover);
-				
+				System.out.println("this will be printed many times");
 				//Grab the ball
 				robotMover.grab(type);
 				
@@ -57,6 +48,7 @@ public class PassingDefender {
 				robotMover.rotate(type, angleTurn);
 				
 				//Pass the ball
+				System.out.println("trying to kick");
 				robotMover.kick(type);
 				
 			} catch (Exception e) {

@@ -52,30 +52,42 @@ public class MoveToPointXY {
 	}
 
 	public static void moveRobotToBall(String type, RobotMover robotMover) throws Exception {
-
+		
+		
 		double angleOne;
 		double angleTwo;
 		double angle;
+		double distance;
 		
 		// Turn to ball
 		if (type.equals("attack")) {
-			angleOne = TurnToObject.Ball(RobotType.AttackUs);
-			angleTwo = TurnToObject.Ball(RobotType.AttackUs);
+			angle = TurnToObject.Ball(RobotType.AttackUs);			
+//			angleOne = TurnToObject.Ball(RobotType.AttackUs);
+//			angleTwo = TurnToObject.Ball(RobotType.AttackUs);
 		} else {
-			angleOne = TurnToObject.Ball(RobotType.DefendUs);
-			angleTwo = TurnToObject.Ball(RobotType.DefendUs);			
+			angle = TurnToObject.Ball(RobotType.DefendUs);			
+//			angleOne = TurnToObject.Ball(RobotType.DefendUs);
+//			angleTwo = TurnToObject.Ball(RobotType.DefendUs);			
 		}
 		
-		angle = (angleOne + angleTwo) / 2;
+//		angle = (angleOne + angleTwo) / 2;
 		
 		robotMover.rotate(type, (int) angle);
-//		System.out.println("Angle to Ball:" + angle);										
+		System.out.println("Angle to Ball:" + angle);										
 
 		//Move to Ball
-		double distance = DistanceCalculator.Distance(ObjectLocations.getUSAttack(), ObjectLocations.getBall());
-//		System.out.println("Distance to Ball:" + distance);
-		robotMover.forward(type, distance - 15);
+		if (type.equals("attack")) {
+			distance = DistanceCalculator.Distance(ObjectLocations.getUSAttack(), ObjectLocations.getBall());
+		} else {
+			distance = DistanceCalculator.Distance(ObjectLocations.getUSDefend(), ObjectLocations.getBall());			
+		}
 
+//		System.out.println("Distance to Ball:" + distance);
+		robotMover.forward(type, distance - 21);
+		System.out.println("TRIED TO GET THE BALL!!");
+
+//		robotMover.waitForCompletion();
+		
 	}
 
 	public static void moveRobotToBlock(String type, RobotMover robotMover) throws Exception {
@@ -208,10 +220,10 @@ public class MoveToPointXY {
 					}
 					if (ObjectLocations.getUSDefendDot().x < ObjectLocations.getUSDefend().x) {
 						//Move Backward
-						robotMover.forward(type, -15);
+						robotMover.forward(type, 15);
 					} else {
 						//Move Forward
-						robotMover.forward(type, 15);
+						robotMover.forward(type, -15);
 					}
 				}
 			} else {
@@ -246,10 +258,10 @@ public class MoveToPointXY {
 					}
 					if (ObjectLocations.getUSDefendDot().x < ObjectLocations.getUSDefend().x) {
 						//Move Backward
-						robotMover.forward(type, -15);
+						robotMover.forward(type, 15);
 					} else {
 						//Move Forward
-						robotMover.forward(type, 15);
+						robotMover.forward(type, -15);
 					}
 				}
 			} else {

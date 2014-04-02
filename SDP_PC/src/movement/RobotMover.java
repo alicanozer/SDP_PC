@@ -17,7 +17,8 @@ public class RobotMover extends Thread{
 	//private Robot type;
 	private BluetoothRobot bRobot;
 
-
+	/** A flag to permit grab*/
+	private boolean grabFlag = true;
 	/** A flag to permit busy-waiting */
 	private boolean running = false;
 	/** A flag to interrupt any active movements */
@@ -55,6 +56,9 @@ public class RobotMover extends Thread{
 		private int dribblemode = 0;
 		//private MovingPoint movPoint = null;
 		public Mode mode;
+		public  String toString(){
+			return this.mode.toString();
+		}
 
 	}
 
@@ -113,47 +117,59 @@ public class RobotMover extends Thread{
 	private void processMovement(MoverConfig movement) throws Exception {
 		switch (movement.mode) {
 		case FORWARD:
-			System.out.println(movement.type + " - Forward " + movement.distance);
+			//System.out.println(movement.type + " - Forward " + movement.distance);
 			bRobot.forward(movement.type, movement.distance);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case BACKWARDSC:
-			System.out.println(movement.type + " - Backward " + movement.distance);
+			//System.out.println(movement.type + " - Backward " + movement.distance);
 			bRobot.backwardsC(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case STOP:
-			System.out.println(movement.type + " - Stop");
+			//System.out.println(movement.type + " - Stop");
 			bRobot.stop(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case GRAB:
-			System.out.println(movement.type + " - Grab");
-			bRobot.grab(movement.type);
-			bRobot.waitForRobotReady(movement.type);
+			if (grabFlag) {
+				//System.out.println(movement.type + " - Grab");
+				bRobot.grab(movement.type);
+				bRobot.waitForRobotReady(movement.type);
+				grabFlag = false;
+			} else {
+				//System.out.println("Cant grab twice!!");
+				grabFlag = false;
+			}
 			break;
 		case KICK:
-			System.out.println(movement.type + " - Kick");
-			bRobot.kick(movement.type);
-			bRobot.waitForRobotReady(movement.type);
+			if (!grabFlag) {
+				//System.out.println(movement.type + " - Kick");
+				bRobot.kick(movement.type);
+				bRobot.waitForRobotReady(movement.type);
+				grabFlag = true;
+			} else {
+				//System.out.println("Cant kick twice");
+				grabFlag = true;
+			}
 			break;
 		case DELAY:
-			System.out.println(movement.type + " - Delay " + movement.milliseconds);
+			//System.out.println(movement.type + " - Delay " + movement.milliseconds);
 			SafeSleep.sleep(movement.milliseconds);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case ROTATE:
-			System.out.println(movement.type + " - Rotate " + movement.angle);
+			//System.out.println(movement.type + " - Rotate " + movement.angle);
 			bRobot.rotateLEFT(movement.type, movement.angle);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case SET_SPEED:
-			System.out.println(movement.type + " - Set Speed " + movement.speed);
+			//System.out.println(movement.type + " - Set Speed " + movement.speed);
 			bRobot.setSpeed(movement.type, movement.speed);
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		case FORWARDSC:
-			System.out.println(movement.type + " - ForwardC");
+			//System.out.println(movement.type + " - ForwardC");
 			bRobot.forwardsC(movement.type);
 			bRobot.waitForRobotReady(movement.type);
 			break;
@@ -162,7 +178,7 @@ public class RobotMover extends Thread{
 			bRobot.waitForRobotReady(movement.type);
 			break;
 		default:
-			System.out.println("DERP! Unknown movement mode specified");
+			//System.out.println("DERP! Unknown movement mode specified");
 			assert (false);
 		}
 	}
@@ -225,7 +241,7 @@ public class RobotMover extends Thread{
 		// Wake up the RobotMover thread if it's waiting for a new job
 		jobSem.release();
 		interruptMove = true;
-		resetQueue();
+		//resetQueue();
 		die = false;
 	}
 
@@ -241,7 +257,7 @@ public class RobotMover extends Thread{
 	 * @throws InterruptedException
 	 *             if the RobotMover thread was interrupted
 	 */
-	public void resetQueue() throws InterruptedException {
+	public void resetQueue(String type) throws InterruptedException {
 		// Block changes in the queue until the queue is finished
 		// resetting
 		queueLock.lockInterruptibly();
@@ -253,7 +269,9 @@ public class RobotMover extends Thread{
 		}
 
 		moveQueue.clear();
+		this.stopRobot(type);
 		queueLock.unlock();
+		
 	}
 
 	/**
@@ -309,9 +327,9 @@ public class RobotMover extends Thread{
 	 * Waits for the movement queue to complete before returning
 	 */
 	public void waitForCompletion() throws InterruptedException {
-		System.out.println("Getting Semaphore");
+		//System.out.println("Getting Semaphore");
 		waitSem.acquire();
-		System.out.println("Got Semaphore");
+		//.println("Got Semaphore");
 	}
 
 

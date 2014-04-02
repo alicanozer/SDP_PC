@@ -11,6 +11,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 	private Bluetooth bluetooth;
 	public static final String TEAM_TRINITY = "0016530970C6";
 	public static final String HERCULES = "0016530D4ED8";
+	private static boolean  grabFlag = true;
 	NXTConnector connector = new NXTConnector();
 	
 	public BluetoothRobot(RobotType type, Bluetooth bluetooth) {
@@ -60,7 +61,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
-			System.out.println("Robot Stopped");
+			//System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
@@ -70,10 +71,10 @@ public class BluetoothRobot extends Robot implements RobotController {
 	@Override
 	public void grab(String robotType) {
 		int[] commands = { bluetooth.GRAB, 0, 0, 0 };
-		
+			
 		try {
 			bluetooth.sendCommand(commands, robotType);
-			System.out.println("Robot Stopped");
+			//System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
@@ -82,15 +83,15 @@ public class BluetoothRobot extends Robot implements RobotController {
 
 	@Override
 	public void kick(String robotType) {
-		int[] commands = { bluetooth.KICK, 0, 0, 0 };
-		
-		try {
-			bluetooth.sendCommand(commands, robotType);
-			System.out.println("Robot Stopped");
-		}catch (IOException e) {
-			System.out.println("Command could not be sent");
-			e.printStackTrace();
-		}
+			int[] commands = { bluetooth.KICK, 0, 0, 0 };
+			
+			try {
+				bluetooth.sendCommand(commands, robotType);
+				////System.out.println("Robot Stopped");
+			}catch (IOException e) {
+				System.out.println("Command could not be sent");
+				e.printStackTrace();
+			}
 	}
 
 	@Override
@@ -111,7 +112,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
-			System.out.println("Robot Stopped");
+			////System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
@@ -125,7 +126,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
-			System.out.println("Robot Stopped");
+			////System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
@@ -139,7 +140,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
-			System.out.println("Robot Stopped");
+			//System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
@@ -154,7 +155,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
-			System.out.println("Robot Stopped");
+			//System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
@@ -167,7 +168,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
-			System.out.println("Robot Stopped");
+			//System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
@@ -181,7 +182,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 		try {
 			bluetooth.sendCommand(commands, robotType);
 			
-			System.out.println("Robot Stopped");
+			//System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
@@ -195,7 +196,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);
-			System.out.println("Robot Stopped");
+			//System.out.println("Robot Stopped");
 		}catch (IOException e) {
 			System.out.println("Command could not be sent");
 			e.printStackTrace();
@@ -206,7 +207,7 @@ public class BluetoothRobot extends Robot implements RobotController {
 	@Override
 	public void waitForRobotReady(String robotType) {
 		try {
-			System.out.println("Waiting for command completion");
+			//System.out.println("Waiting for command completion");
 			bluetooth.waitForReadyCommand(robotType);
 		} catch (IOException e) {
 			System.out.println("Failed while waiting for ready state");
