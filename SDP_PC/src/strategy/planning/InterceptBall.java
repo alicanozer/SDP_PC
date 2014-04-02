@@ -35,7 +35,7 @@ public class InterceptBall{
 							MoveToPointXY.moveAwayDefence(type, robotMover);
 						}
 						try {
-							MoveToPointXY.moveRobotToBlockCont(type, robotMover);
+//							MoveToPointXY.moveRobotToBlockCont(type, robotMover);
 						} catch (Exception e) {
 						}
 					}
@@ -50,6 +50,7 @@ public class InterceptBall{
 				}
 			}
 			robotMover.stopRobot(type);
+			
 		}
 		else{
 			while(!BallPossession.hasPossession(RobotType.AttackUs, ObjectLocations.getUSAttack())){
