@@ -336,11 +336,18 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback, Wind
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width,height, null);
 		g.setColor(Color.white);
+<<<<<<< HEAD
 		g.drawString("FPS " + frameRate , 10, 10);
 
 
 		CreateSlider();
 		slider.addChangeListener(new ChangeListener() {
+=======
+		g.drawString("FPS: " + frameRate , 10, 10);
+		g.setColor(Color.RED);
+		g.drawString("Ball speed: " + ObjectLocations.getBallSpeed(), 10, 280);
+		slider1.addChangeListener(new ChangeListener() {
+>>>>>>> defense finished, need to do some attack
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				if (slider1.getValueIsAdjusting()){

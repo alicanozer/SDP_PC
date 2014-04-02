@@ -35,7 +35,9 @@ public class ObjectLocations {
 
 	private static Object lock1 = new Object();
 	public static double getBallSpeed(){
-		return ballSpeed;
+		synchronized(lock1){
+			return ballSpeed;
+		}
 	}
 	public static double getBallDirectionAngle() {
 		synchronized(lock1){
@@ -204,18 +206,21 @@ public class ObjectLocations {
 
 		}
 		// before we set the ball
-		try {
-			double dist = 0.0;
-			if(ballLocal != null & ObjectLocations.getBall()!= null){
-				dist= PointUtils.euclideanDistance(ballLocal, ObjectLocations.getBall());
-				double v = dist*frameRate;
-				//set ball speed
-				ballSpeed = v;
+		synchronized(lock1){
+			try {
+				double dist = 0.0;
+				if(ballLocal != null & ObjectLocations.getBall()!= null){
+					dist= PointUtils.euclideanDistance(ballLocal, ObjectLocations.getBall());
+					double v = dist*frameRate;
+					//set ball speed
+					ballSpeed = v;
+				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
+
 		// set the ball
 		setBall(ballLocal);
 

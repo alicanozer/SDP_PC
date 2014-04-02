@@ -12,7 +12,6 @@ public class InterceptBall{
 
 	public static void intercept(String type, RobotMover robotMover) throws InterruptedException{
 
-
 		if(type.equals("defence")){
 			while(!BallPossession.hasPossession(RobotType.DefendUs, ObjectLocations.getUSDefend())){
 				if(
@@ -30,12 +29,13 @@ public class InterceptBall{
 					}
 
 					// MOVE
-					if(Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y) > 10){
+					if(ObjectLocations.getBall() != null && ObjectLocations.getUSDefend()!= null && 
+							Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSDefend().y) > 10){
 						if(type.equals("defence")){
 							MoveToPointXY.moveAwayDefence(type, robotMover);
 						}
 						try {
-//							MoveToPointXY.moveRobotToBlockCont(type, robotMover);
+							MoveToPointXY.moveRobotToBlockCont(type, robotMover);
 						} catch (Exception e) {
 						}
 					}
@@ -71,7 +71,7 @@ public class InterceptBall{
 					// MOVE
 					if(Math.abs(ObjectLocations.getBall().y - ObjectLocations.getUSAttack().y) > 10){
 						if(type.equals("defence")){
-							//MoveToPointXY.moveAwayAttack(type, robotMover);
+							MoveToPointXY.moveAwayAttack(type, robotMover);
 						}
 						try {
 							MoveToPointXY.moveRobotToBlockCont(type, robotMover);

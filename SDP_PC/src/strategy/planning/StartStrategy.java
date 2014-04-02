@@ -52,7 +52,7 @@ public class StartStrategy extends JFrame {
 	public static void main(String[] args) {
 
 		//Start vision
-		VisionRunner.startDebugVision(PitchConstants.newPitch, 10, true);
+		VisionRunner.startDebugVision(PitchConstants.oldPitch, 10, true);
 
 		//Sets up the GUI
 		StartStrategy guiStrat = new StartStrategy();
