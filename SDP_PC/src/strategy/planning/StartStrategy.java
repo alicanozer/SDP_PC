@@ -9,6 +9,14 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
+
+import Calculations.BallPossession;
+import Calculations.DistanceCalculator;
+import strategy.movement.MoveToPointXY;
+import strategy.movement.TurnToObject;
+import vision.ObjectLocations;
 import vision.PitchConstants;
 import vision.VisionRunner;
 import world.RobotType;
@@ -30,6 +38,10 @@ public class StartStrategy extends JFrame {
 	private final JButton stopButton = new JButton("Stop");
 	private final JButton quitButton = new JButton("Quit");
 	private final JPanel movePanel = new JPanel();
+	private final JTextField speedTravel = new JTextField(2);
+	private final JTextField speedRotate = new JTextField(2);
+	private final JButton setSpeedTravel = new JButton("Set Travel Speed");
+	private final JButton setSpeedRotate = new JButton("Set Rotate Speed");
 	private final JButton kickButton = new JButton("Kick");
 	private final JButton grabButton = new JButton("Grab");
 	private final JButton forwardButton = new JButton("Forward");
@@ -41,6 +53,7 @@ public class StartStrategy extends JFrame {
 	private String[] connectOption = { "Both", "Attacker", "Defender" };
 	private final JComboBox<String> connectOptions = new JComboBox<>(connectOption);
 	private static int flag = -1;
+
 	//Bluetooth stuff
 	private static BluetoothRobot attackRobot;
 	private static BluetoothRobot defenceRobot;
@@ -48,7 +61,7 @@ public class StartStrategy extends JFrame {
 	private RobotMover defenceMover;
 	private static Thread dthread = null;
 	private static Thread athread = null;
-	
+
 	public static void main(String[] args) {
 
 		//Start vision
@@ -61,20 +74,104 @@ public class StartStrategy extends JFrame {
 		System.out.println("GOT");
 		guiStrat.setVisible(true);
 		guiStrat.setMinimumSize(guiStrat.getSize());
-		
 	}
 
 	public void runStrategy() {
-		
+
 		System.out.println("Starting Strategy...");
-		
-		AttackThread arun = new AttackThread("attack",attackMover);
+
+		/*AttackThread arun = new AttackThread("attack",attackMover);
 		DefenceThread drun = new DefenceThread("defence",defenceMover);
 		dthread = new Thread(drun);
 		dthread.start();
 		athread = new Thread(arun);
 		athread.start();
-		System.out.println("Started Threads");
+		System.out.println("Started Threads");*/
+
+		while (true) {
+
+			if (ObjectLocations.getUSAttack() != null && ObjectLocations.getBall() != null) {
+
+				try {
+					attackMover.resetQueue("attack");
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				attackMover.setSpeed("attack", 8);
+				attackMover.setRotateSpeed("attack", 100);
+				
+				if (ObjectLocations.getBall() != null && BallPossession.BallRegion(ObjectLocations.getBall(), PitchConstants.getRegion3())) {
+					
+					double angle = 0.0;
+					double distance = 0.0;
+					
+					try {
+						angle = TurnToObject.Ball(RobotType.AttackUs);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					if (Math.abs(angle) > 12) {
+						attackMover.rotate("attack", angle);
+					}
+
+					distance = DistanceCalculator.Distance(ObjectLocations.getUSAttack(), ObjectLocations.getBall());
+					
+					if (distance > 16 && distance < 25) {
+						attackMover.setSpeed("attack", 5);
+						attackMover.forward("attack", distance - 14);
+						attackMover.stopRobot("attack");
+					} else if (distance > 25) {
+						attackMover.forward("attack", distance - 22);
+						attackMover.stopRobot("attack");						
+					} else {
+						attackMover.stopRobot("attack");
+					}
+					
+					while (attackMover.numQueuedJobs() > 5) {
+						//Do Nothing
+					}
+					
+					attackMover.grab("attack");
+					
+					attackMover.setSpeed("attack", 8);
+					attackMover.setRotateSpeed("attack", 100);
+					
+					if (ObjectLocations.getUSAttack() != null && ObjectLocations.getBall() != null) {
+						distance = DistanceCalculator.Distance(ObjectLocations.getUSAttack(), ObjectLocations.getBall());
+						System.out.println("Distance to Ball after grabbing: " + distance);
+					} else {
+						distance = 0.0;
+					}
+					
+					if (distance < 18 && distance != 0.0) {
+						
+						double angleShoot = TurnToObject.shootAngle();
+						
+						if (Math.abs(angleShoot) > 10) {
+							attackMover.rotate("attack", angleShoot);
+						}
+						
+						System.out.println("Angle to Shoot: " + angleShoot);
+						
+					}
+					
+					attackMover.kick("attack");
+					
+					System.out.println("num:" + attackMover.numQueuedJobs());
+					
+				}
+
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+			}
+
+		}
 
 	}
 
@@ -93,6 +190,10 @@ public class StartStrategy extends JFrame {
 
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		this.getContentPane().add(movePanel, gbc_panel);
+		movePanel.add(speedTravel);
+		movePanel.add(setSpeedTravel);
+		movePanel.add(speedRotate);
+		movePanel.add(setSpeedRotate);
 		movePanel.add(kickButton);
 		movePanel.add(forwardButton);
 		movePanel.add(backwardButton);
@@ -131,14 +232,14 @@ public class StartStrategy extends JFrame {
 				}
 
 				System.out.println("Strategy Stopped");
-				
+
 			}
 		});
 
 		quitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				// Kill the mover and wait for it to stop completely
 				try {
 					if (flag == 0) {
@@ -170,6 +271,44 @@ public class StartStrategy extends JFrame {
 				}
 				System.out.println("Quitting the GUI");
 				cleanQuit();
+			}
+		});
+
+		setSpeedTravel.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				int speed = Integer.parseInt(speedTravel.getText());
+
+				if (flag == 0) {
+					attackMover.setSpeed("attack", speed);
+					defenceMover.setSpeed("defence", speed);					
+				} else if (flag == 1) {
+					attackMover.setSpeed("attack", speed);					
+				} else if (flag == 2) {
+					defenceMover.setSpeed("defence", speed);					
+				}
+
+			}
+		});
+
+		setSpeedRotate.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				int speed = Integer.parseInt(speedRotate.getText());
+
+				if (flag == 0) {
+					attackMover.setRotateSpeed("attack", speed);
+					defenceMover.setRotateSpeed("defence", speed);					
+				} else if (flag == 1) {
+					attackMover.setRotateSpeed("attack", speed);					
+				} else if (flag == 2) {
+					defenceMover.setRotateSpeed("defence", speed);					
+				}
+
 			}
 		});
 

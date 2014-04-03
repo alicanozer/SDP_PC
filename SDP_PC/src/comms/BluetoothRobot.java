@@ -166,8 +166,25 @@ public class BluetoothRobot extends Robot implements RobotController {
 	}
 	
 	@Override
-	public void setSpeed(String robotType, int speed) {
-		int[] commands = { bluetooth.SPEED, speed,0,0 }; 
+	public void setTravelSpeed(String robotType, int speed) {
+		int triple = speed/3;
+		
+		int[] commands = { bluetooth.TRAVELSPEED, triple,triple, triple};
+		
+		try {
+			bluetooth.sendCommand(commands, robotType);
+			//System.out.println("Robot Stopped");
+		}catch (IOException e) {
+			System.out.println("Command could not be sent");
+			e.printStackTrace();
+		}
+	}
+	
+	public void setRotateSpeed(String robotType, int speed) {
+		
+		int triple = speed/3;
+
+		int[] commands = { bluetooth.ROTATESPEED, triple, triple, triple }; 
 		
 		try {
 			bluetooth.sendCommand(commands, robotType);

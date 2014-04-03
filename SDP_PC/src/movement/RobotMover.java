@@ -69,7 +69,7 @@ public class RobotMover extends Thread{
 	}
 
 	private enum Mode {
-		FORWARD, BACKWARDSC, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC, MOVING
+		FORWARD, BACKWARDSC, STOP, GRAB, KICK, DELAY, ROTATE, SET_SPEED, FORWARDSC, MOVING, SET_ROTATESPEED
 	};
 
 	/**
@@ -165,9 +165,13 @@ public class RobotMover extends Thread{
 			break;
 		case SET_SPEED:
 			//System.out.println(movement.type + " - Set Speed " + movement.speed);
-			bRobot.setSpeed(movement.type, movement.speed);
+			bRobot.setTravelSpeed(movement.type, movement.speed);
 			bRobot.waitForRobotReady(movement.type);
 			break;
+		case SET_ROTATESPEED:
+			bRobot.setRotateSpeed(movement.type, movement.speed);
+			bRobot.waitForRobotReady(movement.type);
+			break;			
 		case FORWARDSC:
 			//System.out.println(movement.type + " - ForwardC");
 			bRobot.forwardsC(movement.type);
@@ -347,7 +351,20 @@ public class RobotMover extends Thread{
 		return true;
 	}
 
+	public synchronized boolean setRotateSpeed(String robotType, int speed) {
+		MoverConfig movement = new MoverConfig();
+		movement.speed = speed;
+		movement.mode = Mode.SET_ROTATESPEED;
+		movement.type = robotType;
 
+		if (!pushMovement(movement))
+			return false;
+
+		// Let the mover know it has a new job
+		jobSem.release();
+		return true;
+	}
+	
 	/**
 	 * Queues a forward by a distance.
 	 * 

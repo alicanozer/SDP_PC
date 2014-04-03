@@ -41,8 +41,8 @@ public class Bluetooth {
 	public final static int STOP = 3;
 	public final static int GRAB = 4;
 	public final static int KICK = 5;
-	public final static int SPEED = 6;
-	//public final static int ROTATESPEED = 7;
+	public final static int TRAVELSPEED = 6;
+	public final static int ROTATESPEED = 12;
 	public final static int ROTATELEFT = 7;
 	public final static int ROTATERIGHT = 8;
 	public final static int MOVING = 9;

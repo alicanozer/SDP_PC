@@ -24,7 +24,9 @@ public interface RobotController {
 	
 	public void forwardsC(String robotType);
 	
-	public void setSpeed(String robotType, int speed);
+	public void setRotateSpeed(String robotType, int speed);
+	
+	public void setTravelSpeed(String robotType, int speed);
 	
 	public void isMoving(String robotType);
 	
