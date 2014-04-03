@@ -1,12 +1,9 @@
 package strategy.planning;
 
-import java.awt.Point;
-
 import Calculations.BallPossession;
 import Calculations.DistanceCalculator;
 import Calculations.Intersection;
-import Calculations.IntersectionLines;
-import strategy.movement.MoveToPointXY;
+import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import world.RobotType;
 import geometry.Vector;
@@ -17,10 +14,18 @@ public class BlockShot {
 
 	public static void blockShot(String type, RobotMover robotMover) {
 
-		//BallPossession.hasPossession(RobotType.AttackThem, ObjectLocations.getTHEMAttack()
-		while (true) {
+		double angle;
+		
+		while (BallPossession.hasPossession(RobotType.AttackThem, ObjectLocations.getTHEMAttack())) {
+
+			angle = TurnToObject.alignHorizontal(RobotType.DefendUs);
+			
 			if(ObjectLocations.getUSDefend() != null && ObjectLocations.getUSDefendDot() != null){
 
+				if (angle > 20) {
+					robotMover.rotate(type, angle);
+				}
+				
 				Point2D_I32 ourDot;
 				Point2D_I32 ourMarker;
 				Point2D_I32 theirDot;
@@ -43,7 +48,7 @@ public class BlockShot {
 				double distance = DistanceCalculator.Distance(ObjectLocations.getUSDefend(), point);
 				System.out.println("Distance to Point: " + distance);
 				
-				if (point.y > 69 && point.y < 205) {
+				if (point.y > 69 && point.y < 209) {
 					if (point.y < ObjectLocations.getUSDefendDot().y) {
 						robotMover.forward(type, -distance);
 					} else {
@@ -54,7 +59,6 @@ public class BlockShot {
 					try {
 						robotMover.resetQueue(type);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -64,7 +68,6 @@ public class BlockShot {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

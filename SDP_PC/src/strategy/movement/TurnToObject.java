@@ -113,9 +113,9 @@ public class TurnToObject {
 		if (ObjectLocations.getYellowDefendingLeft()) {
 			
 			//Right Goal
-			Top = GoalInfo.getRightGoalTopNew();
-			Centre = GoalInfo.getRightGoalCenterNew();
-			Bottom = GoalInfo.getRightGoalBottomNew();
+			Top = ObjectLocations.getConsts().getRightGoalTop();
+			Centre = ObjectLocations.getConsts().getRightGoalCentre();
+			Bottom = ObjectLocations.getConsts().getRightGoalBottom();
 			
 			System.out.println("Goal Top: " + Top.y);
 			System.out.println("Goal Centre: " + Centre.y);
@@ -124,9 +124,9 @@ public class TurnToObject {
 		} else {
 		
 			//Left Goal
-			Top = GoalInfo.getLeftGoalTopNew();
-			Centre = GoalInfo.getLeftGoalCenterNew();
-			Bottom = GoalInfo.getLeftGoalBottomNew();
+			Top = ObjectLocations.getConsts().getLeftGoalTop();
+			Centre = ObjectLocations.getConsts().getLeftGoalCentre();
+			Bottom = ObjectLocations.getConsts().getLeftGoalBottom();
 			
 			System.out.println("Goal Top: " + Top.y);
 			System.out.println("Goal Centre: " + Centre.y);

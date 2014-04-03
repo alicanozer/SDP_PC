@@ -23,29 +23,33 @@ public class AttackThread implements Runnable {
 		this.mover = mover;
 		die = false;
 	}
+	
 	public static void kill(){
 		synchronized(lock){
 			die = true;
 		}
 	}
+	
 	public static boolean getDie(){
 		synchronized(lock){
 			return die;
 		}
 	}
+	
 	@Override
 	public void run() {
-		// big while loop that never ends
+		// While loop that runs the whole game
 		while (true) {
+			
 			if(Math.random() < 0.05){
 				try {
 					System.out.println("Emergency movement kill attacker");
 					mover.resetQueue(type);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			
 			try {
 				if (BallPossession.hasPossession(RobotType.AttackUs,
 						ObjectLocations.getUSAttack())) {
@@ -56,17 +60,19 @@ public class AttackThread implements Runnable {
 						ObjectLocations.getUSDefend())) {
 					System.out.println("Attacker Passing Strategy");
 					mover.resetQueue(type);
-					//PassingDefender.passingAttacker(type, mover);
+					//DO NOTHING
 				} else if (BallPossession.hasPossession(
 						RobotType.AttackThem,
 						ObjectLocations.getTHEMAttack())) {
 					mover.resetQueue(type);
 					System.out.println("Attacker Block Shot Strategy");
+					//DO NOTHING
 				} else if (BallPossession.hasPossession(
 						RobotType.DefendThem,
 						ObjectLocations.getTHEMDefend())) {
 					mover.resetQueue(type);
 					System.out.println("Attacker Block Pass Strategy");
+					BlockPass.blockPass(type, mover);
 				} else {
 					System.out.println("Attacker Intercept");
 					mover.resetQueue(type);
@@ -78,11 +84,13 @@ public class AttackThread implements Runnable {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
 		}
 
 	}

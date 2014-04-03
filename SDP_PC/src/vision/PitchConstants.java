@@ -9,9 +9,7 @@ public class PitchConstants {
 			int croppedHeight, int region12x, int region23x, int region34x, int hUpperBound, int hLowerBound,
 			int rightGoalTopX, int rightGoalTopY, int rightGoalBottomX, int rightGoalBottomY,
 			int leftGoalTopX, int leftGoalTopY, int leftGoalBottomX, int leftGoalBottomY) {
-		
-
-		
+			
 		this.upperLeftX = upperLeftX;
 		this.upperLeftY = upperLeftY;
 		this.croppedWidth = croppedWidth;
@@ -25,8 +23,20 @@ public class PitchConstants {
 		
 		this.rightGoalTop = new Point2D_I32(rightGoalTopX,rightGoalTopY);
 		this.rightGoalBottom = new Point2D_I32(rightGoalBottomX,rightGoalBottomY);
+		
+		int rightCentreX = (rightGoalTop.x + rightGoalBottom.x) / 2;
+		int rightCentreY = (rightGoalTop.y + rightGoalBottom.y) / 2;		
+		
+		this.setRightGoalCentre(new Point2D_I32(rightCentreX, rightCentreY));
+		
 		this.leftGoalTop = new Point2D_I32(leftGoalTopX,leftGoalTopY);
 		this.leftGoalBottom = new Point2D_I32(leftGoalBottomX,leftGoalBottomY);
+
+		int leftCentreX = (leftGoalTop.x + leftGoalBottom.x) / 2;
+		int leftCentreY = (leftGoalTop.y + leftGoalBottom.y) / 2;		
+		
+		this.setLeftGoalCentre(new Point2D_I32(leftCentreX, leftCentreY));
+		
 	}
 	public int getMiddleLine() {
 		return middleLine;
@@ -116,9 +126,11 @@ public class PitchConstants {
 	}
 	private Point2D_I32 rightGoalTop;
 	private Point2D_I32 rightGoalBottom;
+	private Point2D_I32 rightGoalCentre;
 	private Point2D_I32 leftGoalTop;
 	private Point2D_I32 leftGoalBottom;
-
+	private Point2D_I32 leftGoalCentre;
+	
 	public static Polygon getRegion1() {
 		return region1;
 	}
@@ -135,6 +147,18 @@ public class PitchConstants {
 		return region4;
 	}
 	
+	public Point2D_I32 getRightGoalCentre() {
+		return rightGoalCentre;
+	}
+	public void setRightGoalCentre(Point2D_I32 rightGoalCentre) {
+		this.rightGoalCentre = rightGoalCentre;
+	}
+	public Point2D_I32 getLeftGoalCentre() {
+		return leftGoalCentre;
+	}
+	public void setLeftGoalCentre(Point2D_I32 leftGoalCentre) {
+		this.leftGoalCentre = leftGoalCentre;
+	}
 	public static final PitchConstants newPitch = new PitchConstants(60,98,520,307,115,260,410,15,280,510,73,510,209,4,72,7,212);
 	public static final PitchConstants oldPitch = new PitchConstants(69,58,535,292,105,255,405,15,280,498,72,503,212,19,77,13,212); //TODO : fill in
 

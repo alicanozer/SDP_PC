@@ -5,7 +5,6 @@ import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import world.RobotType;
 import Calculations.BallPossession;
-import Calculations.DistanceCalculator;
 import movement.RobotMover;
 
 public class ShootAttacker {

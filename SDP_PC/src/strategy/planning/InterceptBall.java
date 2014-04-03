@@ -50,7 +50,7 @@ public class InterceptBall{
 				}
 			}
 			robotMover.stopRobot(type);
-			
+			robotMover.resetQueue(type);
 		}
 		else{
 			while(!BallPossession.hasPossession(RobotType.AttackUs, ObjectLocations.getUSAttack())){
@@ -89,6 +89,7 @@ public class InterceptBall{
 				}
 			}
 			robotMover.stopRobot(type);
+			robotMover.resetQueue(type);
 		}
 	}
 }

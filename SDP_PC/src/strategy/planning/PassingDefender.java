@@ -5,7 +5,6 @@ import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
 import world.RobotType;
 import Calculations.BallPossession;
-import Calculations.DistanceCalculator;
 import movement.RobotMover;
 
 public class PassingDefender {
@@ -60,9 +59,9 @@ public class PassingDefender {
 			
 			try {
 				Thread.sleep(1000);
+				robotMover.stopRobot(type);
 				robotMover.resetQueue(type);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}		
