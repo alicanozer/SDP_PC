@@ -49,7 +49,8 @@ public class DefenceThread implements Runnable {
 			try {
 				if (BallPossession.hasPossession(RobotType.AttackUs,
 						ObjectLocations.getUSAttack())) {
-					System.out.println("Defender Attack Strategy");
+					//System.out.println("Defender Attack Strategy");
+					//DO NOTHING
 					mover.resetQueue(type);
 				} else if (BallPossession.hasPossession(RobotType.DefendUs,
 						ObjectLocations.getUSDefend())) {
@@ -60,13 +61,14 @@ public class DefenceThread implements Runnable {
 						RobotType.AttackThem,
 						ObjectLocations.getTHEMAttack())) {
 					mover.resetQueue(type);
-					BlockShot.blockShot(type, mover);
 					System.out.println("Defender Block Shot Strategy");
+					BlockShot.blockShot(type, mover);
 				} else if (BallPossession.hasPossession(
 						RobotType.DefendThem,
 						ObjectLocations.getTHEMDefend())) {
 					mover.resetQueue(type);
-					System.out.println("Defender Block Pass Strategy");
+					//System.out.println("Defender Block Pass Strategy");
+					//DO NOTHING
 				} else {
 					// Intercept Strategy
 					System.out.println("Defender Intercept");

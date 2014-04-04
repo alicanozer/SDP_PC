@@ -4,7 +4,6 @@ import geometry.Vector;
 import georegression.struct.point.Point2D_I32;
 import vision.ObjectLocations;
 import world.RobotType;
-import Calculations.GoalInfo;
 
 /**
  * This class contains functions that return the angle of the robot to an object
@@ -209,34 +208,39 @@ public class TurnToObject {
 	 */
 	public static double getAngleToObject(Point2D_I32 dot, Point2D_I32 marker, Point2D_I32 object) {
 		
-		// Vector from dot to the object		
-		int xDiff = object.x - marker.x;
-		int yDiff = object.y - marker.y;
-
-		Vector dotToObject = new Vector(xDiff, yDiff);
+		if (dot != null && marker != null && object != null) {
 		
-		// Vector from dot to marker centre
-		
-		int xDiff1 = marker.x - dot.x;
-		int yDiff1 = marker.y - dot.y;
-		
-		Vector dotToMarker = new Vector(xDiff1, yDiff1);
-
-		double dotProduct = Vector.dotProduct(dotToMarker, dotToObject);
-		double magnitude = Vector.magnitude(dotToMarker);
-		double magnitude2 = Vector.magnitude(dotToObject);
-		double totalMagnitude = magnitude * magnitude2;
-		
-		double angleBetweenDotObject = Math.acos(dotProduct/totalMagnitude);
-		
-		//Check if ball is right or left of the marker
-		
-		if (!isLeft(dot,marker,object)) {
-			return Math.toDegrees(angleBetweenDotObject);
+			// Vector from dot to the object		
+			int xDiff = object.x - marker.x;
+			int yDiff = object.y - marker.y;
+	
+			Vector dotToObject = new Vector(xDiff, yDiff);
+			
+			// Vector from dot to marker centre
+			
+			int xDiff1 = marker.x - dot.x;
+			int yDiff1 = marker.y - dot.y;
+			
+			Vector dotToMarker = new Vector(xDiff1, yDiff1);
+	
+			double dotProduct = Vector.dotProduct(dotToMarker, dotToObject);
+			double magnitude = Vector.magnitude(dotToMarker);
+			double magnitude2 = Vector.magnitude(dotToObject);
+			double totalMagnitude = magnitude * magnitude2;
+			
+			double angleBetweenDotObject = Math.acos(dotProduct/totalMagnitude);
+			
+			//Check if ball is right or left of the marker
+			
+			if (!isLeft(dot,marker,object)) {
+				return Math.toDegrees(angleBetweenDotObject);
+			} else {
+				return -Math.toDegrees(angleBetweenDotObject);
+			}
+			
 		} else {
-			return -Math.toDegrees(angleBetweenDotObject);
+			return 0.0;
 		}
-				
 	}
 	
 	private static boolean isLeft(Point2D_I32 a, Point2D_I32 b, Point2D_I32 c){
