@@ -25,15 +25,48 @@ public class BlockShot {
 				if (angle > 20) {
 					robotMover.rotate(type, angle);
 				}
-				
+								
 				Point2D_I32 ourDot;
 				Point2D_I32 ourMarker;
 				Point2D_I32 theirDot;
 				Point2D_I32 theirMarker;
-
+				Point2D_I32 moveToCentreGoal;
+				
 				ourDot = ObjectLocations.getUSDefendDot();
 				ourMarker = ObjectLocations.getUSDefend();
-
+				
+				if (ObjectLocations.getYellowUs()) {
+					// We are Yellow
+					if (ObjectLocations.getYellowDefendingLeft()) {
+						//Defending Left
+						moveToCentreGoal = new Point2D_I32(ourMarker.x, ObjectLocations.getConsts().getLeftGoalCentre().y); 
+					} else {
+						//Defending Right
+						moveToCentreGoal = new Point2D_I32(ourMarker.x, ObjectLocations.getConsts().getRightGoalCentre().y); 						
+					}
+				}else {
+					//We are BLUE
+					if (ObjectLocations.getYellowDefendingLeft()) {
+						//Defending Right
+						moveToCentreGoal = new Point2D_I32(ourMarker.x, ObjectLocations.getConsts().getRightGoalCentre().y); 						
+					} else {
+						//Defending left
+						moveToCentreGoal = new Point2D_I32(ourMarker.x, ObjectLocations.getConsts().getLeftGoalCentre().y); 											
+					}
+				}
+				
+				double distanceGoal = DistanceCalculator.Distance(ourMarker, moveToCentreGoal);
+				
+				if (ourDot.y < moveToCentreGoal.y) {
+					robotMover.forward(type, distanceGoal);
+				} else {
+					robotMover.forward(type, distanceGoal);					
+				}
+				
+				while (robotMover.numQueuedJobs() > 0) {
+					//DO NOTHING
+				}
+				
 				theirDot = ObjectLocations.getTHEMAttackDot();
 				theirMarker = ObjectLocations.getTHEMAttack();
 
@@ -48,27 +81,31 @@ public class BlockShot {
 				double distance = DistanceCalculator.Distance(ObjectLocations.getUSDefend(), point);
 				System.out.println("Distance to Point: " + distance);
 				
-				if (point.y > 69 && point.y < 209) {
-					if (point.y < ObjectLocations.getUSDefendDot().y) {
-						robotMover.forward(type, -distance);
+				if (point != null ) {
+					if (point.y > 69 && point.y < 209) {
+						if (point.y < ObjectLocations.getUSDefendDot().y) {
+							robotMover.forward(type, -distance);
+						} else {
+							robotMover.forward(type, distance);
+						}
 					} else {
-						robotMover.forward(type, distance);
+						robotMover.stopRobot(type);
+						while (robotMover.numQueuedJobs() > 0) {
+							//Do Nothing
+						}
 					}
-				} else {
-					robotMover.stopRobot(type);
-					try {
-						robotMover.resetQueue(type);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			
+				} 
+				
 			}
 			
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+			
+			while (robotMover.numQueuedJobs() > 0) {
+				//DO NOTHING
 			}
 			
 		}

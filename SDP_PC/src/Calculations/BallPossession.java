@@ -13,8 +13,8 @@ public class BallPossession {
 		
 		Polygon polygon = null;
 		Point2D_I32 marker = null;
-		double distance = 0.0;
-
+//		double distance = 0.0;
+		
 		if (ObjectLocations.getYellowDefendingLeft()) {
 			if (ObjectLocations.getYellowUs()) {
 					if (type == RobotType.AttackUs) {
@@ -92,9 +92,9 @@ public class BallPossession {
 		
 		boolean BallRegion = BallRegion(ball, polygon);
 		
-		if (ball != null && marker != null) {
-			distance = DistanceCalculator.Distance(ball, marker);
-		}
+//		if (ball != null && marker != null) {
+//			distance = DistanceCalculator.Distance(ball, marker);
+//		}
 		
 		//if the robot is near the ball and facing the ball it has possession
 //		System.out.println("ball speed" + ObjectLocations.getBallSpeed());
@@ -104,7 +104,7 @@ public class BallPossession {
 //					possession = true;
 //				}
 //			} else {
-				if (ObjectLocations.getBallSpeed() < 150) {
+				if (ObjectLocations.getBallSpeed() < 300) {
 					possession = true;
 				}
 //			}

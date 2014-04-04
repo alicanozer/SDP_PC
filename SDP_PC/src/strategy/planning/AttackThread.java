@@ -53,19 +53,19 @@ public class AttackThread implements Runnable {
 			try {
 				if (BallPossession.hasPossession(RobotType.AttackUs,
 						ObjectLocations.getUSAttack())) {
-					System.out.println("Attacker Attack Strategy");
+					System.out.println("Attacker Attack Strategy"); 
 					mover.resetQueue(type);
 					ShootAttacker.shootAttacker(type, mover);
 				} else if (BallPossession.hasPossession(RobotType.DefendUs,
 						ObjectLocations.getUSDefend())) {
-					System.out.println("Attacker Passing Strategy");
+					//System.out.println("Attacker Passing Strategy");
 					mover.resetQueue(type);
 					//DO NOTHING
 				} else if (BallPossession.hasPossession(
 						RobotType.AttackThem,
 						ObjectLocations.getTHEMAttack())) {
 					mover.resetQueue(type);
-					System.out.println("Attacker Block Shot Strategy");
+					//System.out.println("Attacker Block Shot Strategy");
 					//DO NOTHING
 				} else if (BallPossession.hasPossession(
 						RobotType.DefendThem,
@@ -78,9 +78,11 @@ public class AttackThread implements Runnable {
 					mover.resetQueue(type);
 					InterceptBall.intercept(type, mover);
 				}
+					
 				if(getDie()){
 					break;
 				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -15,6 +15,7 @@ public class BlockPass {
 	public static void blockPass(String type, RobotMover robotMover) {
 
 		double angle;
+		Point2D_I32 moveToCentreGoal;
 		
 		while (BallPossession.hasPossession(RobotType.DefendThem, ObjectLocations.getTHEMDefend())) {
 			
@@ -34,6 +35,38 @@ public class BlockPass {
 				ourDot = ObjectLocations.getUSAttackDot();
 				ourMarker = ObjectLocations.getUSAttack();
 
+				if (ObjectLocations.getYellowUs()) {
+					// We are Yellow
+					if (ObjectLocations.getYellowDefendingLeft()) {
+						//Defending Left
+						moveToCentreGoal = new Point2D_I32(ourMarker.x, ObjectLocations.getConsts().getLeftGoalCentre().y); 
+					} else {
+						//Defending Right
+						moveToCentreGoal = new Point2D_I32(ourMarker.x, ObjectLocations.getConsts().getRightGoalCentre().y); 						
+					}
+				}else {
+					//We are BLUE
+					if (ObjectLocations.getYellowDefendingLeft()) {
+						//Defending Right
+						moveToCentreGoal = new Point2D_I32(ourMarker.x, ObjectLocations.getConsts().getRightGoalCentre().y); 						
+					} else {
+						//Defending left
+						moveToCentreGoal = new Point2D_I32(ourMarker.x, ObjectLocations.getConsts().getLeftGoalCentre().y); 											
+					}
+				}
+				
+				double distanceGoal = DistanceCalculator.Distance(ourMarker, moveToCentreGoal);
+				
+				if (ourDot.y < moveToCentreGoal.y) {
+					robotMover.forward(type, distanceGoal);
+				} else {
+					robotMover.forward(type, distanceGoal);					
+				}
+				
+				while (robotMover.numQueuedJobs() > 0) {
+					//DO NOTHING
+				}
+				
 				theirDot = ObjectLocations.getTHEMDefendDot();
 				theirMarker = ObjectLocations.getTHEMDefend();
 
@@ -66,6 +99,10 @@ public class BlockPass {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+			
+			while (robotMover.numQueuedJobs() > 0) {
+				//DO NOTHING
 			}
 			
 		}
