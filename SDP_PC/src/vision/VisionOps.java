@@ -559,7 +559,12 @@ public class VisionOps {
 					float ds = (S.unsafe_get(x,y) - sats[k])*adjustUnits;
 						
 					float dist = dh*dh + ds*ds;
-					if(dist <= distanceThresholds[k] && PitchConstants.pitchPolygon.contains(x, y)) {
+					if(dist <= distanceThresholds[k] && 
+							((k == 0) 
+								|| (PitchConstants.region1.contains(x, y) 
+								|| PitchConstants.region2.contains(x, y) 
+								|| PitchConstants.region3.contains(x, y) 
+								|| PitchConstants.region4.contains(x, y)))) {
 						// simply add all the points wherever they are
 						objectsToLocations.get(k).add(new Point2D_I32(x,y));
 						isBlack = false; // pixel is fron object, don't make it black

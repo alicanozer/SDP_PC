@@ -101,14 +101,35 @@ public class ExampleSegmentColor {
 		float[][] white3 = new float[3][3];
 		
 		// pitch stuff
-		int[] xs = new int[8];
-		int[] ys = new int[8];
+		int[] xsD = new int[6];
+		int[] ysD = new int[6];
 
+		int[] xsA = new int[4];
+		int[] ysA = new int[4];
 		createImagePanel(image);
-		System.out.println("Please click on the 8 corners of the inside of the pitch");
-		setPitchPolygon(xs, ys);
-		Polygon p = new Polygon(xs,ys,8);
-		PitchConstants.pitchPolygon = p;
+//		System.out.println("Please click on the 8 corners of the inside of the pitch");
+//		setPitchPolygon(xs, ys);
+//		Polygon p = new Polygon(xs,ys,8);
+//		PitchConstants.pitchPolygon = p;
+		System.out.println("Please click on the 6 corners(inside i.e. on the green) of the leftmost defending region");
+		setDefendPolygon(xsD, ysD);
+		Polygon r1 = new Polygon(xsD,ysD,6);
+		PitchConstants.region1 = r1;
+		
+		System.out.println("Please click on the 4 corners(inside i.e. on the green) of the leftmost attacking region");
+		setAttackPolygon(xsA, ysA);
+		Polygon r2 = new Polygon(xsA,ysA,4);
+		PitchConstants.region2 = r2;
+		
+		System.out.println("Please click on the 4 corners(inside i.e. on the green) of the rightmost attacking region");
+		setAttackPolygon(xsA, ysA);
+		Polygon r3 = new Polygon(xsA,ysA,4);
+		PitchConstants.region3 = r3;
+		
+		System.out.println("Please click on the 6 corners(inside i.e. on the green) of the rightmost defending region");
+		setDefendPolygon(xsD, ysD);
+		Polygon r4 = new Polygon(xsD,ysD,6);
+		PitchConstants.region4 = r4;
 		
 		System.out.println("Please click 3 times on a blue object");
 		setThreeHSV(blue3);
@@ -198,6 +219,35 @@ public class ExampleSegmentColor {
 			flag = false;
 		}
 	}
+	/**
+	 * puts polygon coords in xs and ys
+	 * @param xs
+	 * @param ys
+	 */
+	private static void setDefendPolygon(int[] xs, int ys[]) {
+		for(int i = 0; i < 6; i ++){
+			getClickedCoords();
+			looper();
+			xs[i] = point[0];
+			ys[i] = point[1];
+			flag = false;
+		}
+	}
+	/**
+	 * set attack polygon coords in xs and ys
+	 * @param xs
+	 * @param ys
+	 */
+	private static void setAttackPolygon(int[] xs, int ys[]) {
+		for(int i = 0; i < 4; i ++){
+			getClickedCoords();
+			looper();
+			xs[i] = point[0];
+			ys[i] = point[1];
+			flag = false;
+		}
+	}
+	
 	private float minArray(float[] ar){
 		float min = Float.POSITIVE_INFINITY;
 		for(float a: ar){
