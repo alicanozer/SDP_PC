@@ -1,7 +1,7 @@
 /**
  * 
  */
-package World;
+package world;
 
 import world.support.TimedVector;
 

@@ -1,9 +1,9 @@
 package strategy.planning;
 
-import World.RobotType;
 import strategy.movement.MoveToPointXY;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
+import world.RobotType;
 import movement.RobotMover;
 import comms.BluetoothRobot;
 

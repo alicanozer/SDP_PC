@@ -1,4 +1,4 @@
-package World.object;
+package world.object;
 
 import geometry.Vector;
 

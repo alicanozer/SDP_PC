@@ -1,6 +1,6 @@
 package strategy.movement;
 
-import World.RobotType;
+import world.RobotType;
 import movement.RobotMover;
 import Calculations.DistanceCalculator;
 import comms.BluetoothRobot;

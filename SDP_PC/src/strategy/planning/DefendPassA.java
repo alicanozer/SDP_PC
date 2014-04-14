@@ -2,10 +2,10 @@ package strategy.planning;
 
 import georegression.struct.point.Point2D_I32;
 import Calculations.IntersectionLines;
-import World.RobotType;
 import strategy.movement.MoveToPointXY;
 import strategy.movement.TurnToObject;
 import vision.ObjectLocations;
+import world.RobotType;
 import movement.RobotMover;
 
 public class DefendPassA extends StrategyInterface{
