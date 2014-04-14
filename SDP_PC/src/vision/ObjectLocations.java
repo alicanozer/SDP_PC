@@ -539,7 +539,7 @@ public class ObjectLocations {
 		Color c = g.getColor();
 		g.setColor(Color.RED);
 		if (ObjectLocations.ball != null) {
-			// drawing X over ball			//		
+			// drawing X over ball			//	
 			g.drawLine(ObjectLocations.ball.x - 10, ObjectLocations.ball.y, ObjectLocations.ball.x + 10, ObjectLocations.ball.y);
 			g.drawLine(ObjectLocations.ball.x, ObjectLocations.ball.y - 10, ObjectLocations.ball.x, ObjectLocations.ball.y + 10);
 		}
