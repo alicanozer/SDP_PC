@@ -129,6 +129,7 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		frame.addWindowListener(this);
 		frame.setVisible(true);
 		frame.setSize(width, height);
+		CreateSlider();
 	}
 
 	/**
@@ -231,7 +232,6 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
 		g.drawString("FPS " + frameRate , 10, 10);
-
 
 
 		CreateSlider();
