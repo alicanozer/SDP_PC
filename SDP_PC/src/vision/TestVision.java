@@ -1,7 +1,11 @@
 package vision;
 
 import georegression.struct.point.Point2D_I32;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
@@ -13,6 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import boofcv.alg.color.ColorHsv;
 import boofcv.alg.feature.detect.edge.CannyEdge;
@@ -31,6 +41,8 @@ import boofcv.struct.image.MultiSpectral;
 
 
 public class TestVision {
+	static JPanel panel = new JPanel();
+	static JSlider slider = new JSlider(JSlider.VERTICAL,0,1000,25);
 	private static PitchConstants consts;
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception{
@@ -132,7 +144,7 @@ public class TestVision {
 		System.out.println(KMeans.min(testList ));*/
 
 		ShowImages.showWindow(visualEdgeContour,"K means cluster centers");
-
-
 	}
+	
+	
 }
