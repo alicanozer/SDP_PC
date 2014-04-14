@@ -2,16 +2,13 @@ package strategy.planning;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-
 import comms.Bluetooth;
 import comms.BluetoothRobot;
-
 import Calculations.GoalInfo;
 import World.RobotType;
-
 import vision.PitchConstants;
 import vision.VisionRunner;
-import World.WorldState;
+
 /**
  * Runs the vision, starts a bluetooth connection with HERCULES and starts the
  * strategy. 
@@ -27,7 +24,6 @@ public class RunStrategy {
 
 	private Thread strategyThread;
 	private StrategyInterface strategy;
-	private WorldState worldstate;
 
 	public static void main(String[] args) throws Exception {
 

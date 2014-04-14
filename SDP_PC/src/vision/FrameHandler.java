@@ -264,7 +264,9 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		
 		
 		//KMeans.ClusterHeaps(img, 6, 1, null,15);
-		//img = VisionOps.newDisplay(VisionOps.extractContour(img, colors.getRedValue()),img.getWidth(), img.getHeight());
+
+		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
+
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(visualEdgeContour, 0, 0, width, height, null);
 		g.setColor(Color.white);
