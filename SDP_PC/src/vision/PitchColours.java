@@ -78,5 +78,16 @@ public class PitchColours {
 	public void setWhiteValue(float[] whiteValue){
 		this.whiteValue = whiteValue;
 	}
+	/**
+	 * Gets the main colours of interest bundled together for easier access
+	 * @return the red float[] array as row 0, yellow float[] array as row 1, and blue float[] array as row 2
+	 */
+	public float[][] getRedYellowBlue(){
+		float[][] ret = new float[3][3];
+		ret[0] = getRedValue();
+		ret[1] = getYellowValue();
+		ret[2] = getBlueValue();
+		return ret;
+	}
 	
 }

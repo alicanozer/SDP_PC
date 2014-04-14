@@ -9,9 +9,12 @@ import java.awt.Polygon;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -161,8 +164,9 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 	 * gets new frames and applies the vision on them
 	 */
 	@Override
-	public void nextFrame(VideoFrame frame) {
-		BufferedImage img = frame.getBufferedImage();
+	public void nextFrame(VideoFrame frame){
+		BufferedImage img = null;
+		img = frame.getBufferedImage();//ImageIO.read(new File("test_images/000000013.jpg"));
 		img = img.getSubimage(consts.getUpperLeftX(), consts.getUpperLeftY(), consts.getCroppedWidth(), consts.getCroppedHeight());
 		if(frameCounter < 3){
 			frame.recycle();
@@ -173,54 +177,30 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			frameCounter++;
 			colors = ExampleSegmentColor.selectColoursOfPitch(img);
 			try {
-				List<Color> colorsList = new ArrayList<Color>();
 				BufferedImage pitchImg = img;
-				//set white
-
-				Color white = new Color((int) colors.getWhiteValue()[0],(int) colors.getWhiteValue()[1],(int) colors.getWhiteValue()[2]);
 				List<Color> colorList = new ArrayList<Color>();
+				//set white
+				float[] whiteRGB = new float[3];
+				ColorHsv.hsvToRgb(colors.getWhiteValue()[0], colors.getWhiteValue()[1], colors.getWhiteValue()[2], whiteRGB);
+				Color white = new Color((int) whiteRGB[0], (int) whiteRGB[1], (int)whiteRGB[2]);
 				colorList.add(white);
 				//add pitch
-				float[] fsP = new float[3];
-
-				Color pitch = new Color((int) colors.getGreenPitchValue()[0],(int) colors.getGreenPitchValue()[1],(int) colors.getGreenPitchValue()[2]);
-
+				float[] pitchRGB = new float[3];
+				ColorHsv.hsvToRgb(colors.getGreenPitchValue()[0], colors.getGreenPitchValue()[1], colors.getGreenPitchValue()[2], pitchRGB);
+				Color pitch = new Color((int) pitchRGB[0], (int) pitchRGB[1], (int) pitchRGB[2]);
 				colorList.add(pitch);
-				
 				whitePoints = KMeans.Cluster(pitchImg, 2, 1, colorList).get(0);
 				ShowImages.showWindow(pitchImg,"pitchImg");
-				
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			return;
 		}
-		
-		
 		long thisFrame = System.currentTimeMillis();
 		int frameRate = (int) (1000 / (thisFrame - lastFrame));
 		
 		VisionRunner.sendFrame(new Frame(img,thisFrame));
 		
-		
-//		System.out.println("max blue:" + colors.getBlueValue()[0][0] + " " + colors.getBlueValue()[0][1] + " " + colors.getBlueValue()[0][2]);
-//		System.out.println("min blue:" + colors.getBlueValue()[1][0] + " " + colors.getBlueValue()[1][1] + " " + colors.getBlueValue()[1][2]);
-//		
-//		System.out.println("max black:" + colors.getBlackValue()[0][0] + " " + colors.getBlackValue()[0][1] + " " + colors.getBlackValue()[0][2]);
-//		System.out.println("min black:" + colors.getBlackValue()[1][0] + " " + colors.getBlackValue()[1][1] + " " + colors.getBlackValue()[1][2]);
-//		
-//		System.out.println("max yellow:" + colors.getYellowValue()[0][0] + " " + colors.getYellowValue()[0][1] + " " + colors.getYellowValue()[0][2]);
-//		System.out.println("min yellow:" + colors.getYellowValue()[1][0] + " " + colors.getYellowValue()[1][1] + " " + colors.getYellowValue()[1][2]);
-//		
-//		System.out.println("max red:" + colors.getRedValue()[0][0] + " " + colors.getRedValue()[0][1] + " " + colors.getRedValue()[0][2]);
-//		System.out.println("min red:" + colors.getRedValue()[1][0] + " " + colors.getRedValue()[1][1] + " " + colors.getRedValue()[1][2]);
-		
-		
-		//KMeans.ClusterHeaps(img, 6, 1, null,15);
-
-		//img = VisionOps.newDisplay(VisionOps.newHSVSegment("yellow",img),img.getWidth(), img.getHeight());
-
 		Graphics2D g = (Graphics2D) label.getGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
 		g.setColor(Color.white);
