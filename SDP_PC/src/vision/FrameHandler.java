@@ -239,7 +239,8 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				if (slider.getValueIsAdjusting()){
-					float sliderValue = (float)slider.getValue()/1000; //get slider value and use it from here
+					float sliderValue = (float)slider.getValue()/10000; //get slider value and use it from here
+					
 					System.out.println(sliderValue);
 				}
 			}
@@ -285,21 +286,18 @@ public class FrameHandler extends WindowAdapter implements CaptureCallback{
 		slider.setMinorTickSpacing(1);
 		slider.setMajorTickSpacing(25);
 		slider.setPaintTicks(true);
-		java.util.Hashtable<Integer,JLabel> labelTable = new java.util.Hashtable<Integer,JLabel>();
-		labelTable.put(new Integer(1000), new JLabel("1.0"));  
-		labelTable.put(new Integer(750), new JLabel("0.75"));  
-		labelTable.put(new Integer(500), new JLabel("0.50"));  
-		labelTable.put(new Integer(250), new JLabel("0.25"));  
-		labelTable.put(new Integer(0), new JLabel("0.0")); 
+		java.util.Hashtable<Integer,JLabel> labelTable = new java.util.Hashtable<Integer,JLabel>(); 
+	    labelTable.put(new Integer(1000), new JLabel("0.1"));
+	    labelTable.put(new Integer(0), new JLabel("0.0")); 
 		slider.setLabelTable(labelTable);
 		slider.setPaintLabels(true);
 		panel.add(slider);
-
+		
 		JFrame frame = new JFrame("Slider");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		panel.setPreferredSize(new Dimension(200,650));
 		frame.setContentPane(panel);;
 		frame.pack();frame.setVisible(true);
-
+		
 	}
 }

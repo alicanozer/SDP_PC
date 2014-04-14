@@ -143,7 +143,39 @@ public class TestVision {
 		/*double[] testList = {5.3,1.0,2,0};
 		System.out.println(KMeans.min(testList ));*/
 
-		ShowImages.showWindow(visualEdgeContour,"K means cluster centers");
+		//ShowImages.showWindow(visualEdgeContour,"K means cluster centers");
+		
+		CreateSlider();
+		slider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if (slider.getValueIsAdjusting()){
+					System.out.println((float)slider.getValue()/10000);
+				}
+			}
+		});
+		
+	}
+	
+
+	public static void CreateSlider(){
+		panel.setLayout(new BorderLayout());
+		slider.setMinorTickSpacing(1);
+		slider.setMajorTickSpacing(25);
+		slider.setPaintTicks(true);
+		java.util.Hashtable<Integer,JLabel> labelTable = new java.util.Hashtable<Integer,JLabel>(); 
+	    labelTable.put(new Integer(1000), new JLabel("0.1"));
+	    labelTable.put(new Integer(0), new JLabel("0.0")); 
+		slider.setLabelTable(labelTable);
+		slider.setPaintLabels(true);
+		panel.add(slider);
+		
+		JFrame frame = new JFrame("Slider");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		panel.setPreferredSize(new Dimension(200,650));
+		frame.setContentPane(panel);;
+		frame.pack();frame.setVisible(true);
+		
 	}
 	
 	
